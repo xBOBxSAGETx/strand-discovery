@@ -33,19 +33,27 @@ def tmdb(path, **params):
             time.sleep(wait)
         _last[0] = time.monotonic()
         _calls[0] += 1
+        # The key rides in the URL, so no error path may surface the URL or the original exception:
+        # only the API path and a status/exception class are ever reported, always with `from None`.
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers={'Accept-Encoding': 'identity'}), timeout=30) as r:
                 return json.load(r)
         except urllib.error.HTTPError as e:
-            if e.code == 429:                      # respect the limit: back off, no retry storm
-                time.sleep(float(e.headers.get('Retry-After') or 2 ** attempt))
+            code = e.code
+            retry_after = e.headers.get('Retry-After')
+            if code == 429:                        # respect the limit: back off, no retry storm
+                time.sleep(float(retry_after or 2 ** attempt))
                 continue
-            if e.code >= 500 and attempt < 5:
+            if code >= 500 and attempt < 5:
                 time.sleep(2 ** attempt)
                 continue
-            raise RuntimeError(f'TMDB {e.code} on {path}') from None
-        except urllib.error.URLError:
-            time.sleep(2 ** attempt)
+            raise RuntimeError(f'TMDB HTTP {code} on {path}') from None
+        except Exception as e:                     # URLError, timeouts, bad JSON — class name only
+            kind = type(e).__name__
+            if attempt < 5:
+                time.sleep(2 ** attempt)
+                continue
+            raise RuntimeError(f'TMDB request failed on {path}: {kind}') from None
     raise RuntimeError(f'TMDB gave up on {path}')
 
 
@@ -98,10 +106,21 @@ def collection(card):
     return out
 
 
-def director(card):
+MIN_RUNTIME = 40      # director cards: drop shorts; unknown runtime kept only for well-known titles
+KNOWN_VOTES = 500
+
+
+def director(card, dropped):
     crew = tmdb(f"/person/{card['person_id']}/movie_credits").get('crew', [])
     films = {c['id']: c for c in crew if c.get('job') == 'Director' and c.get('release_date') and c['release_date'] <= TODAY}
-    return [preview(c, 'movie') for c in sorted(films.values(), key=lambda c: c['release_date'], reverse=True)]
+    kept = []
+    for c in sorted(films.values(), key=lambda c: c['release_date'], reverse=True):
+        runtime = tmdb(f"/movie/{c['id']}").get('runtime') or 0
+        if runtime >= MIN_RUNTIME or (runtime == 0 and c.get('vote_count', 0) >= KNOWN_VOTES):
+            kept.append(preview(c, 'movie'))
+        else:
+            dropped.append(f"{c.get('title')} ({c['release_date'][:4]}, {runtime or 'no'} min)")
+    return kept
 
 
 def source_name(card):
@@ -161,7 +180,10 @@ def main():
             elif card['kind'] == 'collection':
                 metas = collection(card)
             elif card['kind'] == 'director':
-                metas = director(card)
+                dropped = []
+                metas = director(card, dropped)
+                if dropped:
+                    print(f"{card['title']}: dropped {len(dropped)} short/unknown-runtime titles: {'; '.join(dropped)}")
             else:
                 raise SystemExit(f"unknown kind {card['kind']}")
             write_catalog(root, media, cid, metas, dflt['page_size'])

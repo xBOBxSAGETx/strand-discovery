@@ -1,0 +1,15 @@
+{
+  "_note": "One entry per card. bg = TMDB source for the background image; logo = optional provider/network/company logo.",
+  "cards": [
+    {"slug": "streaming-netflix", "shape": "wide", "eyebrow": "Streaming", "title": "Netflix",
+     "bg": {"kind": "tv", "id": 66732}, "logo": {"kind": "provider", "id": 8}},
+    {"slug": "series-monsterverse", "shape": "wide", "eyebrow": "Movie Series", "title": "MonsterVerse",
+     "bg": {"kind": "movie", "id": 823464}},
+    {"slug": "series-toy-story", "shape": "wide", "eyebrow": "Movie Series", "title": "Toy Story",
+     "bg": {"kind": "collection", "id": 10194}},
+    {"slug": "dir-denis-villeneuve", "shape": "poster", "eyebrow": "Director", "title": "Denis Villeneuve",
+     "bg": {"kind": "person", "id": 137427}},
+    {"slug": "awards-oscar-best-picture", "shape": "wide", "eyebrow": "Awards", "title": "Oscar Best Picture",
+     "bg": {"kind": "search_movie", "query": "One Battle After Another", "year": 2025}}
+  ]
+}
