@@ -9,6 +9,10 @@ on:
         description: 'Fail the build on purpose (proves the last deploy stays served)'
         type: boolean
         default: false
+      allow_catalog_removal:
+        description: 'Accept catalogs removed/renamed on purpose (the >30% item-drop guard still applies)'
+        type: boolean
+        default: false
 
 permissions: {}
 
@@ -31,6 +35,7 @@ jobs:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           PREV_SUMMARY_URL: https://xbobxsagetx.github.io/strand-discovery/summary.json
           FORCE_FAIL: ${{ inputs.force_fail && '1' || '0' }}
+          ALLOW_CATALOG_REMOVAL: ${{ inputs.allow_catalog_removal && '1' || '0' }}
         run: python generator/build.py out
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:

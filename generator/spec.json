@@ -50,6 +50,14 @@
       "kind": "director",
       "media": ["movie"],
       "person_id": 137427
+    },
+    {
+      "slug": "awards-oscar-best-picture",
+      "title": "Oscar Best Picture",
+      "shelf": "Awards",
+      "kind": "mdblist",
+      "media": ["movie"],
+      "list": "apg2886/oscar-best-picture-winners"
     }
   ]
 }

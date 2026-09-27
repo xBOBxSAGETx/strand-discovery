@@ -7,6 +7,8 @@ Env:
   TMDB_API_KEY       required (GitHub Actions secret; never printed)
   PREV_SUMMARY_URL   optional: last deployed summary.json, used by the refresh guards
   FORCE_FAIL         optional: "1" fails the run after building (pilot test: last deploy must stay served)
+  ALLOW_CATALOG_REMOVAL optional: "1" (manual runs only) accepts catalogs that were removed/renamed on purpose;
+                     the >30% total-items guard still applies
 """
 import csv, datetime as dt, json, os, sys, time, urllib.parse, urllib.request
 from pathlib import Path
@@ -112,7 +114,8 @@ KNOWN_VOTES = 500
 
 def director(card, dropped):
     crew = tmdb(f"/person/{card['person_id']}/movie_credits").get('crew', [])
-    films = {c['id']: c for c in crew if c.get('job') == 'Director' and c.get('release_date') and c['release_date'] <= TODAY}
+    films = {c['id']: c for c in crew if c.get('job') in ('Director', 'Co-Director')
+             and c.get('release_date') and c['release_date'] <= TODAY}
     kept = []
     for c in sorted(films.values(), key=lambda c: c['release_date'], reverse=True):
         runtime = tmdb(f"/movie/{c['id']}").get('runtime') or 0
@@ -123,8 +126,47 @@ def director(card, dropped):
     return kept
 
 
+MDBLIST_JSON = 'https://mdblist.com/lists/{list}/json'   # public export, no key needed
+
+
+def mdblist(card, media):
+    """Items of a public MDBList list, in list order, as tmdb-id previews (MDBList `id` is the TMDB id)."""
+    with urllib.request.urlopen(urllib.request.Request(MDBLIST_JSON.format(list=card['list']),
+                                                       headers={'User-Agent': 'strand-discovery'}), timeout=60) as r:
+        items = json.load(r)
+    want = 'movie' if media == 'movie' else 'show'
+    out = []
+    for it in items:
+        if it.get('mediatype') != want:
+            continue
+        tid = it.get('id')
+        if not tid and it.get('imdb_id'):          # fallback: resolve via TMDB /find
+            found = tmdb(f"/find/{it['imdb_id']}", external_source='imdb_id')
+            hits = found.get('movie_results' if media == 'movie' else 'tv_results') or []
+            tid = hits[0]['id'] if hits else None
+        if not tid:
+            continue
+        details = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}")
+        if details.get('id'):
+            out.append(preview(details, media))
+    return out
+
+
+def interleave(lists):
+    """a0, b0, a1, b1, … so page 1 always holds both kinds (Jellyfin samples the first 20 entries)."""
+    out, seen = [], set()
+    for row in range(max((len(l) for l in lists), default=0)):
+        for lst in lists:
+            if row < len(lst) and (lst[row]['id'], lst[row]['type']) not in seen:
+                seen.add((lst[row]['id'], lst[row]['type']))
+                out.append(lst[row])
+    return out
+
+
 def source_name(card):
     k = card['kind']
+    if k == 'mdblist':
+        return f"MDBList {card['list']}"
     if k == 'collection':
         return ' + '.join(tmdb(f'/collection/{c}').get('name', '?') for c in card['collection_ids'])
     if k == 'director':
@@ -172,28 +214,35 @@ def main():
                 'behaviorHints': {'configurable': False}}
     counts, rows = {}, []
     for card in spec['cards']:
+        # One catalog per card, used directly as a Jellyfin library (merged catalogs lose deep pages when cold).
+        cid = f"sd-{card['slug']}"
+        if 'collection' in f"{cid} {card['title']}".lower():   # AIOStreams would turn it into a BoxSet library
+            raise SystemExit(f"card {card['slug']!r}: id/name must not contain 'collection'")
         name = source_name(card)
+        per_media = []
         for media in card['media']:
-            cid = f"sd-{card['slug']}-{media}"
             if card['kind'] == 'discover':
-                metas = discover(card, media, card.get('depth', dflt['depth']), dflt['min_votes'])
+                per_media.append(discover(card, media, card.get('depth', dflt['depth']), dflt['min_votes']))
             elif card['kind'] == 'collection':
-                metas = collection(card)
+                per_media.append(collection(card))
             elif card['kind'] == 'director':
                 dropped = []
-                metas = director(card, dropped)
+                per_media.append(director(card, dropped))
                 if dropped:
                     print(f"{card['title']}: dropped {len(dropped)} short/unknown-runtime titles: {'; '.join(dropped)}")
+            elif card['kind'] == 'mdblist':
+                per_media.append(mdblist(card, media))
             else:
                 raise SystemExit(f"unknown kind {card['kind']}")
-            write_catalog(root, media, cid, metas, dflt['page_size'])
-            manifest['catalogs'].append({'type': media, 'id': cid, 'name': f"{card['title']} ({'Movies' if media == 'movie' else 'Shows'})",
-                                         'extra': [{'name': 'skip'}]})
-            counts[cid] = len(metas)
-            src_id = card.get('params', {}).get('with_watch_providers') or card.get('params', {}).get('with_keywords') \
-                or card.get('collection_ids') or card.get('person_id')
-            rows.append([card['title'], card['shelf'], card.get('sort', 'default'), card['kind'], src_id, name, cid, media,
-                         len(metas), ' | '.join(m['name'] for m in metas[:3])])
+        metas = interleave(per_media)
+        write_catalog(root, 'movie', cid, metas, dflt['page_size'])
+        manifest['catalogs'].append({'type': 'movie', 'id': cid, 'name': card['title'], 'extra': [{'name': 'skip'}]})
+        counts[cid] = len(metas)
+        kinds = {t: sum(1 for m in metas if m['type'] == t) for t in ('movie', 'series')}
+        src_id = card.get('params', {}).get('with_watch_providers') or card.get('params', {}).get('with_keywords') \
+            or card.get('collection_ids') or card.get('person_id') or card.get('list')
+        rows.append([card['title'], card['shelf'], card.get('sort', 'default'), card['kind'], src_id, name, cid,
+                     f"movie={kinds['movie']} series={kinds['series']}", len(metas), ' | '.join(m['name'] for m in metas[:3])])
     (root / 'manifest.json').write_text(json.dumps(manifest, indent=1), encoding='utf-8')
     (root / '.nojekyll').write_text('', encoding='utf-8')
     summary = {'generated_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'tmdb_requests': _calls[0],
@@ -208,7 +257,9 @@ def main():
     prev = previous_summary()
     if prev:
         emptied = [c for c, n in prev.get('catalogs', {}).items() if n > 0 and counts.get(c, 0) == 0]
-        if emptied:
+        if emptied and os.environ.get('ALLOW_CATALOG_REMOVAL') == '1':
+            print(f'catalogs removed/renamed on purpose (manual run): {emptied}')
+        elif emptied:
             sys.exit(f'GUARD: previously non-empty catalogs are now empty: {emptied}')
         if prev.get('total_items') and summary['total_items'] < prev['total_items'] * (1 - DROP_LIMIT):
             sys.exit(f"GUARD: total items dropped {prev['total_items']} -> {summary['total_items']} (>30%)")
