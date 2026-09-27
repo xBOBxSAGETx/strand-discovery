@@ -9,19 +9,33 @@ Env:
   FORCE_FAIL         optional: "1" fails the run after building (pilot test: last deploy must stay served)
   ALLOW_CATALOG_REMOVAL optional: "1" (manual runs only) accepts catalogs that were removed/renamed on purpose;
                      the >30% total-items guard still applies
+  SD_KINDS_OFF       optional: comma list of catalog kinds to leave out of this deploy (staged rollout: Stage A
+                     deploys with "director,actor" so AIOStreams can't surface people libraries before Stage B)
+  SD_KEEP            optional: comma list of slugs kept despite SD_KINDS_OFF (the pilot's live library)
+  SD_CACHE           optional: directory for the durable lookup cache (default ./cache). Holds only values that
+                     don't change (movie runtimes, title previews by TMDB id); discover pages are never cached.
 """
-import csv, datetime as dt, json, os, sys, time, urllib.parse, urllib.request
+import csv, datetime as dt, json, os, re, sys, threading, time, urllib.parse, urllib.request
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 API = 'https://api.themoviedb.org/3'
 IMG = 'https://image.tmdb.org/t/p'
 HERE = Path(__file__).resolve().parent
 TODAY = dt.date.today().isoformat()
+YEAR_AGO = (dt.date.today() - dt.timedelta(days=365)).isoformat()
 MIN_INTERVAL = 1 / 20          # self-throttle: 20 requests/s (TMDB publishes ~40/s)
 DROP_LIMIT = 0.30              # abort if total items fall by more than 30%
+CARD_DROP = 0.70               # a catalog "dropped" if it lost more than 70% of its items (and had >= 20)
+CARD_DROP_MAX = 10             # more than this many dropped catalogs = systemic -> abort
+REQUEST_CAP = 40000            # runaway guard: abort before deploying anything
+CACHE_FILE = Path(os.environ.get('SD_CACHE', 'cache')) / 'stable.json'
+
+WORKERS = int(os.environ.get('SD_WORKERS', '6'))   # catalogs built in parallel; the 20 req/s throttle is shared
 
 _last = [0.0]
 _calls = [0]
+_lock = threading.Lock()
 
 
 def tmdb(path, **params):
@@ -30,11 +44,16 @@ def tmdb(path, **params):
         sys.exit('TMDB_API_KEY is not set')
     url = f'{API}{path}?{urllib.parse.urlencode({**params, "api_key": key})}'
     for attempt in range(6):
-        wait = _last[0] + MIN_INTERVAL - time.monotonic()
+        with _lock:                                # reserve the next send slot (shared across worker threads)
+            slot = max(time.monotonic(), _last[0] + MIN_INTERVAL)
+            _last[0] = slot
+            _calls[0] += 1
+            over = _calls[0] > REQUEST_CAP
+        if over:
+            sys.exit(f'GUARD: more than {REQUEST_CAP} TMDB requests in one run')
+        wait = slot - time.monotonic()
         if wait > 0:
             time.sleep(wait)
-        _last[0] = time.monotonic()
-        _calls[0] += 1
         # The key rides in the URL, so no error path may surface the URL or the original exception:
         # only the API path and a status/exception class are ever reported, always with `from None`.
         try:
@@ -59,6 +78,32 @@ def tmdb(path, **params):
     raise RuntimeError(f'TMDB gave up on {path}')
 
 
+# ---- durable cache: only values that never change (runtimes, previews by TMDB id) -------------------------------
+try:
+    _stable = json.loads(CACHE_FILE.read_text(encoding='utf-8'))
+except (OSError, ValueError):
+    _stable = {}
+_names = {}                    # per-run memo for source names (collections, keywords, people, providers, …)
+
+
+def stable(key, fetch):
+    if key not in _stable:
+        _stable[key] = fetch()
+    return _stable[key]
+
+
+def save_cache():
+    CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    CACHE_FILE.write_text(json.dumps(_stable, separators=(',', ':')), encoding='utf-8')
+
+
+def named(path, field='name', **params):
+    key = (path, tuple(sorted(params.items())))
+    if key not in _names:
+        _names[key] = tmdb(path, **params)
+    return _names[key] if field is None else _names[key].get(field, '?')
+
+
 def preview(item, media):
     title = item.get('title') or item.get('name')
     date = item.get('release_date') or item.get('first_air_date') or ''
@@ -70,22 +115,71 @@ def preview(item, media):
     return meta
 
 
+def released(item, media):
+    date = item.get('release_date') if media == 'movie' else item.get('first_air_date')
+    return bool(date) and date <= TODAY
+
+
+def details_preview(media, tid):
+    """Preview for one TMDB id (cached durably); None if unknown or not released yet."""
+    key = f'{media}:{tid}'
+    if key not in _stable:
+        try:
+            d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}")
+        except RuntimeError:          # not cached: a transient failure must not stick
+            return None
+        _stable[key] = {'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or ''}             if d.get('id') else None
+    hit = _stable[key]
+    return hit['p'] if hit and hit['d'] and hit['d'] <= TODAY else None
+
+
 SORTS = {
     'popular': ('popularity.desc', 'popularity.desc'),
     'new': ('primary_release_date.desc', 'first_air_date.desc'),
     'top': ('vote_average.desc', 'vote_average.desc'),
     'release_asc': ('primary_release_date.asc', 'first_air_date.asc'),
+    'votes': ('vote_count.desc', 'vote_count.desc'),
 }
 
 
-def discover(card, media, depth, min_votes):
+def depth_of(card, dflt):
+    return card.get('depth') or dflt['depth'][card['sort']]
+
+
+_excluded = {}                 # catalog id -> {rule: count}, filled when SD_MEASURE_EXCLUSIONS=1 (report only)
+
+
+def discover(card, media, depth, dflt):
     movie = media == 'movie'
-    sort = SORTS[card.get('sort', 'popular')][0 if movie else 1]
-    params = {'sort_by': sort, 'include_adult': 'false', 'vote_count.gte': card.get('min_votes', min_votes), **card['params']}
+    sort = SORTS[card['sort']][0 if movie else 1]
+    votes = card.get('min_votes', 10)
+    if isinstance(votes, dict):
+        votes = votes[media]
+    params = {'sort_by': sort, 'include_adult': 'false', 'vote_count.gte': votes, **card.get(media, {})}
+    cutoff = TODAY
+    if card.get('min_age_days'):              # e.g. hidden gems: at least a year old
+        cutoff = (dt.date.today() - dt.timedelta(days=card['min_age_days'])).isoformat()
     if movie:
-        params.update({'with_release_type': '4|5|6', 'release_date.lte': TODAY})
+        params.update({'with_release_type': '4|5|6', 'release_date.lte': cutoff})
+        if card['sort'] in ('top', 'votes'):  # shorts/music videos rise to the top of rating order (smoke test)
+            params.setdefault('with_runtime.gte', 40)
     else:
-        params.update({'with_status': '0|3|4|5', 'first_air_date.lte': TODAY})
+        # released-only without widening a card's own window (decades set their own first_air_date.lte)
+        params.update({'with_status': '0|3|4|5', 'first_air_date.lte': min(cutoff, params.get('first_air_date.lte', cutoff))})
+        params.setdefault('without_genres', '10767|10763')    # no talk shows or news on any TV card
+    if dflt.get('without_keywords'):            # adult-adjacent tags (ecchi/hentai/softcore/…) on every discover card
+        own = params.get('without_keywords')
+        excl = dflt['without_keywords'] + ('' if movie or not dflt.get('without_keywords_tv')
+                                           else '|' + dflt['without_keywords_tv'])
+        params['without_keywords'] = f"{own}|{excl}" if own else excl
+        if os.environ.get('SD_MEASURE_EXCLUSIONS') == '1':   # how many titles in this card's pool the rule removes
+            # TMDB can't group AND/OR, so cards that already filter by keyword aren't measurable this way
+            n = 'n/a (keyword card)'
+            if 'with_keywords' not in params:
+                probe = {k: v for k, v in params.items() if k != 'without_keywords'}
+                probe['with_keywords'] = dflt['without_keywords']
+                n = tmdb(f"/discover/{'movie' if movie else 'tv'}", page=1, **probe).get('total_results', 0)
+            _excluded.setdefault(f"sd-{card['slug']}", {})[f'keywords:{media}'] = n
     out, seen, page = [], set(), 1
     while len(out) < depth:
         data = tmdb(f"/discover/{'movie' if movie else 'tv'}", page=page, **params)
@@ -99,13 +193,21 @@ def discover(card, media, depth, min_votes):
     return out[:depth]
 
 
-def collection(card):
-    out = []
+def franchise(card):
+    """Collections (+ explicit TMDB ids for titles TMDB doesn't group), each medium in release order."""
+    movies = []
     for cid in card['collection_ids']:
-        parts = tmdb(f'/collection/{cid}').get('parts', [])
-        released = [p for p in parts if p.get('release_date') and p['release_date'] <= TODAY]
-        out += [preview(p, 'movie') for p in sorted(released, key=lambda p: p['release_date'])]
-    return out
+        movies += [p for p in named(f'/collection/{cid}', None).get('parts', []) if released(p, 'movie')]
+    movies = [preview(p, 'movie') for p in sorted(movies, key=lambda p: p['release_date'])]
+    extra = {'movie': [], 'series': []}
+    for media, tid in card.get('ids', []):
+        p = details_preview(media, tid)
+        if p:
+            extra[media].append(p)
+    seen = {m['id'] for m in movies}
+    movies += [p for p in extra['movie'] if p['id'] not in seen]
+    by_year = lambda p: p.get('releaseInfo', '9999')
+    return [sorted(movies, key=by_year), sorted(extra['series'], key=by_year)]
 
 
 MIN_RUNTIME = 40      # director cards: drop shorts; unknown runtime kept only for well-known titles
@@ -114,11 +216,11 @@ KNOWN_VOTES = 500
 
 def director(card, dropped):
     crew = tmdb(f"/person/{card['person_id']}/movie_credits").get('crew', [])
-    films = {c['id']: c for c in crew if c.get('job') in ('Director', 'Co-Director')
-             and c.get('release_date') and c['release_date'] <= TODAY}
+    films = {c['id']: c for c in crew if c.get('job') in ('Director', 'Co-Director') and released(c, 'movie')}
     kept = []
-    for c in sorted(films.values(), key=lambda c: c['release_date'], reverse=True):
-        runtime = tmdb(f"/movie/{c['id']}").get('runtime') or 0
+    # best-known first (vote count): release order put restorations/compilations on top (Wyler, Leone - report.csv)
+    for c in sorted(films.values(), key=lambda c: (-(c.get('vote_count') or 0), c['release_date'])):
+        runtime = stable(f"runtime:{c['id']}", lambda: tmdb(f"/movie/{c['id']}").get('runtime') or 0)
         if runtime >= MIN_RUNTIME or (runtime == 0 and c.get('vote_count', 0) >= KNOWN_VOTES):
             kept.append(preview(c, 'movie'))
         else:
@@ -126,29 +228,59 @@ def director(card, dropped):
     return kept
 
 
+SELF = re.compile(r'\b(self|himself|herself|themselves|themself)\b|\(uncredited\)', re.I)
+NOT_ACTING = {10767, 10763, 10764}     # Talk, News, Reality
+MIN_EPISODES = 5                       # TV: a real role, not a guest arc
+MAX_BILLING = 15                       # movies: cast order (0 = top billed)
+
+
+def actor(card, dropped):
+    """Acting credits, movies + TV, best-known first (vote count). Drops talk/news/reality, self/uncredited
+    appearances, TV roles under 5 episodes, movie roles billed below #15, unreleased titles, and near-unknown titles
+    older than a year (< 10 votes). Popularity order put small recurring TV roles first (report.csv spot check)."""
+    cast = tmdb(f"/person/{card['person_id']}/combined_credits").get('cast', [])
+    ranked, seen = [], set()
+    for c in cast:
+        media = {'movie': 'movie', 'tv': 'series'}.get(c.get('media_type'))
+        if not media or not released(c, media):
+            continue
+        date = c.get('release_date') or c.get('first_air_date')
+        why = ('not acting' if set(c.get('genre_ids') or []) & NOT_ACTING else
+               'self/uncredited' if SELF.search(c.get('character') or '') else
+               'minor TV role' if media == 'series' and (c.get('episode_count') or 0) < MIN_EPISODES else
+               'bit part' if media == 'movie' and (c.get('order') or 0) > MAX_BILLING else
+               'obscure' if (c.get('vote_count') or 0) < 10 and date < YEAR_AGO else None)
+        if why:
+            dropped[why] = dropped.get(why, 0) + 1
+            continue
+        if (media, c['id']) not in seen:
+            seen.add((media, c['id']))
+            ranked.append((c.get('vote_count') or 0, preview(c, media)))
+    return [p for _, p in sorted(ranked, key=lambda x: -x[0])]
+
+
 MDBLIST_JSON = 'https://mdblist.com/lists/{list}/json'   # public export, no key needed
 
 
 def mdblist(card, media):
-    """Items of a public MDBList list, in list order, as tmdb-id previews (MDBList `id` is the TMDB id)."""
+    """Items of a public MDBList list as tmdb-id previews (MDBList `id` is the TMDB id); newest first if asked."""
     with urllib.request.urlopen(urllib.request.Request(MDBLIST_JSON.format(list=card['list']),
                                                        headers={'User-Agent': 'strand-discovery'}), timeout=60) as r:
         items = json.load(r)
     want = 'movie' if media == 'movie' else 'show'
+    items = [it for it in items if it.get('mediatype') == want]
+    if card.get('order') == 'year_desc':
+        items.sort(key=lambda it: -(it.get('release_year') or 0))    # stable: list order within a year
     out = []
     for it in items:
-        if it.get('mediatype') != want:
-            continue
         tid = it.get('id')
         if not tid and it.get('imdb_id'):          # fallback: resolve via TMDB /find
             found = tmdb(f"/find/{it['imdb_id']}", external_source='imdb_id')
             hits = found.get('movie_results' if media == 'movie' else 'tv_results') or []
             tid = hits[0]['id'] if hits else None
-        if not tid:
-            continue
-        details = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}")
-        if details.get('id'):
-            out.append(preview(details, media))
+        p = details_preview(media, tid) if tid else None
+        if p:
+            out.append(p)
     return out
 
 
@@ -163,22 +295,45 @@ def interleave(lists):
     return out
 
 
-def source_name(card):
+def source_of(card):
+    """(source id, human-readable source name) for report.csv."""
     k = card['kind']
     if k == 'mdblist':
-        return f"MDBList {card['list']}"
-    if k == 'collection':
-        return ' + '.join(tmdb(f'/collection/{c}').get('name', '?') for c in card['collection_ids'])
-    if k == 'director':
-        return tmdb(f"/person/{card['person_id']}").get('name', '?') + ' (Director credits)'
-    p = card['params']
-    if 'with_watch_providers' in p:
-        provs = tmdb('/watch/providers/movie', watch_region=p.get('watch_region', 'US')).get('results', [])
-        names = {str(x['provider_id']): x['provider_name'] for x in provs}
-        return ' | '.join(names.get(i, i) for i in p['with_watch_providers'].split('|'))
-    if 'with_keywords' in p:
-        return ' | '.join(tmdb(f'/keyword/{k}').get('name', k) for k in p['with_keywords'].split('|'))
-    return json.dumps(p)
+        return card['list'], f"MDBList {card['list']}"
+    if k == 'idlist':
+        return card['slug'], f"committed id list ({len(card['ids'])} ids, generator/awards.json from Wikipedia)"
+    if k == 'franchise':
+        names = [named(f'/collection/{c}') for c in card['collection_ids']]
+        ids = card.get('ids') or []
+        return card['collection_ids'], ' + '.join(names) + (f' + {len(ids)} listed titles' if ids else '')
+    if k in ('director', 'actor'):
+        return card['person_id'], named(f"/person/{card['person_id']}") + (' (directing)' if k == 'director' else ' (acting)')
+    parts, ids = [], []
+    for media in card['media']:
+        p = card.get(media, {})
+        tag = 'movie' if media == 'movie' else 'tv'
+        if 'with_watch_providers' in p:
+            provs = named(f'/watch/providers/{tag}', 'results', watch_region=p.get('watch_region', 'US'))
+            names = {str(x['provider_id']): x['provider_name'] for x in provs}
+            ids.append(p['with_watch_providers'])
+            parts.append(f"{tag}: " + ' | '.join(names.get(i, i) for i in p['with_watch_providers'].split('|')))
+        elif 'with_networks' in p:
+            ids.append(p['with_networks'])
+            parts.append(f"{tag}: network " + named(f"/network/{p['with_networks']}"))
+        elif 'with_companies' in p:
+            ids.append(p['with_companies'])
+            parts.append(f"{tag}: " + ' | '.join(named(f'/company/{c}') for c in p['with_companies'].split('|')))
+        elif 'with_keywords' in p:
+            ids.append(p['with_keywords'])
+            parts.append(f"{tag}: kw " + ' | '.join(named(f'/keyword/{kw}') for kw in p['with_keywords'].split('|')))
+        elif 'with_genres' in p:
+            ids.append(p['with_genres'])
+            genres = {str(g['id']): g['name'] for g in named(f'/genre/{tag}/list', 'genres')}
+            parts.append(f"{tag}: genre {genres.get(p['with_genres'], p['with_genres'])}")
+        else:
+            parts.append(f"{tag}: {json.dumps(p, sort_keys=True)}")
+    votes = card.get('min_votes')
+    return ' / '.join(dict.fromkeys(ids)) or '-', '; '.join(parts) + f" [{card['sort']}, votes>={votes}]"
 
 
 def write_catalog(root, media, cid, metas, page_size):
@@ -206,54 +361,96 @@ def previous_summary():
         return None
 
 
+def build_one(card, dflt):
+    """Returns (metas, notes)."""
+    kind, notes = card['kind'], ''
+    if kind == 'discover':
+        return interleave([discover(card, m, depth_of(card, dflt), dflt) for m in card['media']]), notes
+    if kind == 'franchise':
+        return interleave(franchise(card)), notes
+    if kind == 'director':
+        dropped = []
+        metas = director(card, dropped)
+        return metas, (f"dropped {len(dropped)} short: " + '; '.join(dropped)) if dropped else ''
+    if kind == 'actor':
+        dropped = {}
+        metas = actor(card, dropped)
+        return metas, ('dropped ' + ', '.join(f'{k} {v}' for k, v in sorted(dropped.items()))) if dropped else ''
+    if kind == 'mdblist':
+        return interleave([mdblist(card, m) for m in card['media']]), notes
+    if kind == 'idlist':                       # committed id list (awards_wiki.py), in its own order
+        metas = [details_preview(m, i) for m, i in card['ids']]
+        return [m for m in metas if m], notes
+    raise SystemExit(f'unknown kind {kind}')
+
+
 def main():
     root = Path(sys.argv[1] if len(sys.argv) > 1 else 'out')
     spec = json.loads((HERE / 'spec.json').read_text(encoding='utf-8'))
+    off = {k for k in os.environ.get('SD_KINDS_OFF', '').split(',') if k}
+    keep = {k for k in os.environ.get('SD_KEEP', '').split(',') if k}
+    spec['catalogs'] = [c for c in spec['catalogs'] if c['kind'] not in off or c['slug'] in keep]
     dflt = spec['defaults']
+    folder_title = {f['key']: f['title'] for f in spec['folders']}
     manifest = {**spec['addon'], 'resources': ['catalog'], 'types': ['movie', 'series'], 'catalogs': [],
                 'behaviorHints': {'configurable': False}}
-    counts, rows = {}, []
-    for card in spec['cards']:
-        # One catalog per card, used directly as a Jellyfin library (merged catalogs lose deep pages when cold).
-        cid = f"sd-{card['slug']}"
-        if 'collection' in f"{cid} {card['title']}".lower():   # AIOStreams would turn it into a BoxSet library
-            raise SystemExit(f"card {card['slug']!r}: id/name must not contain 'collection'")
-        name = source_name(card)
-        per_media = []
-        for media in card['media']:
-            if card['kind'] == 'discover':
-                per_media.append(discover(card, media, card.get('depth', dflt['depth']), dflt['min_votes']))
-            elif card['kind'] == 'collection':
-                per_media.append(collection(card))
-            elif card['kind'] == 'director':
-                dropped = []
-                per_media.append(director(card, dropped))
-                if dropped:
-                    print(f"{card['title']}: dropped {len(dropped)} short/unknown-runtime titles: {'; '.join(dropped)}")
-            elif card['kind'] == 'mdblist':
-                per_media.append(mdblist(card, media))
-            else:
-                raise SystemExit(f"unknown kind {card['kind']}")
-        metas = interleave(per_media)
-        write_catalog(root, 'movie', cid, metas, dflt['page_size'])
-        manifest['catalogs'].append({'type': 'movie', 'id': cid, 'name': card['title'], 'extra': [{'name': 'skip'}]})
-        counts[cid] = len(metas)
-        kinds = {t: sum(1 for m in metas if m['type'] == t) for t in ('movie', 'series')}
-        src_id = card.get('params', {}).get('with_watch_providers') or card.get('params', {}).get('with_keywords') \
-            or card.get('collection_ids') or card.get('person_id') or card.get('list')
-        rows.append([card['title'], card['shelf'], card.get('sort', 'default'), card['kind'], src_id, name, cid,
-                     f"movie={kinds['movie']} series={kinds['series']}", len(metas), ' | '.join(m['name'] for m in metas[:3])])
-    (root / 'manifest.json').write_text(json.dumps(manifest, indent=1), encoding='utf-8')
+    counts, rows, t0 = {}, [], time.monotonic()
+    deny = {(m, int(i)) for m, i, _ in dflt.get('deny', [])}
+    def work(card):
+        metas, notes = build_one(card, dflt)
+        return metas, notes, source_of(card)
+
+    try:
+        results = {}
+        with ThreadPoolExecutor(WORKERS) as pool:
+            futs = {pool.submit(work, c): c['slug'] for c in spec['catalogs']}
+            for done in as_completed(futs):
+                results[futs[done]] = done.result()       # re-raises a worker's error / guard exit here
+                if len(results) % 25 == 0:
+                    print(f"  {len(results)}/{len(spec['catalogs'])} catalogs, {_calls[0]} requests, "
+                          f"{time.monotonic() - t0:.0f}s", flush=True)
+        for card in spec['catalogs']:                      # write in spec (= folder) order
+            # One catalog per card, used directly as a Jellyfin library (merged catalogs lose deep pages when cold).
+            cid = f"sd-{card['slug']}"
+            if 'collection' in f"{cid} {card['library']}".lower():   # AIOStreams would make it a BoxSet library
+                raise SystemExit(f"catalog {card['slug']!r}: id/name must not contain 'collection'")
+            metas, notes, (src_id, src_name) = results[card['slug']]
+            before = len(metas)
+            metas = [m for m in metas if (m['type'], int(m['id'].split(':', 1)[1])) not in deny]
+            if len(metas) < before:
+                _excluded.setdefault(cid, {})['deny'] = before - len(metas)
+                notes = f"{notes}; deny-list removed {before - len(metas)}".lstrip('; ')
+            write_catalog(root, 'movie', cid, metas, dflt['page_size'])
+            manifest['catalogs'].append({'type': 'movie', 'id': cid, 'name': card['library'], 'extra': [{'name': 'skip'}]})
+            counts[cid] = len(metas)
+            kinds = {t: sum(1 for m in metas if m['type'] == t) for t in ('movie', 'series')}
+            rows.append([card['title'], card['library'], ' + '.join(folder_title[f] for f in card['folders']),
+                         card.get('sort', card.get('order', 'default')), card['kind'], json.dumps(src_id) if not
+                         isinstance(src_id, str) else src_id, src_name, cid,
+                         f"movie={kinds['movie']} series={kinds['series']}", len(metas),
+                         ' | '.join(f"{m['name']} ({m.get('releaseInfo', '?')})" for m in metas[:5]), notes])
+    finally:
+        save_cache()
+    ids = [c['id'] for c in manifest['catalogs']]
+    if len(ids) != len(spec['catalogs']) or len(set(ids)) != len(ids):
+        sys.exit(f"GUARD: manifest has {len(ids)} catalogs ({len(set(ids))} unique), spec has {len(spec['catalogs'])}")
+    (root / 'manifest.json').write_text(json.dumps(manifest, indent=1, ensure_ascii=False), encoding='utf-8')
     (root / '.nojekyll').write_text('', encoding='utf-8')
     summary = {'generated_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'tmdb_requests': _calls[0],
-               'total_items': sum(counts.values()), 'catalogs': counts}
+               'seconds': round(time.monotonic() - t0), 'total_items': sum(counts.values()), 'catalogs': counts}
     (root / 'summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
+    if _excluded:
+        (root / 'exclusions.json').write_text(json.dumps(_excluded, indent=1), encoding='utf-8')
     with open(root / 'report.csv', 'w', newline='', encoding='utf-8') as f:
         w = csv.writer(f)
-        w.writerow(['card', 'shelf', 'sort', 'source_type', 'source_id', 'source_name', 'catalog_id', 'media', 'item_count', 'top3'])
+        w.writerow(['card', 'library', 'folders', 'sort', 'source_type', 'source_id', 'source_name', 'catalog_id',
+                    'media', 'item_count', 'top5', 'notes'])
         w.writerows(rows)
     print(json.dumps({k: v for k, v in summary.items() if k != 'catalogs'}), '| catalogs:', len(counts))
 
+    empty = [c for c, n in counts.items() if n == 0]
+    if empty:
+        sys.exit(f'GUARD: empty catalogs: {empty}')
     prev = previous_summary()
     if prev:
         emptied = [c for c, n in prev.get('catalogs', {}).items() if n > 0 and counts.get(c, 0) == 0]
@@ -263,6 +460,12 @@ def main():
             sys.exit(f'GUARD: previously non-empty catalogs are now empty: {emptied}')
         if prev.get('total_items') and summary['total_items'] < prev['total_items'] * (1 - DROP_LIMIT):
             sys.exit(f"GUARD: total items dropped {prev['total_items']} -> {summary['total_items']} (>30%)")
+        dropped = [f'{c} {n}->{counts[c]}' for c, n in prev.get('catalogs', {}).items()
+                   if n >= 20 and 0 < counts.get(c, 0) < n * (1 - CARD_DROP)]
+        if len(dropped) > CARD_DROP_MAX:
+            sys.exit(f'GUARD: {len(dropped)} catalogs lost >70% of their items: {dropped}')
+        if dropped:
+            print(f'WARNING: catalogs that lost >70% of their items: {dropped}')
     if os.environ.get('FORCE_FAIL') == '1':
         sys.exit('FORCE_FAIL=1: failing on purpose (pilot test)')
 

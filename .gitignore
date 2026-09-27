@@ -13,3 +13,4 @@ shelves-*.json
 *secret*
 *token*
 *credential*
+*.log
