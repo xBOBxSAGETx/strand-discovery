@@ -1,0 +1,29 @@
+name: weekly-status
+
+# Public repos have scheduled workflows disabled after 60 days without repository activity.
+# This commits a counts-only status file once a week so the daily build keeps running.
+on:
+  schedule:
+    - cron: '43 8 * * 1'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Record counts from the deployed summary
+        run: |
+          mkdir -p status
+          curl -fsS https://xbobxsagetx.github.io/strand-discovery/summary.json \
+            | python3 -c "import sys,json;d=json.load(sys.stdin);print(f\"generated_at={d['generated_at']} catalogs={len(d['catalogs'])} items={d['total_items']}\")" \
+            > status/last-build.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add status/last-build.txt
+          git commit -m "status: weekly counts" || echo 'no change'
+          git push

@@ -1,0 +1,15 @@
+# generated output and caches (served from the Pages artifact, never committed)
+out/
+cache/
+__pycache__/
+*.pyc
+
+# private setup files that must never be published
+*.strand
+shelves-*.json
+.env
+.env.*
+*.key
+*secret*
+*token*
+*credential*
