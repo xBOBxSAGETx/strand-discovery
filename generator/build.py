@@ -343,6 +343,45 @@ def interleave(lists):
     return out
 
 
+def season_of(card, day):
+    """The Seasonal card's season on `day`: the first dated season whose MM-DD window (inclusive, may wrap the year)
+    holds it, else the undated fallback season."""
+    md = day.strftime('%m-%d')
+    for s in card['seasons']:
+        a, z = s.get('start'), s.get('end')
+        if a and (a <= md <= z if a <= z else md >= a or md <= z):
+            return s
+    return next(s for s in card['seasons'] if not s.get('start'))
+
+
+def season_card(card, s):
+    """One season as a plain discover card: the season's own movie/series params, sort and vote floor;
+    `recent_days` limits it to titles first released within that many days of today."""
+    sub = {k: v for k, v in card.items() if k not in ('seasons', 'movie', 'series', 'min_items')}
+    sub.update(kind='discover', sort=s.get('sort', card['sort']), min_votes=s.get('min_votes', card.get('min_votes', 10)))
+    since = (TODAY_D - dt.timedelta(days=s['recent_days'])).isoformat() if s.get('recent_days') else None
+    for m, field in (('movie', 'primary_release_date.gte'), ('series', 'first_air_date.gte')):
+        if m in card['media'] and m in s:
+            sub[m] = {**s[m], **({field: since} if since else {})}
+    sub['media'] = [m for m in card['media'] if m in sub]
+    return sub
+
+
+def seasonal(card, dflt):
+    """Seasonal · Now (issue #10): one fixed library whose content follows the calendar (TODAY / SD_TODAY). A dated
+    season with fewer than `min_items` titles falls back to the undated season, so the card is never empty or thin
+    at a switch. Returns (metas, notes)."""
+    def run(season):
+        sub = season_card(card, season)
+        return interleave([discover(sub, m, depth_of(sub, dflt), dflt) for m in sub['media']])
+    s = season_of(card, TODAY_D)
+    metas = run(s)
+    if s.get('start') and len(metas) < card.get('min_items', 20):
+        fb = next(x for x in card['seasons'] if not x.get('start'))
+        return run(fb), f"season {s['name']} had only {len(metas)} titles: fallback {fb['name']}"
+    return metas, f"season: {s['name']}"
+
+
 def idlist_ids(card):
     """[[media, id], ...] of an idlist card: its awards.json list (read at build time, so the yearly award refresh
     only has to update awards.json), or ids written into the spec."""
@@ -364,6 +403,10 @@ def source_of(card):
         return card['collection_ids'], ' + '.join(names) + (f' + {len(ids)} listed titles' if ids else '')
     if k in ('director', 'actor'):
         return card['person_id'], named(f"/person/{card['person_id']}") + (' (directing)' if k == 'director' else ' (acting)')
+    if k == 'seasonal':                        # the season in force today (notes say if it fell back)
+        s = season_of(card, TODAY_D)
+        src_id, name = source_of(season_card(card, s))
+        return src_id, f"season {s['name']} ({s.get('start', 'fallback')}..{s.get('end', '')}): {name}"
     parts, ids = [], []
     for media in card['media']:
         p = card.get(media, {})
@@ -533,6 +576,8 @@ def build_one(card, dflt):
         return first_seen_card(card, depth_of(card, dflt)), 'ordered by date first seen on the service'
     if kind == 'discover':
         return interleave([discover(card, m, depth_of(card, dflt), dflt) for m in card['media']]), notes
+    if kind == 'seasonal':
+        return seasonal(card, dflt)
     if kind == 'franchise':
         return interleave(franchise(card)), notes
     if kind == 'director':

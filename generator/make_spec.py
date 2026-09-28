@@ -83,6 +83,19 @@ GENRES = [('Action', {'with_genres': '28'}, {'with_genres': '10759'}),
 THEMES = [('Superheroes', '9715'), ('Zombies', '12377'), ('Space Epics', '161176'), ('Spies', '470'), ('Aliens', '9951'),
           ('Robots & AI', '310'), ('Dystopian', '4565'), ('Disaster', '10617'), ('Creature Features', '158126|161791|11100|33696|158252|7035|321335|158108'),
           ('Psychological', '12565'), ('Myths & Legends', '2035'), ('Heist', '10051'), ('Time Travel', '4379')]
+# Seasonal · Now (issue #10, option b): ONE fixed library whose content follows the calendar; build.py picks the
+# season from TODAY (SD_TODAY in tests). Windows are MM-DD, inclusive; first match wins; the undated entry is the
+# fallback for every other day (Jan-May, September) and for a dated season with < min_items titles.
+# Keyword ids checked by name with /search/keyword 2026-09-28 (strand/build/cards_lane/probe_kw_out.txt).
+# Movies: runtime >= 20 so the half-hour specials (Great Pumpkin, Grinch 1966) stay; the 'votes' default is 40.
+SEASONS = [
+    ('Summer', '06-01', '08-31', '13088|14714|5767', None),      # summer, summer vacation, summer camp
+    ('Halloween', '10-01', '10-31', '3335|232795', None),        # halloween, halloween night (movies only has it)
+    ('Thanksgiving', '11-01', '11-28', '4543', None),            # thanksgiving; Nov 28 = latest possible US date
+    ('Christmas', '11-29', '12-31', '207317|260365', '207317'),  # christmas, christmas eve (TV: eve = 1 true-crime doc)
+]
+
+
 # Movie Series, A–Z. collection ids / keyword / explicit TMDB ids (for franchises TMDB doesn't group).
 SERIES = {
     '007': {'collections': [645]},
@@ -188,6 +201,17 @@ def just_hit_digital():
     return e
 
 
+def seasonal_now():
+    """Issue #10(b): last card of Themes (Halloween / Christmas are keyword themes like Zombies); no new shelf."""
+    seasons = [{'name': n, 'start': a, 'end': z, 'movie': {'with_keywords': kw, 'with_runtime.gte': 20},
+                'series': {'with_keywords': tv or kw}} for n, a, z, kw, tv in SEASONS]
+    # fallback: the past 12 months' most-voted releases (never empty, changes daily)
+    seasons.append({'name': 'Best of the Past Year', 'recent_days': 365, 'movie': {}, 'series': {}})
+    return {'slug': 'theme-seasonal-now', 'library': 'Theme · Seasonal · Now', 'title': 'Seasonal · Now',
+            'eyebrow': 'Theme', 'folders': ['themes'], 'kind': 'seasonal', 'media': ['movie', 'series'],
+            'sort': 'votes', 'min_votes': 10, 'depth': 300, 'min_items': 20, 'seasons': seasons}
+
+
 def main():
     cats = []
     for v, n in VARIANTS:                                    # streaming x3
@@ -242,6 +266,7 @@ def main():
             sp = {**p, 'without_keywords': '9715', 'without_genres': '10767|10763|16'}
         cats.append(disc(f'theme-{slugify(name)}', f'Theme · {name}', name, 'Theme', 'themes', ['movie', 'series'],
                          'popular', movie=mp, series=sp))
+    cats.append(seasonal_now())
     for d in range(1960, 2030, 10):
         mp = {'primary_release_date.gte': f'{d}-01-01'}
         sp = {'first_air_date.gte': f'{d}-01-01'}

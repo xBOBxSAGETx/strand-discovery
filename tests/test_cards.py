@@ -121,6 +121,87 @@ class JustHitDigital(unittest.TestCase):
         self.assertEqual(len(json.loads((out / 'catalog/movie/sd-just-hit-digital.json').read_text(encoding='utf-8'))['metas']), 7)
 
 
+class SeasonalNow(unittest.TestCase):
+    card = BY_SLUG['theme-seasonal-now']
+
+    def build(self, today, pools=None):
+        b = load_build(today)
+        stub = StubTMDB(pools)
+        b.tmdb = stub
+        metas, notes = b.build_one(self.card, DFLT)
+        return b, stub, metas, notes
+
+    def queries(self, stub, media):
+        return [q for p, q in stub.paths(f"/discover/{'movie' if media == 'movie' else 'tv'}")]
+
+    def test_spec_card(self):
+        c = self.card
+        self.assertEqual((c['kind'], c['folders'], c['library'], c['title']),
+                         ('seasonal', ['themes'], 'Theme · Seasonal · Now', 'Seasonal · Now'))
+        names = [s['name'] for s in c['seasons']]
+        self.assertEqual(names, ['Summer', 'Halloween', 'Thanksgiving', 'Christmas', 'Best of the Past Year'])
+        self.assertEqual(sum(1 for s in c['seasons'] if not s.get('start')), 1, 'exactly one fallback')
+
+    def test_october_is_halloween(self):
+        for day in ('2026-10-01', '2026-10-15', '2026-10-31'):
+            b, stub, metas, notes = self.build(day)
+            self.assertEqual(notes, 'season: Halloween', day)
+            self.assertEqual(self.queries(stub, 'movie')[0]['with_keywords'].split('|')[:2], ['3335', '232795'])
+            self.assertTrue(self.queries(stub, 'series')[0]['with_keywords'].startswith('3335'))
+            self.assertEqual(self.queries(stub, 'movie')[0]['with_runtime.gte'], 20)   # half-hour specials stay
+            self.assertEqual(self.queries(stub, 'movie')[0]['sort_by'], 'vote_count.desc')
+            self.assertEqual({m['type'] for m in metas}, {'movie', 'series'})
+
+    def test_december_is_christmas(self):
+        for day in ('2026-11-29', '2026-12-10', '2026-12-31'):
+            _, stub, _, notes = self.build(day)
+            self.assertEqual(notes, 'season: Christmas', day)
+            self.assertTrue(self.queries(stub, 'movie')[0]['with_keywords'].startswith('207317'))
+            self.assertEqual(self.queries(stub, 'series')[0]['with_keywords'].split('|')[0], '207317')
+
+    def test_thanksgiving_and_summer(self):
+        self.assertEqual(self.build('2026-11-26')[3], 'season: Thanksgiving')
+        self.assertEqual(self.build('2026-11-28')[3], 'season: Thanksgiving')
+        self.assertEqual(self.build('2026-07-04')[3], 'season: Summer')
+
+    def test_no_season_date_uses_fallback(self):
+        for day, since in (('2026-09-28', '2025-09-28'), ('2027-01-15', '2026-01-15'), ('2026-05-31', '2025-05-31')):
+            _, stub, metas, notes = self.build(day)
+            self.assertEqual(notes, 'season: Best of the Past Year', day)
+            mq, tq = self.queries(stub, 'movie')[0], self.queries(stub, 'series')[0]
+            self.assertNotIn('with_keywords', mq)
+            self.assertEqual(mq['primary_release_date.gte'], since)
+            self.assertEqual(tq['first_air_date.gte'], since)
+            self.assertTrue(metas)
+
+    def test_thin_season_falls_back(self):
+        def pools(path, q):                  # a keyword season with only 3 titles per medium
+            media = 'movie' if path.endswith('movie') else 'tv'
+            n = 3 if 'with_keywords' in q else 30
+            return [item(i, '2020-01-01', media) for i in range(1, n + 1)]
+        _, stub, metas, notes = self.build('2026-10-15', pools)
+        self.assertEqual(notes, 'season Halloween had only 6 titles: fallback Best of the Past Year')
+        self.assertEqual(len(metas), 60)
+
+    def test_wrapping_window(self):
+        import datetime as dt
+        b = load_build('2026-10-15')
+        card = {'seasons': [{'name': 'Winter', 'start': '12-15', 'end': '01-10'}, {'name': 'Rest'}]}
+        pick = lambda d: b.season_of(card, dt.date.fromisoformat(d))['name']
+        self.assertEqual([pick(d) for d in ('2026-12-20', '2027-01-10', '2027-01-11', '2026-12-14')],
+                         ['Winter', 'Winter', 'Rest', 'Rest'])
+
+    def test_builds_through_main(self):
+        b = load_build('2026-10-15')
+        out, man = run_main(b, [self.card], StubTMDB())
+        self.assertEqual([(c['id'], c['name']) for c in man['catalogs']],
+                         [('sd-theme-seasonal-now', 'Theme · Seasonal · Now')])
+        report = (out / 'report.csv').read_text(encoding='utf-8')
+        self.assertIn('season Halloween (10-01..10-31)', report)
+        self.assertIn('keyword 3335', report)
+        self.assertIn('season: Halloween', report)
+
+
 class SpecInvariants(unittest.TestCase):
     """What make_spec.py asserts, checked on the committed spec.json (make_spec needs the private people CSV)."""
 
