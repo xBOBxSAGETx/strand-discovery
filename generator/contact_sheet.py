@@ -3,7 +3,7 @@ slug and the render log's background source underneath. Review artifacts only - 
 
   python contact_sheet.py <out dir> [folder key ...]
 """
-import json, sys, textwrap
+import json, os, sys, textwrap
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -20,7 +20,7 @@ PAD = 12
 def main():
     out = Path(sys.argv[1])
     out.mkdir(parents=True, exist_ok=True)
-    spec = json.loads((ROOT / 'generator' / 'spec.json').read_text(encoding='utf-8'))
+    spec = json.loads(Path(os.environ.get('SD_SPEC', ROOT / 'generator' / 'spec.json')).read_text(encoding='utf-8'))
     logs = {l['slug']: l for l in json.loads((ROOT / 'art' / 'render-log.json').read_text(encoding='utf-8'))}
     small = ImageFont.truetype(str(FONT), 12)
     head = ImageFont.truetype(str(FONT), 26)
@@ -52,7 +52,7 @@ def main():
                 log = logs.get(c['slug'], {})
                 bad = bool(log.get('fails')) or not f.exists()
                 cap = c['slug'] + ('  FAIL' if bad else '')
-                src = str(log.get('bg') or '')
+                src = str(log.get('bg') or log.get('logo') or log.get('field') or '')
                 d.text((x, y + th + 3), textwrap.shorten(cap, 44 if folder['shape'] == 'wide' else 24),
                        font=small, fill=(255, 90, 90) if bad else (220, 220, 220))
                 d.text((x, y + th + 19), textwrap.shorten(src, 50 if folder['shape'] == 'wide' else 26),

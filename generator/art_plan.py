@@ -16,7 +16,7 @@ Background rules (per-slug overrides and the avoid list in art_overrides.json wi
   true crime / murder / scandal / abuse (TASTE_KEYWORDS: real people in crimes/scandals make poor card art).
 Logos: streaming provider icon, network wordmark, studio wordmark; overrides may swap them (e.g. Paramount+).
 """
-import datetime as dt, json, sys
+import datetime as dt, json, os, re, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -86,7 +86,7 @@ WINDOW = 6            # candidates are vote-ordered per medium and interleaved; 
 
 
 def main():
-    spec = json.loads((HERE / 'spec.json').read_text(encoding='utf-8'))
+    spec = json.loads(Path(os.environ.get('SD_SPEC', HERE / 'spec.json')).read_text(encoding='utf-8'))
     dflt = spec['defaults']
     shapes = {f['key']: f['shape'] for f in spec['folders']}
     overrides = json.loads((HERE / 'art_overrides.json').read_text(encoding='utf-8')) \
@@ -103,7 +103,8 @@ def main():
             shape = shape.pop()
             assert (shape == 'poster') == (c['kind'] in ('director', 'actor')), f"{c['slug']}: people must be poster"
             card = {'slug': c['slug'], 'shape': shape, 'eyebrow': c['eyebrow'], 'title': c.get('art_title', c['title'])}
-            logo_key = (f"streaming:{c['provider']}" if c.get('provider') else
+            logo_key = (f"streaming:{c['service']}" if c['kind'] == 'leaving' else     # Leaving Soon · <service>
+                        f"streaming:{c['provider']}" if c.get('provider') else
                         f"streaming:{c['slug'][len('streaming-'):].rsplit('-top', 1)[0]}" if c['slug'].startswith('streaming-')
                         else c['slug'] if c['slug'].startswith(('network-', 'studio-')) else None)
             if logo_key and logo_key in LOGO_SOURCES:
@@ -111,10 +112,12 @@ def main():
                 src = LOGO_SOURCES[logo_key]
                 card.update(style='logo', logo_src={'kind': src['kind'], 'id': src['id']},
                             icon_provider=src.get('icon_provider'),
-                            badge={'new': 'New', 'top': 'Top Rated'}.get(c.get('sort')),
+                            badge='Leaving Soon' if c['kind'] == 'leaving' else
+                            {'new': 'New', 'top': 'Top Rated'}.get(c.get('sort')),
                             eyebrow={'streaming': 'Streaming', 'network': 'Network', 'studio': 'Studio'}[
                                 'streaming' if logo_key.startswith('streaming:') else c['slug'].split('-')[0]])
-                base = c['slug'].rsplit('-new', 1)[0].rsplit('-top', 1)[0]
+                base = (f"streaming-{c['service']}" if c['kind'] == 'leaving' else     # same logo as the service card
+                        re.sub(r'-(new|top)$', '', c['slug']))
                 card.update({k: v for k, v in overrides.get(base, {}).items() if not k.startswith('_')})
                 cards.append(card)
                 continue
@@ -166,7 +169,7 @@ def main():
                 card['logo'] = {'kind': 'network', 'id': int(q['with_networks'])}
             elif 'with_companies' in p:
                 card['logo'] = {'kind': 'company', 'id': int(p['with_companies'].split('|')[0])}
-            base = c['slug'].rsplit('-new', 1)[0].rsplit('-top', 1)[0]   # one override covers all three variants
+            base = re.sub(r'-(new|top)$', '', c['slug'])   # one override covers all three variants
             card.update(overrides.get(base, {}))
             card.update(overrides.get(c['slug'], {}))
             cards.append(card)

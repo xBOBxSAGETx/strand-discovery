@@ -38,5 +38,43 @@
   },
   "logo_sub": "KIDS",
   "_why": "no Netflix Kids wordmark on TMDB: the Netflix wordmark + KIDS"
+ },
+ "streaming-prime-video": {
+  "logo_src": {
+   "kind": "network",
+   "id": 1024
+  },
+  "logo_path": "/q1rC6f1XkJVgmFW5VjSeGHncX50.png",
+  "_why": "current blue \"prime video\" wordmark; the widest TMDB file was the retired \"amazon Prime instant video\" logo (copilot-approved pin 2026-09-28)"
+ },
+ "streaming-criterion-channel": {
+  "logo_src": {
+   "kind": "company",
+   "id": 10932
+  },
+  "logo_path": "/AscjWwkpQC23EZgRxbeOqs4KhRI.png",
+  "_why": "\"THE CRITERION CHANNEL\" wordmark; the widest file is the Criterion Collection logo with a web address (copilot-approved pin 2026-09-28)"
+ },
+ "network-prime-video": {
+  "logo_path": "/q1rC6f1XkJVgmFW5VjSeGHncX50.png",
+  "_why": "same current \"prime video\" wordmark as the streaming card"
+ },
+ "studio-new-line": {
+  "logo_path": "/iaYpEp3LQmb8AfAtmTvpqd4149c.png",
+  "_why": "the widest file says \"An AOL Time Warner Company\" (retired); plain NEW LINE CINEMA wordmark"
+ },
+ "studio-studio-ghibli": {
+  "logo_path": "/eS79pslnoKbWg7t3PMA9ayl0bGs.png",
+  "_why": "the auto pick (735x607) is a tiny wordmark in a large transparent canvas: near-invisible on the card; Totoro + STUDIO GHIBLI"
+ },
+ "studio-warner-bros-pictures": {
+  "logo_path": "/9tefnXnJLGQL97cxs6S3EWEhVyx.png",
+  "emblem": true,
+  "field": "#0b1f4d",
+  "_why": "current WB shield; recolouring it white flattened it into a blob - kept in its gold/blue on WB navy"
+ },
+ "network-nickelodeon": {
+  "logo_path": "/tTsYsrSkd0xbw3bna9vneFPjjnR.png",
+  "_why": "the splat logo rendered small and orange-on-orange; the orange wordmark reads at card size"
  }
 }

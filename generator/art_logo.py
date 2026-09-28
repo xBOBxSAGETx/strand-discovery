@@ -145,7 +145,18 @@ def logo_source(card):
     logos = art.tmdb(f"/{src['kind']}/{src['id']}/images").get('logos', [])
     if not logos:
         return None, f"{src['kind']} {src['id']}: no logos"
-    # prefer a real cut-out wordmark over a filled "box" logo, then the largest; boxy ones are kept as they are
+    pinned = card.get('logo_path')              # art_overrides: an exact logo file, checked by hand
+    if pinned:
+        best = next((l for l in logos if l['file_path'] == pinned), None)
+        if best is None:                        # the pin must still be one of this brand's logos on TMDB
+            return None, f"{src['kind']} {src['id']}: pinned logo {pinned} no longer listed"
+        img = art.fetch_image(pinned, 'original')
+        boxy = boxiness(img) > 0.8
+        desc = f"{src['kind']} {src['id']} {pinned} {best.get('width')}x{best.get('height')} (PINNED)"
+        return img, desc + (' BOXY' if boxy else '')
+    # Pick: a cut-out wordmark over a filled "box" logo, then the largest of the 5 widest; boxy ones are kept as
+    # they are. TMDB logo votes were tried as a "current brand" signal (2026-09-28) and rejected: they preferred the
+    # retired Apple "tv+" and an older flat Starz. An outdated pick is fixed with a `logo_path` pin in art_overrides.
     scored = []
     for l in sorted(logos, key=lambda l: -(l.get('width') or 0))[:5]:
         img = art.fetch_image(l['file_path'], 'original')
@@ -186,7 +197,16 @@ def render_logo(card):
     centre = tuple(min(255, int(c * 0.95)) for c in rgb)
     mean = mean_colour(logo)
     ratio = contrast(mean, centre)
-    if (ratio < MIN_CONTRAST and not boxy) or card.get('logo_colour'):
+    if card.get('emblem'):
+        # a multi-colour emblem (Warner Bros. shield) carries its own inner contrast; recolouring it to one colour
+        # flattens it into a blob. It keeps its colours; its dominant (outer) colour must stand off the field.
+        hue = dominant(logo) or mean
+        ratio = contrast(hue, centre)
+        log['contrast_basis'] = 'emblem: dominant colour vs field'
+        if ratio < MIN_CONTRAST:
+            fails.append(f'emblem contrast {ratio:.2f} < {MIN_CONTRAST}')
+        boxy = True                                   # never recoloured below
+    elif (ratio < MIN_CONTRAST and not boxy) or card.get('logo_colour'):
         target = hexrgb(card['logo_colour']) if card.get('logo_colour') else \
             max([(255, 255, 255), (18, 18, 22)], key=lambda c: contrast(c, centre))
         logo = recolour(logo, target)

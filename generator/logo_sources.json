@@ -120,17 +120,6 @@
   "max_width_available": 332,
   "icon_provider": 175
  },
- "streaming:crunchyroll": {
-  "kind": "company",
-  "id": 198847,
-  "desc": "company 198847 /gNZh44MgDBwipGA9LwozlALjSdE.png 1665x269 (.svg)",
-  "width": 2000,
-  "height": 323,
-  "transparent": true,
-  "boxy": false,
-  "max_width_available": 1665,
-  "icon_provider": 283
- },
  "streaming:mubi": {
   "kind": "network",
   "id": 8303,
@@ -152,17 +141,6 @@
   "boxy": false,
   "max_width_available": 1933,
   "icon_provider": 258
- },
- "streaming:rakuten-viki": {
-  "kind": "provider",
-  "id": 344,
-  "desc": "provider 344 app icon",
-  "width": 332,
-  "height": 332,
-  "transparent": false,
-  "boxy": true,
-  "max_width_available": 332,
-  "icon_provider": 344
  },
  "streaming:magellantv": {
   "kind": "provider",
@@ -229,39 +207,6 @@
   "boxy": true,
   "max_width_available": 332,
   "icon_provider": 300
- },
- "streaming:the-roku-channel": {
-  "kind": "provider",
-  "id": 207,
-  "desc": "provider 207 app icon",
-  "width": 332,
-  "height": 332,
-  "transparent": false,
-  "boxy": true,
-  "max_width_available": 332,
-  "icon_provider": 207
- },
- "streaming:kanopy": {
-  "kind": "company",
-  "id": 122372,
-  "desc": "company 122372 /kYeB9KdSPDDnaEN4gir3p4gMsww.png 946x305 (.png)",
-  "width": 946,
-  "height": 305,
-  "transparent": true,
-  "boxy": false,
-  "max_width_available": 946,
-  "icon_provider": 191
- },
- "streaming:hoopla": {
-  "kind": "provider",
-  "id": 212,
-  "desc": "provider 212 app icon",
-  "width": 332,
-  "height": 332,
-  "transparent": false,
-  "boxy": true,
-  "max_width_available": 332,
-  "icon_provider": 212
  },
  "streaming:plex": {
   "kind": "provider",

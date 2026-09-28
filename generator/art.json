@@ -77,7 +77,8 @@
     "id": 1024
    },
    "icon_provider": 9,
-   "badge": null
+   "badge": null,
+   "logo_path": "/q1rC6f1XkJVgmFW5VjSeGHncX50.png"
   },
   {
    "slug": "streaming-hulu",
@@ -146,19 +147,6 @@
    "logo_sub": "KIDS"
   },
   {
-   "slug": "streaming-crunchyroll",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Crunchyroll",
-   "style": "logo",
-   "logo_src": {
-    "kind": "company",
-    "id": 198847
-   },
-   "icon_provider": 283,
-   "badge": null
-  },
-  {
    "slug": "streaming-mubi",
    "shape": "wide",
    "eyebrow": "Streaming",
@@ -182,20 +170,8 @@
     "id": 10932
    },
    "icon_provider": 258,
-   "badge": null
-  },
-  {
-   "slug": "streaming-rakuten-viki",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Rakuten Viki",
-   "style": "logo",
-   "logo_src": {
-    "kind": "provider",
-    "id": 344
-   },
-   "icon_provider": 344,
-   "badge": null
+   "badge": null,
+   "logo_path": "/AscjWwkpQC23EZgRxbeOqs4KhRI.png"
   },
   {
    "slug": "streaming-magellantv",
@@ -273,45 +249,6 @@
     "id": 300
    },
    "icon_provider": 300,
-   "badge": null
-  },
-  {
-   "slug": "streaming-the-roku-channel",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "The Roku Channel",
-   "style": "logo",
-   "logo_src": {
-    "kind": "provider",
-    "id": 207
-   },
-   "icon_provider": 207,
-   "badge": null
-  },
-  {
-   "slug": "streaming-kanopy",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Kanopy",
-   "style": "logo",
-   "logo_src": {
-    "kind": "company",
-    "id": 122372
-   },
-   "icon_provider": 191,
-   "badge": null
-  },
-  {
-   "slug": "streaming-hoopla",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Hoopla",
-   "style": "logo",
-   "logo_src": {
-    "kind": "provider",
-    "id": 212
-   },
-   "icon_provider": 212,
    "badge": null
   },
   {
@@ -416,7 +353,8 @@
     "id": 1024
    },
    "icon_provider": 9,
-   "badge": "New"
+   "badge": "New",
+   "logo_path": "/q1rC6f1XkJVgmFW5VjSeGHncX50.png"
   },
   {
    "slug": "streaming-hulu-new",
@@ -485,19 +423,6 @@
    "logo_sub": "KIDS"
   },
   {
-   "slug": "streaming-crunchyroll-new",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Crunchyroll",
-   "style": "logo",
-   "logo_src": {
-    "kind": "company",
-    "id": 198847
-   },
-   "icon_provider": 283,
-   "badge": "New"
-  },
-  {
    "slug": "streaming-mubi-new",
    "shape": "wide",
    "eyebrow": "Streaming",
@@ -521,20 +446,8 @@
     "id": 10932
    },
    "icon_provider": 258,
-   "badge": "New"
-  },
-  {
-   "slug": "streaming-rakuten-viki-new",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Rakuten Viki",
-   "style": "logo",
-   "logo_src": {
-    "kind": "provider",
-    "id": 344
-   },
-   "icon_provider": 344,
-   "badge": "New"
+   "badge": "New",
+   "logo_path": "/AscjWwkpQC23EZgRxbeOqs4KhRI.png"
   },
   {
    "slug": "streaming-magellantv-new",
@@ -612,45 +525,6 @@
     "id": 300
    },
    "icon_provider": 300,
-   "badge": "New"
-  },
-  {
-   "slug": "streaming-the-roku-channel-new",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "The Roku Channel",
-   "style": "logo",
-   "logo_src": {
-    "kind": "provider",
-    "id": 207
-   },
-   "icon_provider": 207,
-   "badge": "New"
-  },
-  {
-   "slug": "streaming-kanopy-new",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Kanopy",
-   "style": "logo",
-   "logo_src": {
-    "kind": "company",
-    "id": 122372
-   },
-   "icon_provider": 191,
-   "badge": "New"
-  },
-  {
-   "slug": "streaming-hoopla-new",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Hoopla",
-   "style": "logo",
-   "logo_src": {
-    "kind": "provider",
-    "id": 212
-   },
-   "icon_provider": 212,
    "badge": "New"
   },
   {
@@ -755,7 +629,8 @@
     "id": 1024
    },
    "icon_provider": 9,
-   "badge": "Top Rated"
+   "badge": "Top Rated",
+   "logo_path": "/q1rC6f1XkJVgmFW5VjSeGHncX50.png"
   },
   {
    "slug": "streaming-hulu-top",
@@ -797,19 +672,6 @@
    "badge": "Top Rated"
   },
   {
-   "slug": "streaming-crunchyroll-top",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Crunchyroll",
-   "style": "logo",
-   "logo_src": {
-    "kind": "company",
-    "id": 198847
-   },
-   "icon_provider": 283,
-   "badge": "Top Rated"
-  },
-  {
    "slug": "streaming-mubi-top",
    "shape": "wide",
    "eyebrow": "Streaming",
@@ -833,20 +695,8 @@
     "id": 10932
    },
    "icon_provider": 258,
-   "badge": "Top Rated"
-  },
-  {
-   "slug": "streaming-rakuten-viki-top",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Rakuten Viki",
-   "style": "logo",
-   "logo_src": {
-    "kind": "provider",
-    "id": 344
-   },
-   "icon_provider": 344,
-   "badge": "Top Rated"
+   "badge": "Top Rated",
+   "logo_path": "/AscjWwkpQC23EZgRxbeOqs4KhRI.png"
   },
   {
    "slug": "streaming-shudder-top",
@@ -914,45 +764,6 @@
    "badge": "Top Rated"
   },
   {
-   "slug": "streaming-the-roku-channel-top",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "The Roku Channel",
-   "style": "logo",
-   "logo_src": {
-    "kind": "provider",
-    "id": 207
-   },
-   "icon_provider": 207,
-   "badge": "Top Rated"
-  },
-  {
-   "slug": "streaming-kanopy-top",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Kanopy",
-   "style": "logo",
-   "logo_src": {
-    "kind": "company",
-    "id": 122372
-   },
-   "icon_provider": 191,
-   "badge": "Top Rated"
-  },
-  {
-   "slug": "streaming-hoopla-top",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Hoopla",
-   "style": "logo",
-   "logo_src": {
-    "kind": "provider",
-    "id": 212
-   },
-   "icon_provider": 212,
-   "badge": "Top Rated"
-  },
-  {
    "slug": "streaming-plex-top",
    "shape": "wide",
    "eyebrow": "Streaming",
@@ -964,6 +775,59 @@
    },
    "icon_provider": 538,
    "badge": "Top Rated"
+  },
+  {
+   "slug": "leaving-netflix",
+   "shape": "wide",
+   "eyebrow": "Streaming",
+   "title": "Netflix",
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 213
+   },
+   "icon_provider": 8,
+   "badge": "Leaving Soon"
+  },
+  {
+   "slug": "leaving-hulu",
+   "shape": "wide",
+   "eyebrow": "Streaming",
+   "title": "Hulu",
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 453
+   },
+   "icon_provider": 15,
+   "badge": "Leaving Soon"
+  },
+  {
+   "slug": "leaving-prime-video",
+   "shape": "wide",
+   "eyebrow": "Streaming",
+   "title": "Prime Video",
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 1024
+   },
+   "icon_provider": 9,
+   "badge": "Leaving Soon",
+   "logo_path": "/q1rC6f1XkJVgmFW5VjSeGHncX50.png"
+  },
+  {
+   "slug": "leaving-hbo-max",
+   "shape": "wide",
+   "eyebrow": "Streaming",
+   "title": "HBO Max",
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 3186
+   },
+   "icon_provider": 1899,
+   "badge": "Leaving Soon"
   },
   {
    "slug": "genre-action",
@@ -1715,7 +1579,8 @@
     "id": 13
    },
    "icon_provider": null,
-   "badge": null
+   "badge": null,
+   "logo_path": "/tTsYsrSkd0xbw3bna9vneFPjjnR.png"
   },
   {
    "slug": "network-disney-channel",
@@ -1806,7 +1671,8 @@
     "id": 1024
    },
    "icon_provider": null,
-   "badge": null
+   "badge": null,
+   "logo_path": "/q1rC6f1XkJVgmFW5VjSeGHncX50.png"
   },
   {
    "slug": "network-peacock",
@@ -1975,7 +1841,8 @@
     "id": 10342
    },
    "icon_provider": null,
-   "badge": null
+   "badge": null,
+   "logo_path": "/eS79pslnoKbWg7t3PMA9ayl0bGs.png"
   },
   {
    "slug": "studio-illumination",
@@ -2001,7 +1868,10 @@
     "id": 174
    },
    "icon_provider": null,
-   "badge": null
+   "badge": null,
+   "logo_path": "/9tefnXnJLGQL97cxs6S3EWEhVyx.png",
+   "emblem": true,
+   "field": "#0b1f4d"
   },
   {
    "slug": "studio-universal",
@@ -2118,7 +1988,8 @@
     "id": 12
    },
    "icon_provider": null,
-   "badge": null
+   "badge": null,
+   "logo_path": "/iaYpEp3LQmb8AfAtmTvpqd4149c.png"
   },
   {
    "slug": "studio-amblin",
