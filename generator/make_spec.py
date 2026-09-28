@@ -83,6 +83,19 @@ GENRES = [('Action', {'with_genres': '28'}, {'with_genres': '10759'}),
 THEMES = [('Superheroes', '9715'), ('Zombies', '12377'), ('Space Epics', '161176'), ('Spies', '470'), ('Aliens', '9951'),
           ('Robots & AI', '310'), ('Dystopian', '4565'), ('Disaster', '10617'), ('Creature Features', '158126|161791|11100|33696|158252|7035|321335|158108'),
           ('Psychological', '12565'), ('Myths & Legends', '2035'), ('Heist', '10051'), ('Time Travel', '4379')]
+# Seasonal · Now (issue #10, option b): ONE fixed library whose content follows the calendar; build.py picks the
+# season from TODAY (SD_TODAY in tests). Windows are MM-DD, inclusive; first match wins; the undated entry is the
+# fallback for every other day (Jan-May, September) and for a dated season with < min_items titles.
+# Keyword ids checked by name with /search/keyword 2026-09-28 (strand/build/cards_lane/probe_kw_out.txt).
+# Movies: runtime >= 20 so the half-hour specials (Great Pumpkin, Grinch 1966) stay; the 'votes' default is 40.
+SEASONS = [
+    ('Summer', '06-01', '08-31', '13088|14714|5767', None),      # summer, summer vacation, summer camp
+    ('Halloween', '10-01', '10-31', '3335|232795', None),        # halloween, halloween night (movies only has it)
+    ('Thanksgiving', '11-01', '11-28', '4543', None),            # thanksgiving; Nov 28 = latest possible US date
+    ('Christmas', '11-29', '12-31', '207317|260365', '207317'),  # christmas, christmas eve (TV: eve = 1 true-crime doc)
+]
+
+
 # Movie Series, A–Z. collection ids / keyword / explicit TMDB ids (for franchises TMDB doesn't group).
 SERIES = {
     '007': {'collections': [645]},
@@ -178,6 +191,35 @@ def disc(slug, library, title, eyebrow, folder, media, sort, movie=None, series=
     return e
 
 
+def just_hit_digital():
+    """Issue #9a: movies whose FIRST US digital (4) or TV (6) release is in the last 30 days, newest first. PVOD
+    rentals count (playback is via debrid, so a digital release = WEB-DL on TorBox). In Streaming · New: it answers
+    the same question as that folder ("what is new to watch at home"); no new shelf (owner rule)."""
+    e = disc('just-hit-digital', 'Just Hit Digital', 'Just Hit Digital', 'New · Digital', 'streaming-new', ['movie'],
+             'popular', movie={}, min_votes=5, depth=300)
+    e.update(release_types='4|6', release_window_days=30, newest_first=True)
+    return e
+
+
+def seasonal_now():
+    """Issue #10(b): last card of Themes (Halloween / Christmas are keyword themes like Zombies); no new shelf."""
+    seasons = [{'name': n, 'start': a, 'end': z, 'movie': {'with_keywords': kw, 'with_runtime.gte': 20},
+                'series': {'with_keywords': tv or kw}} for n, a, z, kw, tv in SEASONS]
+    # fallback: the past 12 months' most-voted releases (never empty, changes daily)
+    seasons.append({'name': 'Best of the Past Year', 'recent_days': 365, 'movie': {}, 'series': {}})
+    return {'slug': 'theme-seasonal-now', 'library': 'Theme · Seasonal · Now', 'title': 'Seasonal · Now',
+            'eyebrow': 'Theme', 'folders': ['themes'], 'kind': 'seasonal', 'media': ['movie', 'series'],
+            'sort': 'votes', 'min_votes': 10, 'depth': 300, 'min_items': 20, 'seasons': seasons}
+
+
+def trending_cards():
+    """Issue #11: TMDB trending this week, movies and TV (the issue's slugs). In Streaming · Popular: "what everyone
+    is watching now" is that folder's question; no new shelf (owner rule)."""
+    return [{'slug': f'trending-{s}', 'library': f'Trending · {n}', 'title': f'Trending · {n}', 'eyebrow': 'Trending',
+             'folders': ['streaming-popular'], 'kind': 'trending', 'media': [m], 'order': 'trending_week',
+             'window': 'week', 'depth': 200} for s, n, m in (('movies', 'Movies', 'movie'), ('tv', 'TV', 'series'))]
+
+
 def main():
     cats = []
     for v, n in VARIANTS:                                    # streaming x3
@@ -194,6 +236,10 @@ def main():
                 # history is long enough; then build.py orders the whole card by date first seen on the service
                 cats[-1]['tv_air_window'] = 45
                 cats[-1]['provider'] = slugify(name)
+        if v == 'popular':
+            cats += trending_cards()                         # last cards of Streaming · Popular (issue #11)
+        if v == 'new':
+            cats.append(just_hit_digital())                  # last card of Streaming · New (issue #9a)
     for v, n in VARIANTS:                                    # genres x3
         for name, mp, sp in GENRES:
             media = [m for m, p in (('movie', mp), ('series', sp)) if p is not None]
@@ -230,6 +276,7 @@ def main():
             sp = {**p, 'without_keywords': '9715', 'without_genres': '10767|10763|16'}
         cats.append(disc(f'theme-{slugify(name)}', f'Theme · {name}', name, 'Theme', 'themes', ['movie', 'series'],
                          'popular', movie=mp, series=sp))
+    cats.append(seasonal_now())
     for d in range(1960, 2030, 10):
         mp = {'primary_release_date.gte': f'{d}-01-01'}
         sp = {'first_air_date.gte': f'{d}-01-01'}

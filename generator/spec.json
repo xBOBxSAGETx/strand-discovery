@@ -725,6 +725,38 @@
    }
   },
   {
+   "slug": "trending-movies",
+   "library": "Trending · Movies",
+   "title": "Trending · Movies",
+   "eyebrow": "Trending",
+   "folders": [
+    "streaming-popular"
+   ],
+   "kind": "trending",
+   "media": [
+    "movie"
+   ],
+   "order": "trending_week",
+   "window": "week",
+   "depth": 200
+  },
+  {
+   "slug": "trending-tv",
+   "library": "Trending · TV",
+   "title": "Trending · TV",
+   "eyebrow": "Trending",
+   "folders": [
+    "streaming-popular"
+   ],
+   "kind": "trending",
+   "media": [
+    "series"
+   ],
+   "order": "trending_week",
+   "window": "week",
+   "depth": 200
+  },
+  {
    "slug": "streaming-netflix-new",
    "library": "Netflix · New",
    "title": "Netflix",
@@ -1311,6 +1343,26 @@
    },
    "tv_air_window": 45,
    "provider": "acorn-tv"
+  },
+  {
+   "slug": "just-hit-digital",
+   "library": "Just Hit Digital",
+   "title": "Just Hit Digital",
+   "eyebrow": "New · Digital",
+   "folders": [
+    "streaming-new"
+   ],
+   "kind": "discover",
+   "media": [
+    "movie"
+   ],
+   "sort": "popular",
+   "min_votes": 5,
+   "movie": {},
+   "depth": 300,
+   "release_types": "4|6",
+   "release_window_days": 30,
+   "newest_first": true
   },
   {
    "slug": "streaming-netflix-top",
@@ -5376,6 +5428,80 @@
    "series": {
     "with_keywords": "4379"
    }
+  },
+  {
+   "slug": "theme-seasonal-now",
+   "library": "Theme · Seasonal · Now",
+   "title": "Seasonal · Now",
+   "eyebrow": "Theme",
+   "folders": [
+    "themes"
+   ],
+   "kind": "seasonal",
+   "media": [
+    "movie",
+    "series"
+   ],
+   "sort": "votes",
+   "min_votes": 10,
+   "depth": 300,
+   "min_items": 20,
+   "seasons": [
+    {
+     "name": "Summer",
+     "start": "06-01",
+     "end": "08-31",
+     "movie": {
+      "with_keywords": "13088|14714|5767",
+      "with_runtime.gte": 20
+     },
+     "series": {
+      "with_keywords": "13088|14714|5767"
+     }
+    },
+    {
+     "name": "Halloween",
+     "start": "10-01",
+     "end": "10-31",
+     "movie": {
+      "with_keywords": "3335|232795",
+      "with_runtime.gte": 20
+     },
+     "series": {
+      "with_keywords": "3335|232795"
+     }
+    },
+    {
+     "name": "Thanksgiving",
+     "start": "11-01",
+     "end": "11-28",
+     "movie": {
+      "with_keywords": "4543",
+      "with_runtime.gte": 20
+     },
+     "series": {
+      "with_keywords": "4543"
+     }
+    },
+    {
+     "name": "Christmas",
+     "start": "11-29",
+     "end": "12-31",
+     "movie": {
+      "with_keywords": "207317|260365",
+      "with_runtime.gte": 20
+     },
+     "series": {
+      "with_keywords": "207317"
+     }
+    },
+    {
+     "name": "Best of the Past Year",
+     "recent_days": 365,
+     "movie": {},
+     "series": {}
+    }
+   ]
   },
   {
    "slug": "decade-1960s",

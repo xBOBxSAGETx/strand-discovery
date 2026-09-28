@@ -17,6 +17,8 @@ Env:
   SD_KEEP            optional: comma list of slugs kept despite SD_KINDS_OFF (the pilot's live library)
   SD_CACHE           optional: directory for the durable lookup cache (default ./cache). Holds only values that
                      don't change (movie runtimes, title previews by TMDB id); discover pages are never cached.
+  SD_TODAY           optional (tests / dry runs only): YYYY-MM-DD used as "today" for every date rule (released-only
+                     cutoff, windows, the Seasonal card's season)
 """
 import csv, datetime as dt, json, os, re, sys, threading, time, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -25,8 +27,9 @@ from pathlib import Path
 API = 'https://api.themoviedb.org/3'
 IMG = 'https://image.tmdb.org/t/p'
 HERE = Path(__file__).resolve().parent
-TODAY = dt.date.today().isoformat()
-YEAR_AGO = (dt.date.today() - dt.timedelta(days=365)).isoformat()
+TODAY_D = dt.date.fromisoformat(os.environ['SD_TODAY']) if os.environ.get('SD_TODAY') else dt.date.today()
+TODAY = TODAY_D.isoformat()
+YEAR_AGO = (TODAY_D - dt.timedelta(days=365)).isoformat()
 MIN_INTERVAL = 1 / 20          # self-throttle: 20 requests/s (TMDB publishes ~40/s)
 DROP_LIMIT = 0.30              # abort if total items fall by more than 30%
 CARD_DROP = 0.70               # a catalog "dropped" if it lost more than 70% of its items (and had >= 20)
@@ -188,13 +191,17 @@ def discover(card, media, depth, dflt):
     params = {'sort_by': sort, 'include_adult': 'false', 'vote_count.gte': votes, **card.get(media, {})}
     cutoff = TODAY
     if card.get('min_age_days'):              # e.g. hidden gems: at least a year old
-        cutoff = (dt.date.today() - dt.timedelta(days=card['min_age_days'])).isoformat()
+        cutoff = (TODAY_D - dt.timedelta(days=card['min_age_days'])).isoformat()
     if not movie and card.get('tv_air_window'):   # any episode aired recently (new seasons of old shows count)
         params.pop('first_air_date.lte', None)
-        params.update({'air_date.gte': (dt.date.today() - dt.timedelta(days=card['tv_air_window'])).isoformat(),
+        params.update({'air_date.gte': (TODAY_D - dt.timedelta(days=card['tv_air_window'])).isoformat(),
                        'air_date.lte': TODAY, 'sort_by': 'popularity.desc'})
+    window = None
     if movie:
-        params.update({'with_release_type': '4|5|6', 'release_date.lte': cutoff})
+        params.update({'with_release_type': card.get('release_types', '4|5|6'), 'release_date.lte': cutoff})
+        if card.get('release_window_days'):   # "Just hit digital": a regional release of those types in the window
+            window = (TODAY_D - dt.timedelta(days=card['release_window_days'])).isoformat()
+            params.update({'release_date.gte': window, 'region': dflt.get('region', 'US')})
         if card['sort'] in ('top', 'votes'):  # shorts/music videos rise to the top of rating order (smoke test)
             params.setdefault('with_runtime.gte', 40)
     else:
@@ -214,17 +221,24 @@ def discover(card, media, depth, dflt):
                 probe['with_keywords'] = dflt['without_keywords']
                 n = tmdb(f"/discover/{'movie' if movie else 'tv'}", page=1, **probe).get('total_results', 0)
             _excluded.setdefault(f"sd-{card['slug']}", {})[f'keywords:{media}'] = n
-    out, seen, page = [], set(), 1
-    while len(out) < depth:
+    raw, seen, page = [], set(), 1
+    while len(raw) < depth:
         data = tmdb(f"/discover/{'movie' if movie else 'tv'}", page=page, **params)
         for item in data.get('results', []):
+            # With region + with_release_type, TMDB matches ANY typed date in the window but returns the EARLIEST
+            # one as release_date (20/20 checked 2026-09-28): a title that went digital months ago matched on a later
+            # re-release entry. Keep only titles whose first such release is inside the window.
+            if window and (item.get('release_date') or '') < window:
+                continue
             if item['id'] not in seen:
                 seen.add(item['id'])
-                out.append(preview(item, media))
+                raw.append(item)
         if page >= min(data.get('total_pages', 0), 500):
             break
         page += 1
-    return out[:depth]
+    if card.get('newest_first'):              # by the returned (typed, regional) date; popularity breaks ties
+        raw.sort(key=lambda i: (i.get('release_date') or '', i.get('popularity') or 0), reverse=True)
+    return [preview(i, media) for i in raw[:depth]]
 
 
 def franchise(card):
@@ -329,6 +343,67 @@ def interleave(lists):
     return out
 
 
+TRENDING_SKIP_TV = {10767, 10763}      # talk, news: never on a TV card (same rule as discover)
+
+
+def trending(card, media, depth):
+    """TMDB trending this week (issue #11), in TMDB's order: released titles only, no adult, no talk/news on TV.
+    Pages are capped at depth/20 + 5 (about 15 requests per card)."""
+    tag = 'movie' if media == 'movie' else 'tv'
+    out, seen, page = [], set(), 1
+    while len(out) < depth:
+        data = tmdb(f"/trending/{tag}/{card.get('window', 'week')}", page=page)
+        for it in data.get('results', []):
+            if (it['id'] in seen or it.get('adult') or not released(it, media)
+                    or (media == 'series' and set(it.get('genre_ids') or []) & TRENDING_SKIP_TV)):
+                continue
+            seen.add(it['id'])
+            out.append(preview(it, media))
+        if page >= min(data.get('total_pages', 0), depth // 20 + 5, 500):
+            break
+        page += 1
+    return out[:depth]
+
+
+def season_of(card, day):
+    """The Seasonal card's season on `day`: the first dated season whose MM-DD window (inclusive, may wrap the year)
+    holds it, else the undated fallback season."""
+    md = day.strftime('%m-%d')
+    for s in card['seasons']:
+        a, z = s.get('start'), s.get('end')
+        if a and (a <= md <= z if a <= z else md >= a or md <= z):
+            return s
+    return next(s for s in card['seasons'] if not s.get('start'))
+
+
+def season_card(card, s):
+    """One season as a plain discover card: the season's own movie/series params, sort and vote floor;
+    `recent_days` limits it to titles first released within that many days of today."""
+    sub = {k: v for k, v in card.items() if k not in ('seasons', 'movie', 'series', 'min_items')}
+    sub.update(kind='discover', sort=s.get('sort', card['sort']), min_votes=s.get('min_votes', card.get('min_votes', 10)))
+    since = (TODAY_D - dt.timedelta(days=s['recent_days'])).isoformat() if s.get('recent_days') else None
+    for m, field in (('movie', 'primary_release_date.gte'), ('series', 'first_air_date.gte')):
+        if m in card['media'] and m in s:
+            sub[m] = {**s[m], **({field: since} if since else {})}
+    sub['media'] = [m for m in card['media'] if m in sub]
+    return sub
+
+
+def seasonal(card, dflt):
+    """Seasonal · Now (issue #10): one fixed library whose content follows the calendar (TODAY / SD_TODAY). A dated
+    season with fewer than `min_items` titles falls back to the undated season, so the card is never empty or thin
+    at a switch. Returns (metas, notes)."""
+    def run(season):
+        sub = season_card(card, season)
+        return interleave([discover(sub, m, depth_of(sub, dflt), dflt) for m in sub['media']])
+    s = season_of(card, TODAY_D)
+    metas = run(s)
+    if s.get('start') and len(metas) < card.get('min_items', 20):
+        fb = next(x for x in card['seasons'] if not x.get('start'))
+        return run(fb), f"season {s['name']} had only {len(metas)} titles: fallback {fb['name']}"
+    return metas, f"season: {s['name']}"
+
+
 def idlist_ids(card):
     """[[media, id], ...] of an idlist card: its awards.json list (read at build time, so the yearly award refresh
     only has to update awards.json), or ids written into the spec."""
@@ -350,6 +425,13 @@ def source_of(card):
         return card['collection_ids'], ' + '.join(names) + (f' + {len(ids)} listed titles' if ids else '')
     if k in ('director', 'actor'):
         return card['person_id'], named(f"/person/{card['person_id']}") + (' (directing)' if k == 'director' else ' (acting)')
+    if k == 'trending':
+        path = [f"/trending/{'movie' if m == 'movie' else 'tv'}/{card.get('window', 'week')}" for m in card['media']]
+        return ' + '.join(path), f"TMDB trending ({card.get('window', 'week')}), released only, depth {card['depth']}"
+    if k == 'seasonal':                        # the season in force today (notes say if it fell back)
+        s = season_of(card, TODAY_D)
+        src_id, name = source_of(season_card(card, s))
+        return src_id, f"season {s['name']} ({s.get('start', 'fallback')}..{s.get('end', '')}): {name}"
     parts, ids = [], []
     for media in card['media']:
         p = card.get(media, {})
@@ -519,6 +601,10 @@ def build_one(card, dflt):
         return first_seen_card(card, depth_of(card, dflt)), 'ordered by date first seen on the service'
     if kind == 'discover':
         return interleave([discover(card, m, depth_of(card, dflt), dflt) for m in card['media']]), notes
+    if kind == 'seasonal':
+        return seasonal(card, dflt)
+    if kind == 'trending':
+        return interleave([trending(card, m, card['depth']) for m in card['media']]), notes
     if kind == 'franchise':
         return interleave(franchise(card)), notes
     if kind == 'director':
