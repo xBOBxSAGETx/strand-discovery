@@ -43,9 +43,11 @@ def problems(report, build_result, logger_outcome):
     if 'TMDB HTTP 401' in log:
         out.append('**TMDB rejected the API key (HTTP 401).** Renew it and update the repo secret `TMDB_API_KEY`.')
     if build_result != 'success':
-        guard = [l for l in log.splitlines() if 'GUARD:' in l]
-        out.append(f"Build job ended **{build_result}**." + (f" Guard: `{guard[-1].strip()[:300]}`" if guard else '')
-                   + ' The last good deploy stays served.')
+        lines = [l.strip() for l in log.splitlines() if l.strip()]
+        guard = [l for l in lines if 'GUARD:' in l]
+        why = (f" Guard: `{guard[-1][:300]}`" if guard else f" Last log line: `{lines[-1][:300]}`" if lines
+               else ' No build log (the job died before the generator ran).')
+        out.append(f"Build job ended **{build_result}**.{why} The last good deploy stays served.")
     if logger_outcome != 'success':
         out.append(f"first_seen logger ended **{logger_outcome}** - New cards fall back to release-date order today.")
     if fs:
