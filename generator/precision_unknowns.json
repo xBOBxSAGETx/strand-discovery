@@ -1,0 +1,16 @@
+[
+ {
+  "provider": "tubi",
+  "key": "movie:257344",
+  "title": "Pixels (2015)",
+  "reason": "one source (Vital Thrills Tubi Sept 2026 schedule); JustWatch lists it elsewhere, Tubi has no official list; single-source drop (P4) evaluated and not adopted",
+  "added": "2026-09-28"
+ },
+ {
+  "provider": "disneyplus",
+  "key": "series:261102",
+  "title": "The Secret Lives of Mormon Wives (2024)",
+  "reason": "Hulu original listed as a Disney+ arrival on the combined Disney+/Hulu schedule; not on Disney+'s official list; presence stays per app; ages out 2026-10-25",
+  "added": "2026-09-28"
+ }
+]
