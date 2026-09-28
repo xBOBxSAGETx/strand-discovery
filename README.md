@@ -95,8 +95,13 @@ have no published schedule source, so their New cards use our own daily snapshot
 Personal, non-commercial use. Only TMDB ids and dates end up in the
 catalogs - the sources' text is never republished. A failing source or a format change shows in the health issue and
 the cards fall back to the stored dates and the other sources (never empty).
-First run: *Actions -> build-and-deploy -> Run workflow* with `arrivals_backfill` on reads the last 3 months once
-(about 30k TMDB requests, 25 minutes); the daily run reads only recent posts.
+Catch-up is automatic: the feeds carry only the newest posts (Vital Thrills' tag feed holds 10), so the daily run also
+reads the Vital Thrills and whatsondisneyplus post sitemaps and fetches up to 20 posts per site per run that it has
+not read yet under the current parser version, newest month first. Progress is kept in the first_seen state, a parser
+change re-opens it by itself, and once caught up the sitemaps are re-checked only every 3 days. A 429 during the
+catch-up stops that site for the run and it resumes the next day; only 3 runs in a row without progress raise a health
+warning. Progress ("vt catch-up: 20/38 posts, 18 left, ETA 1 run") is on each run's summary page and in the health
+issue. The manual `arrivals_backfill` input (the last 3 months at once, capped the same way) is no longer needed.
 
 ### Secrets and variables (names only)
 - Secrets: `TMDB_API_KEY` (TMDB v3 key), `SD_STATE_KEY` (encrypts the first_seen backup). Planned: Movie of the Night
