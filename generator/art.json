@@ -1711,7 +1711,8 @@
     "id": 4330
    },
    "icon_provider": null,
-   "badge": null
+   "badge": null,
+   "logo_colour": "#ffffff"
   },
   {
    "slug": "network-pbs",

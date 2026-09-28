@@ -1502,9 +1502,10 @@
   "style": "logo",
   "logo": "network 4330 /fi83B1oztoS47xxcemFdPMhIzK.png 1100x254 (.svg)",
   "field": "#042558 (dark tone of logo colour)",
-  "contrast": 3.12,
+  "logo_recoloured": "#ffffff",
+  "contrast": 15.34,
   "safe_area": "ok",
-  "bytes": 28964,
+  "bytes": 33501,
   "fails": []
  },
  {

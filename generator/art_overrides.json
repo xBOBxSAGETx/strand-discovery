@@ -76,5 +76,9 @@
  "network-nickelodeon": {
   "logo_path": "/tTsYsrSkd0xbw3bna9vneFPjjnR.png",
   "_why": "the splat logo rendered small and orange-on-orange; the orange wordmark reads at card size"
+ },
+ "network-paramountplus": {
+  "logo_colour": "#ffffff",
+  "_why": "blue script on the deep-blue field was the weakest card; white like the streaming Paramount+ card (copilot review 2026-09-28)"
  }
 }
