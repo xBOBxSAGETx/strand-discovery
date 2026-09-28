@@ -37,10 +37,11 @@ Signals are merged into the durable first_seen state (<SD_STATE>/first_seen.json
 <SD_STATE>/signal_candidates.json (per provider, the signals build.py may show today) is written by this step and,
 from the stored signals, by the logger - so a failing source or step falls back to the stored signals, never empty.
 Outputs in <out dir>: arrivals.json (today's merged signals), rows.csv, check_rows.csv, parse_stats.csv,
-arrivals_summary.json (per-source posts / rows / accepted / errors + warnings, read by health.py).
+arrivals_summary.json (per-source posts / rows / accepted / errors + warnings, read by health.py). A source whose
+resolve rate drops 25+ points below its recent median is a warning (resolve_rate_check(), history in the state).
 Env: TMDB_API_KEY (never printed), SD_CACHE, SD_STATE (default state), SD_HTTP_CACHE (default cache/http).
 """
-import csv, datetime as dt, gzip, hashlib, html, json, os, re, sys, time, unicodedata
+import csv, datetime as dt, gzip, hashlib, html, json, os, re, statistics, sys, time, unicodedata
 import urllib.error, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -1362,6 +1363,46 @@ def write_candidates(state, state_dir, today, present=None):
     return cands
 
 
+# ---------------------------------------------------------------- resolve-rate alert ------------------------------
+# A source whose rows suddenly resolve to TMDB far less often than usual has most likely changed its page format (the
+# parser now reads junk titles). Rate = accepted / rows (parse_stats.csv resolved_pct). Measured on every run with
+# arrivals, 2026-09-28 (daily + backfill, PARSER_VERSION 3-5): won 90-92%, vt 62-73%, wodp 63-73%, fb 68-78%,
+# plex 72-73% - at most 11 points of spread per source. A drop of 25+ points below the baseline is > 2x that spread.
+# 40 rows: the binomial noise at p ~0.65 is ~7.5 points, so 25 points is > 3 sigma (smallest daily source: 101 rows).
+RESOLVE_DROP = 0.25             # warn when today's rate < baseline - 25 points
+RESOLVE_MIN_ROWS = 40           # fewer rows: not measured, not recorded
+RESOLVE_HISTORY = 7             # baseline = median rate of the last 7 recorded days (one entry per day: the last run)
+RESOLVE_MIN_HISTORY = 2         # no warning before 2 earlier days are recorded (the first runs only seed the baseline)
+
+
+def resolve_rate_check(state, per, today):
+    """-> (warnings, info). History in the durable state: state['resolve_rates'] = {source: [[date, rows, accepted,
+    PARSER_VERSION], ...]} (one entry per day; another parser version's entries are dropped, so a parser change
+    restarts the baseline). A day that warns is NOT recorded, so a broken source keeps warning daily until it is fixed
+    (or PARSER_VERSION is bumped) instead of becoming the new normal. No state (logger failed): nothing to compare."""
+    if state is None:
+        return [], {'skipped': 'no durable state'}
+    book = state.setdefault('resolve_rates', {})
+    warns, info = [], {}
+    for s, p in per.items():
+        hist = [e for e in book.get(s) or [] if len(e) == 4 and e[3] == PARSER_VERSION and e[0] != today and e[1] > 0]
+        hist = hist[-RESOLVE_HISTORY:]
+        base = statistics.median(e[2] / e[1] for e in hist) if hist else None
+        if p['rows'] < RESOLVE_MIN_ROWS:
+            info[s] = {'rows': p['rows'], 'baseline': base, 'history': len(hist), 'note': 'too few rows: not measured'}
+            continue
+        rate = p['accepted'] / p['rows']
+        info[s] = {'rows': p['rows'], 'rate': round(rate, 3), 'baseline': None if base is None else round(base, 3),
+                   'history': len(hist)}
+        if len(hist) >= RESOLVE_MIN_HISTORY and rate < base - RESOLVE_DROP:
+            warns.append(f"{s}: title-resolve rate {rate:.0%} ({p['accepted']}/{p['rows']} rows) vs {base:.0%} usual "
+                         f"(median of {len(hist)} days) - format changed? see check_rows.csv")
+            info[s]['alert'] = True
+            continue                                    # not recorded: the baseline stays the pre-drop one
+        book[s] = hist + [[today, p['rows'], p['accepted'], PARSER_VERSION]]
+    return warns, info
+
+
 # ---------------------------------------------------------------- main --------------------------------------------
 def main():
     out = Path(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith('--') else 'arrivals')
@@ -1427,6 +1468,16 @@ def main():
     guarded = {s: set(ks) for s, ks in GUARD_DROPS.items()}
     for r in acc:
         r['on_service'] = present(r['service'], r['tmdb_media'], r['tmdb_id'])
+    per = {s: {'rows': 0, 'accepted': 0, 'check': 0, 'confirmed': 0} for s in SOURCES}
+    for r in rows:
+        p = per[r['source']]
+        p['rows'] += 1
+        p['accepted' if r.get('accepted') else 'check'] += 1
+        p['confirmed'] += 1 if r.get('on_service') else 0
+    try:                                                # an alert, never a failure; its history is saved with the state
+        rate_warn, rate_info = resolve_rate_check(state, per, today)
+    except Exception as e:
+        rate_warn, rate_info = [], {'error': f'{type(e).__name__}: {str(e)[:200]}'}
     if state is not None:
         tmp = STATE_DIR / 'first_seen.json.gz.tmp'
         with gzip.open(tmp, 'wt', encoding='utf-8') as fh:
@@ -1452,12 +1503,6 @@ def main():
             w = csv.DictWriter(f, fieldnames=cols, extrasaction='ignore')
             w.writeheader()
             w.writerows(sel)
-    per = {s: {'rows': 0, 'accepted': 0, 'check': 0, 'confirmed': 0} for s in SOURCES}
-    for r in rows:
-        p = per[r['source']]
-        p['rows'] += 1
-        p['accepted' if r.get('accepted') else 'check'] += 1
-        p['confirmed'] += 1 if r.get('on_service') else 0
     with open(out / 'parse_stats.csv', 'w', newline='', encoding='utf-8') as f:
         w = csv.writer(f)
         w.writerow(['source', 'posts', 'rows', 'accepted', 'resolved_pct', 'check', 'confirmed_on_service', 'errors'])
@@ -1473,6 +1518,7 @@ def main():
                  if stats.get(s, {}).get('items', 0) == 0 and not stats.get(s, {}).get('errors')]
     warnings += [f'{s}: {stats[s]["posts"]} posts but 0 rows (format changed?)' for s in SOURCES
                  if stats.get(s, {}).get('posts', 0) > 0 and per[s]['rows'] == 0]
+    warnings += rate_warn
     summary = {'date': today, 'mode': 'backfill' if backfill else 'daily', 'since': since.isoformat(),
                'state': 'merged' if state is not None else 'missing (logger failed): signals not stored',
                'sources': {s: {'items': stats.get(s, {}).get('items', 0), 'posts': stats.get(s, {}).get('posts', 0),
@@ -1482,6 +1528,7 @@ def main():
                'baseline_guard_dropped': {s: len(ks) for s, ks in sorted(guarded.items())},
                # automatic catch-up of the posts the feeds no longer carry (health.py shows catchup_line per source)
                'catchup': catch, 'catchup_lines': [catchup_line(s, rep) for s, rep in catch.items()],
+               'resolve_rate': rate_info,               # per source: today's rate vs the stored baseline (#7 item 1)
                'tmdb_requests': build._calls[0],
                'fetch': fetch_stats, 'seconds': round(time.monotonic() - t0), 'warnings': warnings}
     (out / 'arrivals_summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
