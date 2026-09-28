@@ -29,6 +29,8 @@ Signals are merged into the durable first_seen state (<SD_STATE>/first_seen.json
     among equals; a scheduled (future) event never hides a past one
   - status is recomputed daily: "confirmed" when the logger saw the title on the service today, else "announced"
   - a signal first recorded with a future date is shown only once its date has passed AND it is confirmed
+  - an unconfirmed past arrival is shown for its first 7 days only (F1); a Netflix-network series with no US
+    provider data at all on TMDB counts as confirmed on Netflix (F2)
   - pruned after 180 days (TMDB terms)
 <SD_STATE>/signal_candidates.json (per provider, the signals build.py may show today) is written by this step and,
 from the stored signals, by the logger - so a failing source or step falls back to the stored signals, never empty.
@@ -860,6 +862,28 @@ def current_event(v, today):
     return (best[0], best[1], sorted({o[2] for o in ev}), all(o[4] for o in ev), not started)
 
 
+ANNOUNCED_DAYS = 7              # F1: an arrival not (yet) seen on the service is shown for its first 7 days only
+NETFLIX_NETWORK = 213
+_orphan_memo = {}
+
+
+def netflix_orphan(media, tid):
+    """F2 (narrow): a series whose TMDB networks include Netflix and for which TMDB has NO US watch-provider data at all
+    counts as on Netflix - JustWatch never lists some Netflix originals (STEEL BALL RUN, Unveil &TEAM), so the logger
+    can never confirm them. Titles with US provider data that lacks Netflix stay unconfirmed. Networks are durably
+    cached (1 request per title, ever); provider data is checked once per run, only for titles F1 would drop."""
+    if media != 'series':
+        return False
+    if tid not in _orphan_memo:
+        try:
+            nets = build.stable(f'tvnet:{tid}', lambda: [n['id'] for n in build.tmdb(f'/tv/{tid}').get('networks') or []])
+            _orphan_memo[tid] = NETFLIX_NETWORK in nets and not \
+                build.tmdb(f'/tv/{tid}/watch/providers').get('results', {}).get('US')
+        except RuntimeError:                           # TMDB error: unknown = not confirmed (the guards still apply)
+            _orphan_memo[tid] = False
+    return _orphan_memo[tid]
+
+
 def refresh(state, today, present=None):
     """Recompute every stored signal's status from today's presence and prune old observations; returns
     {provider: [candidate dicts]} = the arrivals build.py may show today: the current event dated in the last WINDOW
@@ -883,9 +907,15 @@ def refresh(state, today, present=None):
             if present:
                 v['s'] = 'confirmed' if present(svc, media, int(tid)) else 'announced'
             date, prec, srcs, needs_conf, future = current_event(v, today)
-            if not future and lo <= date <= today and (not needs_conf or v['s'] == 'confirmed'):
-                cands.append({'key': k, 'date': date, 'precision': prec, 'sources': srcs, 'status': v['s'],
-                              'popularity': v['p'], 'kind': v['k']})
+            if future or not lo <= date <= today or (needs_conf and v['s'] != 'confirmed'):
+                continue
+            status = v['s']
+            if status != 'confirmed' and (dt.date.fromisoformat(today) - dt.date.fromisoformat(date)).days > ANNOUNCED_DAYS:
+                if not (svc == 'netflix' and netflix_orphan(media, int(tid))):
+                    continue                        # F1: never confirmed on the service after a week -> not shown
+                status = 'confirmed (Netflix network, no provider data)'                  # F2
+            cands.append({'key': k, 'date': date, 'precision': prec, 'sources': srcs, 'status': status,
+                          'popularity': v['p'], 'kind': v['k']})
         cands.sort(key=lambda c: (c['date'], -PREC[c['precision']], c['popularity']), reverse=True)
         out[svc] = cands
     return out
