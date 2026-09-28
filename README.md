@@ -86,3 +86,9 @@ First run: *Actions -> build-and-deploy -> Run workflow* with `arrivals_backfill
 Lives in the Actions cache, with an encrypted 90-day artifact backup (`first-seen-state`, AES-256, key in
 `SD_STATE_KEY`). The job restores from the cache, else from the newest backup, else starts a fresh baseline. If the key
 is lost, only the backup becomes unreadable; the cache keeps working, and a new key can be set at any time.
+
+When a service's query changes (provider ids added, e.g. Amazon / Apple / Roku channels, or its monetization), titles
+that were on the service all along become visible: on that run they are recorded as baseline, never as arrivals, so the
+New card does not flood; stored arrival dates are untouched. **Deliberate:** state saved before this rule existed counts
+as changed once, so its first run records every newly seen title as baseline - do not "fix" this (see the no-flood test
+in the owner's build notes).
