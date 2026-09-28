@@ -1,0 +1,45 @@
+name: tests
+
+# PR gate: runs the offline test suite on every pull request. Standard library only, no secrets, no network
+# (the tests use local 127.0.0.1 fake servers). Separate from build-and-deploy and its `pages` concurrency group.
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - name: unittest suite
+        env:
+          TMDB_API_KEY: unused
+        run: python -m unittest discover -v tests
+      # Standalone scripts: exit 1 on a failed check; the RESULT line is checked too, so either signal fails the job.
+      - name: no-flood test (first_seen re-baseline)
+        env:
+          TMDB_API_KEY: unused
+        run: |
+          set -o pipefail
+          python tests/no_flood_test.py "$GITHUB_WORKSPACE" "$RUNNER_TEMP/no-flood" | tee "$RUNNER_TEMP/no-flood.log"
+          grep -qx 'RESULT: PASS' "$RUNNER_TEMP/no-flood.log"
+      - name: circuit-breaker test (429/503)
+        env:
+          TMDB_API_KEY: unused
+        run: |
+          set -o pipefail
+          python tests/circuit_breaker_test.py "$GITHUB_WORKSPACE" "$RUNNER_TEMP/breaker" | tee "$RUNNER_TEMP/breaker.log"
+          grep -qx 'RESULT: PASS' "$RUNNER_TEMP/breaker.log"
