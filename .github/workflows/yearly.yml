@@ -30,34 +30,47 @@ jobs:
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
         run: python generator/awards_wiki.py awards_resolve.csv
-      - name: Branch + review issue (only if the lists changed; tests always proceed)
+      - name: Cross-check every award card against a second source
+        run: python generator/awards_crosscheck.py awards_resolve.csv > crosscheck.md
+      - name: Branch (if the lists changed) + review issue (every year)
         env:
           GH_TOKEN: ${{ github.token }}
           LABEL: ${{ inputs.label }}        # user input reaches the shell only as data, never as code
         run: |
           if ! [[ "$LABEL" =~ ^[a-z0-9-]{0,20}$ ]]; then echo "invalid label"; exit 1; fi
-          if git diff --quiet -- generator/awards.json && [ -z "$LABEL" ]; then echo "award lists unchanged"; exit 0; fi
           suffix="${LABEL:-$(date +%Y)}"
           branch="awards-refresh-$suffix"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -c "$branch"
-          git add generator/awards.json
-          git commit --allow-empty -m "Yearly award list refresh ($(date +%F))"
-          git push -f origin "$branch"
+          changed=1
+          if git diff --quiet -- generator/awards.json && [ -z "$LABEL" ]; then changed=0; fi
+          if [ "$changed" = 1 ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git switch -c "$branch"
+            git add generator/awards.json          # build.py reads the ids from awards.json: nothing else to update
+            git commit --allow-empty -m "Yearly award list refresh ($(date +%F))"
+            git push -f origin "$branch"
+          fi
           {
-            echo "The yearly award refresh changed \`generator/awards.json\`."
+            if [ "$changed" = 1 ]; then
+              echo "The yearly award refresh changed \`generator/awards.json\`."
+              echo
+              echo "**Create the PR:** https://github.com/$GITHUB_REPOSITORY/compare/main...$branch?expand=1"
+            else
+              echo "The Wikipedia award lists are unchanged this year; nothing to merge."
+            fi
             echo
-            echo "**Create the PR:** https://github.com/$GITHUB_REPOSITORY/compare/main...$branch?expand=1"
+            echo "## Cross-check (double source)"
             echo
-            echo "Titles that need a look (non-exact matches and unresolved):"
+            cat crosscheck.md
+            echo
+            echo "## Titles that need a look (non-exact matches and unresolved)"
             echo
             echo '| list | latest win | Wikipedia title | TMDB | match |'
             echo '|---|---|---|---|---|'
             python -c "import csv; [print(f\"| {r['list']} | {r['latest_win']} | {r['wiki_title']} | {r['tmdb_id']} {r['tmdb_title']} | {r['match']} |\") for r in csv.DictReader(open('awards_resolve.csv', encoding='utf-8')) if not r['match'].startswith('exact title')]"
           } > body.md
           gh label create yearly --color 5319e7 --description "Yearly maintenance" 2>/dev/null || true
-          gh issue create --title "Yearly award refresh $suffix: review and merge" --label yearly --body-file body.md
+          gh issue create --title "Yearly award review $suffix" --label yearly --body-file body.md
 
   people:
     runs-on: ubuntu-latest
