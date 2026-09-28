@@ -33,8 +33,6 @@ CARD_DROP = 0.70               # a catalog "dropped" if it lost more than 70% of
 CARD_DROP_MAX = 10             # more than this many dropped catalogs = systemic -> abort
 REQUEST_CAP = 40000            # runaway guard: abort before deploying anything
 CACHE_FILE = Path(os.environ.get('SD_CACHE', 'cache')) / 'stable.json'
-LEAVING_FILE = os.environ.get('SD_LEAVING', 'leaving/leaving.json')   # written by leaving.py in the same job
-MAY_BE_EMPTY = {'leaving'}     # kinds whose empty card is the truthful state (nothing leaving): exempt from the guards
 
 WORKERS = int(os.environ.get('SD_WORKERS', '6'))   # catalogs built in parallel; the 20 req/s throttle is shared
 
@@ -344,8 +342,6 @@ def source_of(card):
     k = card['kind']
     if k == 'mdblist':
         return card['list'], f"MDBList {card['list']}"
-    if k == 'leaving':
-        return card['service'], f"Leaving Soon ({card['service']}): What's on Netflix / whatisleaving.com"
     if k == 'idlist':
         return card.get('awards_key', card['slug']), f"committed id list ({len(idlist_ids(card))} ids, generator/awards.json from Wikipedia)"
     if k == 'franchise':
@@ -476,9 +472,6 @@ def build_one(card, dflt):
         return metas, ('dropped ' + ', '.join(f'{k} {v}' for k, v in sorted(dropped.items()))) if dropped else ''
     if kind == 'mdblist':
         return interleave([mdblist(card, m) for m in card['media']]), notes
-    if kind == 'leaving':                      # leaving.py output of today's run; missing file = empty card
-        import leaving
-        return leaving.leaving_card(card['service'], TODAY, LEAVING_FILE), 'leave date ascending (leaving.py)'
     if kind == 'idlist':                       # committed id list (awards.json from awards_wiki.py), in its own order
         metas = [details_preview(m, i) for m, i in idlist_ids(card)]
         return [m for m in metas if m], notes
@@ -571,13 +564,12 @@ def main():
         w.writerows(rows)
     print(json.dumps({k: v for k, v in summary.items() if k != 'catalogs'}), '| catalogs:', len(counts))
 
-    exempt = {f"sd-{c['slug']}" for c in spec['catalogs'] if c['kind'] in MAY_BE_EMPTY}
-    empty = [c for c, n in counts.items() if n == 0 and c not in exempt]
+    empty = [c for c, n in counts.items() if n == 0]
     if empty:
         sys.exit(f'GUARD: empty catalogs: {empty}')
     prev = previous_summary()
     if prev:
-        emptied = [c for c, n in prev.get('catalogs', {}).items() if n > 0 and counts.get(c, 0) == 0 and c not in exempt]
+        emptied = [c for c, n in prev.get('catalogs', {}).items() if n > 0 and counts.get(c, 0) == 0]
         if emptied and os.environ.get('ALLOW_CATALOG_REMOVAL') == '1':
             print(f'catalogs removed/renamed on purpose (manual run): {emptied}')
         elif emptied:
@@ -585,7 +577,7 @@ def main():
         if prev.get('total_items') and summary['total_items'] < prev['total_items'] * (1 - DROP_LIMIT):
             sys.exit(f"GUARD: total items dropped {prev['total_items']} -> {summary['total_items']} (>30%)")
         dropped = [f'{c} {n}->{counts[c]}' for c, n in prev.get('catalogs', {}).items()
-                   if n >= 20 and 0 < counts.get(c, 0) < n * (1 - CARD_DROP) and c not in exempt]
+                   if n >= 20 and 0 < counts.get(c, 0) < n * (1 - CARD_DROP)]
         if len(dropped) > CARD_DROP_MAX:
             sys.exit(f'GUARD: {len(dropped)} catalogs lost >70% of their items: {dropped}')
         if dropped:

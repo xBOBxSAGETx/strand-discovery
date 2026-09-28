@@ -47,11 +47,6 @@
    "shape": "wide"
   },
   {
-   "key": "leaving-soon",
-   "title": "Leaving Soon",
-   "shape": "wide"
-  },
-  {
    "key": "genres-popular",
    "title": "Genres · Popular",
    "shape": "wide"
@@ -1826,66 +1821,6 @@
     "with_watch_monetization_types": "free|ads|rent"
    },
    "min_age_days": 180
-  },
-  {
-   "slug": "leaving-netflix",
-   "library": "Netflix · Leaving Soon",
-   "title": "Netflix",
-   "eyebrow": "Leaving Soon",
-   "folders": [
-    "leaving-soon"
-   ],
-   "kind": "leaving",
-   "media": [
-    "movie",
-    "series"
-   ],
-   "service": "netflix"
-  },
-  {
-   "slug": "leaving-hulu",
-   "library": "Hulu · Leaving Soon",
-   "title": "Hulu",
-   "eyebrow": "Leaving Soon",
-   "folders": [
-    "leaving-soon"
-   ],
-   "kind": "leaving",
-   "media": [
-    "movie",
-    "series"
-   ],
-   "service": "hulu"
-  },
-  {
-   "slug": "leaving-prime-video",
-   "library": "Prime Video · Leaving Soon",
-   "title": "Prime Video",
-   "eyebrow": "Leaving Soon",
-   "folders": [
-    "leaving-soon"
-   ],
-   "kind": "leaving",
-   "media": [
-    "movie",
-    "series"
-   ],
-   "service": "prime-video"
-  },
-  {
-   "slug": "leaving-hbo-max",
-   "library": "HBO Max · Leaving Soon",
-   "title": "HBO Max",
-   "eyebrow": "Leaving Soon",
-   "folders": [
-    "leaving-soon"
-   ],
-   "kind": "leaving",
-   "media": [
-    "movie",
-    "series"
-   ],
-   "service": "hbo-max"
   },
   {
    "slug": "genre-action",

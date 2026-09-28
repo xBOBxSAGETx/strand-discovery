@@ -52,23 +52,10 @@ Pages serves whatever the last successful deploy published. To go back: revert t
 `build-and-deploy`; or, if the code is fine and only the data was bad, re-run the `deploy` job of the last good run
 (*that run → Re-run jobs → deploy*; its Pages artifact is kept 1 day) or simply run the workflow again.
 
-### Leaving Soon sources
-`generator/leaving.py` runs daily before the generator and writes today's list only (never cached): if it fails,
-the Leaving Soon cards are empty for the day, never stale.
-- **What's on Netflix** "What's Leaving Netflix" posts (RSS) - Netflix.
-- **whatisleaving.com** - OFF (repo variable `SD_LEAVING_WIL` unset or `0`). Its Terms of Service forbid automated
-  bulk extraction and republishing its curated lists ("Reasonable personal or research use is permitted"), so the
-  daily job does not use it unless the owner explicitly opts in with `SD_LEAVING_WIL=1`. With it off, Netflix uses
-  What's on Netflix and the Hulu / Prime Video / HBO Max cards have no source.
-- No Disney+ card: no source lists Disney+ departures.
-Both sources give the removal date (the last day to watch is the day before); a title stays on the card through its
-last day to watch. Only titles TMDB (JustWatch data) still lists on the service are shown, soonest leave date first; source text is never
-stored or republished. A source failure or format change shows up in the health issue.
-
 ### Secrets and variables (names only)
 - Secrets: `TMDB_API_KEY` (TMDB v3 key), `SD_STATE_KEY` (encrypts the first_seen backup). Planned: Movie of the Night
   and Watchmode keys (accuracy monitoring).
-- Variables: `SD_SCHEDULE_DEPLOY` (`on` = scheduled deploys), `SD_KINDS_OFF` / `SD_KEEP` (staged rollout), `SD_LEAVING_WIL` (`1` = whatisleaving on; off by default, see Leaving Soon sources).
+- Variables: `SD_SCHEDULE_DEPLOY` (`on` = scheduled deploys), `SD_KINDS_OFF` / `SD_KEEP` (staged rollout).
 - The values live only in the owner's secrets folder on their PC (and in GitHub's encrypted secrets); never in this
   repo. The people-list source CSV and the Strand shelf files are private too and are not in this repo.
 

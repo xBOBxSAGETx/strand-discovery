@@ -16,7 +16,6 @@ VARIANTS = [('popular', 'Popular'), ('new', 'New'), ('top', 'Top Rated')]
 DIRECTOR_CATS = ['Up & Coming', 'Modern Masters', 'Legends', 'Action', 'Animation', 'Comedy', 'Horror', 'Sci-Fi']
 ACTOR_CATS = ['Rising Stars', 'Scene Stealers', 'Legends', 'Action', 'Comedy', 'Drama', 'Horror']
 FOLDERS = ([{'key': f'streaming-{v}', 'title': f'Streaming · {n}', 'shape': 'wide'} for v, n in VARIANTS]
-           + [{'key': 'leaving-soon', 'title': 'Leaving Soon', 'shape': 'wide'}]
            + [{'key': f'genres-{v}', 'title': f'Genres · {n}', 'shape': 'wide'} for v, n in VARIANTS]
            + [{'key': k, 'title': t, 'shape': 'wide'} for k, t in [
                ('networks', 'Networks'), ('studios', 'Studios'), ('series', 'Movie Series'), ('themes', 'Themes'),
@@ -48,7 +47,6 @@ STREAMING = [('Netflix', '8'), ('Disney+', '337'), ('HBO Max', '1899'), ('Apple 
              ('Netflix Kids', '175'), ('MUBI', '11'), ('Criterion Channel', '258'), ('MagellanTV', '551'),
              ('Shudder', '99'), ('AMC+', '526'), ('BritBox', '151'), ('Tubi', '73'), ('Pluto TV', '300'), ('Plex', '538'),
              ('Acorn TV', '87')]
-LEAVING = ['Netflix', 'Hulu', 'Prime Video', 'HBO Max']          # services a leaving source covers (leaving.py)
 NETWORKS = [('HBO', 49), ('AMC', 174), ('FX', 88), ('BBC One', 4), ('Apple TV', 2552), ('Netflix', 213),
             ('Showtime', 67), ('Adult Swim', 80), ('Comedy Central', 47), ('Cartoon Network', 56), ('Nickelodeon', 13),
             ('Disney Channel', 54), ('History', 65), ('Discovery', 64), ('National Geographic', 43), ('A&E', 129),
@@ -194,11 +192,6 @@ def main():
                 # history is long enough; then build.py orders the whole card by date first seen on the service
                 cats[-1]['tv_air_window'] = 45
                 cats[-1]['provider'] = slugify(name)
-    # Leaving Soon (leaving.py, daily): titles about to leave, soonest first. No Disney+ card: no source lists it.
-    for name in LEAVING:
-        cats.append({'slug': f'leaving-{slugify(name)}', 'library': f'{name} · Leaving Soon', 'title': name,
-                     'eyebrow': 'Leaving Soon', 'folders': ['leaving-soon'], 'kind': 'leaving',
-                     'media': ['movie', 'series'], 'service': slugify(name)})
     for v, n in VARIANTS:                                    # genres x3
         for name, mp, sp in GENRES:
             media = [m for m, p in (('movie', mp), ('series', sp)) if p is not None]

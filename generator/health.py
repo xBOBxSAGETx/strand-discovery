@@ -1,6 +1,6 @@
 """Health alerts for the daily workflow: keeps ONE open GitHub issue labelled "health" in sync with the latest run.
 
-  python health.py <report dir> <build result> <logger outcome> [<leaving outcome>]
+  python health.py <report dir> <build result> <logger outcome>
 
 Test mode (no GitHub calls): HEALTH_DRY_RUN=1 prints every write it would make; HEALTH_MOCK_ISSUES=<json file>
 ({"health": [{"number": 1}], "reminder": [...]}, per label) stands in for `gh issue list`.
@@ -49,7 +49,7 @@ def read(p):
         return None
 
 
-def problems(report, build_result, logger_outcome, leaving_outcome='skipped'):
+def problems(report, build_result, logger_outcome):
     out = []
     summary = read(report / 'out' / 'summary.json') or read(report / 'summary.json')
     fs = read(report / 'state' / 'fs_summary.json') or read(report / 'fs_summary.json')
@@ -64,15 +64,6 @@ def problems(report, build_result, logger_outcome, leaving_outcome='skipped'):
         out.append(f"Build job ended **{build_result}**.{why} The last good deploy stays served.")
     if logger_outcome != 'success':
         out.append(f"first_seen logger ended **{logger_outcome}** - New cards fall back to release-date order today.")
-    if leaving_outcome not in ('success', 'skipped'):
-        out.append(f"Leaving Soon step ended **{leaving_outcome}** - the Leaving Soon cards are empty today.")
-    lv = read(report / 'leaving' / 'leaving_summary.json')
-    if lv:
-        for src, errs in lv.get('errors', {}).items():
-            for e in errs:
-                if not e.startswith('disabled'):
-                    out.append(f"Leaving Soon source `{src}` failed or changed format: {e[:200]} - the cards it feeds "
-                               "fall back (Netflix keeps What's on Netflix; Hulu / Prime Video / HBO Max are empty).")
     if fs:
         out += [f"first_seen warning: {w}" for w in fs.get('warnings', [])]
         out += [f"first_seen skipped: {s}" for s in fs.get('skipped', [])]
@@ -88,8 +79,7 @@ def problems(report, build_result, logger_outcome, leaving_outcome='skipped'):
 
 def main():
     report, build_result, logger_outcome = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
-    leaving_outcome = sys.argv[4] if len(sys.argv) > 4 else 'skipped'
-    found, summary, fs = problems(report, build_result, logger_outcome, leaving_outcome)
+    found, summary, fs = problems(report, build_result, logger_outcome)
     ensure_label('health', 'd73a4a', 'Daily build health (opened/closed automatically)')
     existing = json.loads(gh('issue', 'list', '--label', 'health', '--state', 'open', '--json', 'number', '--limit', '5') or '[]')
     if found:
