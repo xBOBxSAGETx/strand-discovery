@@ -2,6 +2,9 @@
 
   python health.py <report dir> <build result> <logger outcome>
 
+Test mode (no GitHub calls): HEALTH_DRY_RUN=1 prints every write it would make; HEALTH_MOCK_ISSUES=<json file>
+({"health": [{"number": 1}], "reminder": [...]}, per label) stands in for `gh issue list`.
+
 <report dir> = the downloaded run-report artifact (out/summary.json, state/fs_summary.json; either may be missing).
 Opens (or updates) the issue when the build failed, the first_seen logger failed, a guard tripped, TMDB rejected the
 key (401), or the logger reported warnings/skips; closes it with a comment when a later run is clean. GitHub emails
@@ -16,7 +19,16 @@ RUN_URL = f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{REPO}/a
 HEALTH_TITLE = 'Daily build health'
 
 
+DRY = os.environ.get('HEALTH_DRY_RUN') == '1'
+
+
 def gh(*args, check=True):
+    if DRY:
+        if args[:2] == ('issue', 'list'):
+            mock = read(os.environ.get('HEALTH_MOCK_ISSUES', '')) or {}
+            return json.dumps(mock.get(args[args.index('--label') + 1], []))
+        print('WOULD RUN: gh ' + ' '.join(args))
+        return 'https://github.com/<dry-run>/issues/<new>'
     r = subprocess.run(['gh', *args, '-R', REPO], capture_output=True, text=True)
     if check and r.returncode:
         sys.exit(f"gh {' '.join(args[:2])} failed: {r.stderr.strip()[:300]}")
@@ -24,6 +36,8 @@ def gh(*args, check=True):
 
 
 def ensure_label(name, color, desc):
+    if DRY:
+        return
     subprocess.run(['gh', 'label', 'create', name, '-R', REPO, '--color', color, '--description', desc],
                    capture_output=True, text=True)       # "already exists" is fine
 
