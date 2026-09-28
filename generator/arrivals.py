@@ -1047,7 +1047,7 @@ _orphan_memo = {}
 # pre-listing or a rotation, not an arrival: dropped whatever its precision (e.g. 23 of Plex's 55 October 2026 items).
 # Past-dated events are untouched (they arrived before the baseline). Exception: an event that names a NEW season
 # (season >= 2) of a show already on the service is a real arrival ("new seasons of returning shows count") and is kept;
-# set BASELINE_GUARD_KEEP_NEW_SEASONS = False to drop those too (60 of 112 drops on the 2026-09-27 replay).
+# set BASELINE_GUARD_KEEP_NEW_SEASONS = False to drop those too (64 of 112 drops on the 2026-09-27 replay).
 BASELINE_GUARD_KEEP_NEW_SEASONS = True
 GUARD_DROPS = {}                # refresh(): {provider: [key, ...]} dropped by the baseline guard on its last call
 
