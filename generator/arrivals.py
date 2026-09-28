@@ -20,9 +20,13 @@ non-commercial use.
 Every row is resolved to TMDB by exact title (+ year / media / season, films >= 40 min, on-service tie-break); anything
 not exact or ambiguous is a CHECK row and is not used. Later seasons of returning shows count (copilot ruling).
 Signals are merged into the durable first_seen state (<SD_STATE>/first_seen.json.gz, per provider "signals"):
-  key "movie:ID" / "series:ID" -> [date, precision, sources, status, was_future, popularity, kind]
-  - one arrival event keeps its best-precision date (day > week > month), the earliest among equals; a signal more
-    than 60 days after the stored one is a new arrival (the title left and came back) and replaces it
+  key "movie:ID" / "series:ID" -> {"o": [[date, precision, source, season, recorded_before_date], ...],
+                                     "p": popularity, "k": title|season, "s": status}
+  - every distinct observation is kept (so the result never depends on the order rows arrived in); on each read the
+    observations are grouped into arrival events: dates at most 14 days apart and not different seasons = one event
+    (sources a few days / a week apart, weekly episode drops); a new season or a later re-arrival is a new event
+  - the card shows the LATEST event that has started, dated at its best precision (day > week > month), earliest
+    among equals; a scheduled (future) event never hides a past one
   - status is recomputed daily: "confirmed" when the logger saw the title on the service today, else "announced"
   - a signal first recorded with a future date is shown only once its date has passed AND it is confirmed
   - pruned after 180 days (TMDB terms)
@@ -43,7 +47,7 @@ import build  # noqa: E402  (throttled, key-safe tmdb(); durable cache in SD_CAC
 
 STATE_DIR = Path(os.environ.get('SD_STATE', 'state'))
 WINDOW = 45                     # New on X: arrivals in the last 45 days
-NEW_EVENT_GAP = 60              # a signal this much later than the stored one = a new arrival (re-arrival)
+NEW_EVENT_GAP = 14              # signals further apart are separate arrival events (a new season, a re-arrival)
 PRUNE_DAYS = 180
 DAILY_LOOKBACK = 50             # daily run: posts from the last 50 days (the window + a margin)
 BACKFILL_LOOKBACK = 92          # --backfill: the last 3 months
@@ -363,8 +367,9 @@ def dated_rows(lines, service, year, month, source, url, start=None, stop=None, 
 def src_won(since, backfill, stats):
     rows = []
     st, xml, _ = get('https://www.whats-on-netflix.com/whats-new/feed/')
-    stats['won'] = {'posts': 0, 'status': st, 'errors': [] if st == 200 else [f'feed HTTP {st}']}
-    for it in (feed_items(xml) if st == 200 else []):
+    items = feed_items(xml) if st == 200 else []
+    stats['won'] = {'posts': 0, 'items': len(items), 'errors': [] if st == 200 else [f'feed HTTP {st}'], 'notes': []}
+    for it in items:
         if not it['pub'] or it['pub'] < since:
             continue
         t = it['title']
@@ -421,7 +426,7 @@ def sitemap_posts(site, index, n=3):
 
 
 def src_vt(months, backfill, stats):
-    rows, posts, errs = [], 0, []
+    rows, posts, errs, notes = [], 0, [], []
     if backfill:
         urls = sitemap_posts('https://www.vitalthrills.com', 'sitemap_index.xml')
     else:
@@ -444,14 +449,14 @@ def src_vt(months, backfill, stats):
         r = dated_rows(text_lines(post_body(t)), svc, year, mon, 'vt', u, start=r'^(##h2 )?.*(schedules?|titles)$',
                        stop=r'^#\w|^tags?:|related posts|^##h2 (sports|live|fast channels|espn)', prefix=svc == 'disney+hulu')
         if not r:
-            errs.append(f'{u}: 0 rows (format change?)')
+            notes.append(f'{u}: 0 rows')
         rows += r
-    stats['vt'] = {'posts': posts, 'errors': errs}
+    stats['vt'] = {'posts': posts, 'items': len(urls), 'errors': errs, 'notes': notes}
     return rows
 
 
 def src_wodp(months, backfill, stats):
-    rows, posts, errs = [], 0, []
+    rows, posts, errs, notes = [], 0, [], []
     if backfill:
         urls = sitemap_posts('https://whatsondisneyplus.com', 'sitemap.xml')          # its index (no sitemap_index)
     else:
@@ -476,14 +481,14 @@ def src_wodp(months, backfill, stats):
                        stop=r'looking forward to|for the latest|let me know', bullets_only=True, heading_marker=True,
                        h3_titles=True, drop_prefixes=('hulu', 'espn') if svc == 'disneyplus' else ('espn',))
         if not r:
-            errs.append(f'{u}: 0 rows (format change?)')
+            notes.append(f'{u}: 0 rows')
         rows += r
-    stats['wodp'] = {'posts': posts, 'errors': errs}
+    stats['wodp'] = {'posts': posts, 'items': len(urls), 'errors': errs, 'notes': notes}
     return rows
 
 
 def src_fb(months, backfill, stats):
-    rows, posts, errs = [], 0, []
+    rows, posts, errs, notes = [], 0, [], []
     feeds = ['https://film-book.com/category/streaming-schedule/feed/']        # ~120 posts: 3+ months (no paging)
     items = []
     for f in feeds:
@@ -518,14 +523,14 @@ def src_fb(months, backfill, stats):
                        strip_prefix=svc in ('disneyplus', 'hulu'), heading_year=False)
         r = [x for x in r if not re.search(r'schedule:|streaming release|^advertisement', x['raw'], re.I)]
         if not r:
-            errs.append(f"{it['link']}: 0 dated rows (month-level format, not parsed)")
+            notes.append(f"{it['link']}: 0 dated rows (month-level format, not parsed)")
         rows += r
-    stats['fb'] = {'posts': posts, 'errors': errs}
+    stats['fb'] = {'posts': posts, 'items': len(items), 'errors': errs, 'notes': notes}
     return rows
 
 
 def src_plex(months, backfill, stats):
-    rows, posts, errs = [], 0, []
+    rows, posts, errs, notes = [], 0, [], []
     st, xml, _ = get('https://www.plex.tv/blog/feed/')
     if st != 200:
         errs.append(f'feed HTTP {st}')
@@ -540,9 +545,9 @@ def src_plex(months, backfill, stats):
         r = dated_rows(text_lines(body), 'plex', year, mon, 'plex', it['link'], start=r'^##h\d new on plex in',
                        stop=r'^##h\d', default_date=(dt.date(year, mon, 1), 'month'))
         if not r:
-            errs.append(f"{it['link']}: 0 rows (format change?)")
+            notes.append(f"{it['link']}: 0 rows")
         rows += r
-    stats['plex'] = {'posts': posts, 'errors': errs}
+    stats['plex'] = {'posts': posts, 'items': len(feed_items(xml)) if st == 200 else 0, 'errors': errs, 'notes': notes}
     return rows
 
 
@@ -708,43 +713,67 @@ def load_state(state_dir):
 
 
 def merge(signals, key, rec, today):
-    """Merge one accepted row into a provider's stored signals (see module doc)."""
-    date, prec, src, pop, kind = rec
-    cur = signals.get(key)
-    if cur and dt.date.fromisoformat(date) - dt.date.fromisoformat(cur[0]) > dt.timedelta(days=NEW_EVENT_GAP):
-        cur = None                                  # a re-arrival: a new event replaces the old one
-    if not cur:
-        signals[key] = [date, prec, [src], 'announced', int(date > today), round(pop, 3), kind]
-        return
-    if PREC[prec] < PREC[cur[1]] or (PREC[prec] == PREC[cur[1]] and date < cur[0]):
-        cur[0], cur[1] = date, prec
-        cur[4] = cur[4] and int(date > today)
-    if src not in cur[2]:
-        cur[2] = sorted(cur[2] + [src])
-    cur[5] = max(cur[5], round(pop, 3))
+    """Record one accepted row as an observation of the title's arrivals (see module doc)."""
+    date, prec, src, pop, kind, season = rec
+    v = signals.get(key)
+    if not isinstance(v, dict):                     # new key (or an old-format entry: rebuilt from today's rows)
+        v = signals[key] = {'o': [], 'p': 0, 'k': kind, 's': 'announced'}
+    ob = [date, prec, src, season or 0]
+    if not any(o[:4] == ob for o in v['o']):
+        v['o'].append(ob + [int(date > today)])
+    v['p'] = max(v['p'], round(pop, 3))
     if kind == 'title':
-        cur[6] = 'title'
+        v['k'] = 'title'
+
+
+def events(obs):
+    """Group observations into arrival events (date order): <= NEW_EVENT_GAP days apart and not different seasons."""
+    out = []
+    for o in sorted(obs):
+        cur = out[-1] if out else None
+        if cur and (dt.date.fromisoformat(o[0]) - dt.date.fromisoformat(cur[-1][0])).days <= NEW_EVENT_GAP and                 not (o[3] and cur[-1][3] and o[3] != cur[-1][3]):
+            cur.append(o)
+        else:
+            out.append([o])
+    return out
+
+
+def current_event(v, today):
+    """(date, precision, sources, needs_confirmation, future) of the latest event that has started; the earliest
+    scheduled one when none has started yet."""
+    evs = events(v['o'])
+    started = [e for e in evs if e[0][0] <= today]
+    ev = started[-1] if started else evs[0]
+    best = min(ev, key=lambda o: (PREC[o[1]], o[0]))
+    return (best[0], best[1], sorted({o[2] for o in ev}), all(o[4] for o in ev), not started)
 
 
 def refresh(state, today, present=None):
-    """Recompute every stored signal's status from today's presence and prune old ones; returns
-    {provider: [candidate dicts]} = the signals build.py may show today (dated in the last WINDOW days, and a signal
-    first recorded as future only once confirmed)."""
+    """Recompute every stored signal's status from today's presence and prune old observations; returns
+    {provider: [candidate dicts]} = the arrivals build.py may show today: the current event dated in the last WINDOW
+    days, and an event known only from schedules published before its date only once confirmed on the service."""
     lo = (dt.date.fromisoformat(today) - dt.timedelta(days=WINDOW)).isoformat()
     cut = (dt.date.fromisoformat(today) - dt.timedelta(days=PRUNE_DAYS)).isoformat()
     out = {}
     for svc, prov in (state or {}).get('providers', {}).items():
         sig = prov.get('signals') or {}
-        for k in [k for k, v in sig.items() if v[0] < cut]:
-            del sig[k]
+        for k in list(sig):
+            v = sig[k]
+            if not isinstance(v, dict):
+                del sig[k]                          # old format: re-recorded from the sources
+                continue
+            v['o'] = [o for o in v['o'] if o[0] >= cut]
+            if not v['o']:
+                del sig[k]
         cands = []
         for k, v in sig.items():
             media, tid = k.split(':')
             if present:
-                v[3] = 'confirmed' if present(svc, media, int(tid)) else 'announced'
-            if lo <= v[0] <= today and (not v[4] or v[3] == 'confirmed'):
-                cands.append({'key': k, 'date': v[0], 'precision': v[1], 'sources': v[2], 'status': v[3],
-                              'popularity': v[5], 'kind': v[6]})
+                v['s'] = 'confirmed' if present(svc, media, int(tid)) else 'announced'
+            date, prec, srcs, needs_conf, future = current_event(v, today)
+            if not future and lo <= date <= today and (not needs_conf or v['s'] == 'confirmed'):
+                cands.append({'key': k, 'date': date, 'precision': prec, 'sources': srcs, 'status': v['s'],
+                              'popularity': v['p'], 'kind': v['k']})
         cands.sort(key=lambda c: (c['date'], -PREC[c['precision']], c['popularity']), reverse=True)
         out[svc] = cands
     return out
@@ -801,7 +830,7 @@ def main():
         prov = work['providers'].setdefault(r['service'], {'items': {}})
         merge(prov.setdefault('signals', {}), f"{r['tmdb_media']}:{r['tmdb_id']}",
               (r['date'], r['precision'], r['source'], r['popularity'],
-               'season' if (r.get('season') or 0) > 1 else 'title'), today)
+               'season' if (r.get('season') or 0) > 1 else 'title', r.get('season')), today)
     cands = refresh(work, today, present)
     for r in acc:
         r['on_service'] = present(r['service'], r['tmdb_media'], r['tmdb_id'])
@@ -816,9 +845,10 @@ def main():
     arrivals = {}
     for svc, prov in work['providers'].items():
         for k, v in (prov.get('signals') or {}).items():
-            arrivals.setdefault(svc, {})[k] = {'date': v[0], 'precision': v[1], 'source': v[2][0], 'sources': v[2],
-                                              'status': v[3], 'popularity': v[5], 'kind': v[6],
-                                              **({'future': True} if v[0] > today else {})}
+            date, prec, srcs, needs_conf, future = current_event(v, today)
+            arrivals.setdefault(svc, {})[k] = {'date': date, 'precision': prec, 'source': srcs[0], 'sources': srcs,
+                                              'status': v['s'], 'popularity': v['p'], 'kind': v['k'],
+                                              **({'future': True} if future else {})}
     (out / 'arrivals.json').write_text(json.dumps({'generated': today, 'since': since.isoformat(),
                                                    'services': arrivals}, indent=1), encoding='utf-8')
     cols = ['source', 'service', 'date', 'precision', 'raw', 'title', 'year', 'season', 'media', 'accepted', 'how',
@@ -840,16 +870,17 @@ def main():
         for s, p in per.items():
             st = stats.get(s, {})
             w.writerow([s, st.get('posts', 0), p['rows'], p['accepted'], f"{p['accepted'] / max(1, p['rows']):.0%}",
-                        p['check'], p['confirmed'], ' | '.join(st.get('errors', []))[:500]])
+                        p['check'], p['confirmed'], ' | '.join(st.get('errors', []) + st.get('notes', []))[:500]])
+    # warnings = real failures only (they open the health issue); known per-post parse gaps are notes
     warnings = [f'{s}: {e}' for s, st in stats.items() for e in st.get('errors', [])]
-    # a normally productive source with nothing today = a format change or an outage (the feeds always hold posts)
-    warnings += [f'{s}: 0 posts parsed (source down or format changed)' for s in SOURCES
-                 if stats.get(s, {}).get('posts', 0) == 0]
-    warnings += [f'{s}: {per[s]["rows"]} rows from {stats[s]["posts"]} posts (format changed?)' for s in SOURCES
+    warnings += [f'{s}: the feed / sitemap returned no items (source down or format changed)' for s in SOURCES
+                 if stats.get(s, {}).get('items', 0) == 0 and not stats.get(s, {}).get('errors')]
+    warnings += [f'{s}: {stats[s]["posts"]} posts but 0 rows (format changed?)' for s in SOURCES
                  if stats.get(s, {}).get('posts', 0) > 0 and per[s]['rows'] == 0]
     summary = {'date': today, 'mode': 'backfill' if backfill else 'daily', 'since': since.isoformat(),
                'state': 'merged' if state is not None else 'missing (logger failed): signals not stored',
-               'sources': {s: {'posts': stats.get(s, {}).get('posts', 0), **per[s]} for s in SOURCES},
+               'sources': {s: {'items': stats.get(s, {}).get('items', 0), 'posts': stats.get(s, {}).get('posts', 0),
+                               **per[s], 'notes': stats.get(s, {}).get('notes', [])} for s in SOURCES},
                'candidates': {s: len(c) for s, c in cands.items()}, 'tmdb_requests': build._calls[0],
                'fetch': fetch_stats, 'seconds': round(time.monotonic() - t0), 'warnings': warnings}
     (out / 'arrivals_summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
