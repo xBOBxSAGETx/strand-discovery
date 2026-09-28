@@ -1072,7 +1072,7 @@ class Presence:
     answers for free; TMDB watch/providers only for services the logger has no state for."""
 
     def __init__(self, state, pids):
-        self.state, self.pids, self.memo = state, pids, {}
+        self.state, self.pids, self.memo, self.err = state, pids, {}, {}
 
     def __call__(self, svc, media, tid):
         prov = (self.state or {}).get('providers', {}).get(svc)
@@ -1085,11 +1085,20 @@ class Presence:
         if k not in self.memo:
             try:
                 wp = build.tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}/watch/providers")['results'].get('US', {})
-            except (RuntimeError, SystemExit):
-                wp = {}
+            except (RuntimeError, SystemExit) as e:
+                wp, self.err[k] = {}, e
             self.memo[k] = bool({str(p['provider_id']) for kind in ('flatrate', 'free', 'ads', 'rent')
                                  for p in wp.get(kind, [])} & self.pids.get(svc, set()))
         return self.memo[k]
+
+    def checked(self, svc, media, tid):
+        """Like calling it, but a TMDB error (now or earlier this run) raises instead of answering False: resolve()
+        must not durably cache a tie-break decided by an error (W2-S1)."""
+        v = self(svc, media, tid)
+        e = self.err.get((svc, media, tid))
+        if e is not None:
+            raise (SystemExit(e.code) if isinstance(e, SystemExit) else RuntimeError(str(e)))
+        return v
 
 
 FRANCHISE = re.compile(r"^(star wars|marvel studios'|marvel's|marvel|disney's|pixar's|dc's|dc)\s*:?\s+(?=\S)", re.I)
@@ -1100,24 +1109,33 @@ def _year(r):
     return int(d[:4]) if d[:4].isdigit() else None
 
 
+TMDB_ERROR_HOW = 'CHECK: TMDB error (not cached; retried next run)'
+
+
 def resolve(row, present):
-    """-> (accepted, media, id, tmdb_title, tmdb_year, popularity, how); durably cached per title/service."""
+    """-> (accepted, media, id, tmdb_title, tmdb_year, popularity, how); durably cached per title/service.
+    Only a result TMDB actually answered is cached (W2-S1). A TMDB error (build.tmdb's RuntimeError, after its
+    retries) makes this row a not-accepted CHECK row for today and caches NOTHING, so the next run asks again - the
+    same rule as highest_season_at() and the other lookups here. The request-cap guard (SystemExit) is not caught:
+    it is a runaway abort, so the step fails before the state is written (the logger's fallback stays; health alerts)."""
     ver = 'arr3' if FRANCHISE.match(row['title']) else 'arr2'
     key = f"{ver}:{row.get('media')}|{norm(row['title'])}|{row.get('year')}|{row.get('season')}|{row['service']}"
-    return tuple(build.stable(key, lambda: list(_resolve(row, present))))
+    try:
+        return tuple(build.stable(key, lambda: list(_resolve(row, present))))
+    except RuntimeError:
+        return (False, row.get('media'), None, '', None, 0, TMDB_ERROR_HOW)
 
 
 def _search(media, query):
-    try:
-        return build.tmdb('/search/movie' if media == 'movie' else '/search/tv', query=query,
-                          include_adult='false').get('results', [])
-    except (RuntimeError, SystemExit):
-        return []
+    """TMDB search results. Raises on a TMDB error or the request-cap exit: an error is never an empty result."""
+    return build.tmdb('/search/movie' if media == 'movie' else '/search/tv', query=query,
+                      include_adult='false').get('results', [])
 
 
 def _resolve(row, present):
     medias = [row['media']] if row.get('media') else ['movie', 'series']
-    on = lambda m, r: present(row['service'], m, r['id'])
+    ask = getattr(present, 'checked', present)          # a Presence raises on a TMDB error; plain test stubs answer
+    on = lambda m, r: ask(row['service'], m, r['id'])
     cands = []
     for media in medias:
         for r in _search(media, row['title'])[:20]:
@@ -1145,10 +1163,7 @@ def _resolve(row, present):
     feats = []
     for m, r in exact:
         if m == 'movie':
-            try:
-                rt = build.stable(f"runtime:{r['id']}", lambda: build.tmdb(f"/movie/{r['id']}").get('runtime') or 0)
-            except RuntimeError:
-                rt = 0
+            rt = build.stable(f"runtime:{r['id']}", lambda: build.tmdb(f"/movie/{r['id']}").get('runtime') or 0)
             if rt and rt < 40 and not row.get('short'):
                 continue
         feats.append((m, r))
@@ -1453,6 +1468,10 @@ def main():
         res = list(pool.map(lambda r: resolve(r, present), todo))
     for r, (ok, m, i, tt, ty, pop, how) in zip(todo, res):
         r.update(accepted=ok, tmdb_media=m, tmdb_id=i, tmdb_title=tt, tmdb_year=ty, popularity=pop or 0, how=how)
+    tmdb_errors = sum(1 for x in res if x[6] == TMDB_ERROR_HOW)
+    if tmdb_errors:
+        print(f'resolve: {tmdb_errors} of {len(todo)} rows hit a TMDB error (CHECK today, not cached, retried next run)',
+              flush=True)
     build.save_cache()
     prune_http_cache()
     acc = [r for r in rows if r.get('accepted')]
