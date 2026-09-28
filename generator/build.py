@@ -439,7 +439,8 @@ FS_SUMMARY = _read_json(STATE_DIR / 'fs_summary.json', None)
 FS_CANDIDATES = _read_json(STATE_DIR / 'new_candidates.json', {})
 # arrival signals (arrivals.py, or the logger's fallback from the stored signals): per provider, date-desc
 SIGNALS = _read_json(STATE_DIR / 'signal_candidates.json', {}).get('providers', {})
-MIN_SIGNALS = 10               # a New card switches to arrival order with at least this many dated arrivals
+MIN_SIGNALS = 5                # a New card switches to arrival order with at least this many dated arrivals (was 10;
+#                                5 evaluated 2026-09-28: Apple TV and Shudder switch, precision gate 13/13 on service)
 
 
 def first_seen_mode(card):

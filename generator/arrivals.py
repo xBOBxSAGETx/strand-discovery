@@ -64,7 +64,7 @@ UA = 'strand-discovery/1.0 (personal non-commercial; +https://github.com/xBOBxSA
 # 'arrivals-v2': the earlier namespace ('arrivals') held page bodies; it is deleted on start and never read again.
 HTTP_ROOT = Path(os.environ.get('SD_HTTP_CACHE', 'cache/http'))
 HTTP_CACHE = HTTP_ROOT / 'arrivals-v2'
-PARSER_VERSION = 4              # bump on ANY parser change: stored parsed data from another version is refetched in full
+PARSER_VERSION = 5              # bump on ANY parser change: stored parsed data from another version is refetched in full
 # politeness: at least 3 s between requests to any host; film-book.com's robots Crawl-delay is 5 s; Vital Thrills
 # rate-limits (HTTP 429 to 17 fetches at ~1 s spacing from a GitHub runner, 2026-09-28): 5 s as a courtesy
 DELAY = {'film-book.com': 5.0, 'vitalthrills.com': 5.0}
@@ -312,7 +312,7 @@ def clean(raw):
     cut = len(s)
     for rx in (r'\((19|20)\d\d\)', r'\(\s*(complete )?seasons?\b', r'\((limited series|stand-up|documentary|special)',
                r',?\s+(complete )?seasons? \d', r'\s+netflix original', r',\s+directed by', r'\s+\((hbo|hulu|disney|fx|netflix|apple|prime|'
-               r'peacock|paramount|starz|amc|shudder|britbox|acorn|discovery|tlc|hgtv|id|cnn|tnt|own|dc|magnolia|food|'
+               r'peacock|paramount|starz|amc|shudder|sundance|britbox|acorn|discovery|tlc|hgtv|id|cnn|tnt|own|dc|magnolia|food|'
                r'cartoon|abc|nbc|cbs|a&e|lifetime|bravo|history|nat geo|national geographic)[^)]*\)'):
         m = re.search(rx, s, re.I)
         if m:
@@ -364,6 +364,14 @@ def heading_date(line, year):
             return None
     if re.fullmatch(r'(?:available|coming|streaming)\s+(?:this month|in ' + MON_RX + r'|' + MON_RX + r'|tba|date tba)', s):
         return 'month', 'month'
+    if re.fullmatch(r"new (?:on|to) [a-z0-9+&' ]{2,25} in " + MON_RX, s):     # Film-Book "New on Plex in September"
+        return 'month', 'month'
+    m = re.fullmatch(r'(\d{1,2})/(\d{1,2})/(\d{2})', s)                     # Film-Book table cell "6/1/26"
+    if m:
+        try:
+            return dt.date(2000 + int(m.group(3)), int(m.group(1)), int(m.group(2))), 'day'
+        except ValueError:
+            return None
     return None
 
 
@@ -385,13 +393,43 @@ def is_departures(line):
     return bool(DEPARTURES.search(ln) or DEPARTURES_CAPS.search(ln) or DEPARTURES_DATED.search(ln))
 
 
+# "Title (Shudder Original Film) - New Film Premieres Friday, August 7 (Available in the US and CA)",
+# "TITLE - Premieres Sept. 25": the date follows the title; the verb must announce an arrival, not a continuing run
+TRAILING = re.compile(r'^(?P<title>.+?)\s+[\u2013\u2014-]\s+(?P<verb>(?:(?!\s[\u2013\u2014-]\s).)*?)\b(?:on\s+)?'
+                      r'(?:(?:mon|tues|wednes|thurs|fri|satur|sun)day,?\s+)?' + MON_RX +
+                      r'\s+(?P<day>\d{1,2})(?:st|nd|rd|th)?\b(?P<rest>.*)$', re.I)
+TRAILING_VERB = re.compile(r'premiere|stream|available|arriv|debut|binge|launch', re.I)
+TRAILING_NOT = re.compile(r'continu|until|finale|every\b|weekly|new episodes? (?!.*premiere)', re.I)
+US_AVAIL = re.compile(r'\bUS\b|U\.S\.|United States|North America', re.I)
+
+
+def trailing_date(line, year, lo, hi):
+    """(date, title) for a trailing-date arrival line, else None. An '(Available in ...)' note must include the US."""
+    m = TRAILING.match(line.replace('**', '').strip())
+    if not m or not TRAILING_VERB.search(m.group('verb')) or TRAILING_NOT.search(m.group('verb')):
+        return None
+    rest = m.group('rest')
+    if re.search(r'available (only )?in', rest, re.I) and not US_AVAIL.search(rest):
+        return None
+    mon_txt = next(g for g in m.groups()[2:] if g and g.lower().rstrip('.') in {**MONTHS, **SHORT})
+    mon = MONTHS.get(mon_txt.lower().rstrip('.'), SHORT.get(mon_txt.lower().rstrip('.')))
+    try:
+        d = dt.date(year, mon, int(m.group('day')))
+    except (ValueError, TypeError):
+        return None
+    if not lo <= d <= hi:
+        return None
+    return d, m.group('title').strip()
+
+
 def dated_rows(lines, service, year, month, source, url, start=None, stop=None, prefix=False, bullets_only=False,
                heading_marker=False, heading_year=None, default_date=None, h3_titles=False, drop_prefixes=(),
-               strip_prefix=False, skip_lines=None):
+               strip_prefix=False, skip_lines=None, trailing=False, sections=None):
     """Walk the lines after `start` (regex): date headings set the date, other lines are titles. heading_marker: a
     date heading must be a '##h' line; heading_year False: a heading carrying a year is ignored (Film-Book sidebar);
     default_date: the date before any heading; dates outside the post month +- 1 are ignored (sidebars / links)."""
     rows, date, prec, media, on = [], None, None, None, start is None
+    sect = []                                           # sections: services of the current section ([] = skip)
     if default_date:
         date, prec = default_date
     table, take_next = False, False
@@ -418,7 +456,17 @@ def dated_rows(lines, service, year, month, source, url, start=None, stop=None, 
             continue
         if h:
             continue
-        m = re.match(MON_RX + r' (\d{1,2})(?:-\d{1,2})?\s*[–:-]\s*(.+)$', ln.replace('**', ''), re.I)
+        if sections is not None:                        # AMC+ posts: "AMC+", "SHUDDER (also available on AMC+)", ...
+            pl = ln.replace('**', '').strip()
+            hit = next((svs for rx, svs in sections if re.match(rx, pl, re.I)), None)
+            if hit is not None:
+                sect = hit
+                continue
+            if pl.isupper() and len(pl) < 40 and not re.search(r'\d', pl):
+                sect = []                               # a section of another service (ALL REALITY, HIDIVE, ...)
+                continue
+        trail = False
+        m = re.match(MON_RX + r' (\d{1,2})(?:-\d{1,2})?(?:,\s*20\d\d)?\s*[–:-]\s*(.+)$', ln.replace('**', ''), re.I)
         if m and not prefix:                            # inline "September 4 - Title" / "September 1: Title"
             mon = MONTHS.get(m.group(1).lower().rstrip('.'), SHORT.get(m.group(1).lower().rstrip('.')))
             try:
@@ -428,6 +476,9 @@ def dated_rows(lines, service, year, month, source, url, start=None, stop=None, 
             if not lo <= d <= hi:
                 continue
             ln_date, ln_prec, ln = d, 'day', m.group(3)
+        elif trailing and trailing_date(ln, year, lo, hi):
+            ln_date, ln = trailing_date(ln, year, lo, hi)
+            ln_prec, trail = 'day', True
         else:
             ln_date, ln_prec = date, prec
             m = re.search(r'\s+[–-]\s+(\d{1,2})/(\d{1,2})$', ln)   # Tubi "Title - 9/11"
@@ -458,17 +509,19 @@ def dated_rows(lines, service, year, month, source, url, start=None, stop=None, 
         if bullets_only and not ln.startswith('- '):
             continue
         plain = ln.replace('**', '').strip()
-        if plain.isupper() and len(plain) < 32 and not re.search(r'\d', plain) and not prefix:
+        if plain.isupper() and len(plain) < 32 and not re.search(r'\d', plain) and not prefix and not trail:
             media = None                                # genre / section headers (ACTION, THRILLER)
             continue
-        svcs = [service]
+        svcs = list(sect) if sections is not None else [service]
+        if not svcs:
+            continue
         if prefix:                                     # "Hulu: **Title" / "Disney+ and Hulu: **Title"
             m = re.match(r'^(disney\+ and hulu|hulu|disney\+)\s*:\s*(.*)$', plain, re.I)
             if not m:
                 continue
             svcs = {'hulu': ['hulu'], 'disney+': ['disneyplus'], 'disney+ and hulu': ['disneyplus', 'hulu']}[m.group(1).lower()]
             ln = m.group(2)
-        elif len(ln) > 110 or '. ' in ln or ln.endswith('.'):
+        elif not trail and (len(ln) > 110 or '. ' in ln or ln.endswith('.')):
             continue                                    # description sentences, not titles
         if strip_prefix:                               # Film-Book Disney+ post: "Disney+ and Hulu: Title"
             m = re.match(r'^(disney\+ and hulu|hulu|disney\+|espn)\s*:\s*(.*)$', plain, re.I)
@@ -567,6 +620,27 @@ def sitemap_posts(site, index, n=3):
     return urls
 
 
+# Vital Thrills posts whose schedule is a "HIGHLIGHTS" / "LINEUP" / "TITLES AND MORE" section of trailing-date lines
+VT_START = {s: r'^(##h2 )?.*(schedules?|titles|highlights|lineup)( and more)?$'
+            for s in ('shudder', 'terror-on-tubi', 'amc-plus')}
+VT_TRAILING = {'shudder', 'terror-on-tubi', 'amc-plus'}
+# AMC+ posts list several services: each section counts for its own service; Sundance Now has no card of its own and
+# the post says it is "also available on AMC+"; Shudder has its own card (per-app, not counted for AMC+)
+VT_SECTIONS = {'amc-plus': [(r'^amc\+$', ['amcplus']), (r'^shudder\b', ['shudder']), (r'^sundance now\b', ['amcplus']),
+                            (r'^acorn tv$', ['acorn-tv'])]}
+# Pluto TV posts are prose (quoted titles inside sentences, dates in the running text), not a list: not parsed
+
+
+def vt_rows(t, svc, slug, year, mon, u):
+    """Parser: one Vital Thrills monthly schedule post (page HTML) -> rows. BBC Select (a separate subscription listed
+    at the end of BritBox posts) ends the schedule."""
+    return dated_rows(text_lines(post_body(t)), svc, year, mon, 'vt', u,
+                      start=VT_START.get(slug, r'^(##h2 )?.*(schedules?|titles)$'),
+                      stop=r'^#\w|^tags?:|related posts|^##h2 (sports|live|fast channels|espn)|bbc select',
+                      prefix=svc == 'disney+hulu', trailing=slug in VT_TRAILING, sections=VT_SECTIONS.get(slug),
+                      skip_lines=r'watch part')
+
+
 def src_vt(months, backfill, stats):
     rows, posts, errs, notes = [], 0, [], []
     if backfill:
@@ -590,15 +664,17 @@ def src_vt(months, backfill, stats):
                 notes.append(f'{u}: deferred (backfill cap {VT_BACKFILL_MAX} posts per run)')
                 continue
             fetched += 1
-        s, r, _ = get_parsed(u, 'vt-post', lambda t, svc=svc, year=year, mon=mon, u=u: dated_rows(
-            text_lines(post_body(t)), svc, year, mon, 'vt', u, start=r'^(##h2 )?.*(schedules?|titles)$',
-            stop=r'^#\w|^tags?:|related posts|^##h2 (sports|live|fast channels|espn)', prefix=svc == 'disney+hulu'),
-            max_age=72)
+        slug = m.group(1)
+        s, r, _ = get_parsed(u, 'vt-post', lambda t, svc=svc, year=year, mon=mon, u=u, slug=slug:
+                             vt_rows(t, svc, slug, year, mon, u), max_age=72)
         if s != 200:
             errs.append(f'{u}: HTTP {s}')
             continue
         posts += 1
-        if not r:
+        if departures_signature(r):
+            notes.append(f'{u}: {departures_signature(r)} - read as a departures list, not as arrivals')
+            r = []
+        elif not r:
             notes.append(f'{u}: 0 rows')
         rows += r
     stats['vt'] = {'posts': posts, 'items': len(urls), 'errors': errs, 'notes': notes}
@@ -637,6 +713,31 @@ def src_wodp(months, backfill, stats):
     return rows
 
 
+def departures_signature(rows):
+    """A post whose dated rows mostly fall on a month's LAST day is a leaving list (licences end at month end; arrivals
+    cluster on the 1st): Film-Book's Starz October 2026 post carries Starz's leaving list under its 'Schedule' heading
+    with no departures heading (148 of 150 rows dated October 31). Returns the reason, or '' (>= 20 rows, >= half)."""
+    eom = sum(1 for r in rows if (dt.date.fromisoformat(r['date']) + dt.timedelta(days=1)).day == 1)
+    return f'{eom} of {len(rows)} rows dated a month end' if len(rows) >= 20 and 2 * eom >= len(rows) else ''
+
+
+def fb_rows(t, svc, year, mon, link):
+    """Parser: one Film-Book monthly schedule post (page HTML) -> rows. The schedule heading is an h3 (to September
+    2026) or an h2 (October 2026 on); a month-only heading ("Available in October", "New on Plex in September") dates
+    its titles the 1st with precision 'month'. The Criterion Channel's post has no dates: its titles are collection
+    lists ("FEATURING: Title (Year), ...") that mix new additions with films already on the channel (October 2026: 15 of
+    58 were on it before October), so it yields no rows and the Criterion card stays on release-date order."""
+    return dated_rows(text_lines(t[t.find('<article'):]), svc, year, mon, 'fb', link,
+                      start=r'^##h[23] .*schedule$',
+                      stop=r'^(more .* streaming|view all streaming|share this|about the author|'
+                           r'tags:|leave a (reply|comment)|##h[23] .*(leav(?:ing)|coming soon)|bbc select|'
+                           r'back to top|you may also like|recent posts|popular posts|'
+                           r'movie trailer|^contest$|newsletter|trending on filmbook|'
+                           r'latest video|^flickr$|^tags$|^subscribe$|delivered to your inbox)',
+                      strip_prefix=svc in ('disneyplus', 'hulu'), heading_year=False,
+                      skip_lines=r'schedule:|streaming release|^advertisement')
+
+
 def src_fb(months, backfill, stats):
     rows, posts, errs, notes = [], 0, [], []
     feeds = ['https://film-book.com/category/streaming-schedule/feed/']        # ~120 posts: 3+ months (no paging)
@@ -659,21 +760,17 @@ def src_fb(months, backfill, stats):
         if not svc or svc in DROPPED or not in_window(int(m.group(3)), MONTHS[m.group(2).lower()]):
             continue
         year, mon, link = int(m.group(3)), MONTHS[m.group(2).lower()], it['link']
-        s, r, _ = get_parsed(link, 'fb-post', lambda t, svc=svc, year=year, mon=mon, link=link: dated_rows(
-            text_lines(t[t.find('<article'):]), svc, year, mon, 'fb', link,
-            start=r'^##h3 .*schedule$', stop=r'^(more .* streaming|view all streaming|share this|about the author|'
-                                           r'tags:|leave a (reply|comment)|##h[23] .*(leav(?:ing)|coming soon)|'
-                                           r'back to top|you may also like|recent posts|popular posts|'
-                                           r'movie trailer|^contest$|newsletter|trending on filmbook|'
-                                           r'latest video|^flickr$|^tags$|^subscribe$|delivered to your inbox)',
-            strip_prefix=svc in ('disneyplus', 'hulu'), heading_year=False,
-            skip_lines=r'schedule:|streaming release|^advertisement'), max_age=72)
+        s, r, _ = get_parsed(link, 'fb-post', lambda t, svc=svc, year=year, mon=mon, link=link:
+                             fb_rows(t, svc, year, mon, link), max_age=72)
         if s != 200:
             errs.append(f"{it['link']}: HTTP {s}")
             continue
         posts += 1
-        if not r:
-            notes.append(f"{it['link']}: 0 dated rows (month-level format, not parsed)")
+        if departures_signature(r):
+            notes.append(f"{it['link']}: {departures_signature(r)} - read as a departures list, not as arrivals")
+            r = []
+        elif not r:
+            notes.append(f"{it['link']}: 0 dated rows (format not parsed)")
         rows += r
     stats['fb'] = {'posts': posts, 'items': len(items), 'errors': errs, 'notes': notes}
     return rows
@@ -921,12 +1018,18 @@ def events(obs):
     return out
 
 
+def current_obs(v, today):
+    """The observations of the latest event that has started; the earliest scheduled one when none has started yet."""
+    evs = events(v['o'])
+    started = [e for e in evs if e[0][0] <= today]
+    return started[-1] if started else evs[0]
+
+
 def current_event(v, today):
     """(date, precision, sources, needs_confirmation, future) of the latest event that has started; the earliest
     scheduled one when none has started yet."""
-    evs = events(v['o'])
-    started = [e for e in evs if e[0][0] <= today]
-    ev = started[-1] if started else evs[0]
+    ev = current_obs(v, today)
+    started = ev[0][0] <= today
     best = min(ev, key=lambda o: (PREC[o[1]], o[0]))
     return (best[0], best[1], sorted({o[2] for o in ev}), all(o[4] for o in ev), not started)
 
@@ -939,6 +1042,48 @@ ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}   # TMDB netwo
 SINGLE_SOURCE_DROP = os.environ.get('SD_ARRIVALS_SINGLE_SOURCE_DROP', '0') == '1'
 SINGLE_SOURCE_DAYS = 21
 _orphan_memo = {}
+# Baseline guard (copilot ruling 2026-09-28): an arrival DATED AFTER the logger's baseline date, for a title that was on
+# the service at the baseline and never left since (first_seen item ['baseline', last seen at the last run]), is a
+# pre-listing or a rotation, not an arrival: dropped whatever its precision (e.g. 25 of Plex's 55 October 2026 items).
+# Past-dated events are untouched (they arrived before the baseline). Exception (ruling accepted 2026-09-28): an event
+# that names a NEW season of a show already on the service is a real arrival ("new seasons of returning shows count")
+# and is kept. NEW = season >= 2 AND at least the latest season the show had aired at the baseline (the latest one
+# counts: it may reach the service after airing elsewhere - ruling of 2026-09-28 on 71138a6). The logger records
+# shows, not seasons, so "aired at the baseline" is TMDB's highest season (specials S0 excluded) whose air_date is on
+# or before the baseline date; a season without an air_date does not count as aired. A re-listed OLDER season (S1 or
+# S3 of a show with S4 out) still drops. Set BASELINE_GUARD_KEEP_NEW_SEASONS = False to drop every season too.
+BASELINE_GUARD_KEEP_NEW_SEASONS = True
+GUARD_DROPS = {}                # refresh(): {provider: [key, ...]} dropped by the baseline guard on its last call
+
+
+def highest_season_at(tid, base):
+    """Highest season number (> 0) of TMDB series `tid` with an air_date on or before `base` (0 when none). One TMDB
+    tv-details request per (series, baseline), durably cached; None on a TMDB error (not cached: retried next run)."""
+    def fetch():
+        seasons = build.tmdb(f'/tv/{tid}').get('seasons') or []
+        return max([s['season_number'] for s in seasons
+                    if (s.get('season_number') or 0) > 0 and s.get('air_date') and s['air_date'] <= base] or [0])
+    try:
+        return build.stable(f'tvseasons-at:{tid}:{base}', fetch)
+    except RuntimeError:
+        return None
+
+
+def pre_listed(prov, key, ev):
+    """Baseline guard: True when the event `ev` (current_obs) is dated after the provider's baseline and the title was
+    present at the baseline and is still present (never removed since) - unless the event names a new season."""
+    base, last = prov.get('baseline'), prov.get('last_run')
+    date = min(o[0] for o in ev)
+    if not base or not last or date <= base:
+        return False
+    it = (prov.get('items') or {}).get(fs_key(key))
+    if not (it and it[0] == 'baseline' and it[1] >= last):
+        return False
+    season = max((o[3] or 0) for o in ev)
+    if not BASELINE_GUARD_KEEP_NEW_SEASONS or season < 2 or not key.startswith('series:'):
+        return True
+    top = highest_season_at(int(key.split(':')[1]), base)
+    return top is None or season < top           # unknown (TMDB error) = not shown to be new: dropped this run
 
 
 def network_orphan(svc, media, tid):
@@ -968,6 +1113,7 @@ def refresh(state, today, present=None):
     lo = (dt.date.fromisoformat(today) - dt.timedelta(days=WINDOW)).isoformat()
     cut = (dt.date.fromisoformat(today) - dt.timedelta(days=PRUNE_DAYS)).isoformat()
     out = {}
+    GUARD_DROPS.clear()
     for svc, prov in (state or {}).get('providers', {}).items():
         sig = prov.get('signals') or {}
         for k in list(sig):
@@ -987,6 +1133,9 @@ def refresh(state, today, present=None):
             if present:
                 v['s'] = 'confirmed' if present(svc, media, int(tid)) else 'announced'
             date, prec, srcs, needs_conf, future = current_event(v, today)
+            if pre_listed(prov, k, current_obs(v, today)):
+                GUARD_DROPS.setdefault(svc, []).append(k)   # baseline guard (see BASELINE_GUARD_KEEP_NEW_SEASONS)
+                continue
             if future or not lo <= date <= today or (needs_conf and v['s'] != 'confirmed'):
                 continue
             status = v['s']
@@ -1059,6 +1208,8 @@ def main():
               (r['date'], r['precision'], r['source'], r['popularity'],
                'season' if (r.get('season') or 0) > 1 else 'title', r.get('season'), r.get('url')), today)
     cands = refresh(work, today, present)
+    build.save_cache()                                  # refresh()'s tvnet: / tvseasons-at: lookups are durable too
+    guarded = {s: set(ks) for s, ks in GUARD_DROPS.items()}
     for r in acc:
         r['on_service'] = present(r['service'], r['tmdb_media'], r['tmdb_id'])
     if state is not None:
@@ -1075,7 +1226,8 @@ def main():
             date, prec, srcs, needs_conf, future = current_event(v, today)
             arrivals.setdefault(svc, {})[k] = {'date': date, 'precision': prec, 'source': srcs[0], 'sources': srcs,
                                               'status': v['s'], 'popularity': v['p'], 'kind': v['k'],
-                                              **({'future': True} if future else {})}
+                                              **({'future': True} if future else {}),
+                                              **({'pre_listed': True} if k in guarded.get(svc, ()) else {})}
     (out / 'arrivals.json').write_text(json.dumps({'generated': today, 'since': since.isoformat(),
                                                    'services': arrivals}, indent=1), encoding='utf-8')
     cols = ['source', 'service', 'date', 'precision', 'title', 'year', 'season', 'media', 'accepted', 'how',
@@ -1109,7 +1261,10 @@ def main():
                'state': 'merged' if state is not None else 'missing (logger failed): signals not stored',
                'sources': {s: {'items': stats.get(s, {}).get('items', 0), 'posts': stats.get(s, {}).get('posts', 0),
                                **per[s], 'notes': stats.get(s, {}).get('notes', [])} for s in SOURCES},
-               'candidates': {s: len(c) for s, c in cands.items()}, 'tmdb_requests': build._calls[0],
+               'candidates': {s: len(c) for s, c in cands.items()},
+               # baseline guard notes: items dated after the baseline for titles on the service since the baseline
+               'baseline_guard_dropped': {s: len(ks) for s, ks in sorted(guarded.items())},
+               'tmdb_requests': build._calls[0],
                'fetch': fetch_stats, 'seconds': round(time.monotonic() - t0), 'warnings': warnings}
     (out / 'arrivals_summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
     print(json.dumps({k: summary[k] for k in ('mode', 'state', 'tmdb_requests', 'seconds', 'candidates')}), flush=True)
