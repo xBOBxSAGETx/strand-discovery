@@ -150,9 +150,13 @@ def recall(pages, summary, official_rows, today, baseline):
         inwin = {f"{r['media']}:{r['tmdb_id']}" for r in official_rows
                  if r['service'] == svc and lo <= r['date'] <= today}
         base = baseline.get('services', {}).get(svc)
-        if len(inwin) < MIN_OFFICIAL:
-            out.append({'service': svc, 'status': 'skipped', 'official_in_window': len(inwin),
-                        'note': f'fewer than {MIN_OFFICIAL} official arrivals dated {lo}..{today}: no current list'})
+        month = today[:7]
+        has_month = any(r['service'] == svc and r['date'][:7] == month for r in official_rows)
+        if not has_month or len(inwin) < MIN_OFFICIAL:     # measured only against a CURRENT-month official list
+            why = (f'no official arrival list for {month}' if not has_month else
+                   f'only {len(inwin)} official arrivals dated {lo}..{today} (need {MIN_OFFICIAL})')
+            out.append({'service': svc, 'status': 'skipped', 'official_in_window': len(inwin), 'month': month,
+                        'note': f'{why}; add them + a new baseline'})
             continue
         order = set(card_order(pages, slug))
         found = len(inwin & order)
@@ -198,6 +202,7 @@ def main():
     ap.add_argument('--unknowns', default=str(HERE / 'precision_unknowns.json'))
     ap.add_argument('--baseline', default=str(HERE / 'accuracy_baseline.json'))
     ap.add_argument('--spec', default=str(HERE / 'spec.json'))
+    ap.add_argument('--today', help='tests only: the date to judge against (default: the build date)')
     a = ap.parse_args()
     pages, state_dir, out = Path(a.pages), Path(a.state), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -206,6 +211,8 @@ def main():
     summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     spec = json.loads(Path(a.spec).read_text(encoding='utf-8'))
     cands = load_candidates(state_dir, summary['generated_at'][:10])
+    if a.today:                                  # tests only: judge the recall window / list month as of this date
+        cands = dict(cands, date=a.today)
     today = cands['date']                        # the date the build ordered the cards with
     official_rows = list(csv.DictReader(open(a.official, encoding='utf-8')))
     official = {}
@@ -235,6 +242,13 @@ def main():
                 f"{e['event_date']}, sources {e['sources']}, status {e['status']}) {e['urls'][:200]}" for e in errors]
     problems += [f"recall: {r['service']} {r['recall']}% is {r['drop']} points below the baseline {r['baseline']}%"
                  for r in rec if r.get('problem')]
+    # a skipped recall is never silent: it keeps the issue open until the month's lists + a new baseline are added
+    skipped = [r for r in rec if r['status'] == 'skipped']
+    if skipped:
+        months = sorted({r['month'] for r in skipped})
+        problems.append(f"recall: skipped for {', '.join(r['service'] for r in skipped)}: "
+                        f"{skipped[0]['note'].split(';')[0]}{'' if len(months) == 1 else ' (' + ', '.join(months) + ')'}; "
+                        "add them to generator/official_arrivals.csv + a new generator/accuracy_baseline.json")
     print('RESULT:', 'CLEAN' if not problems else f'{len(problems)} problem(s)')
     for p in problems:
         print(' -', p)
