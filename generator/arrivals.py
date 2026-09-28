@@ -1047,11 +1047,11 @@ _orphan_memo = {}
 # pre-listing or a rotation, not an arrival: dropped whatever its precision (e.g. 25 of Plex's 55 October 2026 items).
 # Past-dated events are untouched (they arrived before the baseline). Exception (ruling accepted 2026-09-28): an event
 # that names a NEW season of a show already on the service is a real arrival ("new seasons of returning shows count")
-# and is kept. NEW = season >= 2 AND higher than every season the show had at the baseline. The logger records shows,
-# not seasons, so "had at the baseline" is TMDB's highest season (specials S0 excluded) whose air_date is on or before
-# the baseline date; a season without an air_date does not count as aired. A re-listed old season (S1 or S3 of a
-# show with S4 out) still drops - and so does an older season that reaches this service late (TMDB's air_date is the
-# original airing, not this service's). Set BASELINE_GUARD_KEEP_NEW_SEASONS = False to drop every season too.
+# and is kept. NEW = season >= 2 AND at least the latest season the show had aired at the baseline (the latest one
+# counts: it may reach the service after airing elsewhere - ruling of 2026-09-28 on 71138a6). The logger records
+# shows, not seasons, so "aired at the baseline" is TMDB's highest season (specials S0 excluded) whose air_date is on
+# or before the baseline date; a season without an air_date does not count as aired. A re-listed OLDER season (S1 or
+# S3 of a show with S4 out) still drops. Set BASELINE_GUARD_KEEP_NEW_SEASONS = False to drop every season too.
 BASELINE_GUARD_KEEP_NEW_SEASONS = True
 GUARD_DROPS = {}                # refresh(): {provider: [key, ...]} dropped by the baseline guard on its last call
 
@@ -1083,7 +1083,7 @@ def pre_listed(prov, key, ev):
     if not BASELINE_GUARD_KEEP_NEW_SEASONS or season < 2 or not key.startswith('series:'):
         return True
     top = highest_season_at(int(key.split(':')[1]), base)
-    return top is None or season <= top          # unknown (TMDB error) = not shown to be new: dropped this run
+    return top is None or season < top           # unknown (TMDB error) = not shown to be new: dropped this run
 
 
 def network_orphan(svc, media, tid):
