@@ -61,7 +61,7 @@ TMDB says what is on a service, not when it arrived, so the New cards are ordere
    category feed), and the Plex blog ("New on Plex in <Month>").
 2. **Our own daily snapshots** (first_seen): the day we first saw a title on the service (after 14 days of history).
 3. Otherwise newest releases (the original behaviour).
-A card switches to arrival order once it has 10 dated arrivals in the last 45 days. A schedule entry dated in the
+A card switches to arrival order once it has 5 dated arrivals in the last 45 days. A schedule entry dated in the
 future is shown only after its date AND once the title is really on the service (JustWatch data via TMDB); titles are
 matched to TMDB by exact title only (anything ambiguous is left out). New seasons of returning shows count.
 Day-dated items from a published schedule are trusted for the whole 45-day window. Week/month roundup items (e.g. the
@@ -74,7 +74,12 @@ days after its date. Only titles, years, seasons, dates and post URLs are kept f
 Politeness: identifiable User-Agent, at least 3 s between requests to any site (Film-Book's 5 s crawl delay honoured;
 Vital Thrills 5 s), conditional GET from a private cache, never search URLs; an HTTP 429/503 is honoured once
 (Retry-After) and a second one stops that site for the run (one health warning); the backfill fetches at most 20
-Vital Thrills posts per run. Departure sections of a schedule ("Leaving …") are never read as arrivals.
+Vital Thrills posts per run. Departure sections of a schedule ("Leaving …") are never read as arrivals, nor is a post
+whose dated items mostly fall on a month's last day (a leaving list without a "Leaving" heading).
+Month-level lists ("Available in October", "New on Plex in September") are dated the 1st of the month and shown from
+that day. Not read: Pluto TV posts (prose, not a list), the Criterion Channel's monthly post (collection lists that
+mix new and existing films), and BBC Select sections (a separate subscription); Discovery+, Netflix Kids and MagellanTV
+have no published schedule source, so their New cards use our own daily snapshots only.
 Personal, non-commercial use. Only TMDB ids and dates end up in the
 catalogs - the sources' text is never republished. A failing source or a format change shows in the health issue and
 the cards fall back to the stored dates and the other sources (never empty).

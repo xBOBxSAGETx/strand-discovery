@@ -1,0 +1,126 @@
+"""Parser tests for generator/arrivals.py (standard library only; no network, no TMDB):
+
+    python -m unittest discover -s tests
+
+The page excerpts are synthetic (invented titles in the sources' layouts); no source text is stored in this repo.
+"""
+import os, sys, tempfile, unittest
+from pathlib import Path
+
+_tmp = tempfile.mkdtemp(prefix='sd-tests-')
+os.environ.setdefault('TMDB_API_KEY', 'unused-in-tests')
+for var in ('SD_HTTP_CACHE', 'SD_CACHE', 'SD_STATE'):
+    os.environ[var] = str(Path(_tmp) / var.lower())
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'generator'))
+import arrivals as a  # noqa: E402
+
+FB_URL = 'https://film-book.com/example-october-2026-schedule/'
+VT_URL = 'https://www.vitalthrills.com/example-october-2026/'
+
+
+def fb_page(body):
+    return f'<html><body><nav>sidebar</nav><article>{body}</article></body></html>'
+
+
+def vt_page(body):
+    return f'<html><body><div class="entry-content">{body}</div></article></body></html>'
+
+
+def titles(rows):
+    return [r['title'] for r in rows]
+
+
+class FilmBookMonthLevel(unittest.TestCase):
+    def test_month_heading_rows_dated_the_first(self):
+        rows = a.fb_rows(fb_page(
+            '<h2>New Movies Coming to Mubi in October 2026</h2><p>Intro text.</p>'
+            '<h2>Mubi October 2026 Schedule</h2>'
+            '<h3>Available in October</h3><ul><li>Quiet Harbor (2025)</li><li>The Lantern Keeper (2024)</li></ul>'),
+            'mubi', 2026, 10, FB_URL)
+        self.assertEqual(titles(rows), ['Quiet Harbor', 'The Lantern Keeper'])
+        self.assertEqual({(r['date'], r['precision'], r['service']) for r in rows}, {('2026-10-01', 'month', 'mubi')})
+        self.assertEqual([r['year'] for r in rows], [2025, 2024])
+
+    def test_new_on_service_in_month_heading(self):
+        rows = a.fb_rows(fb_page('<h3>Plex September 2026 Schedule</h3><h3>New on Plex in September</h3>'
+                                 '<ul><li>Paper Comets (2019)</li></ul>'), 'plex', 2026, 9, FB_URL)
+        self.assertEqual([(r['title'], r['date'], r['precision']) for r in rows], [('Paper Comets', '2026-09-01', 'month')])
+
+    def test_departures_heading_stops_the_month_list(self):
+        rows = a.fb_rows(fb_page(
+            '<h2>Mubi October 2026 Schedule</h2><h3>Available in October</h3><ul><li>Quiet Harbor (2025)</li></ul>'
+            '<h3>Leaving Mubi in October</h3><ul><li>Old Reel (1999)</li></ul>'), 'mubi', 2026, 10, FB_URL)
+        self.assertEqual(titles(rows), ['Quiet Harbor'])
+
+    def test_day_headings_still_day_precision(self):
+        rows = a.fb_rows(fb_page('<h3>Starz July 2026 Schedule</h3><h3>July 1</h3><ul><li>Iron Orchard (2012)</li></ul>'
+                                 '<h3>July 10</h3><ul><li>Salt Road, Season 2</li></ul>'), 'starz', 2026, 7, FB_URL)
+        self.assertEqual([(r['title'], r['date'], r['precision']) for r in rows],
+                         [('Iron Orchard', '2026-07-01', 'day'), ('Salt Road', '2026-07-10', 'day')])
+
+    def test_table_date_cells(self):
+        rows = a.fb_rows(fb_page('<h3>Hulu June 2026 Schedule</h3><table>\n<tr>\n<td>date</td>\n<td>show</td>\n'
+                                 '<td>category</td>\n<td>status</td>\n</tr>\n<tr>\n<td>6/4/26</td>\n<td>Glass Tide</td>\n'
+                                 '<td>Hulu Original</td>\n<td>Added</td>\n</tr>\n</table>'),
+                         'hulu', 2026, 6, FB_URL)
+        self.assertEqual([(r['title'], r['date'], r['precision']) for r in rows], [('Glass Tide', '2026-06-04', 'day')])
+
+    def test_bbc_select_section_is_not_britbox(self):
+        rows = a.fb_rows(fb_page('<h3>BritBox June 2026 Schedule</h3><h3>June 3</h3><ul><li>Moor Lane, Season 1</li></ul>'
+                                 '<p>BBC SELECT MONTHLY LISTINGS</p><h3>June 9</h3><ul><li>Rivers of Stone</li></ul>'),
+                         'britbox', 2026, 6, FB_URL)
+        self.assertEqual(titles(rows), ['Moor Lane'])
+
+    def test_leaving_list_without_heading_is_flagged(self):
+        leaving = ''.join(f'<li>Faded Title {i}</li>' for i in range(24))
+        rows = a.fb_rows(fb_page(f'<h2>Starz October 2026 Schedule</h2><h3>October 1</h3><ul><li>Lone Arrival</li></ul>'
+                                 f'<h3>October 31</h3><ul>{leaving}</ul>'), 'starz', 2026, 10, FB_URL)
+        self.assertEqual(len(rows), 25)
+        self.assertEqual(a.departures_signature(rows), '24 of 25 rows dated a month end')
+
+    def test_arrivals_on_the_first_are_not_flagged(self):
+        rows = [{'date': '2026-10-01'}] * 30 + [{'date': '2026-10-31'}] * 5
+        self.assertEqual(a.departures_signature(rows), '')
+        self.assertEqual(a.departures_signature([{'date': '2026-10-31'}] * 19), '')     # too few rows to judge
+
+
+class VitalThrillsTrailingDates(unittest.TestCase):
+    def test_trailing_date_lines(self):
+        rows = a.vt_rows(vt_page(
+            '<h2>SHUDDER OCTOBER 2026 HIGHLIGHTS</h2>'
+            '<p>Night Orchard (Shudder Original Film) &#8211; New Film Premieres Friday, October 2 '
+            '(Available in the US and CA)</p><p>A description sentence about the film. It is long.</p>'
+            '<p>HOLLOW PINES 2 &#8211; Premieres Oct. 9</p>'
+            '<p>Grey Coast (Shudder Exclusive Film) &#8211; New Film Premieres Friday, October 16 '
+            '(Available in Canada)</p>'
+            '<p>Marsh Lights Season 2 (Shudder Original Series) &#8211; New Episodes Continue Weekly Through October 30</p>'
+            '<p>LEAVING OCTOBER 31</p><p>Old Fog &#8211; Available until October 31</p>'),
+            'shudder', 'shudder', 2026, 10, VT_URL)
+        self.assertEqual([(r['title'], r['date'], r['precision'], r['service']) for r in rows],
+                         [('Night Orchard', '2026-10-02', 'day', 'shudder'), ('HOLLOW PINES 2', '2026-10-09', 'day', 'shudder')])
+
+    def test_amc_plus_sections(self):
+        rows = a.vt_rows(vt_page(
+            '<h2>AMC+ OCTOBER 2026 HIGHLIGHTS</h2>'
+            '<p>AMC+</p><p>Ridge County Season 3 (AMC+ Original Series) &#8211; Season Premieres Sunday, October 4</p>'
+            '<p>SHUDDER (also available on AMC+)</p>'
+            '<p>Night Orchard (Shudder Original Film) &#8211; New Film Premieres Friday, October 2</p>'
+            '<p>SUNDANCE NOW (also available on AMC+)</p>'
+            '<p>Cold Ledger (Sundance Now Documentary) &#8211; Documentary Series Premieres Thursday, October 8</p>'
+            '<p>HIDIVE</p><p>Star Lantern &#8211; Premieres October 3</p>'),
+            'amcplus', 'amc-plus', 2026, 10, VT_URL)
+        self.assertEqual([(r['title'], r['service'], r['date']) for r in rows],
+                         [('Ridge County', 'amcplus', '2026-10-04'), ('Night Orchard', 'shudder', '2026-10-02'),
+                          ('Cold Ledger', 'amcplus', '2026-10-08')])
+
+    def test_bbc_select_stops_vital_thrills_britbox(self):
+        rows = a.vt_rows(vt_page('<h2>BRITBOX JUNE 2026 SCHEDULE</h2><p>AVAILABLE JUNE 3</p>'
+                                 '<p>Moor Lane Season 1 | New to BritBox | 6 x 60\'</p>'
+                                 '<h2>BBC SELECT MONTHLY LISTINGS</h2><p>AVAILABLE JUNE 9</p>'
+                                 '<p>Rivers of Stone | Available in North America | 1 x 60\'</p>'),
+                         'britbox', 'britbox', 2026, 6, VT_URL)
+        self.assertEqual(titles(rows), ['Moor Lane'])
+
+
+if __name__ == '__main__':
+    unittest.main()
