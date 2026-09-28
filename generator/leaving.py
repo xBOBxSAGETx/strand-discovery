@@ -312,7 +312,9 @@ def main():
     stats = {s: {'posts': 0, 'rows': 0, 'errors': [], 'platforms': {}} for s in ('won', 'wil')}
     rows = []
     for name, fn in (('won', lambda st: won_rows(st)), ('wil', lambda st: wil_rows(st, today))):
-        if name == 'wil' and os.environ.get('SD_LEAVING_WIL', '1') == '0':     # kill switch (README: Operations)
+        # OFF by default: whatisleaving.com's Terms of Service forbid automated bulk extraction and republishing its
+        # lists (found 2026-09-28); only an explicit SD_LEAVING_WIL=1 turns it on, pending the owner's decision
+        if name == 'wil' and os.environ.get('SD_LEAVING_WIL', '0') != '1':
             stats[name]['errors'].append('disabled (SD_LEAVING_WIL=0)')
             continue
         try:

@@ -39,6 +39,9 @@ FOLDERS += [{'key': f'actors-{slugify(c)}', 'title': f'Actors · {c}', 'shape': 
 # ---- sources -----------------------------------------------------------------------------------------------------
 # subscription services: flatrate only; ad-supported / library services: free|ads. Rent/buy never counts as "on it".
 FREE_SERVICES = {'Tubi', 'Pluto TV', 'Plex'}
+# Plex uses one provider id for its free library and its rental store. The owner keeps rentals on the Plex cards
+# (playback is via debrid, so "rent" still means watchable) - explicit here, the single source for build + first_seen.
+MONETIZATION = {'Plex': 'free|ads|rent'}
 # dropped by the user 2026-09-28: Crunchyroll, Rakuten Viki, The Roku Channel, Kanopy, Hoopla
 STREAMING = [('Netflix', '8'), ('Disney+', '337'), ('HBO Max', '1899'), ('Apple TV', '350'), ('Paramount+', '2616|2303'),
              ('Prime Video', '9'), ('Hulu', '15'), ('Peacock', '386|387'), ('Starz', '43'), ('Discovery+', '520'),
@@ -182,7 +185,7 @@ def main():
             if v == 'top' and name in NO_TOP:
                 continue
             p = {'watch_region': 'US', 'with_watch_providers': ids,
-                 'with_watch_monetization_types': 'free|ads' if name in FREE_SERVICES else 'flatrate'}
+                 'with_watch_monetization_types': MONETIZATION.get(name, 'free|ads' if name in FREE_SERVICES else 'flatrate')}
             eyebrow = {'popular': 'Streaming', 'new': 'New on Streaming', 'top': 'Top Rated · Streaming'}[v]
             cats.append(disc(f'streaming-{slugify(name)}' + ('' if v == 'popular' else f'-{v}'), f'{name} · {n}', name,
                              eyebrow, f'streaming-{v}', ['movie', 'series'], v, movie=p, series=p))

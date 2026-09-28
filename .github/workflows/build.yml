@@ -99,7 +99,7 @@ jobs:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           SD_CACHE: cache
           SD_HTTP_CACHE: cache/http
-          SD_LEAVING_WIL: ${{ vars.SD_LEAVING_WIL || '1' }}
+          SD_LEAVING_WIL: ${{ vars.SD_LEAVING_WIL || '0' }}   # off unless the owner opts in (README: Leaving Soon sources)
         run: python generator/leaving.py leaving
       - name: Save first_seen state (cache)
         if: steps.logger.outcome == 'success'

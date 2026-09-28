@@ -695,12 +695,12 @@
    "movie": {
     "watch_region": "US",
     "with_watch_providers": "538",
-    "with_watch_monetization_types": "free|ads"
+    "with_watch_monetization_types": "free|ads|rent"
    },
    "series": {
     "watch_region": "US",
     "with_watch_providers": "538",
-    "with_watch_monetization_types": "free|ads"
+    "with_watch_monetization_types": "free|ads|rent"
    }
   },
   {
@@ -1279,12 +1279,12 @@
    "movie": {
     "watch_region": "US",
     "with_watch_providers": "538",
-    "with_watch_monetization_types": "free|ads"
+    "with_watch_monetization_types": "free|ads|rent"
    },
    "series": {
     "watch_region": "US",
     "with_watch_providers": "538",
-    "with_watch_monetization_types": "free|ads"
+    "with_watch_monetization_types": "free|ads|rent"
    },
    "tv_air_window": 45,
    "provider": "plex"
@@ -1818,12 +1818,12 @@
    "movie": {
     "watch_region": "US",
     "with_watch_providers": "538",
-    "with_watch_monetization_types": "free|ads"
+    "with_watch_monetization_types": "free|ads|rent"
    },
    "series": {
     "watch_region": "US",
     "with_watch_providers": "538",
-    "with_watch_monetization_types": "free|ads"
+    "with_watch_monetization_types": "free|ads|rent"
    },
    "min_age_days": 180
   },

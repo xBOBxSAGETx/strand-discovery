@@ -56,8 +56,8 @@ def providers():
 
 
 def base_params(p, media, dflt):
-    q = dict(p[media])
-    q['with_watch_monetization_types'] = 'free|ads' if p['free'] else 'flatrate'
+    q = dict(p[media])                  # monetization comes from the spec card (make_spec: MONETIZATION / FREE_SERVICES)
+    q.setdefault('with_watch_monetization_types', 'free|ads' if p['free'] else 'flatrate')
     q.update({'include_adult': 'false', 'vote_count.gte': 0,
               'sort_by': 'primary_release_date.asc' if media == 'movie' else 'first_air_date.asc'})
     excl = dflt.get('without_keywords', '')
