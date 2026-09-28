@@ -6,10 +6,11 @@ TMDB's watch-provider data says what is on a service, not when it arrived; the f
 snapshots) needs 14 days of history. These sources publish the dates directly:
   won   What's on Netflix "whats-new" feed: weekly "New on Netflix This Week" roundups (no per-day dates -> dated at the
         week START, precision "week") and "Netflix Adds N ... for <Month> 1st" posts (day)
-  vt    Vital Thrills monthly "<service>-<month>-<year>" schedule posts: daily = the streaming-schedule tag feed;
-        backfill = its post sitemaps (never ?s= search URLs: robots.txt)
-  wodp  whatsondisneyplus.com monthly "What's Coming To Disney+ (US) / Hulu / HBO Max In <Month>": daily = its feed;
-        backfill = its post sitemaps
+  vt    Vital Thrills monthly "<service>-<month>-<year>" schedule posts: daily = the streaming-schedule tag feed +
+        the automatic catch-up (post sitemaps, <= 20 unread posts per run; see catchup()); backfill = its post
+        sitemaps (never ?s= search URLs: robots.txt)
+  wodp  whatsondisneyplus.com monthly "What's Coming To Disney+ (US) / Hulu / HBO Max In <Month>": daily = its feed +
+        the automatic catch-up; backfill = its post sitemaps
   fb    Film-Book streaming-schedule category feed -> each post (robots Crawl-delay 5 s)
   plex  plex.tv blog "New on Plex in <Month>" (month precision)
 Politeness: identifiable User-Agent, <= 1 request/s per host (Crawl-delay honoured), on-disk HTTP cache with ETag /
@@ -36,10 +37,11 @@ Signals are merged into the durable first_seen state (<SD_STATE>/first_seen.json
 <SD_STATE>/signal_candidates.json (per provider, the signals build.py may show today) is written by this step and,
 from the stored signals, by the logger - so a failing source or step falls back to the stored signals, never empty.
 Outputs in <out dir>: arrivals.json (today's merged signals), rows.csv, check_rows.csv, parse_stats.csv,
-arrivals_summary.json (per-source posts / rows / accepted / errors + warnings, read by health.py).
+arrivals_summary.json (per-source posts / rows / accepted / errors + warnings, read by health.py). A source whose
+resolve rate drops 25+ points below its recent median is a warning (resolve_rate_check(), history in the state).
 Env: TMDB_API_KEY (never printed), SD_CACHE, SD_STATE (default state), SD_HTTP_CACHE (default cache/http).
 """
-import csv, datetime as dt, gzip, hashlib, html, json, os, re, sys, time, unicodedata
+import csv, datetime as dt, gzip, hashlib, html, json, os, re, statistics, sys, time, unicodedata
 import urllib.error, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -641,6 +643,36 @@ def vt_rows(t, svc, slug, year, mon, u):
                       skip_lines=r'watch part')
 
 
+def has_current(url, parser):
+    """True when the HTTP cache holds this page parsed by the CURRENT parser version (reading it costs no request)."""
+    try:
+        rec = json.loads(_record_path(url, parser).read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return False
+    return rec.get('v') == PARSER_VERSION and 'data' in rec
+
+
+def vt_match(u, months):
+    """(service, slug, year, month) of a Vital Thrills monthly schedule post in the run's window, else None."""
+    m = re.search(r'vitalthrills\.com/([a-z-]+?)-(' + '|'.join(months) + r')-(20\d\d)/?$', u)
+    if not m or m.group(1) not in VT_SERVICES:
+        return None
+    year, mon = int(m.group(3)), MONTHS[m.group(2)]
+    return (VT_SERVICES[m.group(1)], m.group(1), year, mon) if in_window(year, mon) else None
+
+
+def vt_post(u, info, max_age=72):
+    """(status, rows, note) of one Vital Thrills post; a leaving list (departures_signature) yields no rows."""
+    svc, slug, year, mon = info
+    s, r, _ = get_parsed(u, 'vt-post', lambda t: vt_rows(t, svc, slug, year, mon, u), max_age=max_age)
+    if s != 200:
+        return s, [], None
+    PARSED_OK['vt'].add(u)
+    if departures_signature(r):
+        return s, [], f'{u}: {departures_signature(r)} - read as a departures list, not as arrivals'
+    return s, r, None if r else f'{u}: 0 rows'
+
+
 def src_vt(months, backfill, stats):
     rows, posts, errs, notes = [], 0, [], []
     if backfill:
@@ -652,33 +684,49 @@ def src_vt(months, backfill, stats):
             errs.append(f'tag feed HTTP {st}')
     fetched = 0
     for u in dict.fromkeys(urls):
-        m = re.search(r'vitalthrills\.com/([a-z-]+?)-(' + '|'.join(months) + r')-(20\d\d)/?$', u)
-        if not m or m.group(1) not in VT_SERVICES:
+        info = vt_match(u, months)
+        if not info:
             continue
-        svc, mon, year = VT_SERVICES[m.group(1)], MONTHS[m.group(2)], int(m.group(3))
-        if not in_window(year, mon):
-            continue
-        cached = _record_path(u, 'vt-post').exists()
-        if backfill and not cached:
+        # a record of another parser version is refetched in full, so it counts against the cap too
+        if backfill and not has_current(u, 'vt-post'):
             if fetched >= VT_BACKFILL_MAX:        # the rest on the next backfill run (the cache keeps progress)
                 notes.append(f'{u}: deferred (backfill cap {VT_BACKFILL_MAX} posts per run)')
                 continue
             fetched += 1
-        slug = m.group(1)
-        s, r, _ = get_parsed(u, 'vt-post', lambda t, svc=svc, year=year, mon=mon, u=u, slug=slug:
-                             vt_rows(t, svc, slug, year, mon, u), max_age=72)
+        s, r, note = vt_post(u, info)
         if s != 200:
             errs.append(f'{u}: HTTP {s}')
             continue
         posts += 1
-        if departures_signature(r):
-            notes.append(f'{u}: {departures_signature(r)} - read as a departures list, not as arrivals')
-            r = []
-        elif not r:
-            notes.append(f'{u}: 0 rows')
+        if note:
+            notes.append(note)
         rows += r
     stats['vt'] = {'posts': posts, 'items': len(urls), 'errors': errs, 'notes': notes}
     return rows
+
+
+def wodp_match(u, months):
+    """(service, year, month) of a whatsondisneyplus.com monthly list in the run's window (Disney+: the US edition
+    only), else None."""
+    m = re.search(r"whats-coming-to-(disney-in|hulu-hulu-on-disney-in|hbo-max-in)-(" + '|'.join(months) +
+                  r")-(20\d\d)(-us)?/?$", u)
+    if not m or (m.group(1) == 'disney-in' and not m.group(4)):
+        return None
+    year, mon = int(m.group(3)), MONTHS[m.group(2)]
+    return (WODP[m.group(1)], year, mon) if in_window(year, mon) else None
+
+
+def wodp_post(u, info, max_age=72):
+    """(status, rows, note) of one whatsondisneyplus.com post."""
+    svc, year, mon = info
+    s, r, _ = get_parsed(u, 'wodp-post', lambda t: dated_rows(
+        text_lines(post_body(t)), svc, year, mon, 'wodp', u, start=None,
+        stop=r'looking forward to|for the latest|let me know', bullets_only=True, heading_marker=True,
+        h3_titles=True, drop_prefixes=('hulu', 'espn') if svc == 'disneyplus' else ('espn',)), max_age=max_age)
+    if s != 200:
+        return s, [], None
+    PARSED_OK['wodp'].add(u)
+    return s, r, None if r else f'{u}: 0 rows'
 
 
 def src_wodp(months, backfill, stats):
@@ -691,26 +739,179 @@ def src_wodp(months, backfill, stats):
         if st != 200:
             errs.append(f'feed HTTP {st}')
     for u in dict.fromkeys(urls):
-        m = re.search(r"whats-coming-to-(disney-in|hulu-hulu-on-disney-in|hbo-max-in)-(" + '|'.join(months) +
-                      r")-(20\d\d)(-us)?/?$", u)
-        if not m or (m.group(1) == 'disney-in' and not m.group(4)):
-            continue                                    # Disney+: the US edition only
-        svc, mon, year = WODP[m.group(1)], MONTHS[m.group(2)], int(m.group(3))
-        if not in_window(year, mon):
+        info = wodp_match(u, months)
+        if not info:
             continue
-        s, r, _ = get_parsed(u, 'wodp-post', lambda t, svc=svc, year=year, mon=mon, u=u: dated_rows(
-            text_lines(post_body(t)), svc, year, mon, 'wodp', u, start=None,
-            stop=r'looking forward to|for the latest|let me know', bullets_only=True, heading_marker=True,
-            h3_titles=True, drop_prefixes=('hulu', 'espn') if svc == 'disneyplus' else ('espn',)), max_age=72)
+        s, r, note = wodp_post(u, info)
         if s != 200:
             errs.append(f'{u}: HTTP {s}')
             continue
         posts += 1
-        if not r:
-            notes.append(f'{u}: 0 rows')
+        if note:
+            notes.append(note)
         rows += r
     stats['wodp'] = {'posts': posts, 'items': len(urls), 'errors': errs, 'notes': notes}
     return rows
+
+
+# ---------------------------------------------------------------- automatic catch-up -------------------------------
+# The daily feeds carry only the newest posts (Vital Thrills' tag feed: 10 items, 2026-09-28), so most monthly posts
+# of a month are never in them (38 VT posts in the daily window, 8 in the feed). The daily run therefore also reads
+# the post SITEMAPS and fetches, per run, at most CATCHUP_MAX posts it has not read yet under the current
+# PARSER_VERSION - newest month first. Progress lives in the durable first_seen state (state['catchup']), written
+# together with the signals those posts produced; a new PARSER_VERSION re-opens the catch-up by itself. Once every
+# in-window post is read, the listing is checked again only every CATCHUP_RESCAN_DAYS (0 requests in between).
+# A 429/503 in the catch-up stops that host (circuit breaker) and is a note, not a health warning; the catch-up
+# resumes next run. CATCHUP_STALL_RUNS runs in a row without progress while posts are pending = one warning.
+# (A 429 in the regular feed path stays ONE health warning per stopped host, as before.) Weekly, reread() also
+# revalidates the done posts of the current and next month, within the same per-run cap.
+CATCHUP_MAX = {'vt': VT_BACKFILL_MAX, 'wodp': 20}
+CATCHUP_RESCAN_DAYS = 3
+CATCHUP_STALL_RUNS = 3
+CATCHUP_REREAD_DAYS = 7         # weekly re-read of the current + next month's done posts (titles added mid-month)
+CATCHUP_SOURCES = {'vt': ('https://www.vitalthrills.com', 'sitemap_index.xml', vt_match, vt_post, 'vt-post'),
+                   'wodp': ('https://whatsondisneyplus.com', 'sitemap.xml', wodp_match, wodp_post, 'wodp-post')}
+PARSED_OK = {'vt': set(), 'wodp': set()}      # posts read (HTTP 200) by this run's feed / backfill path
+GONE = (404, 410)                             # a post that no longer exists is not waited for
+
+
+def catchup(state, months, today_d, backfill):
+    """-> (rows, report, warnings, ledger). The ledger replaces state['catchup'] only when this returns (the caller
+    commits it with the rows' signals), so an exception leaves the stored progress as it was."""
+    today = today_d.isoformat()
+    led = state.get('catchup')
+    if not isinstance(led, dict) or led.get('v') != PARSER_VERSION:
+        led = {'v': PARSER_VERSION, 'sources': {}}           # a parser fix: every post is read again
+    led = json.loads(json.dumps(led))
+    rows, report, warns = [], {}, []
+    for name, (site, index, match, fetch, parser) in CATCHUP_SOURCES.items():
+        st = led['sources'].setdefault(name, {'done': {}, 'scanned': None, 'listed': 0, 'pending': None, 'stalled': 0})
+        done = st['done']
+        for u in list(done):
+            if not match(u, months):
+                del done[u]                                  # out of the window now: forgotten (the state stays small)
+        for u in PARSED_OK[name]:
+            if match(u, months):
+                done.setdefault(u, today)                    # read today by the feed / backfill path
+        cap, notes = CATCHUP_MAX[name], []
+        host = urllib.parse.urlparse(site).netloc.lower().removeprefix('www.')
+        age = (today_d - dt.date.fromisoformat(st['scanned'])).days if st.get('scanned') else None
+        due = st.get('pending') != 0 or age is None or age >= CATCHUP_RESCAN_DAYS
+        rep = report[name] = {'listed': st['listed'], 'done': len(done), 'pending': st.get('pending'),
+                              'fetched': 0, 'read': 0, 'cap': cap, 'notes': notes}
+        fetched = 0                                          # requests this run: catch-up + re-read share the cap
+        if backfill or not due:
+            rep['state'] = ('manual backfill run (progress recorded, no catch-up fetches)' if backfill else
+                            f"done (listing re-checked on {dt.date.fromisoformat(st['scanned']) + dt.timedelta(days=CATCHUP_RESCAN_DAYS)})")
+        elif host in _stopped:
+            rep['state'] = f'skipped: {host} stopped earlier in this run ({_stopped[host]})'
+            st['stalled'] = st.get('stalled', 0) + 1
+        else:
+            urls = sitemap_posts(site, index)
+            inwin = {u: info for u in dict.fromkeys(urls) if (info := match(u, months))}
+            if not inwin:
+                rep['state'] = 'skipped: the post sitemaps listed no post in the window (unavailable?)'
+                st['stalled'] = st.get('stalled', 0) + 1
+            else:
+                # newest month first: this and next month's posts date the New cards; older months only history
+                todo = sorted((u for u in inwin if u not in done), key=lambda u: inwin[u][-2:], reverse=True)
+                read, stop = 0, None
+                for u in todo:
+                    if host in _stopped:
+                        stop = _stopped[host]
+                        break
+                    cached = has_current(u, parser)
+                    if not cached:
+                        if fetched >= cap:
+                            break                            # the rest on the next run
+                        fetched += 1
+                    s, r, note = fetch(u, inwin[u], max_age=1e9 if cached else 72)
+                    if s == 200 or s in GONE:
+                        done[u] = today
+                        read += 1
+                        rows += r
+                        if note or s != 200:
+                            notes.append(note or f'{u}: HTTP {s} (gone; not waited for)')
+                    elif s == BLOCKED:
+                        stop = _stopped.get(host, 'stopped')
+                        break
+                    else:
+                        notes.append(f'{u}: HTTP {s} (retried next run)')
+                pending = sum(1 for u in inwin if u not in done)
+                st.update(scanned=today, listed=len(inwin), pending=pending)
+                st['stalled'] = 0 if read or not pending else st.get('stalled', 0) + 1
+                rep.update(listed=len(inwin), done=len(inwin) - pending, pending=pending, fetched=fetched, read=read,
+                           eta_runs=-(-pending // cap),
+                           state=('done' if not pending else f'stopped: {stop}' if stop else 'catching up'))
+        if not backfill:
+            fetched = reread(name, st, done, match, fetch, host, cap, fetched, months, today_d, rows, rep)
+        if st.get('pending') and st['stalled'] >= CATCHUP_STALL_RUNS:
+            warns.append(f"{name} catch-up: no progress for {st['stalled']} runs in a row with {st['pending']} posts "
+                         f"pending ({rep['state']})")
+    return rows, report, warns, led
+
+
+def reread(name, st, done, match, fetch, host, cap, fetched, months, today_d, rows, rep):
+    """Weekly re-read: schedules gain titles mid-month, and a done post that has left the feed is not read again
+    otherwise. Every CATCHUP_REREAD_DAYS a cycle queues the done posts of the CURRENT and NEXT month (not those the
+    feed path read today: it revalidates them itself); the queue is worked off in later runs within the per-run cap
+    (conditional GET, one request each), so a 429 or the cap only defers the rest. state: st['reread'] =
+    {'last': date the current cycle started, 'queue': [urls]}. Returns the updated request count."""
+    today = today_d.isoformat()
+    rr = st.setdefault('reread', {'last': None, 'queue': []})
+    if rr.get('last') is None:
+        rr['last'] = today                               # the posts were just read: first re-read in a week
+    elif not rr['queue'] and (today_d - dt.date.fromisoformat(rr['last'])).days >= CATCHUP_REREAD_DAYS:
+        cur = (today_d.year, today_d.month)
+        nxt = (today_d.year + today_d.month // 12, today_d.month % 12 + 1)
+        rr['queue'] = sorted(u for u in done if (i := match(u, months)) and tuple(i[-2:]) in (cur, nxt)
+                             and u not in PARSED_OK[name] and done[u] != today)
+        rr['last'] = today
+    got, stop = 0, None
+    for u in list(rr['queue']):
+        info = match(u, months)
+        if not info:
+            rr['queue'].remove(u)                        # out of the window since the cycle started
+            continue
+        if host in _stopped:
+            stop = _stopped[host]
+            break
+        if fetched >= cap:
+            break                                        # the rest on the next run
+        fetched += 1
+        s, r, note = fetch(u, info, max_age=0)           # revalidate (If-None-Match / If-Modified-Since)
+        if host in _stopped:                             # 429 twice: the stored data came back, not a re-read
+            stop = _stopped[host]
+            break
+        if s == 200 or s in GONE:
+            rr['queue'].remove(u)
+            rows += r
+            got += 1
+            if s != 200:
+                rep['notes'].append(f'{u}: HTTP {s} on re-read (gone)')
+        else:
+            rep['notes'].append(f'{u}: HTTP {s} on re-read (retried next run)')
+    rep['fetched'] = fetched
+    rep['reread'] = {'cycle_started': rr['last'], 'read': got, 'queued': len(rr['queue']),
+                     'next_cycle': (dt.date.fromisoformat(rr['last']) + dt.timedelta(days=CATCHUP_REREAD_DAYS)).isoformat(),
+                     **({'stopped': stop} if stop else {})}
+    return fetched
+
+
+def catchup_line(name, rep):
+    """'vt catch-up: 20/38 posts, 18 left, ETA 1 run (fetched 20 this run)' / 'wodp catch-up: done (9/9 posts)'."""
+    if 'error' in rep:
+        return f"{name} catch-up: FAILED ({rep['error']}) - stored progress kept, retried next run"
+    rr = rep.get('reread') or {}
+    rr_txt = (f"; weekly re-read: {rr['read']} re-read, {rr['queued']} queued"
+              f"{' (' + rr['stopped'] + ')' if rr.get('stopped') else ''}") if rr.get('read') or rr.get('queued') else ''
+    if rep.get('pending') is None:
+        return f"{name} catch-up: {rep.get('state', 'not run')}{rr_txt}"
+    if not rep['pending']:
+        return f"{name} catch-up: {rep.get('state', 'done')} ({rep['done']}/{rep['listed']} posts){rr_txt}"
+    eta = rep.get('eta_runs', -(-rep['pending'] // max(1, rep.get('cap', 1))))
+    return (f"{name} catch-up: {rep['done']}/{rep['listed']} posts, {rep['pending']} left, ETA {eta} "
+            f"run{'s' if eta != 1 else ''} (fetched {rep.get('fetched', 0)} this run; {rep.get('state', '')}){rr_txt}")
 
 
 def departures_signature(rows):
@@ -1162,6 +1363,46 @@ def write_candidates(state, state_dir, today, present=None):
     return cands
 
 
+# ---------------------------------------------------------------- resolve-rate alert ------------------------------
+# A source whose rows suddenly resolve to TMDB far less often than usual has most likely changed its page format (the
+# parser now reads junk titles). Rate = accepted / rows (parse_stats.csv resolved_pct). Measured on every run with
+# arrivals, 2026-09-28 (daily + backfill, PARSER_VERSION 3-5): won 90-92%, vt 62-73%, wodp 63-73%, fb 68-78%,
+# plex 72-73% - at most 11 points of spread per source. A drop of 25+ points below the baseline is > 2x that spread.
+# 40 rows: the binomial noise at p ~0.65 is ~7.5 points, so 25 points is > 3 sigma (smallest daily source: 101 rows).
+RESOLVE_DROP = 0.25             # warn when today's rate < baseline - 25 points
+RESOLVE_MIN_ROWS = 40           # fewer rows: not measured, not recorded
+RESOLVE_HISTORY = 7             # baseline = median rate of the last 7 recorded days (one entry per day: the last run)
+RESOLVE_MIN_HISTORY = 2         # no warning before 2 earlier days are recorded (the first runs only seed the baseline)
+
+
+def resolve_rate_check(state, per, today):
+    """-> (warnings, info). History in the durable state: state['resolve_rates'] = {source: [[date, rows, accepted,
+    PARSER_VERSION], ...]} (one entry per day; another parser version's entries are dropped, so a parser change
+    restarts the baseline). A day that warns is NOT recorded, so a broken source keeps warning daily until it is fixed
+    (or PARSER_VERSION is bumped) instead of becoming the new normal. No state (logger failed): nothing to compare."""
+    if state is None:
+        return [], {'skipped': 'no durable state'}
+    book = state.setdefault('resolve_rates', {})
+    warns, info = [], {}
+    for s, p in per.items():
+        hist = [e for e in book.get(s) or [] if len(e) == 4 and e[3] == PARSER_VERSION and e[0] != today and e[1] > 0]
+        hist = hist[-RESOLVE_HISTORY:]
+        base = statistics.median(e[2] / e[1] for e in hist) if hist else None
+        if p['rows'] < RESOLVE_MIN_ROWS:
+            info[s] = {'rows': p['rows'], 'baseline': base, 'history': len(hist), 'note': 'too few rows: not measured'}
+            continue
+        rate = p['accepted'] / p['rows']
+        info[s] = {'rows': p['rows'], 'rate': round(rate, 3), 'baseline': None if base is None else round(base, 3),
+                   'history': len(hist)}
+        if len(hist) >= RESOLVE_MIN_HISTORY and rate < base - RESOLVE_DROP:
+            warns.append(f"{s}: title-resolve rate {rate:.0%} ({p['accepted']}/{p['rows']} rows) vs {base:.0%} usual "
+                         f"(median of {len(hist)} days) - format changed? see check_rows.csv")
+            info[s]['alert'] = True
+            continue                                    # not recorded: the baseline stays the pre-drop one
+        book[s] = hist + [[today, p['rows'], p['accepted'], PARSER_VERSION]]
+    return warns, info
+
+
 # ---------------------------------------------------------------- main --------------------------------------------
 def main():
     out = Path(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith('--') else 'arrivals')
@@ -1188,6 +1429,21 @@ def main():
             r = []
         rows += r
         print(f"{name}: {stats.get(name, {}).get('posts', 0)} posts, {len(r)} rows", flush=True)
+    stopped_before = set(_stopped)
+    catch_warn = []
+    if state is None:                                   # nowhere to keep progress: nothing is fetched
+        catch = {s: {'state': 'skipped: no durable state (the logger failed)'} for s in CATCHUP_SOURCES}
+    else:
+        try:
+            c_rows, catch, catch_warn, led = catchup(state, months, today_d, backfill)
+            rows += c_rows
+            state['catchup'] = led                      # written below together with the signals of these rows
+        except Exception as e:                          # never fails the step; the stored progress is kept
+            catch = {s: {'error': f'{type(e).__name__}: {str(e)[:200]}'} for s in CATCHUP_SOURCES}
+            catch_warn = [f'catch-up failed: {type(e).__name__}: {str(e)[:200]} (stored progress kept)']
+    catch_stops = set(_stopped) - stopped_before        # a host stopped during the catch-up: a note (resumes next run)
+    for s, rep in catch.items():
+        print(catchup_line(s, rep), flush=True)
     rows = [r for r in rows if r['service'] not in DROPPED]
     todo = [r for r in rows if r['service'] in pids]
     for r in rows:
@@ -1212,6 +1468,16 @@ def main():
     guarded = {s: set(ks) for s, ks in GUARD_DROPS.items()}
     for r in acc:
         r['on_service'] = present(r['service'], r['tmdb_media'], r['tmdb_id'])
+    per = {s: {'rows': 0, 'accepted': 0, 'check': 0, 'confirmed': 0} for s in SOURCES}
+    for r in rows:
+        p = per[r['source']]
+        p['rows'] += 1
+        p['accepted' if r.get('accepted') else 'check'] += 1
+        p['confirmed'] += 1 if r.get('on_service') else 0
+    try:                                                # an alert, never a failure; its history is saved with the state
+        rate_warn, rate_info = resolve_rate_check(state, per, today)
+    except Exception as e:
+        rate_warn, rate_info = [], {'error': f'{type(e).__name__}: {str(e)[:200]}'}
     if state is not None:
         tmp = STATE_DIR / 'first_seen.json.gz.tmp'
         with gzip.open(tmp, 'wt', encoding='utf-8') as fh:
@@ -1237,12 +1503,6 @@ def main():
             w = csv.DictWriter(f, fieldnames=cols, extrasaction='ignore')
             w.writeheader()
             w.writerows(sel)
-    per = {s: {'rows': 0, 'accepted': 0, 'check': 0, 'confirmed': 0} for s in SOURCES}
-    for r in rows:
-        p = per[r['source']]
-        p['rows'] += 1
-        p['accepted' if r.get('accepted') else 'check'] += 1
-        p['confirmed'] += 1 if r.get('on_service') else 0
     with open(out / 'parse_stats.csv', 'w', newline='', encoding='utf-8') as f:
         w = csv.writer(f)
         w.writerow(['source', 'posts', 'rows', 'accepted', 'resolved_pct', 'check', 'confirmed_on_service', 'errors'])
@@ -1252,11 +1512,13 @@ def main():
                         p['check'], p['confirmed'], ' | '.join(st.get('errors', []) + st.get('notes', []))[:500]])
     # warnings = real failures only (they open the health issue); known per-post parse gaps are notes
     warnings = [f'{s}: {e}' for s, st in stats.items() for e in st.get('errors', []) if f'HTTP {BLOCKED}' not in e]
-    warnings += [f'{h}: {why}' for h, why in _stopped.items()]
+    warnings += [f'{h}: {why}' for h, why in _stopped.items() if h not in catch_stops]
+    warnings += catch_warn
     warnings += [f'{s}: the feed / sitemap returned no items (source down or format changed)' for s in SOURCES
                  if stats.get(s, {}).get('items', 0) == 0 and not stats.get(s, {}).get('errors')]
     warnings += [f'{s}: {stats[s]["posts"]} posts but 0 rows (format changed?)' for s in SOURCES
                  if stats.get(s, {}).get('posts', 0) > 0 and per[s]['rows'] == 0]
+    warnings += rate_warn
     summary = {'date': today, 'mode': 'backfill' if backfill else 'daily', 'since': since.isoformat(),
                'state': 'merged' if state is not None else 'missing (logger failed): signals not stored',
                'sources': {s: {'items': stats.get(s, {}).get('items', 0), 'posts': stats.get(s, {}).get('posts', 0),
@@ -1264,6 +1526,9 @@ def main():
                'candidates': {s: len(c) for s, c in cands.items()},
                # baseline guard notes: items dated after the baseline for titles on the service since the baseline
                'baseline_guard_dropped': {s: len(ks) for s, ks in sorted(guarded.items())},
+               # automatic catch-up of the posts the feeds no longer carry (health.py shows catchup_line per source)
+               'catchup': catch, 'catchup_lines': [catchup_line(s, rep) for s, rep in catch.items()],
+               'resolve_rate': rate_info,               # per source: today's rate vs the stored baseline (#7 item 1)
                'tmdb_requests': build._calls[0],
                'fetch': fetch_stats, 'seconds': round(time.monotonic() - t0), 'warnings': warnings}
     (out / 'arrivals_summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')

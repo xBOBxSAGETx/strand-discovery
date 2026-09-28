@@ -207,5 +207,75 @@ class BaselineGuard(unittest.TestCase):
                 del a.build._stable[k]
 
 
+def per_counts(**src):
+    """{source: (rows, accepted)} -> the per-source counts main() builds (other sources: 0 rows)."""
+    return {s: {'rows': src.get(s, (0, 0))[0], 'accepted': src.get(s, (0, 0))[1]} for s in a.SOURCES}
+
+
+# real daily counts of run 36443937197 (2026-09-28): won 351/382, vt 349/554, wodp 64/101, fb 1483/1978, plex 108/148
+NORMAL = dict(won=(382, 351), vt=(554, 349), wodp=(101, 64), fb=(1978, 1483), plex=(148, 108))
+
+
+class ResolveRateAlert(unittest.TestCase):
+    def seeded(self, days=('2026-09-25', '2026-09-26', '2026-09-27')):
+        state = {'providers': {}}
+        for d in days:
+            self.assertEqual(a.resolve_rate_check(state, per_counts(**NORMAL), d)[0], [])
+        return state
+
+    def test_first_run_seeds_without_warning(self):
+        state = {'providers': {}}
+        warns, info = a.resolve_rate_check(state, per_counts(fb=(1978, 100)), '2026-09-28')
+        self.assertEqual(warns, [])                                    # no baseline yet: never a warning
+        self.assertEqual(state['resolve_rates']['fb'], [['2026-09-28', 1978, 100, a.PARSER_VERSION]])
+        self.assertIsNone(info['fb']['baseline'])
+
+    def test_normal_rates_no_warning(self):
+        state = self.seeded()
+        warns, info = a.resolve_rate_check(state, per_counts(**{**NORMAL, 'vt': (4188, 2969), 'fb': (1511, 1179)}),
+                                           '2026-09-28')              # backfill-mix vt 71%, fb 78%: both normal
+        self.assertEqual(warns, [])
+        self.assertEqual(len(state['resolve_rates']['fb']), 4)
+
+    def test_sudden_drop_one_warning(self):
+        state = self.seeded()
+        warns, info = a.resolve_rate_check(state, per_counts(**{**NORMAL, 'fb': (1978, 600)}), '2026-09-28')
+        self.assertEqual(len(warns), 1)                                # fb 30% vs 75%: exactly one, for fb
+        self.assertTrue(warns[0].startswith('fb: title-resolve rate 30% (600/1978 rows) vs 75% usual'))
+        self.assertTrue(info['fb']['alert'])
+        self.assertEqual(state['resolve_rates']['fb'][-1][0], '2026-09-27')   # the bad day is not recorded
+        warns, _ = a.resolve_rate_check(state, per_counts(**{**NORMAL, 'fb': (1978, 600)}), '2026-09-29')
+        self.assertEqual(len(warns), 1)                                # still broken next day: warns again
+
+    def test_too_few_rows_no_warning(self):
+        state = self.seeded()
+        warns, info = a.resolve_rate_check(state, per_counts(**{**NORMAL, 'plex': (30, 2)}), '2026-09-28')
+        self.assertEqual(warns, [])                                    # 7% of 30 rows: too few to judge
+        self.assertEqual(state['resolve_rates']['plex'][-1][0], '2026-09-27')
+
+    def test_parser_version_bump_restarts_baseline(self):
+        state = self.seeded()
+        for s in state['resolve_rates'].values():
+            for e in s:
+                e[3] = a.PARSER_VERSION - 1
+        self.assertEqual(a.resolve_rate_check(state, per_counts(**{**NORMAL, 'fb': (1978, 600)}), '2026-09-28')[0], [])
+
+    def test_no_state_no_warning(self):
+        self.assertEqual(a.resolve_rate_check(None, per_counts(fb=(1978, 10)), '2026-09-28')[0], [])
+
+    def test_warning_reaches_health_issue(self):
+        os.environ.setdefault('GITHUB_REPOSITORY', 'test/test')
+        import health, json
+        state = self.seeded()
+        warns, _ = a.resolve_rate_check(state, per_counts(**{**NORMAL, 'vt': (554, 100)}), '2026-09-28')
+        rep = Path(tempfile.mkdtemp(prefix='sd-health-'))
+        (rep / 'arrivals').mkdir()
+        (rep / 'arrivals' / 'arrivals_summary.json').write_text(json.dumps({'warnings': warns}), encoding='utf-8')
+        found = health.problems(rep, 'success', 'success', 'success')[0]
+        hits = [f for f in found if 'title-resolve rate' in f]
+        self.assertEqual(len(hits), 1)
+        self.assertIn('vt: title-resolve rate 18% (100/554 rows) vs 63% usual', hits[0])
+
+
 if __name__ == '__main__':
     unittest.main()

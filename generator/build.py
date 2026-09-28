@@ -24,6 +24,8 @@ from pathlib import Path
 
 API = 'https://api.themoviedb.org/3'
 IMG = 'https://image.tmdb.org/t/p'
+POSTER_SIZE = 'w780'   # item posters (Strand tiles on a 4K TV; w342 looked soft - measured ~2.6x sharper, 0 extra requests)
+POSTER_RE = re.compile(r'/t/p/w\d+/')   # the size segment of a TMDB image URL; write_pages() rewrites it
 HERE = Path(__file__).resolve().parent
 TODAY = dt.date.today().isoformat()
 YEAR_AGO = (dt.date.today() - dt.timedelta(days=365)).isoformat()
@@ -128,7 +130,7 @@ def preview(item, media):
     date = item.get('release_date') or item.get('first_air_date') or ''
     meta = {'id': f"tmdb:{item['id']}", 'type': media, 'name': title}
     if item.get('poster_path'):
-        meta['poster'] = f"{IMG}/w342{item['poster_path']}"
+        meta['poster'] = f"{IMG}/{POSTER_SIZE}{item['poster_path']}"
     if date[:4]:
         meta['releaseInfo'] = date[:4]
     # private: canonical genres for the genre pages, stripped before anything is written
@@ -382,6 +384,11 @@ def write_pages(base, cid, metas, page_size, genre=None):
     """First page + skip pages + an empty terminal page. File names are the extras string AIOStreams sends upstream
     (core ExtrasParser, checked on the deployed image): 'genre=G' for the first page, then 'skip=N&genre=G'."""
     tag = f'&genre={genre}' if genre else ''
+    # Poster size is normalised here, at emit time, in ONE place: cached previews (_stable, durable) and stored
+    # first-seen metas keep the size they were fetched with, so rewriting at the source alone never reaches them.
+    # Copies only: the caller's metas (and the cache objects behind them) are never mutated. 0 extra TMDB requests.
+    metas = [{**m, 'poster': POSTER_RE.sub(f'/t/p/{POSTER_SIZE}/', m['poster'])} if m.get('poster') else dict(m)
+             for m in metas]
     d = base / cid
     d.mkdir(parents=True, exist_ok=True)
     first = d / f'genre={genre}.json' if genre else base / f'{cid}.json'

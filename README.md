@@ -43,6 +43,7 @@ deploy stays served.
 | Build job ended failure · Last log line: … | the generator crashed or was cancelled | open the run log; re-run once; if it repeats, fix the code |
 | first_seen logger ended failure | New cards fall back to release-date order for that day | nothing, if the next run is clean; if it repeats, check the logger step's log |
 | first_seen warning / skipped / dropped | a service's catalogue shrank > 20%, churned > 15%, had no arrivals for 7+ days, or was skipped for time/request budget; "dropped" = a service removed from the spec left the state (expected once; more than 5 at once are kept and warned instead) | usually a TMDB/JustWatch data hiccup; check the service's New card if it persists |
+| Arrival source warning: `<source>: title-resolve rate X% (a/b rows) vs Y% usual` | the source's rows (40+) matched TMDB titles 25+ points less often than the median of its last 7 recorded days: its page format probably changed and the parser reads wrong titles (normal range 2026-09-28: won ~91%, vt/wodp 62-73%, fb 68-78%, plex ~73%) | open the run's `check_rows.csv` for that source; fix the parser and bump `PARSER_VERSION` (restarts the baseline). A warning day is not recorded, so it repeats daily until fixed |
 | first_seen state was not restored | the cache and the encrypted backup were both unavailable, so today's run started a fresh baseline (New order restarts its 14-day warm-up) | check that the secret `SD_STATE_KEY` still matches the owner's saved key |
 
 **The "accuracy" issue** (weekly): an undocumented precision error names the title, its source URL and date - either
@@ -95,8 +96,15 @@ have no published schedule source, so their New cards use our own daily snapshot
 Personal, non-commercial use. Only TMDB ids and dates end up in the
 catalogs - the sources' text is never republished. A failing source or a format change shows in the health issue and
 the cards fall back to the stored dates and the other sources (never empty).
-First run: *Actions -> build-and-deploy -> Run workflow* with `arrivals_backfill` on reads the last 3 months once
-(about 30k TMDB requests, 25 minutes); the daily run reads only recent posts.
+Catch-up is automatic: the feeds carry only the newest posts (Vital Thrills' tag feed holds 10), so the daily run also
+reads the Vital Thrills and whatsondisneyplus post sitemaps and fetches up to 20 posts per site per run that it has
+not read yet under the current parser version, newest month first. Progress is kept in the first_seen state, a parser
+change re-opens it by itself, and once caught up the sitemaps are re-checked only every 3 days. Once a week the
+already-read posts of the current and next month are revalidated (titles added mid-month), within the same cap. A 429
+in the regular feed fetch is one health warning per site, as before. A 429 during the
+catch-up stops that site for the run and it resumes the next day; only 3 runs in a row without progress raise a health
+warning. Progress ("vt catch-up: 20/38 posts, 18 left, ETA 1 run") is on each run's summary page and in the health
+issue. The manual `arrivals_backfill` input (the last 3 months at once, capped the same way) is no longer needed.
 
 ### Secrets and variables (names only)
 - Secrets: `TMDB_API_KEY` (TMDB v3 key), `SD_STATE_KEY` (encrypts the first_seen backup). Planned: Movie of the Night
