@@ -37,13 +37,13 @@ FOLDERS += [{'key': f'actors-{slugify(c)}', 'title': f'Actors · {c}', 'shape': 
 
 # ---- sources -----------------------------------------------------------------------------------------------------
 # subscription services: flatrate only; ad-supported / library services: free|ads. Rent/buy never counts as "on it".
-FREE_SERVICES = {'Tubi', 'Pluto TV', 'The Roku Channel', 'Plex', 'Kanopy', 'Hoopla'}
+FREE_SERVICES = {'Tubi', 'Pluto TV', 'Plex'}
+# dropped by the user 2026-09-28: Crunchyroll, Rakuten Viki, The Roku Channel, Kanopy, Hoopla
 STREAMING = [('Netflix', '8'), ('Disney+', '337'), ('HBO Max', '1899'), ('Apple TV', '350'), ('Paramount+', '2616|2303'),
              ('Prime Video', '9'), ('Hulu', '15'), ('Peacock', '386|387'), ('Starz', '43'), ('Discovery+', '520'),
-             ('Netflix Kids', '175'), ('Crunchyroll', '283'), ('MUBI', '11'), ('Criterion Channel', '258'),
-             ('Rakuten Viki', '344'), ('MagellanTV', '551'), ('Shudder', '99'), ('AMC+', '526'), ('BritBox', '151'),
-             ('Tubi', '73'), ('Pluto TV', '300'), ('The Roku Channel', '207'), ('Kanopy', '191'), ('Hoopla', '212'),
-             ('Plex', '538'), ('Acorn TV', '87')]
+             ('Netflix Kids', '175'), ('MUBI', '11'), ('Criterion Channel', '258'), ('MagellanTV', '551'),
+             ('Shudder', '99'), ('AMC+', '526'), ('BritBox', '151'), ('Tubi', '73'), ('Pluto TV', '300'), ('Plex', '538'),
+             ('Acorn TV', '87')]
 NETWORKS = [('HBO', 49), ('AMC', 174), ('FX', 88), ('BBC One', 4), ('Apple TV', 2552), ('Netflix', 213),
             ('Showtime', 67), ('Adult Swim', 80), ('Comedy Central', 47), ('Cartoon Network', 56), ('Nickelodeon', 13),
             ('Disney Channel', 54), ('History', 65), ('Discovery', 64), ('National Geographic', 43), ('A&E', 129),
@@ -141,15 +141,18 @@ SERIES = {
     'Twilight': {'collections': [33514]},
     'X-Men': {'collections': [748]},
 }
-AWARDS = [('Oscar Best Picture', 'apg2886/oscar-best-picture-winners', 'movie'),
-          ('Oscar Best Picture Nominees', 'gatornylon/oscar-best-picture-nominated', 'movie'),
-          ("Palme d'Or", 'sheeper/cannes-palme-dor-winners', 'movie'),
-          ('BAFTA Best Film', 'imkaptain/bafta-best-film-all-time', 'movie'),
-          ('Golden Globe Best Picture', 'oldmankestis/golden-globe-best-picture-winners', 'movie'),
-]
-# Built from Wikipedia winner tables by awards_wiki.py -> awards.json (committed; unresolved titles listed there)
-ID_AWARDS = [('Emmy · Best Series Winners', 'emmy-best-series', 'Emmy Best Series Winners'),
-             ('Sundance · Grand Jury Prize', 'sundance-gjp', 'Sundance Grand Jury Prize')]
+# (card name, source) in folder order. Source = an MDBList list, or an awards.json key (built from the Wikipedia winner
+# tables by awards_wiki.py; build.py reads the ids at build time, so the yearly refresh only has to update awards.json).
+# Palme d'Or and Golden Globe moved from MDBList to Wikipedia 2026-09-28 (MDBList had a wrong film on each).
+OSCAR_NOT_BP = [['movie', 631], ['movie', 3061], ['movie', 44657]]   # 1927/28 "Unique and Artistic Production" (Sunrise,
+#                                    The Crowd, Chang): a separate award, not Best Picture - the Academy starts with Wings
+AWARDS = [('Oscar Best Picture', {'list': 'apg2886/oscar-best-picture-winners', 'exclude': OSCAR_NOT_BP}),
+          ('Oscar Best Picture Nominees', {'list': 'gatornylon/oscar-best-picture-nominated', 'exclude': OSCAR_NOT_BP}),
+          ("Palme d'Or", {'awards_key': 'palme-dor'}),
+          ('BAFTA Best Film', {'list': 'imkaptain/bafta-best-film-all-time'}),
+          ('Golden Globe Best Picture', {'awards_key': 'golden-globe-best-picture'}),
+          ('Emmy · Best Series Winners', {'awards_key': 'emmy-best-series', 'library': 'Emmy Best Series Winners'}),
+          ('Sundance · Grand Jury Prize', {'awards_key': 'sundance-gjp', 'library': 'Sundance Grand Jury Prize'})]
 
 VOTES = {'popular': 10, 'new': 5, 'top': {'movie': 300, 'series': 150}}
 TOP_MIN_AGE = 180            # days: early-rating inflation put this month's releases on top of every Top Rated card
@@ -231,14 +234,19 @@ def main():
         # defining titles per decade (vote count); popularity led the 1960s with "The Ape Woman"
         cats.append(disc(f'decade-{d}s', f'Decade · {d}s', f'{d}s', 'Decade', 'decades', ['movie', 'series'], 'votes',
                          movie=mp, series=sp, min_votes={'movie': 10, 'series': 50}))
-    for name, lst, media in AWARDS:
-        cats.append({'slug': f'awards-{slugify(name)}', 'library': f'Award · {name}', 'title': name, 'eyebrow': 'Awards',
-                     'folders': ['awards'], 'kind': 'mdblist', 'media': [media], 'list': lst, 'order': 'year_desc'})
     awards = json.loads((HERE / 'awards.json').read_text(encoding='utf-8'))
-    for title, key, lib in ID_AWARDS:
-        ids = awards[key]['ids']
-        cats.append({'slug': f'awards-{key}', 'library': f'Award · {lib}', 'title': title, 'eyebrow': 'Awards',
-                     'folders': ['awards'], 'kind': 'idlist', 'media': sorted({m for m, _ in ids}), 'ids': ids})
+    for name, src in AWARDS:
+        card = {'library': f"Award · {src.get('library', name)}", 'title': name, 'eyebrow': 'Awards', 'folders': ['awards']}
+        if 'list' in src:
+            card.update(slug=f'awards-{slugify(name)}', kind='mdblist', media=['movie'], list=src['list'], order='year_desc')
+        else:
+            key = src['awards_key']
+            assert awards[key]['card'], f'{key} is a reference list, not a card'
+            card.update(slug=f'awards-{key}', kind='idlist', media=sorted({m for m, _ in awards[key]['ids']}),
+                        awards_key=key)
+        if src.get('exclude'):
+            card['exclude'] = src['exclude']
+        cats.append(card)
     for name, media, avg, lo, hi in [('Acclaimed Movies', 'movie', 7.8, 2000, None),
                                      ('Acclaimed TV', 'series', 7.8, 800, None),
                                      ('Hidden Gem Movies', 'movie', 7.3, 150, 1500),

@@ -8,6 +8,16 @@ Lists (winners only, newest win first, a title that won several times appears on
                     articles' tables; the year comes from the "(Nth) Primetime Emmy Awards" link (year = 1948 + N).
   sundance-gjp      Sundance Grand Jury Prize, U.S. Dramatic + U.S. Documentary ("second place" rows excluded;
                     the World Cinema / "International winners" section is NOT included).
+  palme-dor         Cannes Palme d'Or / Grand Prix winners (every film of the winner table, incl. the 1946-47 multi-
+                    category Grand Prix; Special Palme d'Or excluded) + Union Pacific (1939, awarded retrospectively
+                    in 2002; only in a footnote on Wikipedia - added by EXTRA_ROWS).
+  golden-globe-best-picture  Golden Globe Best Motion Picture - Drama + Musical or Comedy winners (incl. the
+                    1958-62 separate Comedy / Musical winners).
+Reference lists (not cards; used by awards_crosscheck.py against the MDBList cards): oscar-winners, oscar-nominees,
+bafta-best-film.
+Film lists are resolved ROW BY ROW (same-name films of different years stay distinct), newest first, one entry per id.
+Film candidates shorter than MIN_FILM_RUNTIME are never picked (a 13-min "Birdman" short once beat the 2014 winner);
+the same rule applies to the Emmy TV-movie fallback.
 Every title is resolved with TMDB search; the report lists each one with how it matched. Unresolved titles are
 listed there and in awards.json["unresolved"], never silently dropped. Needs TMDB_API_KEY (never printed).
 """
@@ -85,6 +95,108 @@ def sundance_documentary():
     return out
 
 
+# ---- film award tables (Oscar / BAFTA / Palme d'Or / Golden Globe) --------------------------------------------------
+LINKED = re.compile(r"('{2,5})\s*\[\[([^\]|]+)(?:\|([^\]]+))?\]\]([^'\[\]{}|<]*)'{2,5}")   # + text after the link
+PLAIN = re.compile(r"('{2,5})\s*([^'\[\]{}|<]+?)\s*'{2,5}")
+WINNER_BG = ('faeb86', 'b0c4de')          # winner-row shading (Oscar/BAFTA gold, Golden Globe blue)
+
+
+def section(text, start, end=None):
+    """From `start` to `end`, or (end=None) to the next level-2 heading."""
+    i = text.index(start)
+    if end:
+        return text[i:text.index(end, i)]
+    m = re.compile(r'\n==[^=]').search(text, i + len(start))
+    return text[i:m.start() if m else len(text)]
+
+
+def title_in(cell):
+    """(title, wiki target, bold-italic?) of the italic title in a table cell ('' or '''''; bold-only ''' names
+    are people, not films)."""
+    cell = re.sub(r"\{\{sort\|[^|]*\|", '', cell)          # Palme: {{sort|key|''[[X]]''}}
+    for rx, linked in ((LINKED, True), (PLAIN, False)):
+        for m in rx.finditer(cell):
+            if len(m.group(1)) not in (2, 5):
+                continue
+            if linked:
+                name = display(m.group(2), (m.group(3) or '').replace("'''", '') or None) + m.group(4).rstrip()
+                return name, m.group(2), len(m.group(1)) == 5
+            if m.group(2).strip():
+                return m.group(2).strip(), None, len(m.group(1)) == 5
+    return None
+
+
+def film_rows(text, year_re, all_winners=False, all_cells=False):
+    """[(year, title, target, winner)] - one entry per film row; the year carries over rowspans.
+    all_cells: every '||' cell of a line can hold a film (Golden Globe 1958-62: Comedy and Musical side by side)."""
+    out, year = [], None
+    for row in text.split('\n|-'):
+        row_gold = any(c in row.split('\n')[0].lower() for c in WINNER_BG)   # '|- style="background:#FAEB86"'
+        y = re.search(year_re, row)
+        if y:
+            year = int(y.group(1))
+        if not year:
+            continue
+        for line in row.split('\n'):
+            st = line.strip()
+            if not st.startswith('|') or st.startswith('|}') or 'colspan="5"' in st or '{{center|' in st:
+                continue
+            cells = st.lstrip('|').split('||')             # a line may open with '||' (Oscar 1981)
+            cells = cells if all_cells else cells[:1]
+            found = False
+            for cell in cells:
+                t = title_in(cell)
+                if t:
+                    gold = row_gold or any(c in cell.lower() for c in WINNER_BG)
+                    out.append((year, t[0], t[1], all_winners or t[2] or gold))
+                    found = True
+            if found:
+                break                                      # the first line with a title is the film row
+    return out
+
+
+def film_lists():
+    """{key: [(year, title, wiki target, page)]} for the film award lists (winners, except oscar-nominees)."""
+    page = 'Academy_Award_for_Best_Picture'
+    oscar = film_rows(section(wikitext(page), '==Winners and nominees==', '\n==Age superlatives=='),
+                      r"\[\[(\d{4}) in film\|")
+    out = {'oscar-nominees': [(y, t, g, page) for y, t, g, _ in oscar],
+           'oscar-winners': [(y, t, g, page) for y, t, g, w in oscar if w]}
+    page = "Palme_d'Or"
+    palme = film_rows(section(wikitext(page), '=== 1940s ===', "=== Special Palme d'Or ==="),
+                      r"^\s*!.*?\b((?:19|20)\d\d)\b", all_winners=True)
+    out['palme-dor'] = [(y, t, g, page) for y, t, g, _ in palme]
+    page = 'BAFTA_Award_for_Best_Film'
+    bafta = film_rows(section(wikitext(page), '==Winners and nominees==', '==Longlist finalists=='),
+                      r"\{\{center\|'''(\d{4})'''")
+    out['bafta-best-film'] = [(y, t, g, page) for y, t, g, w in bafta if w]
+    gg = []
+    for page in ('Golden_Globe_Award_for_Best_Motion_Picture_–_Drama',
+                 'Golden_Globe_Award_for_Best_Motion_Picture_–_Musical_or_Comedy'):
+        text = wikitext(page)
+        start = '== Winners and Nominees ==' if '== Winners and Nominees ==' in text else '==Winners and nominations=='
+        gg += [(y, t, g, page) for y, t, g, w in film_rows(section(text, start), r"Golden Globe Awards\|(\d{4})\]\]",
+                                                           all_cells=True) if w]
+    out['golden-globe-best-picture'] = gg
+    return out
+
+
+def film_list(key, entries):
+    """Resolve row by row, newest first; one entry per TMDB id."""
+    ids, rows, unresolved = [], [], []
+    extra = [(y, t, g, f'EXTRA: {why}') for y, t, g, why in EXTRA_ROWS.get(key, [])]
+    for year, title, target, page in sorted(entries + extra, key=lambda e: -e[0]):
+        hit = resolve(title, year, 'movie', target)
+        if hit:
+            if [hit[0], hit[1]] not in ids:
+                ids.append([hit[0], hit[1]])
+            rows.append([year, year, title, page, f'{hit[0]}:{hit[1]}', hit[2], hit[3], hit[4]])
+        else:
+            unresolved.append(f'{title} ({year})')
+            rows.append([year, year, title, page, '', '', '', 'UNRESOLVED'])
+    return ids, rows, unresolved
+
+
 def norm(s):
     s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode().lower()
     return re.sub(r'[^a-z0-9]+', ' ', s.replace('&', 'and')).strip()
@@ -94,7 +206,16 @@ def norm(s):
 OVERRIDES = {
     # 1987 Outstanding Miniseries = the 3-part NBC miniseries (tv 77044, 1986), not the 1987 follow-up series 10756
     ('series', 'a year in the life', 1987): ('series', 77044),
+    # Palme d'Or 1947 winner table (Grand Prix categories): "Dumbo" (Best Animation Design) is the 1941 film - outside
+    # the year window; "The Damned (1947 film)" is Les Maudits (TMDB has it under its French title)
+    ('movie', 'dumbo', 1947): ('movie', 11360),
+    ('movie', 'the damned', 1947): ('movie', 87245),
 }
+# rows a winner table leaves out, with why (copilot ruling 2026-09-28)
+EXTRA_ROWS = {'palme-dor': [(1939, 'Union Pacific', 'Union Pacific (film)',
+                             "1939 Palme d'Or awarded retrospectively in 2002 (Wikipedia footnote only)")]}
+MIN_FILM_RUNTIME = 40
+REFERENCE_ONLY = {'oscar-winners', 'oscar-nominees', 'bafta-best-film'}   # cross-check only, not cards
 
 
 def wiki_hint(target):
@@ -114,6 +235,12 @@ def _year(r):
     return int(d[:4]) if d[:4].isdigit() else None
 
 
+def _feature_length(movie_id):
+    """A film award goes to a feature: runtime unknown (0) or >= MIN_FILM_RUNTIME. Durably cached."""
+    rt = build.stable(f'runtime:{movie_id}', lambda: build.tmdb(f'/movie/{movie_id}').get('runtime') or 0)
+    return rt == 0 or rt >= MIN_FILM_RUNTIME
+
+
 def _search(title, media, lo, hi):
     """Search results released/first aired within [lo, hi]: (exact-title candidates, all candidates),
     each sorted by vote count, most votes first."""
@@ -121,6 +248,8 @@ def _search(title, media, lo, hi):
                      include_adult='false').get('results', [])
     inwin = sorted((r for r in res if _year(r) is not None and lo <= _year(r) <= hi),
                    key=lambda r: -(r.get('vote_count') or 0))
+    if media == 'movie':
+        inwin = [r for r in inwin[:8] if _feature_length(r['id'])]
     return [r for r in inwin if norm(r.get('title') or r.get('name') or '') == norm(title)], inwin
 
 
@@ -215,12 +344,16 @@ def main():
         emmy += emmy_winners(page)
     sundance = sundance_dramatic() + sundance_documentary()
     out, report = {}, []
-    for key, entries, media in (('emmy-best-series', emmy, 'series'), ('sundance-gjp', sundance, 'movie')):
-        ids, rows, unresolved = build_list(entries, media)
-        out[key] = {'ids': ids, 'unresolved': unresolved, 'wiki_entries': len(entries)}
+    lists = [('emmy-best-series', emmy, 'series'), ('sundance-gjp', sundance, 'movie')]
+    lists += [(k, e, None) for k, e in film_lists().items()]
+    for key, entries, media in lists:
+        ids, rows, unresolved = build_list(entries, media) if media else film_list(key, entries)
+        out[key] = {'ids': ids, 'unresolved': unresolved, 'wiki_entries': len(entries),
+                    'card': key not in REFERENCE_ONLY}
         report += [[key] + r for r in rows]
-        print(f'{key}: {len(entries)} winner rows -> {len(rows)} unique titles -> {len(ids)} resolved, '
-              f'{len(unresolved)} unresolved, {sum(1 for r in rows if r[-1].startswith("CHECK"))} to check')
+        print(f'{key}: {len(entries)} rows -> {len(rows)} titles -> {len(ids)} ids, {len(unresolved)} unresolved, '
+              f'{sum(1 for r in rows if r[-1].startswith("CHECK"))} to check', flush=True)
+    build.save_cache()
     (HERE / 'awards.json').write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
     with open(sys.argv[1], 'w', newline='', encoding='utf-8') as f:
         w = csv.writer(f)

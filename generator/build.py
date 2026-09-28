@@ -328,13 +328,21 @@ def interleave(lists):
     return out
 
 
+def idlist_ids(card):
+    """[[media, id], ...] of an idlist card: its awards.json list (read at build time, so the yearly award refresh
+    only has to update awards.json), or ids written into the spec."""
+    if 'awards_key' in card:
+        return json.loads((HERE / 'awards.json').read_text(encoding='utf-8'))[card['awards_key']]['ids']
+    return card['ids']
+
+
 def source_of(card):
     """(source id, human-readable source name) for report.csv."""
     k = card['kind']
     if k == 'mdblist':
         return card['list'], f"MDBList {card['list']}"
     if k == 'idlist':
-        return card['slug'], f"committed id list ({len(card['ids'])} ids, generator/awards.json from Wikipedia)"
+        return card.get('awards_key', card['slug']), f"committed id list ({len(idlist_ids(card))} ids, generator/awards.json from Wikipedia)"
     if k == 'franchise':
         names = [named(f'/collection/{c}') for c in card['collection_ids']]
         ids = card.get('ids') or []
@@ -463,8 +471,8 @@ def build_one(card, dflt):
         return metas, ('dropped ' + ', '.join(f'{k} {v}' for k, v in sorted(dropped.items()))) if dropped else ''
     if kind == 'mdblist':
         return interleave([mdblist(card, m) for m in card['media']]), notes
-    if kind == 'idlist':                       # committed id list (awards_wiki.py), in its own order
-        metas = [details_preview(m, i) for m, i in card['ids']]
+    if kind == 'idlist':                       # committed id list (awards.json from awards_wiki.py), in its own order
+        metas = [details_preview(m, i) for m, i in idlist_ids(card)]
         return [m for m in metas if m], notes
     raise SystemExit(f'unknown kind {kind}')
 
@@ -506,6 +514,12 @@ def main():
             if len(metas) < before:
                 _excluded.setdefault(cid, {})['deny'] = before - len(metas)
                 notes = f"{notes}; deny-list removed {before - len(metas)}".lstrip('; ')
+            card_ex = {(m, int(i)) for m, i in card.get('exclude', [])}       # this card only (e.g. Oscar 1927/28)
+            if card_ex:
+                n = len(metas)
+                metas = [m for m in metas if (m['type'], int(m['id'].split(':', 1)[1])) not in card_ex]
+                _excluded.setdefault(cid, {})['card_exclude'] = n - len(metas)
+                notes = f"{notes}; card exclusions removed {n - len(metas)}".lstrip('; ')
             options, gfiles, gbytes = write_catalog(root, 'movie', cid, metas, dflt['page_size'])
             genre_stats[cid] = {'options': len(options), 'files': gfiles, 'bytes': gbytes,
                                 'untagged': sum(1 for m in metas if not m.get('_g'))}

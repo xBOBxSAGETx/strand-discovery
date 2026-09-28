@@ -38,7 +38,7 @@ CAP = int(os.environ.get('SD_FS_CAP') or 10000)   # TMDB discover returns at mos
 MAX_REQUESTS = 35000            # whole run (logger + build)
 MAX_MINUTES = 30
 PAGE_POOL = ThreadPoolExecutor(int(os.environ.get('SD_WORKERS') or 8))   # page fetches; the 20 req/s throttle is shared
-FREE = {'tubi', 'pluto-tv', 'the-roku-channel', 'plex', 'kanopy', 'hoopla'}   # ad-supported / library services
+FREE = {'tubi', 'pluto-tv', 'plex'}   # ad-supported services
 
 
 def providers():
@@ -132,7 +132,12 @@ def main():
     summary = {'date': today, 'state_source': os.environ.get('SD_STATE_SOURCE', 'unknown'), 'providers': {},
                'warnings': [], 'skipped': []}
     candidates = {}
-    for p in providers():
+    wanted = providers()
+    if not os.environ.get('SD_FS_ONLY'):                     # a service dropped from the spec leaves the state too
+        for gone in sorted(set(state['providers']) - {p['slug'] for p in wanted}):
+            del state['providers'][gone]
+            summary.setdefault('dropped', []).append(gone)
+    for p in wanted:
         elapsed = (time.monotonic() - t0) / 60
         if p['free'] and (build._calls[0] + build_est > MAX_REQUESTS * 0.8 or elapsed > MAX_MINUTES * 0.5):
             summary['skipped'].append(f"{p['slug']}: budget (requests so far {build._calls[0]}, build est {build_est}, "
