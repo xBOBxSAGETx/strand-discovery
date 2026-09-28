@@ -12,3 +12,6 @@ Personal, non-commercial use only.
 <img src="art/tmdb-logo.svg" alt="TMDB" width="160">
 
 This product uses the TMDB API but is not endorsed or certified by TMDB.
+
+Streaming availability (which titles are on which service) is watch-provider data from
+[JustWatch](https://www.justwatch.com), provided through TMDB.

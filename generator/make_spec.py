@@ -33,7 +33,8 @@ FOLDERS += [{'key': f'directors-{slugify(c)}', 'title': f'Directors · {c}', 'sh
 FOLDERS += [{'key': f'actors-{slugify(c)}', 'title': f'Actors · {c}', 'shape': 'poster'} for c in ACTOR_CATS]
 
 # ---- sources -----------------------------------------------------------------------------------------------------
-MONETIZATION = 'flatrate|free|ads|rent|buy'
+# subscription services: flatrate only; ad-supported / library services: free|ads. Rent/buy never counts as "on it".
+FREE_SERVICES = {'Tubi', 'Pluto TV', 'The Roku Channel', 'Plex', 'Kanopy', 'Hoopla'}
 STREAMING = [('Netflix', '8'), ('Disney+', '337'), ('HBO Max', '1899'), ('Apple TV', '350'), ('Paramount+', '2616|2303'),
              ('Prime Video', '9'), ('Hulu', '15'), ('Peacock', '386|387'), ('Starz', '43'), ('Discovery+', '520'),
              ('Netflix Kids', '175'), ('Crunchyroll', '283'), ('MUBI', '11'), ('Criterion Channel', '258'),
@@ -172,10 +173,16 @@ def main():
         for name, ids in STREAMING:
             if v == 'top' and name in NO_TOP:
                 continue
-            p = {'watch_region': 'US', 'with_watch_providers': ids, 'with_watch_monetization_types': MONETIZATION}
+            p = {'watch_region': 'US', 'with_watch_providers': ids,
+                 'with_watch_monetization_types': 'free|ads' if name in FREE_SERVICES else 'flatrate'}
             eyebrow = {'popular': 'Streaming', 'new': 'New on Streaming', 'top': 'Top Rated · Streaming'}[v]
             cats.append(disc(f'streaming-{slugify(name)}' + ('' if v == 'popular' else f'-{v}'), f'{name} · {n}', name,
                              eyebrow, f'streaming-{v}', ['movie', 'series'], v, movie=p, series=p))
+            if v == 'new':
+                # TV "New" = episodes aired in the last 45 days (new seasons count), until the provider's first_seen
+                # history is long enough; then build.py orders the whole card by date first seen on the service
+                cats[-1]['tv_air_window'] = 45
+                cats[-1]['provider'] = slugify(name)
     for v, n in VARIANTS:                                    # genres x3
         for name, mp, sp in GENRES:
             media = [m for m, p in (('movie', mp), ('series', sp)) if p is not None]

@@ -159,6 +159,10 @@ def discover(card, media, depth, dflt):
     cutoff = TODAY
     if card.get('min_age_days'):              # e.g. hidden gems: at least a year old
         cutoff = (dt.date.today() - dt.timedelta(days=card['min_age_days'])).isoformat()
+    if not movie and card.get('tv_air_window'):   # any episode aired recently (new seasons of old shows count)
+        params.pop('first_air_date.lte', None)
+        params.update({'air_date.gte': (dt.date.today() - dt.timedelta(days=card['tv_air_window'])).isoformat(),
+                       'air_date.lte': TODAY, 'sort_by': 'popularity.desc'})
     if movie:
         params.update({'with_release_type': '4|5|6', 'release_date.lte': cutoff})
         if card['sort'] in ('top', 'votes'):  # shorts/music videos rise to the top of rating order (smoke test)
@@ -361,9 +365,39 @@ def previous_summary():
         return None
 
 
+STATE_DIR = Path(os.environ.get('SD_STATE', 'state'))
+
+
+def _read_json(p, default):
+    try:
+        return json.loads(p.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return default
+
+
+FS_SUMMARY = _read_json(STATE_DIR / 'fs_summary.json', None)
+FS_CANDIDATES = _read_json(STATE_DIR / 'new_candidates.json', {})
+
+
+def first_seen_mode(card):
+    prov = card.get('provider')
+    info = (FS_SUMMARY or {}).get('providers', {}).get(prov) if prov else None
+    return bool(info and info.get('mode') == 'first_seen' and prov in FS_CANDIDATES)
+
+
+def first_seen_card(card, depth):
+    """New on X = titles first seen on the service within the window, newest first, popularity tiebreak,
+    no vote floor (arrivals are often obscure); movies and TV interleaved."""
+    c = sorted(FS_CANDIDATES[card['provider']], key=lambda m: (m['first_seen'], m['popularity']), reverse=True)
+    strip = lambda m: {k: v for k, v in m.items() if k not in ('first_seen', 'popularity')}
+    return interleave([[strip(m) for m in c if m['type'] == t][:depth] for t in ('movie', 'series')])
+
+
 def build_one(card, dflt):
     """Returns (metas, notes)."""
     kind, notes = card['kind'], ''
+    if kind == 'discover' and first_seen_mode(card):
+        return first_seen_card(card, depth_of(card, dflt)), 'ordered by date first seen on the service'
     if kind == 'discover':
         return interleave([discover(card, m, depth_of(card, dflt), dflt) for m in card['media']]), notes
     if kind == 'franchise':
@@ -438,6 +472,13 @@ def main():
     (root / '.nojekyll').write_text('', encoding='utf-8')
     summary = {'generated_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'tmdb_requests': _calls[0],
                'seconds': round(time.monotonic() - t0), 'total_items': sum(counts.values()), 'catalogs': counts}
+    fs = FS_SUMMARY or {'status': 'missing (logger did not run or failed)'}
+    summary['first_seen'] = {k: v for k, v in fs.items() if k != 'providers'}
+    summary['first_seen']['providers'] = {p: {k: v for k, v in i.items() if k in ('size', 'adds', 'removals', 'churn',
+                                                                                  'history_days', 'mode', 'sliced')}
+                                          for p, i in fs.get('providers', {}).items()}
+    summary['new_card_modes'] = {c['slug']: ('first_seen' if first_seen_mode(c) else 'release_date')
+                                 for c in spec['catalogs'] if c.get('provider')}
     (root / 'summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
     if _excluded:
         (root / 'exclusions.json').write_text(json.dumps(_excluded, indent=1), encoding='utf-8')
