@@ -1,6 +1,7 @@
 """Plan the artwork for every catalog: writes generator/art.json from spec.json (titles fetched live from TMDB).
 
   python art_plan.py
+  python art_plan.py --title-logos [plan.csv]   # re-plan only the Movie Series title logos in art.json
 
 Background rules (per-slug overrides and the avoid list in art_overrides.json win):
   people          -> TMDB profile photo (poster)
@@ -84,6 +85,146 @@ def pool(c, dflt):
 
 WINDOW = 6            # candidates are vote-ordered per medium and interleaved; re-ranked by votes per window of 6
 
+# ---- Movie Series title logos (issue #15) ---------------------------------------------------------------------------
+# A franchise card shows the franchise's own title logo instead of the typeset title when TMDB has a good one:
+# English (or untagged) PNG, >= 500 px wide, not a filled box. Sources, in order: the collection's own logos (TMDB
+# lists none today, 2026-09-28), then the earliest film of the card's collections whose title IS the card title
+# ("Alien", "The Dark Knight"; never "Dr. No" for 007). Pick = highest-voted, not the widest (the widest file picked
+# retired brand logos in the logo pass). art_overrides.json per slug: "title_logo_pin": {"kind", "id", "path"} (a
+# checked file; it must still be listed on TMDB) or "title_logo_pin": false (keep the typeset title).
+# No logo -> {'fallback': reason}: the card keeps the current look (photo + typeset title).
+TITLE_LOGO_MIN_W = 500
+TITLE_LOGO_BOXY = 0.8           # art_logo.boxiness above this = a filled box / badge
+TITLE_LOGO_MAX_ASPECT = 8.0     # trimmed width/height above this = a thin strip (ALIEN at 1920x109 fits 640x36)
+LOGO_CACHE_FILE = build.CACHE_FILE.parent / 'title_logos.json'    # logo metadata + boxiness, fetched once
+
+
+def _norm(t):
+    t = t.lower().replace('&', 'and')
+    t = re.sub(r'^the\s+', '', t)
+    return re.sub(r'[^a-z0-9]', '', t)
+
+
+def rank_title_logos(logos):
+    """Usable logos, best first: English before untagged, then votes (average, count), then width."""
+    ok = [l for l in logos if l.get('iso_639_1') in ('en', None) and (l.get('width') or 0) >= TITLE_LOGO_MIN_W
+          and l.get('file_path', '').lower().endswith('.png')]
+    return sorted(ok, key=lambda l: (l.get('iso_639_1') != 'en', -(l.get('vote_average') or 0),
+                                     -(l.get('vote_count') or 0), -(l.get('width') or 0)))
+
+
+def title_logo_sources(title, collections):
+    """[(kind, id)] to search, in order. collections: [{'id', 'parts': [{'id', 'title', 'release_date'}]}]."""
+    srcs = [('collection', col['id']) for col in collections]
+    parts = sorted((p for col in collections for p in col.get('parts', [])),
+                   key=lambda p: p.get('release_date') or '9999')
+    srcs += [('movie', p['id']) for p in parts if _norm(p.get('title', '')) == _norm(title)][:1]
+    return srcs
+
+
+def pick_title_logo(title, sources, images_of, shape_of, pin=None):
+    """-> {'path', 'lang', 'source', 'width', 'height', 'votes', 'pinned'} or {'fallback': reason}.
+    images_of(kind, id) -> TMDB logos list; shape_of(path) -> (boxiness 0..1, width/height of the trimmed logo).
+    Both are injected, so the tests run without network."""
+    if pin is False:
+        return {'fallback': 'override: typeset title'}
+    if pin:
+        sources = [(pin['kind'], pin['id'])]
+    for kind, tid in sources:
+        logos = images_of(kind, tid)
+        cands = [l for l in logos if l['file_path'] == pin['path']] if pin else rank_title_logos(logos)
+        for l in cands:
+            if not pin:
+                boxy, aspect = shape_of(l['file_path'])
+                if boxy > TITLE_LOGO_BOXY or aspect > TITLE_LOGO_MAX_ASPECT:
+                    continue
+            return {'path': l['file_path'], 'lang': l.get('iso_639_1'), 'source': f'{kind} {tid}',
+                    'width': l.get('width'), 'height': l.get('height'),
+                    'votes': f"{l.get('vote_average', 0):.2f}/{l.get('vote_count', 0)}", 'pinned': bool(pin)}
+    if pin:
+        return {'fallback': f"PIN MISSING: {pin['kind']} {pin['id']} {pin['path']} no longer listed on TMDB"}
+    if not sources:
+        return {'fallback': 'no TMDB collection (keyword franchise)'}
+    if not any(k == 'movie' for k, _ in sources):
+        return {'fallback': 'no collection logo and no film titled like the card'}
+    return {'fallback': 'no English/untagged PNG logo >= 500 px that is not boxy or a thin strip'}
+
+
+class TitleLogoData:
+    """TMDB lookups for title logos, cached in cache/title_logos.json (metadata only; images are fetched at render)."""
+
+    def __init__(self):
+        try:
+            self.cache = json.loads(LOGO_CACHE_FILE.read_text(encoding='utf-8'))
+        except (OSError, ValueError):
+            self.cache = {}
+
+    def _get(self, key, fetch):
+        if key not in self.cache:
+            self.cache[key] = fetch()
+        return self.cache[key]
+
+    def collection(self, cid):
+        return self._get(f'collection:{cid}', lambda: {'id': cid, 'parts': [
+            {k: p.get(k) for k in ('id', 'title', 'release_date')} for p in build.tmdb(f'/collection/{cid}')['parts']]})
+
+    def images_of(self, kind, tid):
+        keep = ('file_path', 'iso_639_1', 'width', 'height', 'vote_average', 'vote_count')
+        return self._get(f'logos:{kind}:{tid}', lambda: [
+            {k: l.get(k) for k in keep} for l in
+            build.tmdb(f'/{kind}/{tid}/images', include_image_language='en,null').get('logos', [])])
+
+    def shape_of(self, path):
+        import art, art_logo                      # PIL only when a candidate is actually checked
+
+        def measure():
+            img = art.fetch_image(path, 'w300')
+            bbox = img.getchannel('A').point(lambda a: 255 if a > 20 else 0).getbbox() or (0, 0, 1, 1)
+            return [round(art_logo.boxiness(img), 3), round((bbox[2] - bbox[0]) / max(1, bbox[3] - bbox[1]), 2)]
+        return tuple(self._get(f'shape:{path}', measure))
+
+    def save(self):
+        LOGO_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        LOGO_CACHE_FILE.write_text(json.dumps(self.cache, indent=0, ensure_ascii=False), encoding='utf-8')
+
+
+def plan_title_logo(c, title, overrides, data):
+    cols = [data.collection(i) for i in c.get('collection_ids', [])] if c['kind'] == 'franchise' else []
+    return pick_title_logo(title, title_logo_sources(title, cols), data.images_of, data.shape_of,
+                           overrides.get(c['slug'], {}).get('title_logo_pin'))
+
+
+def title_logos_only(csv_path=None):
+    """Re-plan only the series-* title logos inside the existing art.json (no other card is touched)."""
+    spec = json.loads(Path(os.environ.get('SD_SPEC', HERE / 'spec.json')).read_text(encoding='utf-8'))
+    by_slug = {c['slug']: c for c in spec['catalogs']}
+    overrides = json.loads((HERE / 'art_overrides.json').read_text(encoding='utf-8'))
+    doc = json.loads((HERE / 'art.json').read_text(encoding='utf-8'))
+    data, rows = TitleLogoData(), []
+    try:
+        for card in doc['cards']:
+            if not card['slug'].startswith('series-'):
+                continue
+            card['title_logo'] = tl = plan_title_logo(by_slug[card['slug']], card['title'], overrides, data)
+            rows.append({'slug': card['slug'], 'title': card['title'], 'result': 'fallback' if 'fallback' in tl else 'logo',
+                         **{k: tl.get(k, '') for k in ('source', 'path', 'lang', 'width', 'height', 'votes', 'pinned',
+                                                          'fallback')}})
+    finally:
+        data.save()
+    (HERE / 'art.json').write_text(json.dumps(doc, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
+    if csv_path:
+        import csv
+        with open(csv_path, 'w', newline='', encoding='utf-8') as f:
+            wr = csv.DictWriter(f, fieldnames=list(rows[0]))
+            wr.writeheader()
+            wr.writerows(rows)
+    n = sum(r['result'] == 'logo' for r in rows)
+    print(f'title logos: {n} cards with a logo, {len(rows) - n} fallback, {build._calls[0]} TMDB requests')
+    missing = [r for r in rows if str(r['fallback']).startswith('PIN MISSING')]
+    for r in missing:
+        print('PROBLEM', r['slug'], r['fallback'])
+    return 1 if missing else 0
+
 
 def main():
     spec = json.loads(Path(os.environ.get('SD_SPEC', HERE / 'spec.json')).read_text(encoding='utf-8'))
@@ -96,6 +237,7 @@ def main():
     # approved backgrounds stay as they are and are reserved first, so no other card can take them
     used = {b['path'] for b in pinned.values() if b.get('kind') == 'path'}
     cards, problems, skipped = [], [], {'documentary': 0, 'taste': 0, 'avoid': 0, 'duplicate': 0}
+    logo_data = TitleLogoData()
     try:
         for c in spec['catalogs']:
             shape = {shapes[f] for f in c['folders']}
@@ -169,9 +311,15 @@ def main():
             base = re.sub(r'-(new|top)$', '', c['slug'])   # one override covers all three variants
             card.update(overrides.get(base, {}))
             card.update(overrides.get(c['slug'], {}))
+            if c['slug'].startswith('series-'):           # franchise title logo or the documented fallback
+                card.pop('title_logo_pin', None)
+                card['title_logo'] = plan_title_logo(c, card['title'], overrides, logo_data)
+                if card['title_logo'].get('fallback', '').startswith('PIN MISSING'):
+                    problems.append(f"{c['slug']}: {card['title_logo']['fallback']}")
             cards.append(card)
     finally:
         build.save_cache()
+        logo_data.save()
     (HERE / 'art.json').write_text(json.dumps({'_note': 'generated by art_plan.py; edit art_overrides.json instead',
                                                'cards': cards}, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
     print(f"art plan: {len(cards)} cards ({sum(c['shape'] == 'wide' for c in cards)} wide, "
@@ -182,4 +330,6 @@ def main():
 
 
 if __name__ == '__main__':
+    if sys.argv[1:2] == ['--title-logos']:        # python art_plan.py --title-logos [plan.csv]
+        sys.exit(title_logos_only(sys.argv[2] if len(sys.argv) > 2 else None))
     main()

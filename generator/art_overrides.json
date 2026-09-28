@@ -80,5 +80,107 @@
  "network-paramountplus": {
   "logo_colour": "#ffffff",
   "_why": "blue script on the deep-blue field was the weakest card; white like the streaming Paramount+ card (copilot review 2026-09-28)"
+ },
+ "series-twilight": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 8966,
+   "path": "/8EUdQFZzIdKEGmEliGWcu7GTTHc.png"
+  },
+  "_why": "the top-voted Twilight logo carries a \"1\" (first film) under the wordmark; this one is the plain wordmark (worker self-read 2026-09-28)"
+ },
+ "series-saw": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 176,
+   "path": "/nussT8miNnbajyOLmoqeP9Ss2pi.png"
+  },
+  "_why": "the top-voted Saw logo is dark grunge letters, near-illegible on a dark photo; this is the red SAW wordmark (worker self-read 2026-09-28)"
+ },
+ "series-transformers": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 1858,
+   "path": "/sRdt54X9wXUvCEwG4CdVyxFcC8y.png"
+  },
+  "_why": "the top-voted Transformers logo is dark metallic and low-contrast; this is a flat white TRANSFORMERS wordmark (worker self-read 2026-09-28)"
+ },
+ "series-alien": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 348,
+   "path": "/6kh259JU0GCXvfV3LMFieWq4Um8.png"
+  },
+  "_why": "the classic tall-letter ALIEN wordmark; the top-voted file is a 1920x109 spaced strip (too thin) and the next a generic condensed font (worker self-read 2026-09-28)"
+ },
+ "series-dune": {
+  "title_logo_pin": false,
+  "_why": "every TMDB Dune logo is a hairline strip or says \"PART ONE\"; keep the typeset title (worker self-read 2026-09-28)"
+ },
+ "series-lethal-weapon": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 941,
+   "path": "/lrQ91gIq5GGLP8wXbjXmuAyV0Cm.png"
+  },
+  "_why": "the top-voted logo is dark red (17% of its pixels readable on a dark photo); this is the brighter red stacked wordmark (worker self-read 2026-09-28); bg: the collection backdrop put \"LETHAL WEAPON\" across Danny Glover's nose and moustache (and forced the red logo to white); this Lethal Weapon 2 still has both faces above/right of the title and keeps the red (lane U self-read 2026-09-28)",
+  "bg": {
+   "kind": "path",
+   "path": "/i4R2yYpGeyF7O9GRrNlItAVRBYl.jpg",
+   "from": "Lethal Weapon 2 (tmdb:942)"
+  }
+ },
+ "series-john-wick": {
+  "bg": {
+   "kind": "path",
+   "path": "/fRLftkwv8jm3DLxXOf2NbngHjPB.jpg",
+   "from": "John Wick: Chapter 2 (tmdb:324552)"
+  },
+  "_why": "collection backdrop puts Keanu Reeves's face right under \"WICK\"; this Chapter 2 still has his face top-right, clear of the title (lane U self-read 2026-09-28)"
+ },
+ "series-mad-max": {
+  "bg": {
+   "kind": "path",
+   "path": "/mWQg2INejtX1PCWRAN4vseadA6H.jpg",
+   "from": "Mad Max (tmdb:9659)"
+  },
+  "_why": "collection backdrop (Beyond Thunderdome art) puts the \"X\" of MAX across Mel Gibson's face; this Mad Max (1979) still has his face top-right, clear of the title (lane U self-read 2026-09-28)"
+ },
+ "series-madagascar": {
+  "bg": {
+   "kind": "path",
+   "path": "/tPaurpIUskVji5vwV0dhy9pq4Vs.jpg",
+   "from": "Madagascar (tmdb:953)"
+  },
+  "_why": "collection backdrop puts \"SCAR\" over Alex the lion's head; the Madagascar beach group shot keeps every face above the title (lane U self-read 2026-09-28)"
+ },
+ "series-the-hunger-games": {
+  "bg": {
+   "kind": "path",
+   "path": "/yVBQ65YBYZ9UhzJ4NGdRgeXtyTL.jpg",
+   "from": "The Hunger Games (tmdb:70160)"
+  },
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 70160,
+   "path": "/hJA3edSToEmAXHKSiDjTb4ZtM7H.png"
+  },
+  "_why": "the auto logo is a thin gold strip whose \"ES\" fades into shadow, and gold-on-fire on the Mockingjay backdrop; bright stacked gold wordmark on the first film's dark still (Katniss right, clear of the title) (lane U self-read 2026-09-28)"
+ },
+ "series-men-in-black": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 607,
+   "path": "/x8UjMnqCakIv16FEY8fk86WzNeg.png"
+  },
+  "_why": "the auto logo is a dark blue-grey MIB with navy \"MEN IN BLACK\" (69% readable) on a night photo; this is the white MIB wordmark with the agents silhouette (lane U self-read 2026-09-28)"
+ },
+ "series-pirates-of-the-caribbean": {
+  "bg": {
+   "kind": "path",
+   "path": "/1jHxkVXMI5s3vRiyiZooUy1shB5.jpg",
+   "from": "Pirates of the Caribbean: At World's End (tmdb:285)"
+  },
+  "_why": "collection backdrop put \"of the\" / \"Caribbean\" across Jack Sparrow's beard and chest (lane I note for the TV check); this At World's End crew still keeps every face above the title (lane U self-read 2026-09-28)"
  }
 }
