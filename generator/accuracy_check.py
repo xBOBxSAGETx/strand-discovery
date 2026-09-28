@@ -13,9 +13,11 @@ from spec.json. Netflix / HBO Max: a series of the service's own network with no
 service (rules F2 / F3 of arrivals.py). A miss is (i) LAG = a day-dated item from a published schedule, <= 14 days old;
 (iii) OFFICIAL = on the service's official arrival list (official_arrivals.csv), a JustWatch gap; DOCUMENTED = listed in
 precision_unknowns.json; else (ii) ERROR. The gate fails on any undocumented (ii).
-RECALL: per service in official_arrivals.csv, the official arrivals dated inside the 45-day New window (at least
-MIN_OFFICIAL of them, else skipped with a note - no current list, nothing measured) that are anywhere on the service's
-New card. A drop of more than MAX_DROP points below accuracy_baseline.json is a problem.
+RECALL: per service, on the LATEST month that has an official list in official_arrivals.csv: its official arrivals
+dated inside the 45-day New window that are anywhere on the service's New card. A drop of more than MAX_DROP points
+below accuracy_baseline.json is a problem. NOTES (shown in the log and in the issue body when an issue is open anyway,
+never a reason to open one): the lists are older than the run's month ("stale"), or fewer than MIN_OFFICIAL arrivals
+of that month fall in the window (not measured). The lists are an optional manual refresh.
 --report: open / comment on / close the "accuracy" issue (gh CLI, GITHUB_TOKEN with issues: write). Test mode as in
 health.py: HEALTH_DRY_RUN=1 prints the writes; HEALTH_MOCK_ISSUES=<json> stands in for `gh issue list`.
 TMDB_API_KEY from the environment (never printed). Reads only; never writes state.
@@ -30,7 +32,7 @@ SCHEDULES = {'vt', 'fb', 'wodp'}
 ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}      # the sets arrivals.py uses (F2 / F3)
 LAG_DAYS = 14
 WINDOW = 45                     # the New card's arrival window (arrivals.WINDOW)
-MIN_OFFICIAL = 10               # fewer official arrivals inside the window = no current list: recall skipped
+MIN_OFFICIAL = 10               # fewer official arrivals of the measured month in the window: not measured (a note)
 MAX_DROP = 3.0                  # recall points below the baseline that open the issue
 UA = 'strand-discovery/1.0 (accuracy check; +https://github.com/xBOBxSAGETx/strand-discovery)'
 TITLE = 'Weekly accuracy check'
@@ -147,16 +149,16 @@ def recall(pages, summary, official_rows, today, baseline):
     out = []
     for svc in sorted({r['service'] for r in official_rows}):
         slug = f'streaming-{svc}-new'
+        # measured on the LATEST month that has an official list for this service (lists are a manual refresh)
+        month = max(r['date'][:7] for r in official_rows if r['service'] == svc)
         inwin = {f"{r['media']}:{r['tmdb_id']}" for r in official_rows
-                 if r['service'] == svc and lo <= r['date'] <= today}
+                 if r['service'] == svc and r['date'][:7] == month and lo <= r['date'] <= today}
         base = baseline.get('services', {}).get(svc)
-        month = today[:7]
-        has_month = any(r['service'] == svc and r['date'][:7] == month for r in official_rows)
-        if not has_month or len(inwin) < MIN_OFFICIAL:     # measured only against a CURRENT-month official list
-            why = (f'no official arrival list for {month}' if not has_month else
-                   f'only {len(inwin)} official arrivals dated {lo}..{today} (need {MIN_OFFICIAL})')
+        stale = month < today[:7]
+        if len(inwin) < MIN_OFFICIAL:                        # a note, never a problem
             out.append({'service': svc, 'status': 'skipped', 'official_in_window': len(inwin), 'month': month,
-                        'note': f'{why}; add them + a new baseline'})
+                        'stale': stale, 'note': f'only {len(inwin)} official arrivals of {month} dated {lo}..{today} '
+                                                f'(need {MIN_OFFICIAL}): not measured'})
             continue
         order = set(card_order(pages, slug))
         found = len(inwin & order)
@@ -164,6 +166,7 @@ def recall(pages, summary, official_rows, today, baseline):
         drop = round(base - pct, 1) if base is not None else None
         out.append({'service': svc, 'status': 'measured', 'official_in_window': len(inwin), 'found': found,
                     'recall': pct, 'baseline': base, 'drop': drop, 'mode': summary.get('new_card_modes', {}).get(slug),
+                    'month': month, 'stale': stale, 'note': f'measured on {month}',
                     'problem': drop is not None and drop > MAX_DROP})
     return out
 
@@ -228,8 +231,6 @@ def main():
         w.writeheader()
         w.writerows(rows)
     errors = [r for r in rows if r['class'] == 'ERROR (ii)']
-    (out / 'accuracy.json').write_text(json.dumps({'date': today, 'seed': seed, 'precision': table, 'recall': rec,
-                                                   'errors': errors}, indent=1), encoding='utf-8')
     lines = ['| provider | dated | sample | on service | lag (i) | official (iii) | documented | errors (ii) |',
              '|---|---|---|---|---|---|---|---|']
     lines += [f"| {t['provider']} | {t['dated_items']} | {t['sample']} | {t['on_service']} | {t['lag_i']} | "
@@ -242,20 +243,25 @@ def main():
                 f"{e['event_date']}, sources {e['sources']}, status {e['status']}) {e['urls'][:200]}" for e in errors]
     problems += [f"recall: {r['service']} {r['recall']}% is {r['drop']} points below the baseline {r['baseline']}%"
                  for r in rec if r.get('problem')]
-    # a skipped recall is never silent: it keeps the issue open until the month's lists + a new baseline are added
-    skipped = [r for r in rec if r['status'] == 'skipped']
-    if skipped:
-        months = sorted({r['month'] for r in skipped})
-        problems.append(f"recall: skipped for {', '.join(r['service'] for r in skipped)}: "
-                        f"{skipped[0]['note'].split(';')[0]}{'' if len(months) == 1 else ' (' + ', '.join(months) + ')'}; "
-                        "add them to generator/official_arrivals.csv + a new generator/accuracy_baseline.json")
+    # NOTES are shown, never problems: stale official lists (a manual refresh; the precision gate is the weekly guard)
+    # and services with too few official arrivals in the window to measure
+    notes = []
+    stale = sorted({r['month'] for r in rec if r.get('stale')})
+    if stale:
+        notes.append(f"stale: official lists are for {', '.join(stale)} (run {today[:7]}); recall is measured on "
+                     "that month - refresh generator/official_arrivals.csv + accuracy_baseline.json when convenient")
+    notes += [f"recall not measured for {r['service']}: {r['note']}" for r in rec if r['status'] == 'skipped']
     print('RESULT:', 'CLEAN' if not problems else f'{len(problems)} problem(s)')
     for p in problems:
         print(' -', p)
+    for n in notes:
+        print(' NOTE:', n)
+    (out / 'accuracy.json').write_text(json.dumps({'date': today, 'seed': seed, 'precision': table, 'recall': rec,
+                                                   'errors': errors, 'notes': notes}, indent=1), encoding='utf-8')
     if a.report:
         run_url = (f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{os.environ.get('GITHUB_REPOSITORY', '')}"
                    f"/actions/runs/{os.environ.get('GITHUB_RUN_ID', '')}")
-        report(problems, lines, run_url)
+        report(problems, [f'**Note:** {n}' for n in notes] + [''] + lines if notes else lines, run_url)
     return 1 if problems and not a.report else 0      # with --report the issue carries the signal (like health.py)
 
 

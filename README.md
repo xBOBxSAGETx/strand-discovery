@@ -25,7 +25,7 @@ Plex cards also include titles Plex rents (the owner's choice: playback is via d
 |---|---|---|
 | `build-and-deploy` | daily 07:17 | first_seen logger (date each title was first seen on each service), then the generator, the guards, the run report, and a Pages deploy. An `alert` job keeps the "health" issue in sync. |
 | `weekly-status` | Mondays 08:43 | commits a counts-only `status/last-build.txt` so GitHub keeps the scheduled workflows enabled (they are disabled after 60 days without repository activity). |
-| `weekly-accuracy` | Mondays 09:37 | read-only accuracy check of the arrival-ordered New cards (`generator/accuracy_check.py`) on the latest build's output: precision (a weekly random 20 of each card's dated titles checked on TMDB/JustWatch; misses that are schedule lag, on the service's official list, or in `precision_unknowns.json` are not errors) and recall against the committed official arrival lists (`official_arrivals.csv`; measured only when the current month's list is there). One `accuracy` issue: opened on an undocumented error, a recall drop of more than 3 points below `accuracy_baseline.json`, or a skipped recall ("no official arrival list for <month>" - never silent), closed after a clean week. |
+| `weekly-accuracy` | Mondays 09:37 | read-only accuracy check of the arrival-ordered New cards (`generator/accuracy_check.py`) on the latest build's output: precision (a weekly random 20 of each card's dated titles checked on TMDB/JustWatch; misses that are schedule lag, on the service's official list, or in `precision_unknowns.json` are not errors) and recall on the latest month of the committed official arrival lists (`official_arrivals.csv`, an optional manual refresh - the precision gate is the weekly guard; older lists show a "stale" note, never an issue). One `accuracy` issue: opened on an undocumented precision error or a recall drop of more than 3 points below `accuracy_baseline.json`, closed after a clean week. |
 | `yearly-refresh` | October 1, 09:23 | re-reads the Wikipedia award lists, pushes `awards-refresh-<year>` if they changed, and opens a review issue with the double-source cross-check; opens the people-list review issue. |
 
 Scheduled deploys stay off unless the repo variable `SD_SCHEDULE_DEPLOY` is `on` (the build still runs and alerts).
@@ -48,8 +48,9 @@ deploy stays served.
 **The "accuracy" issue** (weekly): an undocumented precision error names the title, its source URL and date - either
 the arrival source was wrong (fix the parser) or it is a real but unconfirmable arrival (add it to
 `precision_unknowns.json` with the reason); a recall drop means the New cards miss official arrivals (check the
-Arrival signals step and the source health). Refresh `official_arrivals.csv` + `accuracy_baseline.json` when a new
-month's official lists are collected (titles, TMDB ids and dates only - never the lists' text).
+Arrival signals step and the source health). Recall is measured on the latest month of `official_arrivals.csv`; when
+that month is older than the run's, the report and the issue (if one is open anyway) carry a "stale" note - refreshing
+the lists + `accuracy_baseline.json` is optional and manual (titles, TMDB ids and dates only - never the lists' text).
 
 **Day-15 reminder:** once first_seen has 15 days of history, the alert job opens one `reminder` issue (once only) to
 re-score the New cards against the services' official arrival lists.
