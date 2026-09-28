@@ -777,59 +777,6 @@
    "badge": "Top Rated"
   },
   {
-   "slug": "leaving-netflix",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Netflix",
-   "style": "logo",
-   "logo_src": {
-    "kind": "network",
-    "id": 213
-   },
-   "icon_provider": 8,
-   "badge": "Leaving Soon"
-  },
-  {
-   "slug": "leaving-hulu",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Hulu",
-   "style": "logo",
-   "logo_src": {
-    "kind": "network",
-    "id": 453
-   },
-   "icon_provider": 15,
-   "badge": "Leaving Soon"
-  },
-  {
-   "slug": "leaving-prime-video",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "Prime Video",
-   "style": "logo",
-   "logo_src": {
-    "kind": "network",
-    "id": 1024
-   },
-   "icon_provider": 9,
-   "badge": "Leaving Soon",
-   "logo_path": "/q1rC6f1XkJVgmFW5VjSeGHncX50.png"
-  },
-  {
-   "slug": "leaving-hbo-max",
-   "shape": "wide",
-   "eyebrow": "Streaming",
-   "title": "HBO Max",
-   "style": "logo",
-   "logo_src": {
-    "kind": "network",
-    "id": 3186
-   },
-   "icon_provider": 1899,
-   "badge": "Leaving Soon"
-  },
-  {
    "slug": "genre-action",
    "shape": "wide",
    "eyebrow": "Genre",

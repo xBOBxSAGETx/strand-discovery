@@ -5735,51 +5735,5 @@
   "title_lines": 2,
   "bytes": 60654,
   "fails": []
- },
- {
-  "slug": "leaving-netflix",
-  "shape": "wide",
-  "style": "logo",
-  "logo": "network 213 /wwemzKWzjKYJFfCeiB57q3r4Bcm.png 1000x268 (.svg)",
-  "field": "#000000 (app icon background)",
-  "contrast": 4.24,
-  "safe_area": "ok",
-  "bytes": 29012,
-  "fails": []
- },
- {
-  "slug": "leaving-hulu",
-  "shape": "wide",
-  "style": "logo",
-  "logo": "network 453 /pqUTCleNUiTLAVlelGxUgWn1ELh.png 1000x329 (.svg)",
-  "field": "#25b66c (app icon background)",
-  "logo_recoloured": "#121216",
-  "contrast": 6.37,
-  "safe_area": "ok",
-  "bytes": 37452,
-  "fails": []
- },
- {
-  "slug": "leaving-prime-video",
-  "shape": "wide",
-  "style": "logo",
-  "logo": "network 1024 /q1rC6f1XkJVgmFW5VjSeGHncX50.png 1000x307 (PINNED)",
-  "field": "#0c3658 (dark tone of logo colour)",
-  "contrast": 4.33,
-  "safe_area": "ok",
-  "bytes": 39576,
-  "fails": []
- },
- {
-  "slug": "leaving-hbo-max",
-  "shape": "wide",
-  "style": "logo",
-  "logo": "network 3186 /nmU0UMDJB3dRRQSTUqawzF2Od1a.png 1100x190 (.svg)",
-  "field": "#000000 (app icon background)",
-  "logo_recoloured": "#ffffff",
-  "contrast": 21.0,
-  "safe_area": "ok",
-  "bytes": 30504,
-  "fails": []
  }
 ]

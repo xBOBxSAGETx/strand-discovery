@@ -103,8 +103,7 @@ def main():
             shape = shape.pop()
             assert (shape == 'poster') == (c['kind'] in ('director', 'actor')), f"{c['slug']}: people must be poster"
             card = {'slug': c['slug'], 'shape': shape, 'eyebrow': c['eyebrow'], 'title': c.get('art_title', c['title'])}
-            logo_key = (f"streaming:{c['service']}" if c['kind'] == 'leaving' else     # Leaving Soon · <service>
-                        f"streaming:{c['provider']}" if c.get('provider') else
+            logo_key = (f"streaming:{c['provider']}" if c.get('provider') else
                         f"streaming:{c['slug'][len('streaming-'):].rsplit('-top', 1)[0]}" if c['slug'].startswith('streaming-')
                         else c['slug'] if c['slug'].startswith(('network-', 'studio-')) else None)
             if logo_key and logo_key in LOGO_SOURCES:
@@ -112,12 +111,10 @@ def main():
                 src = LOGO_SOURCES[logo_key]
                 card.update(style='logo', logo_src={'kind': src['kind'], 'id': src['id']},
                             icon_provider=src.get('icon_provider'),
-                            badge='Leaving Soon' if c['kind'] == 'leaving' else
-                            {'new': 'New', 'top': 'Top Rated'}.get(c.get('sort')),
+                            badge={'new': 'New', 'top': 'Top Rated'}.get(c.get('sort')),
                             eyebrow={'streaming': 'Streaming', 'network': 'Network', 'studio': 'Studio'}[
                                 'streaming' if logo_key.startswith('streaming:') else c['slug'].split('-')[0]])
-                base = (f"streaming-{c['service']}" if c['kind'] == 'leaving' else     # same logo as the service card
-                        re.sub(r'-(new|top)$', '', c['slug']))
+                base = re.sub(r'-(new|top)$', '', c['slug'])
                 card.update({k: v for k, v in overrides.get(base, {}).items() if not k.startswith('_')})
                 cards.append(card)
                 continue
