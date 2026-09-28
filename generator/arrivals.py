@@ -64,10 +64,15 @@ UA = 'strand-discovery/1.0 (personal non-commercial; +https://github.com/xBOBxSA
 # 'arrivals-v2': the earlier namespace ('arrivals') held page bodies; it is deleted on start and never read again.
 HTTP_ROOT = Path(os.environ.get('SD_HTTP_CACHE', 'cache/http'))
 HTTP_CACHE = HTTP_ROOT / 'arrivals-v2'
-PARSER_VERSION = 2              # bump on ANY parser change: stored parsed data from another version is refetched in full
-DELAY = {'film-book.com': 5.0}          # robots.txt Crawl-delay
-DEFAULT_DELAY = 1.1
-_last = {}
+PARSER_VERSION = 3              # bump on ANY parser change: stored parsed data from another version is refetched in full
+# politeness: at least 3 s between requests to any host; film-book.com's robots Crawl-delay is 5 s; Vital Thrills
+# rate-limits (HTTP 429 to 17 fetches at ~1 s spacing from a GitHub runner, 2026-09-28): 5 s as a courtesy
+DELAY = {'film-book.com': 5.0, 'vitalthrills.com': 5.0}
+DEFAULT_DELAY = 3.0
+RETRY_AFTER_MAX = 60            # a 429/503 is honoured once (Retry-After, capped); a second one stops the host for the run
+BLOCKED = -1                    # get_parsed status for a host stopped by the circuit breaker (stored data if any)
+VT_BACKFILL_MAX = 20            # Vital Thrills posts fetched per backfill run; the cache keeps progress for the next run
+_last, _stopped = {}, {}         # host -> reason (circuit breaker; one warning per host)
 fetch_stats = {'requests': 0, 'cache_fresh': 0, 'not_modified': 0, 'errors': 0, 'stale_fallback': 0,
                'scan_removed': 0}
 TEXT_KEYS = {'body', 'text', 'content', 'html', 'xml', 'raw'}   # 'raw': source lines are not kept either
@@ -131,42 +136,66 @@ def get_parsed(url, parser, parse, max_age=20.0):
         fetch_stats['cache_fresh'] += 1
         return rec['status'], rec['data'], True
     host = q.netloc.lower().removeprefix('www.')
-    wait = _last.get(host, 0) + DELAY.get(host, DEFAULT_DELAY) - time.time()
-    if wait > 0:
-        time.sleep(wait)
+    if host in _stopped:                       # circuit breaker: no more requests to this host in this run
+        return _blocked(rec, usable)
     headers = {'User-Agent': UA, 'Accept-Encoding': 'identity'}
     if usable:                                 # another parser version: full refetch, no conditional headers
         if rec.get('etag'):
             headers['If-None-Match'] = rec['etag']
         if rec.get('last_modified'):
             headers['If-Modified-Since'] = rec['last_modified']
-    fetch_stats['requests'] += 1
-    try:
-        with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60) as r:
-            status, text = r.status, r.read().decode('utf-8', errors='replace')
-            etag, lm = r.headers.get('ETag'), r.headers.get('Last-Modified')
-    except urllib.error.HTTPError as e:
-        _last[host] = time.time()
-        if e.code == 304 and usable:
-            fetch_stats['not_modified'] += 1
-            rec['fetched'] = time.time()
-            _write(rec_p, rec)
-            return 200, rec['data'], True
-        fetch_stats['errors'] += 1
-        return e.code, None, False
-    except Exception:                          # network error: the stored parsed data beats nothing
-        _last[host] = time.time()
-        fetch_stats['errors'] += 1
-        if usable:
-            fetch_stats['stale_fallback'] += 1
-            return rec['status'], rec['data'], True
-        return 0, None, False
+    for attempt in (1, 2):
+        wait = _last.get(host, 0) + DELAY.get(host, DEFAULT_DELAY) - time.time()
+        if wait > 0:
+            time.sleep(wait)
+        fetch_stats['requests'] += 1
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60) as r:
+                status, text = r.status, r.read().decode('utf-8', errors='replace')
+                etag, lm = r.headers.get('ETag'), r.headers.get('Last-Modified')
+            break
+        except urllib.error.HTTPError as e:
+            _last[host] = time.time()
+            if e.code in (429, 503):
+                if attempt == 1:                   # honour Retry-After once
+                    ra = e.headers.get('Retry-After') if e.headers else None
+                    time.sleep(min(RETRY_AFTER_MAX, int(ra)) if ra and ra.isdigit() else RETRY_AFTER_MAX)
+                    continue
+                _stopped[host] = f'HTTP {e.code} twice (after honouring Retry-After): stopped for this run'
+                fetch_stats['errors'] += 1
+                return _blocked(rec, usable)
+            return _http_error(e, host, rec, rec_p, usable)
+        except Exception:                          # network error: the stored parsed data beats nothing
+            _last[host] = time.time()
+            fetch_stats['errors'] += 1
+            if usable:
+                fetch_stats['stale_fallback'] += 1
+                return rec['status'], rec['data'], True
+            return 0, None, False
     _last[host] = time.time()
     data = parse(text)
     del text                                   # the source text goes no further than the parser
     _write(rec_p, {'url': url, 'parser': parser, 'v': PARSER_VERSION, 'status': status, 'etag': etag,
                    'last_modified': lm, 'fetched': time.time(), 'data': data})
     return status, data, False
+
+
+def _blocked(rec, usable):
+    """A stopped host: the stored parsed data if there is any (like a network-error fallback), else BLOCKED."""
+    if usable:
+        fetch_stats['stale_fallback'] += 1
+        return rec['status'], rec['data'], True
+    return BLOCKED, None, False
+
+
+def _http_error(e, host, rec, rec_p, usable):
+    if e.code == 304 and usable:
+        fetch_stats['not_modified'] += 1
+        rec['fetched'] = time.time()
+        _write(rec_p, rec)
+        return 200, rec['data'], True
+    fetch_stats['errors'] += 1
+    return e.code, None, False
 
 
 def _write(path, rec):
@@ -338,6 +367,13 @@ def heading_date(line, year):
     return None
 
 
+# a departures section ("Leaving Starz in August 2026", "Expiring on Peacock", "Leaving Soon") ends the arrivals: Film-Book's
+# monthly posts list departures under the same date headings (2026-09-28: ~71 departed Starz titles read as arrivals).
+# A title line ("Leaving Las Vegas", "- Leaving Neverland") is not a section heading: it needs a preposition or "soon".
+DEPARTURES = re.compile(r"^(##h\d\s+)?(what.s\s+|titles?\s+|movies?\s+|shows?\s+)?(leaving|expiring|departing|last chance)\b"
+                        r"(.*\b(in|on|from|this|at the end of)\b|\s+soon\b)", re.I)
+
+
 def dated_rows(lines, service, year, month, source, url, start=None, stop=None, prefix=False, bullets_only=False,
                heading_marker=False, heading_year=None, default_date=None, h3_titles=False, drop_prefixes=(),
                strip_prefix=False, skip_lines=None):
@@ -354,6 +390,8 @@ def dated_rows(lines, service, year, month, source, url, start=None, stop=None, 
             on = bool(re.search(start, ln, re.I))
             continue
         if stop and re.search(stop, ln, re.I):
+            break
+        if DEPARTURES.search(ln.replace('**', '').strip()):
             break
         if ln.lower() in ('date', 'show', 'title') and not table:
             table = True                                # Film-Book table: date / title / category / status cells
@@ -527,6 +565,7 @@ def src_vt(months, backfill, stats):
         urls = [it['link'] for it in items] if st == 200 else []
         if st != 200:
             errs.append(f'tag feed HTTP {st}')
+    fetched = 0
     for u in dict.fromkeys(urls):
         m = re.search(r'vitalthrills\.com/([a-z-]+?)-(' + '|'.join(months) + r')-(20\d\d)/?$', u)
         if not m or m.group(1) not in VT_SERVICES:
@@ -534,6 +573,12 @@ def src_vt(months, backfill, stats):
         svc, mon, year = VT_SERVICES[m.group(1)], MONTHS[m.group(2)], int(m.group(3))
         if not in_window(year, mon):
             continue
+        cached = _record_path(u, 'vt-post').exists()
+        if backfill and not cached:
+            if fetched >= VT_BACKFILL_MAX:        # the rest on the next backfill run (the cache keeps progress)
+                notes.append(f'{u}: deferred (backfill cap {VT_BACKFILL_MAX} posts per run)')
+                continue
+            fetched += 1
         s, r, _ = get_parsed(u, 'vt-post', lambda t, svc=svc, year=year, mon=mon, u=u: dated_rows(
             text_lines(post_body(t)), svc, year, mon, 'vt', u, start=r'^(##h2 )?.*(schedules?|titles)$',
             stop=r'^#\w|^tags?:|related posts|^##h2 (sports|live|fast channels|espn)', prefix=svc == 'disney+hulu'),
@@ -1021,7 +1066,8 @@ def main():
             w.writerow([s, st.get('posts', 0), p['rows'], p['accepted'], f"{p['accepted'] / max(1, p['rows']):.0%}",
                         p['check'], p['confirmed'], ' | '.join(st.get('errors', []) + st.get('notes', []))[:500]])
     # warnings = real failures only (they open the health issue); known per-post parse gaps are notes
-    warnings = [f'{s}: {e}' for s, st in stats.items() for e in st.get('errors', [])]
+    warnings = [f'{s}: {e}' for s, st in stats.items() for e in st.get('errors', []) if f'HTTP {BLOCKED}' not in e]
+    warnings += [f'{h}: {why}' for h, why in _stopped.items()]
     warnings += [f'{s}: the feed / sitemap returned no items (source down or format changed)' for s in SOURCES
                  if stats.get(s, {}).get('items', 0) == 0 and not stats.get(s, {}).get('errors')]
     warnings += [f'{s}: {stats[s]["posts"]} posts but 0 rows (format changed?)' for s in SOURCES
