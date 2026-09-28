@@ -61,7 +61,8 @@ the Leaving Soon cards are empty for the day, never stale.
   daily job does not use it unless the owner explicitly opts in with `SD_LEAVING_WIL=1`. With it off, Netflix uses
   What's on Netflix and the Hulu / Prime Video / HBO Max cards have no source.
 - No Disney+ card: no source lists Disney+ departures.
-Only titles TMDB (JustWatch data) still lists on the service are shown, soonest leave date first; source text is never
+Both sources give the removal date (the last day to watch is the day before); a title stays on the card through its
+last day to watch. Only titles TMDB (JustWatch data) still lists on the service are shown, soonest leave date first; source text is never
 stored or republished. A source failure or format change shows up in the health issue.
 
 ### Secrets and variables (names only)
