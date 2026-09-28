@@ -50,10 +50,24 @@ Pages serves whatever the last successful deploy published. To go back: revert t
 `build-and-deploy`; or, if the code is fine and only the data was bad, re-run the `deploy` job of the last good run
 (*that run → Re-run jobs → deploy*; its Pages artifact is kept 1 day) or simply run the workflow again.
 
+### Leaving Soon sources
+`generator/leaving.py` runs daily before the generator and writes today's list only (never cached): if it fails,
+the Leaving Soon cards are empty for the day, never stale.
+- **What's on Netflix** "What's Leaving Netflix" posts (RSS) - Netflix.
+- **whatisleaving.com** - Netflix (cross-check), Hulu, Prime Video, HBO Max. The site has no feed; its pages load the
+  data from the site's own public read API, and the job makes the same one query per day, with an identifiable
+  User-Agent, reading the site's anonymous key from its page at run time (never stored). robots.txt allows all
+  crawling and the site publishes no terms. Chosen because no other free source covers those services; if the site
+  owner objects or blocks it, it is dropped. Kill switch: repo variable `SD_LEAVING_WIL=0` (Netflix then keeps What's
+  on Netflix; the other three cards are empty).
+- No Disney+ card: no source lists Disney+ departures.
+Only titles TMDB (JustWatch data) still lists on the service are shown, soonest leave date first; source text is never
+stored or republished. A source failure or format change shows up in the health issue.
+
 ### Secrets and variables (names only)
 - Secrets: `TMDB_API_KEY` (TMDB v3 key), `SD_STATE_KEY` (encrypts the first_seen backup). Planned: Movie of the Night
   and Watchmode keys (accuracy monitoring).
-- Variables: `SD_SCHEDULE_DEPLOY` (`on` = scheduled deploys), `SD_KINDS_OFF` / `SD_KEEP` (staged rollout).
+- Variables: `SD_SCHEDULE_DEPLOY` (`on` = scheduled deploys), `SD_KINDS_OFF` / `SD_KEEP` (staged rollout), `SD_LEAVING_WIL` (`0` = whatisleaving off).
 - The values live only in the owner's secrets folder on their PC (and in GitHub's encrypted secrets); never in this
   repo. The people-list source CSV and the Strand shelf files are private too and are not in this repo.
 
