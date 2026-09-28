@@ -182,6 +182,25 @@ def depth_of(card, dflt):
 _excluded = {}                 # catalog id -> {rule: count}, filled when SD_MEASURE_EXCLUSIONS=1 (report only)
 
 
+def fill_reverse(path, params, raw, total, pages, pool=None):
+    """Issue #25: read a /discover pool once more in the REVERSE sort order (separate cache entries) and add every id
+    the forward pages hid to `raw` ({id: item}, updated in place). Stops once `raw` holds `total` ids; bounded by
+    `pages`. With `pool` (an executor) pages are read in parallel batches of its size. -> (pages read, ids added)."""
+    field, _, way = params['sort_by'].rpartition('.')
+    fill = {**params, 'sort_by': f"{field}.{'asc' if way == 'desc' else 'desc'}"}
+    n0, used, step = len(raw), 0, (pool._max_workers if pool else 1)
+    for start in range(1, pages + 1, step):
+        batch = range(start, min(start + step, pages + 1))
+        fetch = (lambda pg: tmdb(path, page=pg, **fill))
+        for data in (pool.map(fetch, batch) if pool else map(fetch, batch)):
+            used += 1
+            for item in data.get('results', []):
+                raw.setdefault(item['id'], item)
+        if len(raw) >= total:
+            break
+    return used, len(raw) - n0
+
+
 def discover(card, media, depth, dflt):
     movie = media == 'movie'
     sort = SORTS[card['sort']][0 if movie else 1]
@@ -238,20 +257,11 @@ def discover(card, media, depth, dflt):
         sort_by = params['sort_by']
         field, _, way = sort_by.rpartition('.')
         field = {'primary_release_date': 'release_date'}.get(field, field)
-        fill = {**params, 'sort_by': f"{sort_by.rpartition('.')[0]}.{'asc' if way == 'desc' else 'desc'}"}
-        n0, used = len(seen), 0
-        for pg in range(1, pages + 1):
-            used += 1
-            for item in tmdb(path, page=pg, **fill).get('results', []):
-                if item['id'] not in seen:
-                    seen.add(item['id'])
-                    raw[item['id']] = item
-            if len(seen) >= total:
-                break
+        used, got = fill_reverse(path, params, raw, total, pages)
         with _lock:
             _fill[0] += used
-            _fill[1] += len(seen) - n0
-        print(f"  discover fill {card.get('slug')} {media}: +{len(seen) - n0} ids ({used} pages)", flush=True)
+            _fill[1] += got
+        print(f"  discover fill {card.get('slug')} {media}: +{got} ids ({used} pages)", flush=True)
         # one order from the current values (the stale pages' order was the problem); ties keep first-read order
         order = {i: n for n, i in enumerate(raw)}
         have = [i for i in raw if raw[i].get(field) not in (None, '')]

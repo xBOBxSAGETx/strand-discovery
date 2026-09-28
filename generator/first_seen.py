@@ -38,6 +38,7 @@ CAP = int(os.environ.get('SD_FS_CAP') or 10000)   # TMDB discover returns at mos
 MAX_REQUESTS = 35000            # whole run (logger + build)
 MAX_MINUTES = 30
 PAGE_POOL = ThreadPoolExecutor(int(os.environ.get('SD_WORKERS') or 8))   # page fetches; the 20 req/s throttle is shared
+_fill = [0, 0]        # reverse-order fill (issue #25): pages read, ids recovered
 FREE = {'tubi', 'pluto-tv', 'plex'}   # ad-supported services
 MAX_DROP = 5          # at most this many services leave the state in one run (the 2026-09-28 drop was 5)
 
@@ -84,18 +85,25 @@ def enumerate_catalogue(p, media, dflt):
     q = base_params(p, media, dflt)
     items = {}
 
-    def take(results):
-        for r in results:
-            items[r['id']] = r
-
-    def pages(params, total_pages):             # pages 2..N in parallel (latency, not the throttle, was the limit)
-        for d in PAGE_POOL.map(lambda pg: build.tmdb(path, page=pg, **params), range(2, min(total_pages, 500) + 1)):
-            take(d.get('results', []))
+    def pages(params, first):                   # pages 2..N in parallel (latency, not the throttle, was the limit)
+        got = {r['id']: r for r in first.get('results', [])}
+        total, n = first.get('total_results', 0), first.get('total_pages', 0)
+        for d in PAGE_POOL.map(lambda pg: build.tmdb(path, page=pg, **params), range(2, min(n, 500) + 1)):
+            got.update((r['id'], r) for r in d.get('results', []))
+        # TMDB caches every /discover page on its own (hours), so one query's pages can come from different
+        # snapshots: an id repeats on two pages and another is never returned - "absent" today, back tomorrow
+        # (issue #25). Holes -> read the pool once more in the reverse order (build.fill_reverse, shared with
+        # discover()). The query is unchanged, so this is not a re-baseline event.
+        if len(got) < total and 0 < n <= 500:
+            used, added = build.fill_reverse(path, params, got, total, n, PAGE_POOL)
+            with build._lock:
+                _fill[0] += used
+                _fill[1] += added
+        items.update(got)
 
     first = build.tmdb(path, page=1, **q)
     if first.get('total_results', 0) <= CAP:
-        take(first.get('results', []))
-        pages(q, first.get('total_pages', 0))
+        pages(q, first)
         return items, False
 
     def slice_range(lo, hi):
@@ -106,8 +114,7 @@ def enumerate_catalogue(p, media, dflt):
             slice_range(lo, mid)
             slice_range(mid + dt.timedelta(days=1), hi)
             return
-        take(d.get('results', []))
-        pages(params, d.get('total_pages', 0))
+        pages(params, d)
 
     slice_range(dt.date(1874, 1, 1), TODAY + dt.timedelta(days=730))
     return items, True
@@ -155,7 +162,7 @@ def main():
             summary['skipped'].append(f"{p['slug']}: budget (requests so far {build._calls[0]}, build est {build_est}, "
                                       f"{elapsed:.1f} min)")
             continue
-        calls_before = build._calls[0]
+        calls_before, fill_before = build._calls[0], list(_fill)
         with ThreadPoolExecutor(2) as pool:                  # movie + tv in parallel; the throttle is shared
             (movies, sliced_m), (shows, sliced_t) = pool.map(lambda m: enumerate_catalogue(p, m, dflt), ('movie', 'series'))
         present = {f'm:{i}': r for i, r in movies.items()} | {f't:{i}': r for i, r in shows.items()}
@@ -204,7 +211,8 @@ def main():
         churn = (adds + removals) / size_prev if size_prev else 0.0
         s = {'size': len(present), 'adds': adds, 'removals': removals, 'churn': round(churn, 4),
              'history_days': history, 'baseline': prov['baseline'], 'requests': build._calls[0] - calls_before,
-             'sliced': sliced_m or sliced_t, 'mode': 'first_seen' if history >= MIN_HISTORY_DAYS else 'release_date'}
+             'sliced': sliced_m or sliced_t, 'fill_pages': _fill[0] - fill_before[0],
+             'fill_recovered': _fill[1] - fill_before[1], 'mode': 'first_seen' if history >= MIN_HISTORY_DAYS else 'release_date'}
         summary['providers'][p['slug']] = s
         if size_prev and len(present) < size_prev * 0.8:
             summary['warnings'].append(f"{p['slug']}: catalogue shrank {size_prev} -> {len(present)} (>20%)")
@@ -223,7 +231,8 @@ def main():
                                      if (r.get('release_date') or r.get('first_air_date')) else {})}
                                  for k, r in fresh]
         print(f"  {p['slug']:<18} size {len(present):>6} adds {adds:>4} removals {removals:>4} history {history:>3}d "
-              f"requests {s['requests']:>5}{' sliced' if s['sliced'] else ''}", flush=True)
+              f"requests {s['requests']:>5}{' sliced' if s['sliced'] else ''}"
+              f"{' fill +%d (%d pages)' % (s['fill_recovered'], s['fill_pages']) if s['fill_pages'] else ''}", flush=True)
     if today not in state['runs']:
         state['runs'].append(today)
     try:                                                 # the stored arrival signals with today's presence: the
@@ -234,6 +243,7 @@ def main():
         summary['warnings'].append(f'signal candidates not written: {type(e).__name__}: {str(e)[:200]}')
     save_state(state_dir, state)
     summary['requests'] = build._calls[0]
+    summary['discover_fill'] = {'pages': _fill[0], 'recovered': _fill[1]}
     summary['seconds'] = round(time.monotonic() - t0)
     (state_dir / 'new_candidates.json').write_text(json.dumps(candidates, separators=(',', ':')), encoding='utf-8')
     (state_dir / 'fs_summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
