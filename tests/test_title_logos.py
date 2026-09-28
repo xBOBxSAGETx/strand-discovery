@@ -91,7 +91,7 @@ def wordmark_logo(rgb=(255, 255, 255), size=(900, 300)):
 class Render(unittest.TestCase):
     def setUp(self):
         self.saved = (art.fetch_image, art.background_path, art.OUT, art.TITLE_LOGO_BOX, art.title_logo_xy, art.gradient,
-                      art.TITLE_LOGO_MAX_AREA)
+                      art.TITLE_LOGO_MAX_AREA, art.EYEBROW_FIX)
         art.OUT = Path(_tmp) / 'cards'
         art.background_path = lambda bg: '/bg.jpg'
         self.logo_img = wordmark_logo()
@@ -100,7 +100,7 @@ class Render(unittest.TestCase):
 
     def tearDown(self):
         (art.fetch_image, art.background_path, art.OUT, art.TITLE_LOGO_BOX, art.title_logo_xy, art.gradient,
-         art.TITLE_LOGO_MAX_AREA) = self.saved
+         art.TITLE_LOGO_MAX_AREA, art.EYEBROW_FIX) = self.saved
 
     def card(self, **tl):
         return {'slug': 'series-test', 'shape': 'wide', 'eyebrow': 'Movie Series', 'title': 'Test',
@@ -203,6 +203,49 @@ class Render(unittest.TestCase):
         self.assertEqual(log['safe_area'], 'ok')
         self.assertEqual(log['hero_band'], 'FAIL')
         self.assertTrue(any(f.startswith('outside hero band') and 'title logo' in f for f in fails), fails)
+
+    def bright_busy(self):
+        art.gradient = lambda size, shape: Image.new('L', size, 0)                   # no card-wide shade
+        self.bg_img = Image.new('RGBA', (1920, 1080), (255, 255, 255, 255))
+        d = ImageDraw.Draw(self.bg_img)
+        for x in range(0, 1920, 12):                                                 # white / pale-yellow stripes
+            d.rectangle((x, 0, x + 5, 1079), fill=(250, 240, 200, 255))
+
+    def test_control_eyebrow_on_bright_busy_patch_fails_without_fix(self):
+        self.bright_busy()
+        art.EYEBROW_FIX = False
+        _, log, fails = art.render(self.card())
+        self.assertTrue(any(f.startswith('eyebrow contrast') for f in fails), (fails, log))
+        self.assertNotIn('eyebrow_scrim', log)
+
+    def test_eyebrow_on_bright_busy_patch_passes_with_the_scrim(self):
+        self.bright_busy()
+        _, log, fails = art.render(self.card())
+        self.assertFalse(any(f.startswith('eyebrow contrast') for f in fails), (fails, log))
+        self.assertLess(log['eyebrow_legible_raw'], art.MIN_LEGIBLE_SHARE)
+        self.assertGreaterEqual(log['eyebrow_legible'], art.MIN_LEGIBLE_SHARE)
+        self.assertIn(log['eyebrow_scrim'], art.EYEBROW_SCRIM_ALPHAS)
+
+    def test_eyebrow_on_dark_photo_needs_no_scrim(self):
+        _, log, fails = art.render(self.card())
+        self.assertEqual(fails, [])
+        self.assertGreaterEqual(log['eyebrow_legible'], art.MIN_LEGIBLE_SHARE)
+        self.assertNotIn('eyebrow_scrim', log)
+
+    def test_non_series_cards_are_untouched(self):
+        card = self.card()
+        del card['title_logo']
+        _, log, fails = art.render(card)
+        self.assertEqual(fails, [])
+        self.assertNotIn('eyebrow_legible', log)
+        self.assertNotIn('hero_band', log)
+
+    def test_fallback_titles_sit_in_the_hero_band(self):
+        for title, n in (('Pirates of the Caribbean', 2), ('007', 1), ('How to Train Your Dragon', 2)):
+            card = dict(self.card(fallback='no film titled like the card'), title=title)
+            _, log, fails = art.render(card)
+            self.assertEqual(fails, [], title)
+            self.assertEqual((log['hero_band'], log['safe_area'], log['title_lines']), ('ok', 'ok', n), title)
 
     def test_control_thin_strip_fails_min_size(self):
         self.logo_img = wordmark_logo(size=(1920, 109))                              # the ALIEN strip: 640x36

@@ -154,6 +154,11 @@ TITLE_LOGO_MAX_AREA = 0.13
 # sits inside this band, HERO_PAD above its bottom edge, and is asserted there.
 HERO_BAND = (0.246, 0.754)
 HERO_PAD = 14
+# Movie Series eyebrow: asserted legible like a flat logo (MIN_LEGIBLE_SHARE of its pixels at MIN_TITLE_CONTRAST).
+# When the photo under it is too bright/busy, a soft dark scrim is laid behind the eyebrow only (no card-wide
+# darkening), getting stronger step by step until the assert passes. EYEBROW_FIX = False is the seeded control.
+EYEBROW_FIX = True
+EYEBROW_SCRIM_ALPHAS = (110, 150, 190, 230)
 
 
 def title_logo_xy(size, lw, lh, margin):
@@ -161,6 +166,41 @@ def title_logo_xy(size, lw, lh, margin):
     if size[0] > size[1]:
         return margin, int(size[1] * HERO_BAND[1]) - HERO_PAD - lh
     return margin, size[1] - margin - lh
+
+
+def draw_eyebrow(base, card, xy, eyebrow_f, fails, log, check):
+    """Draw the eyebrow at xy; with check, assert its legibility and fix it with a local scrim. Returns its bbox."""
+    text = card['eyebrow'].upper()
+    draw = ImageDraw.Draw(base)
+    bbox = draw.textbbox(xy, text, font=eyebrow_f)
+    if check:
+        layer = Image.new('RGBA', base.size, (0, 0, 0, 0))
+        ImageDraw.Draw(layer).text(xy, text, font=eyebrow_f, fill=ACCENT)
+        glyphs = layer.crop(bbox)
+        share = legible_share(glyphs, base.crop(bbox))
+        log['eyebrow_legible_raw'] = round(share, 3)
+        orig = base.copy()                            # each step is one scrim on the original photo, not stacked
+        for alpha in (EYEBROW_SCRIM_ALPHAS if EYEBROW_FIX else ()):
+            if share >= MIN_LEGIBLE_SHARE:
+                break
+            pad_x, pad_y = 14, 6
+            mask = Image.new('L', base.size, 0)
+            ImageDraw.Draw(mask).rounded_rectangle((bbox[0] - pad_x, bbox[1] - pad_y, bbox[2] + pad_x, bbox[3] + pad_y),
+                                                   radius=10, fill=alpha)
+            mask = mask.filter(ImageFilter.GaussianBlur(4))
+            scrim = Image.new('RGBA', base.size, (0, 0, 0, 0))
+            scrim.putalpha(mask)
+            trial = orig.copy()
+            trial.alpha_composite(scrim)
+            share = legible_share(glyphs, trial.crop(bbox))
+            base.paste(trial)
+            log['eyebrow_scrim'] = alpha
+        log['eyebrow_legible'] = round(share, 3)
+        if share < MIN_LEGIBLE_SHARE:
+            fails.append(f'eyebrow contrast: only {share:.0%} of its pixels reach {MIN_TITLE_CONTRAST}:1 '
+                         f'(need {MIN_LEGIBLE_SHARE:.0%})')
+    ImageDraw.Draw(base).text(xy, text, font=eyebrow_f, fill=ACCENT)
+    return bbox
 
 
 def check_hero_band(boxes, size, fails, log):
@@ -278,14 +318,18 @@ def render(card):
         log['title_px'], log['title_lines'] = title_f.size, len(lines)
         line_h = title_f.size * 1.08
         y = h - margin - line_h * len(lines)
+        if card.get('title_logo') and card['shape'] == 'wide':    # Movie Series fallback: inside the hero band too
+            last_bottom = draw.textbbox((0, 0), lines[-1], font=title_f)[3]
+            y = int(h * HERO_BAND[1]) - HERO_PAD - (len(lines) - 1) * line_h - last_bottom
         boxes = []
         for i, line in enumerate(lines):
             draw.text((margin, y + i * line_h), line, font=title_f, fill=(255, 255, 255))
             boxes.append((f'title line {i + 1}', draw.textbbox((margin, y + i * line_h), line, font=title_f)))
     eyebrow_f = font(26 if card['shape'] == 'wide' else 22, 'Bold')
     ey = (margin, y - eyebrow_f.size - 14)
-    draw.text(ey, card['eyebrow'].upper(), font=eyebrow_f, fill=ACCENT)
-    boxes.insert(0, ('eyebrow', draw.textbbox(ey, card['eyebrow'].upper(), font=eyebrow_f)))
+    series = 'title_logo' in card                     # Movie Series (logo or fallback): eyebrow legibility asserted
+    boxes.insert(0, ('eyebrow', draw_eyebrow(base, card, ey, eyebrow_f, fails, log, check=series)))
+    draw = ImageDraw.Draw(base)
     if logo_kind == 'provider':                       # square app icon, rounded corners
         logo = logo_image(card['logo']).resize((150, 150), Image.LANCZOS)
         mask = Image.new('L', logo.size, 0)
@@ -306,8 +350,8 @@ def render(card):
             boxes.append(('logo', (margin, margin, margin + logo.width, margin + logo.height)))
             log['logo'] = f'{logo_kind} wordmark (luma {mean}{", whitened" if mean < 110 else ""})'
     import art_logo                                   # 4% safe-area assert, same as the logo / type cards
-    if (card.get('title_logo') or {}).get('path') and card['shape'] == 'wide':
-        check_hero_band(boxes, size, fails, log)      # eyebrow + title logo inside the tvOS hero band
+    if card.get('title_logo') and card['shape'] == 'wide':
+        check_hero_band(boxes, size, fails, log)      # eyebrow + title (logo or typeset) inside the tvOS hero band
     art_logo.check_bounds(boxes, size, fails, log)
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"{card['slug']}.jpg"
