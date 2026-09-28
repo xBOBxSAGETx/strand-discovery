@@ -88,10 +88,19 @@ def main():
     report, build_result, logger_outcome = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
     arrivals_outcome = sys.argv[4] if len(sys.argv) > 4 else 'skipped'
     found, summary, fs = problems(report, build_result, logger_outcome, arrivals_outcome)
+    # arrivals catch-up progress (information, never a problem by itself): run page summary + log, and the issue body
+    progress = (read(report / 'arrivals' / 'arrivals_summary.json') or {}).get('catchup_lines') or []
+    for line in progress:
+        print('progress:', line)
+    if progress and os.environ.get('GITHUB_STEP_SUMMARY'):
+        with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as f:
+            f.write('### Arrivals catch-up\n' + ''.join(f'- {line}\n' for line in progress))
     ensure_label('health', 'd73a4a', 'Daily build health (opened/closed automatically)')
     existing = json.loads(gh('issue', 'list', '--label', 'health', '--state', 'open', '--json', 'number', '--limit', '5') or '[]')
     if found:
         body = (f"Latest run: {RUN_URL}\n\n" + '\n'.join(f'- {p}' for p in found) +
+                ("\n\nArrivals catch-up (information):\n" + '\n'.join(f'- {line}' for line in progress)
+                 if progress else '') +
                 "\n\nThis issue closes itself after the next clean run. What each alert means: README → Operations.")
         if existing:
             gh('issue', 'comment', str(existing[0]['number']), '--body', body)
