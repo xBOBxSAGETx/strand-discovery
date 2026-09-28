@@ -1,0 +1,75 @@
+name: weekly-accuracy
+
+# Weekly accuracy check of the arrival-ordered "New on X" cards (generator/accuracy_check.py): PRECISION (a sample of
+# what each card shows is on the service) and RECALL (the services' official arrival lists are on the cards). Keeps ONE
+# issue labelled "accuracy": opened / updated on an undocumented precision error or a recall drop of more than 3 points,
+# closed after a clean week. Read-only: it restores the first_seen state but never saves it, and never deploys.
+on:
+  schedule:
+    - cron: '37 9 * * 1'        # Mondays, after the 07:17 daily build
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read            # the latest build's artifacts (Pages output + encrypted state backup)
+      issues: write            # the "accuracy" issue only
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      # Same state source order as build.yml, read-only (restore action only, no save step).
+      - name: Restore first_seen state (cache, read-only)
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: state-cache
+          key: sd-state-${{ github.run_id }}
+          restore-keys: sd-state-
+      # Prefer the Pages output and the state of the SAME build run (the cards and the arrival dates they were
+      # ordered with); the github-pages artifact is kept 1 day, so an older build falls back to the live site + cache.
+      - name: Fetch the latest build's output and state
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SD_STATE_KEY: ${{ secrets.SD_STATE_KEY }}
+        run: |
+          run_id=$(gh run list -R "$GITHUB_REPOSITORY" --workflow build.yml --branch main --status success -L 1 \
+                   --json databaseId --jq '.[0].databaseId // empty')
+          echo "latest successful build: ${run_id:-none}"
+          mkdir -p pages state
+          if [ -n "$run_id" ] && gh run download "$run_id" -R "$GITHUB_REPOSITORY" -n github-pages -D pages-art \
+             && tar -xf pages-art/artifact.tar -C pages \
+             && gh run download "$run_id" -R "$GITHUB_REPOSITORY" -n first-seen-state -D state-art \
+             && openssl enc -d -aes-256-cbc -pbkdf2 -pass env:SD_STATE_KEY \
+                  -in state-art/first_seen.json.gz.enc -out state/first_seen.json.gz \
+             && gzip -t state/first_seen.json.gz; then
+            echo "SOURCE=build run $run_id (pages + state)" >> "$GITHUB_ENV"
+          elif [ -f state-cache/first_seen.json.gz ]; then
+            rm -rf pages && mkdir pages && cp state-cache/first_seen.json.gz state/
+            echo "FETCH_SITE=https://xbobxsagetx.github.io/strand-discovery/" >> "$GITHUB_ENV"
+            echo "SOURCE=live site + cached state" >> "$GITHUB_ENV"
+          else
+            echo "::warning::no build output and no state: nothing to check"; echo "SKIP=1" >> "$GITHUB_ENV"
+          fi
+      - name: Accuracy check + issue
+        if: env.SKIP != '1'
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "source: $SOURCE"
+          python generator/accuracy_check.py --pages pages --state state --out accuracy --report \
+            ${FETCH_SITE:+--fetch-site "$FETCH_SITE"}
+      - name: Accuracy report
+        if: always() && env.SKIP != '1'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: accuracy-report
+          path: accuracy/
+          if-no-files-found: warn
+          retention-days: 30

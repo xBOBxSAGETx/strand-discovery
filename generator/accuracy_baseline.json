@@ -1,0 +1,11 @@
+{
+ "measured": "2026-09-27",
+ "list_month": "2026-09",
+ "method": "accuracy_check.py recall on the final arrivals code (50e5a27 semantics, P4 off); official arrivals dated inside the 45-day window found anywhere on the New card",
+ "services": {
+  "disneyplus": 94.7,
+  "hulu": 88.4,
+  "netflix": 95.8,
+  "prime-video": 92.5
+ }
+}
