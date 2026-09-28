@@ -218,7 +218,7 @@ def main():
                                   'name': r.get('title') or r.get('name'), 'first_seen': items[k][0],
                                   'popularity': r.get('popularity') or 0,
                                   '_g': build.canon_genres(r.get('genre_ids')),
-                                  **({'poster': f"{build.IMG}/w342{r['poster_path']}"} if r.get('poster_path') else {}),
+                                  **({'poster': f"{build.IMG}/{build.POSTER_SIZE}{r['poster_path']}"} if r.get('poster_path') else {}),
                                   **({'releaseInfo': (r.get('release_date') or r.get('first_air_date'))[:4]}
                                      if (r.get('release_date') or r.get('first_air_date')) else {})}
                                  for k, r in fresh]
