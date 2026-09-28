@@ -229,6 +229,7 @@ def main():
     try:                                                 # the stored arrival signals with today's presence: the
         import arrivals                                  # fallback for build.py if today's arrivals step fails
         arrivals.write_candidates(state, state_dir, today, arrivals.Presence(state, {}))
+        build.save_cache()                               # its durable TMDB lookups (tvnet: / tvseasons-at:)
     except Exception as e:                               # never fail the logger over it
         summary['warnings'].append(f'signal candidates not written: {type(e).__name__}: {str(e)[:200]}')
     save_state(state_dir, state)

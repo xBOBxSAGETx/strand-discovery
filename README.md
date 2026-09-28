@@ -68,7 +68,9 @@ Day-dated items from a published schedule are trusted for the whole 45-day windo
 weekly What's on Netflix recap, Plex's monthly list) need confirmation after 7 days: TMDB (JustWatch) must list the
 title on the service, otherwise it leaves the card. An item dated after the day our snapshots began, for a title
 that was already on the service that day and never left, is a pre-listing or a rotation, not an arrival: it is
-dropped whatever its precision (a new season, 2 or later, of such a show still counts). (A Netflix-network series that TMDB has no US provider data for at
+dropped whatever its precision. A new season of such a show still counts: season 2 or later AND higher than every
+season TMDB shows as aired by that day (specials and seasons without an air date don't count as aired); a re-listed
+older season, or the current season reaching this service late, is dropped. (A Netflix-network series that TMDB has no US provider data for at
 all counts as on Netflix; the same for an HBO / Max-network series on HBO Max. Presence is per app: a title JustWatch
 lists only on a sibling service - Hulu for Disney+ - is not confirmed.) Optional rule, off by default: repo variable
 `SD_ARRIVALS_SINGLE_SOURCE_DROP=1` drops a day-dated item listed by only one schedule and still not on the service 21

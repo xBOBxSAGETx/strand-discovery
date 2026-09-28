@@ -1044,17 +1044,34 @@ SINGLE_SOURCE_DAYS = 21
 _orphan_memo = {}
 # Baseline guard (copilot ruling 2026-09-28): an arrival DATED AFTER the logger's baseline date, for a title that was on
 # the service at the baseline and never left since (first_seen item ['baseline', last seen at the last run]), is a
-# pre-listing or a rotation, not an arrival: dropped whatever its precision (e.g. 23 of Plex's 55 October 2026 items).
-# Past-dated events are untouched (they arrived before the baseline). Exception: an event that names a NEW season
-# (season >= 2) of a show already on the service is a real arrival ("new seasons of returning shows count") and is kept;
-# set BASELINE_GUARD_KEEP_NEW_SEASONS = False to drop those too (64 of 112 drops on the 2026-09-27 replay).
+# pre-listing or a rotation, not an arrival: dropped whatever its precision (e.g. 25 of Plex's 55 October 2026 items).
+# Past-dated events are untouched (they arrived before the baseline). Exception (ruling accepted 2026-09-28): an event
+# that names a NEW season of a show already on the service is a real arrival ("new seasons of returning shows count")
+# and is kept. NEW = season >= 2 AND higher than every season the show had at the baseline. The logger records shows,
+# not seasons, so "had at the baseline" is TMDB's highest season (specials S0 excluded) whose air_date is on or before
+# the baseline date; a season without an air_date does not count as aired. A re-listed old season (S1 or S3 of a
+# show with S4 out) still drops - and so does an older season that reaches this service late (TMDB's air_date is the
+# original airing, not this service's). Set BASELINE_GUARD_KEEP_NEW_SEASONS = False to drop every season too.
 BASELINE_GUARD_KEEP_NEW_SEASONS = True
 GUARD_DROPS = {}                # refresh(): {provider: [key, ...]} dropped by the baseline guard on its last call
 
 
+def highest_season_at(tid, base):
+    """Highest season number (> 0) of TMDB series `tid` with an air_date on or before `base` (0 when none). One TMDB
+    tv-details request per (series, baseline), durably cached; None on a TMDB error (not cached: retried next run)."""
+    def fetch():
+        seasons = build.tmdb(f'/tv/{tid}').get('seasons') or []
+        return max([s['season_number'] for s in seasons
+                    if (s.get('season_number') or 0) > 0 and s.get('air_date') and s['air_date'] <= base] or [0])
+    try:
+        return build.stable(f'tvseasons-at:{tid}:{base}', fetch)
+    except RuntimeError:
+        return None
+
+
 def pre_listed(prov, key, ev):
     """Baseline guard: True when the event `ev` (current_obs) is dated after the provider's baseline and the title was
-    present at the baseline and is still present (never removed since)."""
+    present at the baseline and is still present (never removed since) - unless the event names a new season."""
     base, last = prov.get('baseline'), prov.get('last_run')
     date = min(o[0] for o in ev)
     if not base or not last or date <= base:
@@ -1062,7 +1079,11 @@ def pre_listed(prov, key, ev):
     it = (prov.get('items') or {}).get(fs_key(key))
     if not (it and it[0] == 'baseline' and it[1] >= last):
         return False
-    return not (BASELINE_GUARD_KEEP_NEW_SEASONS and any((o[3] or 0) > 1 for o in ev))
+    season = max((o[3] or 0) for o in ev)
+    if not BASELINE_GUARD_KEEP_NEW_SEASONS or season < 2 or not key.startswith('series:'):
+        return True
+    top = highest_season_at(int(key.split(':')[1]), base)
+    return top is None or season <= top          # unknown (TMDB error) = not shown to be new: dropped this run
 
 
 def network_orphan(svc, media, tid):
@@ -1187,6 +1208,7 @@ def main():
               (r['date'], r['precision'], r['source'], r['popularity'],
                'season' if (r.get('season') or 0) > 1 else 'title', r.get('season'), r.get('url')), today)
     cands = refresh(work, today, present)
+    build.save_cache()                                  # refresh()'s tvnet: / tvseasons-at: lookups are durable too
     guarded = {s: set(ks) for s, ks in GUARD_DROPS.items()}
     for r in acc:
         r['on_service'] = present(r['service'], r['tmdb_media'], r['tmdb_id'])

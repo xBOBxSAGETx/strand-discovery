@@ -124,18 +124,29 @@ class VitalThrillsTrailingDates(unittest.TestCase):
 
 class BaselineGuard(unittest.TestCase):
     """refresh(): an arrival dated after the logger baseline, for a title present at the baseline and never removed,
-    is dropped (pre-listing / rotation); past-dated events and titles that arrived after the baseline are kept."""
+    is dropped (pre-listing / rotation); past-dated events and titles that arrived after the baseline are kept; a new
+    season (>= 2, higher than any season the show had at the baseline) is kept, a re-listed old season is dropped."""
+    TOP = {4: 2, 6: 4}                                  # highest season aired at the baseline (stubbed TMDB lookup)
+
+    def setUp(self):
+        self._lookup = a.highest_season_at
+        a.highest_season_at = lambda tid, base: self.TOP.get(tid)
+
+    def tearDown(self):
+        a.highest_season_at = self._lookup
 
     def state(self):
         sig = {}
         for key, date, kind, season in (('movie:1', '2026-10-01', 'title', None),     # present at baseline -> dropped
                                         ('movie:2', '2026-10-01', 'title', None),     # first seen after baseline
                                         ('movie:3', '2026-09-20', 'title', None),     # past-dated
-                                        ('series:4', '2026-10-02', 'season', 3),      # new season of a present show
-                                        ('movie:5', '2026-10-01', 'title', None)):    # present at baseline, then left
+                                        ('series:4', '2026-10-02', 'season', 3),      # S3 > S2 at baseline: new
+                                        ('movie:5', '2026-10-01', 'title', None),     # present at baseline, then left
+                                        ('series:6', '2026-10-03', 'season', 3)):     # S3 re-listed, S4 out: old
             a.merge(sig, key, (date, 'day', 'vt', 1.0, kind, season, 'https://example.test/guard'), '2026-09-15')
         items = {'m:1': ['baseline', '2026-10-10'], 'm:2': ['2026-10-01', '2026-10-10'],
-                 'm:3': ['baseline', '2026-10-10'], 't:4': ['baseline', '2026-10-10'], 'm:5': ['baseline', '2026-09-30']}
+                 'm:3': ['baseline', '2026-10-10'], 't:4': ['baseline', '2026-10-10'], 'm:5': ['baseline', '2026-09-30'],
+                 't:6': ['baseline', '2026-10-10']}
         return {'providers': {'x': {'baseline': '2026-09-28', 'last_run': '2026-10-10', 'items': items, 'signals': sig}}}
 
     def keys(self, today='2026-10-10'):
@@ -143,7 +154,7 @@ class BaselineGuard(unittest.TestCase):
 
     def test_present_at_baseline_and_dated_after_is_dropped(self):
         self.assertEqual(self.keys(), ['movie:2', 'movie:3', 'movie:5', 'series:4'])
-        self.assertEqual(a.GUARD_DROPS, {'x': ['movie:1']})
+        self.assertEqual(sorted(a.GUARD_DROPS['x']), ['movie:1', 'series:6'])
 
     def test_not_present_at_baseline_is_kept(self):
         self.assertIn('movie:2', self.keys())
@@ -160,9 +171,35 @@ class BaselineGuard(unittest.TestCase):
         try:
             a.BASELINE_GUARD_KEEP_NEW_SEASONS = False
             self.assertNotIn('series:4', self.keys())
-            self.assertEqual(sorted(a.GUARD_DROPS['x']), ['movie:1', 'series:4'])
+            self.assertEqual(sorted(a.GUARD_DROPS['x']), ['movie:1', 'series:4', 'series:6'])
         finally:
             a.BASELINE_GUARD_KEEP_NEW_SEASONS = True
+
+    def test_relisted_old_season_is_dropped(self):
+        self.assertNotIn('series:6', self.keys())           # S3 while S4 had aired at the baseline
+        self.assertIn('series:4', self.keys())              # S3 while S2 was the latest: a new season
+
+    def test_unknown_seasons_drop(self):
+        self.TOP = {6: 4}                                   # series:4 lookup failed (None): not shown to be new
+        self.assertNotIn('series:4', self.keys())
+
+    def test_highest_season_at_edge_cases(self):
+        seasons = [{'season_number': 0, 'air_date': '2030-01-01'},        # specials: never counted
+                   {'season_number': 1, 'air_date': '2020-05-01'},
+                   {'season_number': 2, 'air_date': '2026-09-28'},        # aired on the baseline day: counts
+                   {'season_number': 3, 'air_date': None},                # no air_date: not aired
+                   {'season_number': 4, 'air_date': '2026-11-01'}]        # after the baseline
+        tmdb, a.build.tmdb = a.build.tmdb, lambda path, **kw: {'seasons': seasons}
+        try:
+            self.assertEqual(self._lookup(990001, '2026-09-28'), 2)
+            self.assertEqual(self._lookup(990002, '2019-01-01'), 0)
+            a.build.tmdb = lambda path, **kw: (_ for _ in ()).throw(RuntimeError('TMDB HTTP 500'))
+            self.assertIsNone(self._lookup(990003, '2026-09-28'))
+            self.assertNotIn('tvseasons-at:990003:2026-09-28', a.build._stable)   # an error is not cached
+        finally:
+            a.build.tmdb = tmdb
+            for k in [k for k in a.build._stable if k.startswith('tvseasons-at:99000')]:
+                del a.build._stable[k]
 
 
 if __name__ == '__main__':
