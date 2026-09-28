@@ -67,7 +67,10 @@ matched to TMDB by exact title only (anything ambiguous is left out). New season
 Day-dated items from a published schedule are trusted for the whole 45-day window. Week/month roundup items (e.g. the
 weekly What's on Netflix recap, Plex's monthly list) need confirmation after 7 days: TMDB (JustWatch) must list the
 title on the service, otherwise it leaves the card. (A Netflix-network series that TMDB has no US provider data for at
-all counts as on Netflix.) Only titles, years, seasons, dates and post URLs are kept from the sources - not their text.
+all counts as on Netflix; the same for an HBO / Max-network series on HBO Max. Presence is per app: a title JustWatch
+lists only on a sibling service - Hulu for Disney+ - is not confirmed.) Optional rule, off by default: repo variable
+`SD_ARRIVALS_SINGLE_SOURCE_DROP=1` drops a day-dated item listed by only one schedule and still not on the service 21
+days after its date. Only titles, years, seasons, dates and post URLs are kept from the sources - not their text.
 Politeness: identifiable User-Agent, at least 3 s between requests to any site (Film-Book's 5 s crawl delay honoured;
 Vital Thrills 5 s), conditional GET from a private cache, never search URLs; an HTTP 429/503 is honoured once
 (Retry-After) and a second one stops that site for the run (one health warning); the backfill fetches at most 20

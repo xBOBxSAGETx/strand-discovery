@@ -94,6 +94,7 @@ jobs:
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           SD_CACHE: cache
+          SD_ARRIVALS_SINGLE_SOURCE_DROP: ${{ vars.SD_ARRIVALS_SINGLE_SOURCE_DROP }}   # the logger rebuilds the fallback
         run: python generator/first_seen.py state
       # Arrival signals (published schedules) merged into the first_seen state before it is saved; a failure leaves
       # the logger's fallback (the stored signals) in place for the build
@@ -105,6 +106,7 @@ jobs:
           SD_CACHE: cache
           SD_HTTP_CACHE: cache/http
           SD_STATE: state
+          SD_ARRIVALS_SINGLE_SOURCE_DROP: ${{ vars.SD_ARRIVALS_SINGLE_SOURCE_DROP }}
         run: python generator/arrivals.py arrivals ${{ inputs.arrivals_backfill && '--backfill' || '' }}
       - name: Save first_seen state (cache)
         if: steps.logger.outcome == 'success'

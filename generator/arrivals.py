@@ -933,25 +933,32 @@ def current_event(v, today):
 
 ANNOUNCED_DAYS = 7              # F1: a week/month-precision (roundup) arrival not seen on the service: first 7 days only;
 #                                 day-dated items from a published schedule are trusted for the whole window
-NETFLIX_NETWORK = 213
+ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}   # TMDB networks: Netflix; HBO, HBO Max (TMDB has two, 3186 and 8304)
+# P4 (evaluated 2026-09-28, default OFF unless adopted): a day-dated item from ONE source, still not on the service 21
+# days after its date, is dropped (a second source or presence keeps it)
+SINGLE_SOURCE_DROP = os.environ.get('SD_ARRIVALS_SINGLE_SOURCE_DROP', '0') == '1'
+SINGLE_SOURCE_DAYS = 21
 _orphan_memo = {}
 
 
-def netflix_orphan(media, tid):
-    """F2 (narrow): a series whose TMDB networks include Netflix and for which TMDB has NO US watch-provider data at all
-    counts as on Netflix - JustWatch never lists some Netflix originals (STEEL BALL RUN, Unveil &TEAM), so the logger
-    can never confirm them. Titles with US provider data that lacks Netflix stay unconfirmed. Networks are durably
-    cached (1 request per title, ever); provider data is checked once per run, only for titles F1 would drop."""
-    if media != 'series':
+def network_orphan(svc, media, tid):
+    """F2 (Netflix) / F3 (HBO Max), narrow: a series whose TMDB networks include the service's own network AND for
+    which TMDB has NO US watch-provider data at all counts as on that service - JustWatch never lists some originals
+    (STEEL BALL RUN, Unveil &TEAM on Netflix; Krypto Saves the Day! on HBO Max), so the logger can never confirm them.
+    Titles with US provider data that lacks the service stay unconfirmed. Presence stays per app: a title JustWatch
+    lists on a sibling service (Hulu for Disney+) is never confirmed by this. Networks are durably cached (1 request per
+    title, ever); provider data is checked once per run, only for unconfirmed titles of these two services."""
+    nets_wanted = ORPHAN_NETWORKS.get(svc)
+    if media != 'series' or not nets_wanted:
         return False
-    if tid not in _orphan_memo:
+    if (svc, tid) not in _orphan_memo:
         try:
             nets = build.stable(f'tvnet:{tid}', lambda: [n['id'] for n in build.tmdb(f'/tv/{tid}').get('networks') or []])
-            _orphan_memo[tid] = NETFLIX_NETWORK in nets and not \
+            _orphan_memo[(svc, tid)] = bool(nets_wanted & set(nets)) and not \
                 build.tmdb(f'/tv/{tid}/watch/providers').get('results', {}).get('US')
         except RuntimeError:                           # TMDB error: unknown = not confirmed (the guards still apply)
-            _orphan_memo[tid] = False
-    return _orphan_memo[tid]
+            _orphan_memo[(svc, tid)] = False
+    return _orphan_memo[(svc, tid)]
 
 
 def refresh(state, today, present=None):
@@ -983,10 +990,14 @@ def refresh(state, today, present=None):
             if future or not lo <= date <= today or (needs_conf and v['s'] != 'confirmed'):
                 continue
             status = v['s']
-            if status != 'confirmed' and prec != 'day' and                     (dt.date.fromisoformat(today) - dt.date.fromisoformat(date)).days > ANNOUNCED_DAYS:
-                if not (svc == 'netflix' and netflix_orphan(media, int(tid))):
+            age = (dt.date.fromisoformat(today) - dt.date.fromisoformat(date)).days
+            if status != 'confirmed' and network_orphan(svc, media, int(tid)):
+                status = 'confirmed (service network, no provider data)'                  # F2 / F3
+            if not status.startswith('confirmed'):
+                if prec != 'day' and age > ANNOUNCED_DAYS:
                     continue                        # F1: a roundup item never confirmed after a week -> not shown
-                status = 'confirmed (Netflix network, no provider data)'                  # F2
+                if SINGLE_SOURCE_DROP and prec == 'day' and len(srcs) == 1 and age > SINGLE_SOURCE_DAYS:
+                    continue                        # P4: one schedule, never seen on the service after 3 weeks
             cands.append({'key': k, 'date': date, 'precision': prec, 'sources': srcs, 'status': status,
                           'popularity': v['p'], 'kind': v['k']})
         cands.sort(key=lambda c: (c['date'], -PREC[c['precision']], c['popularity']), reverse=True)
