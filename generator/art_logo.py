@@ -275,6 +275,9 @@ GENRE_COLOURS = {    # typographic Genres · New cards: deep tones that carry wh
     'Westerns': '#8d4e1a'}
 
 
+TYPE_ONE_LINE_MIN = 108
+
+
 def render_type(card):
     size = art.SIZES[card['shape']]
     w, h = size
@@ -283,28 +286,36 @@ def render_type(card):
     log['field'] = '#%02x%02x%02x' % rgb
     base = field(size, rgb)
     draw = ImageDraw.Draw(base)
-    # oversized decorative "NEW", faint, fully inside the card (it used to bleed off the edge and read "NEV")
+    # Genres · New default: watermark and pill both "NEW". Date-driven cards (trending, seasonal) set card['mark'] /
+    # card['badge'] (None = no pill) in art_overrides.json, since "NEW" would be wrong on them.
+    mark, badge = card.get('mark', 'NEW'), card.get('badge', 'NEW')
+    # oversized decorative mark, faint, fully inside the card (it used to bleed off the edge and read "NEV")
     size_px = 430
-    while draw.textlength('NEW', font=art.font(size_px, 'ExtraBold')) > w * 0.62:
+    while draw.textlength(mark, font=art.font(size_px, 'ExtraBold')) > w * card.get('mark_w', 0.62):
         size_px -= 10
     big = art.font(size_px, 'ExtraBold')
-    tw = draw.textlength('NEW', font=big)
-    bx0, by0, bx1, by1 = draw.textbbox((0, 0), 'NEW', font=big)
+    bx0, by0, bx1, by1 = draw.textbbox((0, 0), mark, font=big)
     layer = Image.new('RGBA', size, (0, 0, 0, 0))
     wm_xy = (w - 64 - bx1, (h - (by1 - by0)) // 2 - by0 - 40)
-    ImageDraw.Draw(layer).text(wm_xy, 'NEW', font=big, fill=(255, 255, 255, 34))
-    boxes = [('watermark NEW', text_box(ImageDraw.Draw(layer), wm_xy, 'NEW', big))]
+    ImageDraw.Draw(layer).text(wm_xy, mark, font=big, fill=(255, 255, 255, 34))
+    boxes = [(f'watermark {mark}', text_box(ImageDraw.Draw(layer), wm_xy, mark, big))]
     base.alpha_composite(layer)
+    log['mark'], log['badge'] = mark, badge
     margin = 64
-    title_f, lines = art.fit_lines(draw, card['title'], w - 2 * margin, 132, 'ExtraBold')
+    # one line if it fits at >= TYPE_ONE_LINE_MIN px (a wrapped "Trending ·" / "Movies" left a dangling dot and pushed
+    # the pill into the watermark); else up to 2 lines from 132 px. Genre titles all fit one line at 132 (unchanged).
+    title_f, lines = art.fit_lines(draw, card['title'], w - 2 * margin, 132, 'ExtraBold', max_lines=1)
+    if title_f is None or title_f.size < TYPE_ONE_LINE_MIN:
+        title_f, lines = art.fit_lines(draw, card['title'], w - 2 * margin, 132, 'ExtraBold')
     if title_f is None:
         fails.append('title does not fit in 2 lines')
         title_f = art.font(28, 'ExtraBold')
     line_h = title_f.size * 1.06
     y = h - margin - line_h * len(lines)
-    npill = art.font(52, 'ExtraBold')
-    boxes.append(('badge', pill(draw, 'NEW', (margin + draw.textlength('NEW', font=npill) + 2 * round(52 * 0.8), y - 104),
-                                npill, fg=rgb, bg=(255, 255, 255))))
+    if badge:
+        npill = art.font(52, 'ExtraBold')
+        boxes.append(('badge', pill(draw, badge.upper(), (margin + draw.textlength(badge.upper(), font=npill)
+                                                          + 2 * round(52 * 0.8), y - 104), npill, fg=rgb, bg=(255, 255, 255))))
     for i, line in enumerate(lines):
         draw.text((margin, y + i * line_h), line, font=title_f, fill=(255, 255, 255))
         boxes.append((f'title line {i + 1}', text_box(draw, (margin, y + i * line_h), line, title_f)))
@@ -312,6 +323,10 @@ def render_type(card):
     draw.text((margin, margin), card['eyebrow'].upper(), font=ef, fill=(255, 255, 255, 215))
     boxes.append(('eyebrow', text_box(draw, (margin, margin), card['eyebrow'].upper(), ef)))
     check_bounds(boxes, size, fails, log)
+    wm = boxes[0][1]                                  # the faint watermark must not run under the pill or the title
+    hit = [n for n, b in boxes[1:] if n != 'eyebrow' and b[0] < wm[2] and wm[0] < b[2] and b[1] < wm[3] and wm[1] < b[3]]
+    if hit:
+        fails.append(f"{boxes[0][0]} overlaps: {', '.join(hit)}")
     ratio = contrast((255, 255, 255), rgb)
     log['contrast'] = round(ratio, 2)
     if ratio < 4.5:

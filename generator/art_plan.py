@@ -122,6 +122,12 @@ def main():
                 card.update(style='type', eyebrow='Genre')          # typographic "NEW" card on a genre colour
                 cards.append(card)
                 continue
+            if overrides.get(c['slug'], {}).get('style') == 'type':
+                # date-driven cards (trending, seasonal, just-hit-digital): their titles change every week, so a
+                # baked-in backdrop would go stale; typographic card on a colour field, set in art_overrides.json
+                card.update(overrides[c['slug']])
+                cards.append(card)
+                continue
             if c['slug'] in pinned:
                 card['bg'] = pinned[c['slug']]
             elif c['kind'] in ('director', 'actor'):

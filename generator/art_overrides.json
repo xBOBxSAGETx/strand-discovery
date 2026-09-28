@@ -80,5 +80,35 @@
  "network-paramountplus": {
   "logo_colour": "#ffffff",
   "_why": "blue script on the deep-blue field was the weakest card; white like the streaming Paramount+ card (copilot review 2026-09-28)"
+ },
+ "just-hit-digital": {
+  "style": "type",
+  "field": "#0f766e",
+  "mark": "NEW",
+  "badge": "New",
+  "_why": "date-driven card (first US digital release in the last 30 days): a baked-in backdrop would go stale within weeks, and art_plan.pool() has no pool for it; typographic card like Genres · New, NEW pill like the rest of Streaming · New (lane U, 2026-09-28)"
+ },
+ "trending-movies": {
+  "style": "type",
+  "field": "#9a3412",
+  "mark": "HOT",
+  "badge": "This week",
+  "_why": "TMDB trending/week changes weekly and pool() returns [] for kind trending; typographic card, no \"NEW\" (Streaming · Popular cards carry no NEW badge), pill says the window (lane U, 2026-09-28); watermark capped at half the width (mark_w) so it stays clear of the wider \"THIS WEEK\" pill",
+  "mark_w": 0.5
+ },
+ "trending-tv": {
+  "style": "type",
+  "field": "#6b21a8",
+  "mark": "HOT",
+  "badge": "This week",
+  "_why": "TMDB trending/week changes weekly and pool() returns [] for kind trending; typographic card, no \"NEW\", pill says the window (lane U, 2026-09-28); watermark capped at half the width (mark_w) so it stays clear of the wider \"THIS WEEK\" pill",
+  "mark_w": 0.5
+ },
+ "theme-seasonal-now": {
+  "style": "type",
+  "field": "#3f6212",
+  "mark": "NOW",
+  "badge": null,
+  "_why": "the season (Summer, Halloween, Thanksgiving...) changes with the calendar, so any photo would be wrong most of the year and pool() returns [] for kind seasonal; typographic card, no pill (lane U, 2026-09-28)"
  }
 }

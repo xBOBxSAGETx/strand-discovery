@@ -5735,5 +5735,53 @@
   "title_lines": 2,
   "bytes": 60654,
   "fails": []
+ },
+ {
+  "slug": "trending-movies",
+  "shape": "wide",
+  "style": "type",
+  "field": "#9a3412",
+  "mark": "HOT",
+  "badge": "This week",
+  "safe_area": "ok",
+  "contrast": 7.31,
+  "bytes": 46017,
+  "fails": []
+ },
+ {
+  "slug": "trending-tv",
+  "shape": "wide",
+  "style": "type",
+  "field": "#6b21a8",
+  "mark": "HOT",
+  "badge": "This week",
+  "safe_area": "ok",
+  "contrast": 8.72,
+  "bytes": 41457,
+  "fails": []
+ },
+ {
+  "slug": "just-hit-digital",
+  "shape": "wide",
+  "style": "type",
+  "field": "#0f766e",
+  "mark": "NEW",
+  "badge": "New",
+  "safe_area": "ok",
+  "contrast": 5.47,
+  "bytes": 42890,
+  "fails": []
+ },
+ {
+  "slug": "theme-seasonal-now",
+  "shape": "wide",
+  "style": "type",
+  "field": "#3f6212",
+  "mark": "NOW",
+  "badge": null,
+  "safe_area": "ok",
+  "contrast": 7.08,
+  "bytes": 37280,
+  "fails": []
  }
 ]
