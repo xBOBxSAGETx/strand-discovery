@@ -1,7 +1,7 @@
 """Contact sheets for art QA: one sheet per Strand folder (split at 48 cards), thumbnails in folder order with the
 slug and the render log's background source underneath. Review artifacts only - written outside the repo.
 
-  python contact_sheet.py <out dir>
+  python contact_sheet.py <out dir> [folder key ...]
 """
 import json, sys, textwrap
 from pathlib import Path
@@ -25,7 +25,11 @@ def main():
     small = ImageFont.truetype(str(FONT), 12)
     head = ImageFont.truetype(str(FONT), 26)
     written = []
+    only = set(sys.argv[2:])
+    order = {f['key']: i + 1 for i, f in enumerate(spec['folders'])}
     for folder in spec['folders']:
+        if only and folder['key'] not in only:
+            continue
         cats = [c for c in spec['catalogs'] if folder['key'] in c['folders']]
         if folder['shape'] == 'poster':      # people folders: CSV rank order
             cats.sort(key=lambda c: c['ranks'][folder['key']])
@@ -53,7 +57,7 @@ def main():
                        font=small, fill=(255, 90, 90) if bad else (220, 220, 220))
                 d.text((x, y + th + 19), textwrap.shorten(src, 50 if folder['shape'] == 'wide' else 26),
                        font=small, fill=(140, 140, 150))
-            p = out / f"{len(written) + 1:02d}-{folder['key']}-{part}.jpg"
+            p = out / f"{order[folder['key']]:02d}-{folder['key']}-{part}.jpg"
             sheet.save(p, 'JPEG', quality=85)
             written.append(p)
     print(f'{len(written)} sheets -> {out}')

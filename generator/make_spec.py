@@ -6,7 +6,7 @@ One spec entry = one catalog = one AIOStreams Jellyfin library. `folders` lists 
 cards point at it; a person listed in two categories is one catalog with two cards. `library` is the library name
 (unique across the whole server), `title` is the card title shown in Strand (hidden, the art carries it).
 """
-import csv, json, re, sys
+import csv, json, re, sys, unicodedata
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -24,6 +24,9 @@ FOLDERS = ([{'key': f'streaming-{v}', 'title': f'Streaming · {n}', 'shape': 'wi
 
 
 def slugify(s):
+    # accents -> ASCII first (é->e, ó->o, ñ->n): slugs become catalog ids and Strand library ids, so they must not
+    # lose letters ("Chloé Zhao" was "chlo-zhao")
+    s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode()
     s = s.lower().replace('&', 'and').replace('+', 'plus')
     s = re.sub(r"['’.]", '', s)
     return re.sub(r'[^a-z0-9]+', '-', s).strip('-')
@@ -285,6 +288,8 @@ def main():
     slugs = [c['slug'] for c in cats]
     libs = [c['library'] for c in cats]
     assert len(slugs) == len(set(slugs)), 'duplicate slug'
+    bad = [s for s in slugs if not re.fullmatch(r'[a-z0-9-]+', s)]
+    assert not bad, f'non-ASCII / invalid slugs (they become permanent library ids): {bad}'
     assert len(libs) == len(set(libs)), 'duplicate library name'
     for c in cats:
         assert set(c['folders']) <= keys, c

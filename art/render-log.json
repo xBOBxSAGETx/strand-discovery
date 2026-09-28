@@ -1,0 +1,5708 @@
+[
+ {
+  "slug": "streaming-netflix",
+  "shape": "wide",
+  "bg": "Spider-Man: Homecoming (tmdb:315635)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 58052,
+  "fails": []
+ },
+ {
+  "slug": "streaming-disneyplus",
+  "shape": "wide",
+  "bg": "The Avengers (tmdb:24428)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 70022,
+  "fails": []
+ },
+ {
+  "slug": "streaming-hbo-max",
+  "shape": "wide",
+  "bg": "The Dark Knight (tmdb:155)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 57205,
+  "fails": []
+ },
+ {
+  "slug": "streaming-apple-tv",
+  "shape": "wide",
+  "bg": "The Wolf of Wall Street (tmdb:106646)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 72426,
+  "fails": []
+ },
+ {
+  "slug": "streaming-paramountplus",
+  "shape": "wide",
+  "bg": "Interstellar (tmdb:157336)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 88, whitened)",
+  "bytes": 80050,
+  "fails": []
+ },
+ {
+  "slug": "streaming-prime-video",
+  "shape": "wide",
+  "bg": "Pulp Fiction (tmdb:680)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 54472,
+  "fails": []
+ },
+ {
+  "slug": "streaming-hulu",
+  "shape": "wide",
+  "bg": "Avatar (tmdb:19995)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 45047,
+  "fails": []
+ },
+ {
+  "slug": "streaming-peacock",
+  "shape": "wide",
+  "bg": "Harry Potter and the Philosopher's Stone (tmdb:671)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 11, whitened)",
+  "bytes": 107376,
+  "fails": []
+ },
+ {
+  "slug": "streaming-starz",
+  "shape": "wide",
+  "bg": "Avengers: Age of Ultron (tmdb:99861)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 54860,
+  "fails": []
+ },
+ {
+  "slug": "streaming-discoveryplus",
+  "shape": "wide",
+  "bg": "Planet Earth (tmdb:1044)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 51915,
+  "fails": []
+ },
+ {
+  "slug": "streaming-netflix-kids",
+  "shape": "wide",
+  "bg": "Barbie in the Nutcracker (tmdb:15167)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 60415,
+  "fails": []
+ },
+ {
+  "slug": "streaming-crunchyroll",
+  "shape": "wide",
+  "bg": "Naruto Shippūden (tmdb:31910)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 59545,
+  "fails": []
+ },
+ {
+  "slug": "streaming-mubi",
+  "shape": "wide",
+  "bg": "The Babadook (tmdb:242224)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 37439,
+  "fails": []
+ },
+ {
+  "slug": "streaming-criterion-channel",
+  "shape": "wide",
+  "bg": "The Silence of the Lambs (tmdb:274)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 49523,
+  "fails": []
+ },
+ {
+  "slug": "streaming-rakuten-viki",
+  "shape": "wide",
+  "bg": "My Hero Academia (tmdb:65930)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 72579,
+  "fails": []
+ },
+ {
+  "slug": "streaming-magellantv",
+  "shape": "wide",
+  "bg": "An Honest Liar (tmdb:262481)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 42360,
+  "fails": []
+ },
+ {
+  "slug": "streaming-shudder",
+  "shape": "wide",
+  "bg": "The Others (tmdb:1933)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 28780,
+  "fails": []
+ },
+ {
+  "slug": "streaming-amcplus",
+  "shape": "wide",
+  "bg": "Django Unchained (tmdb:68718)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 63057,
+  "fails": []
+ },
+ {
+  "slug": "streaming-britbox",
+  "shape": "wide",
+  "bg": "Sherlock (tmdb:19885)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 45920,
+  "fails": []
+ },
+ {
+  "slug": "streaming-tubi",
+  "shape": "wide",
+  "bg": "Jurassic World (tmdb:135397)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 47772,
+  "fails": []
+ },
+ {
+  "slug": "streaming-pluto-tv",
+  "shape": "wide",
+  "bg": "John Wick (tmdb:245891)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 27864,
+  "fails": []
+ },
+ {
+  "slug": "streaming-the-roku-channel",
+  "shape": "wide",
+  "bg": "Memento (tmdb:77)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 69736,
+  "fails": []
+ },
+ {
+  "slug": "streaming-kanopy",
+  "shape": "wide",
+  "bg": "Forrest Gump (tmdb:13)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 41576,
+  "fails": []
+ },
+ {
+  "slug": "streaming-hoopla",
+  "shape": "wide",
+  "bg": "Titanic (tmdb:597)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 49001,
+  "fails": []
+ },
+ {
+  "slug": "streaming-plex",
+  "shape": "wide",
+  "bg": "Fear the Walking Dead (tmdb:62286)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 46952,
+  "fails": []
+ },
+ {
+  "slug": "streaming-acorn-tv",
+  "shape": "wide",
+  "bg": "Luther (tmdb:1426)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 45403,
+  "fails": []
+ },
+ {
+  "slug": "streaming-netflix-new",
+  "shape": "wide",
+  "bg": "Frankenstein (tmdb:1062722)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 35247,
+  "fails": []
+ },
+ {
+  "slug": "streaming-disneyplus-new",
+  "shape": "wide",
+  "bg": "Avatar: Fire and Ash (tmdb:83533)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 56233,
+  "fails": []
+ },
+ {
+  "slug": "streaming-hbo-max-new",
+  "shape": "wide",
+  "bg": "Backrooms (tmdb:1083381)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 54436,
+  "fails": []
+ },
+ {
+  "slug": "streaming-apple-tv-new",
+  "shape": "wide",
+  "bg": "Pluribus (tmdb:225171)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 44420,
+  "fails": []
+ },
+ {
+  "slug": "streaming-paramountplus-new",
+  "shape": "wide",
+  "bg": "The Running Man (tmdb:798645)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 88, whitened)",
+  "bytes": 146359,
+  "fails": []
+ },
+ {
+  "slug": "streaming-prime-video-new",
+  "shape": "wide",
+  "bg": "Project Hail Mary (tmdb:687163)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 64672,
+  "fails": []
+ },
+ {
+  "slug": "streaming-hulu-new",
+  "shape": "wide",
+  "bg": "Predator: Badlands (tmdb:1242898)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 45669,
+  "fails": []
+ },
+ {
+  "slug": "streaming-peacock-new",
+  "shape": "wide",
+  "bg": "Obsession (tmdb:1339713)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 11, whitened)",
+  "bytes": 64500,
+  "fails": []
+ },
+ {
+  "slug": "streaming-starz-new",
+  "shape": "wide",
+  "bg": "Michael (tmdb:936075)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 41376,
+  "fails": []
+ },
+ {
+  "slug": "streaming-discoveryplus-new",
+  "shape": "wide",
+  "bg": "Louvre Heist: Minute by Minute (tmdb:1588671)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 51890,
+  "fails": []
+ },
+ {
+  "slug": "streaming-netflix-kids-new",
+  "shape": "wide",
+  "bg": "PAW Patrol (tmdb:57532)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 70327,
+  "fails": []
+ },
+ {
+  "slug": "streaming-crunchyroll-new",
+  "shape": "wide",
+  "bg": "Witch Hat Atelier (tmdb:196950)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 66180,
+  "fails": []
+ },
+ {
+  "slug": "streaming-mubi-new",
+  "shape": "wide",
+  "bg": "La Grazia (tmdb:1397364)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 35594,
+  "fails": []
+ },
+ {
+  "slug": "streaming-criterion-channel-new",
+  "shape": "wide",
+  "bg": "The Little Sister (tmdb:961077)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 52301,
+  "fails": []
+ },
+ {
+  "slug": "streaming-rakuten-viki-new",
+  "shape": "wide",
+  "bg": "Dear X (tmdb:256226)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 47707,
+  "fails": []
+ },
+ {
+  "slug": "streaming-magellantv-new",
+  "shape": "wide",
+  "bg": "Atlantis (tmdb:47054)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 59750,
+  "fails": []
+ },
+ {
+  "slug": "streaming-shudder-new",
+  "shape": "wide",
+  "bg": "Good Boy (tmdb:1422096)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 39687,
+  "fails": []
+ },
+ {
+  "slug": "streaming-amcplus-new",
+  "shape": "wide",
+  "bg": "Over Your Dead Body (tmdb:1390300)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 55200,
+  "fails": []
+ },
+ {
+  "slug": "streaming-britbox-new",
+  "shape": "wide",
+  "bg": "The Other Bennet Sister (tmdb:273866)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 58871,
+  "fails": []
+ },
+ {
+  "slug": "streaming-tubi-new",
+  "shape": "wide",
+  "bg": "The Odyssey (tmdb:1698863)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 46123,
+  "fails": []
+ },
+ {
+  "slug": "streaming-pluto-tv-new",
+  "shape": "wide",
+  "bg": "Little Brother (tmdb:979157)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 52373,
+  "fails": []
+ },
+ {
+  "slug": "streaming-the-roku-channel-new",
+  "shape": "wide",
+  "bg": "Among Us (tmdb:229544)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 60063,
+  "fails": []
+ },
+ {
+  "slug": "streaming-kanopy-new",
+  "shape": "wide",
+  "bg": "Cold Storage (tmdb:696393)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 55811,
+  "fails": []
+ },
+ {
+  "slug": "streaming-hoopla-new",
+  "shape": "wide",
+  "bg": "Citizen Vigilante (tmdb:1413976)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 43118,
+  "fails": []
+ },
+ {
+  "slug": "streaming-plex-new",
+  "shape": "wide",
+  "bg": "It Was Just an Accident (tmdb:1456349)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 40734,
+  "fails": []
+ },
+ {
+  "slug": "streaming-acorn-tv-new",
+  "shape": "wide",
+  "bg": "Murder Before Evensong (tmdb:280571)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 55761,
+  "fails": []
+ },
+ {
+  "slug": "streaming-netflix-top",
+  "shape": "wide",
+  "bg": "Dilwale Dulhania Le Jayenge (tmdb:19404)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 73482,
+  "fails": []
+ },
+ {
+  "slug": "streaming-disneyplus-top",
+  "shape": "wide",
+  "bg": "The Empire Strikes Back (tmdb:1891)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 62285,
+  "fails": []
+ },
+ {
+  "slug": "streaming-hbo-max-top",
+  "shape": "wide",
+  "bg": "The Pitt (tmdb:250307)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 53454,
+  "fails": []
+ },
+ {
+  "slug": "streaming-apple-tv-top",
+  "shape": "wide",
+  "bg": "Dickinson (tmdb:89901)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 44189,
+  "fails": []
+ },
+ {
+  "slug": "streaming-paramountplus-top",
+  "shape": "wide",
+  "bg": "The Godfather (tmdb:238)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 88, whitened)",
+  "bytes": 82531,
+  "fails": []
+ },
+ {
+  "slug": "streaming-prime-video-top",
+  "shape": "wide",
+  "bg": "The Chosen (tmdb:85077)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 63136,
+  "fails": []
+ },
+ {
+  "slug": "streaming-hulu-top",
+  "shape": "wide",
+  "bg": "12 Angry Men (tmdb:389)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 59383,
+  "fails": []
+ },
+ {
+  "slug": "streaming-peacock-top",
+  "shape": "wide",
+  "bg": "Psycho (tmdb:539)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 11, whitened)",
+  "bytes": 113893,
+  "fails": []
+ },
+ {
+  "slug": "streaming-starz-top",
+  "shape": "wide",
+  "bg": "The Hate U Give (tmdb:470044)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 52818,
+  "fails": []
+ },
+ {
+  "slug": "streaming-crunchyroll-top",
+  "shape": "wide",
+  "bg": "Chainsaw Man - The Movie: Reze Arc (tmdb:1218925)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 57992,
+  "fails": []
+ },
+ {
+  "slug": "streaming-mubi-top",
+  "shape": "wide",
+  "bg": "Twin Peaks (tmdb:1920)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 59118,
+  "fails": []
+ },
+ {
+  "slug": "streaming-criterion-channel-top",
+  "shape": "wide",
+  "bg": "Harakiri (tmdb:14537)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 53335,
+  "fails": []
+ },
+ {
+  "slug": "streaming-rakuten-viki-top",
+  "shape": "wide",
+  "bg": "Ne Zha 2 (tmdb:980477)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 68154,
+  "fails": []
+ },
+ {
+  "slug": "streaming-shudder-top",
+  "shape": "wide",
+  "bg": "The Cabinet of Dr. Caligari (tmdb:234)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 51116,
+  "fails": []
+ },
+ {
+  "slug": "streaming-amcplus-top",
+  "shape": "wide",
+  "bg": "Mad Men (tmdb:1104)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 66193,
+  "fails": []
+ },
+ {
+  "slug": "streaming-britbox-top",
+  "shape": "wide",
+  "bg": "Evil Under the Sun (tmdb:4193)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 50953,
+  "fails": []
+ },
+ {
+  "slug": "streaming-tubi-top",
+  "shape": "wide",
+  "bg": "Hunter x Hunter (tmdb:46298)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 55408,
+  "fails": []
+ },
+ {
+  "slug": "streaming-pluto-tv-top",
+  "shape": "wide",
+  "bg": "Death Note (tmdb:13916)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 61860,
+  "fails": []
+ },
+ {
+  "slug": "streaming-the-roku-channel-top",
+  "shape": "wide",
+  "bg": "The Good, the Bad and the Ugly (tmdb:429)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 67130,
+  "fails": []
+ },
+ {
+  "slug": "streaming-kanopy-top",
+  "shape": "wide",
+  "bg": "Freaks and Geeks (tmdb:2382)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 66714,
+  "fails": []
+ },
+ {
+  "slug": "streaming-hoopla-top",
+  "shape": "wide",
+  "bg": "¿Quieres ser mi hijo? (tmdb:1181678)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 56489,
+  "fails": []
+ },
+ {
+  "slug": "streaming-plex-top",
+  "shape": "wide",
+  "bg": "Fighting Spirit (tmdb:42705)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "provider icon",
+  "bytes": 57868,
+  "fails": []
+ },
+ {
+  "slug": "genre-action",
+  "shape": "wide",
+  "bg": "Inception (tmdb:27205)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 124414,
+  "fails": []
+ },
+ {
+  "slug": "genre-adventure",
+  "shape": "wide",
+  "bg": "Deadpool (tmdb:293660)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 78190,
+  "fails": []
+ },
+ {
+  "slug": "genre-animation",
+  "shape": "wide",
+  "bg": "Inside Out (tmdb:150540)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 96417,
+  "fails": []
+ },
+ {
+  "slug": "genre-anime",
+  "shape": "wide",
+  "bg": "Spirited Away (tmdb:129)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 75945,
+  "fails": []
+ },
+ {
+  "slug": "genre-comedy",
+  "shape": "wide",
+  "bg": "The Big Bang Theory (tmdb:1418)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 93685,
+  "fails": []
+ },
+ {
+  "slug": "genre-crime",
+  "shape": "wide",
+  "bg": "The Shawshank Redemption (tmdb:278)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 121953,
+  "fails": []
+ },
+ {
+  "slug": "genre-documentary",
+  "shape": "wide",
+  "bg": "Seven Deadly Sins (tmdb:27240)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 97304,
+  "fails": []
+ },
+ {
+  "slug": "genre-drama",
+  "shape": "wide",
+  "bg": "Fight Club (tmdb:550)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 68592,
+  "fails": []
+ },
+ {
+  "slug": "genre-family",
+  "shape": "wide",
+  "bg": "Up (tmdb:14160)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 126623,
+  "fails": []
+ },
+ {
+  "slug": "genre-fantasy",
+  "shape": "wide",
+  "bg": "The Lord of the Rings: The Fellowship of the Ring (tmdb:120)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 93826,
+  "fails": []
+ },
+ {
+  "slug": "genre-history",
+  "shape": "wide",
+  "bg": "The Imitation Game (tmdb:205596)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 134255,
+  "fails": []
+ },
+ {
+  "slug": "genre-horror",
+  "shape": "wide",
+  "bg": "It (tmdb:346364)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 73386,
+  "fails": []
+ },
+ {
+  "slug": "genre-kids",
+  "shape": "wide",
+  "bg": "Miraculous: Tales of Ladybug & Cat Noir (tmdb:65334)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 92726,
+  "fails": []
+ },
+ {
+  "slug": "genre-music",
+  "shape": "wide",
+  "bg": "Coco (tmdb:354912)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 172074,
+  "fails": []
+ },
+ {
+  "slug": "genre-mystery",
+  "shape": "wide",
+  "bg": "Shutter Island (tmdb:11324)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 80557,
+  "fails": []
+ },
+ {
+  "slug": "genre-reality",
+  "shape": "wide",
+  "bg": "The Kardashians (tmdb:154521)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 104427,
+  "fails": []
+ },
+ {
+  "slug": "genre-romance",
+  "shape": "wide",
+  "bg": "La La Land (tmdb:313369)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 70317,
+  "fails": []
+ },
+ {
+  "slug": "genre-sci-fi",
+  "shape": "wide",
+  "bg": "Avengers: Infinity War (tmdb:299536)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 145501,
+  "fails": []
+ },
+ {
+  "slug": "genre-thriller",
+  "shape": "wide",
+  "bg": "Joker (tmdb:475557)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 140586,
+  "fails": []
+ },
+ {
+  "slug": "genre-war",
+  "shape": "wide",
+  "bg": "Inglourious Basterds (tmdb:16869)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 71653,
+  "fails": []
+ },
+ {
+  "slug": "genre-westerns",
+  "shape": "wide",
+  "bg": "The Revenant (tmdb:281957)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 68798,
+  "fails": []
+ },
+ {
+  "slug": "genre-action-new",
+  "shape": "wide",
+  "bg": "Mortal Kombat II (tmdb:931285)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 64319,
+  "fails": []
+ },
+ {
+  "slug": "genre-adventure-new",
+  "shape": "wide",
+  "bg": "The Super Mario Galaxy Movie (tmdb:1226863)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 108152,
+  "fails": []
+ },
+ {
+  "slug": "genre-animation-new",
+  "shape": "wide",
+  "bg": "Zootopia 2 (tmdb:1084242)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 132760,
+  "fails": []
+ },
+ {
+  "slug": "genre-anime-new",
+  "shape": "wide",
+  "bg": "Scarlet (tmdb:1406657)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 83355,
+  "fails": []
+ },
+ {
+  "slug": "genre-comedy-new",
+  "shape": "wide",
+  "bg": "Wake Up Dead Man: A Knives Out Mystery (tmdb:812583)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 112571,
+  "fails": []
+ },
+ {
+  "slug": "genre-crime-new",
+  "shape": "wide",
+  "bg": "The Punisher: One Last Kill (tmdb:1439930)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 90959,
+  "fails": []
+ },
+ {
+  "slug": "genre-documentary-new",
+  "shape": "wide",
+  "bg": "The Dinosaurs (tmdb:313298)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 71708,
+  "fails": []
+ },
+ {
+  "slug": "genre-drama-new",
+  "shape": "wide",
+  "bg": "The Devil Wears Prada 2 (tmdb:1314481)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 90882,
+  "fails": []
+ },
+ {
+  "slug": "genre-family-new",
+  "shape": "wide",
+  "bg": "Hoppers (tmdb:1327819)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 134095,
+  "fails": []
+ },
+ {
+  "slug": "genre-fantasy-new",
+  "shape": "wide",
+  "bg": "Swapped (tmdb:1007757)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 90093,
+  "fails": []
+ },
+ {
+  "slug": "genre-history-new",
+  "shape": "wide",
+  "bg": "Nuremberg (tmdb:1214931)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 44876,
+  "fails": []
+ },
+ {
+  "slug": "genre-horror-new",
+  "shape": "wide",
+  "bg": "Lee Cronin's The Mummy (tmdb:1304313)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 136907,
+  "fails": []
+ },
+ {
+  "slug": "genre-kids-new",
+  "shape": "wide",
+  "bg": "Winx Club: The Magic Is Back (tmdb:286822)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 91215,
+  "fails": []
+ },
+ {
+  "slug": "genre-music-new",
+  "shape": "wide",
+  "bg": "Springsteen: Deliver Me from Nowhere (tmdb:1230368)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 64827,
+  "fails": []
+ },
+ {
+  "slug": "genre-mystery-new",
+  "shape": "wide",
+  "bg": "The Housemaid (tmdb:1368166)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 84532,
+  "fails": []
+ },
+ {
+  "slug": "genre-reality-new",
+  "shape": "wide",
+  "bg": "Physical: Asia (tmdb:293613)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 116492,
+  "fails": []
+ },
+ {
+  "slug": "genre-romance-new",
+  "shape": "wide",
+  "bg": "The Drama (tmdb:1325734)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 78458,
+  "fails": []
+ },
+ {
+  "slug": "genre-sci-fi-new",
+  "shape": "wide",
+  "bg": "Disclosure Day (tmdb:1275779)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 37165,
+  "fails": []
+ },
+ {
+  "slug": "genre-thriller-new",
+  "shape": "wide",
+  "bg": "War Machine (tmdb:1265609)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 67110,
+  "fails": []
+ },
+ {
+  "slug": "genre-war-new",
+  "shape": "wide",
+  "bg": "Sisu: Road to Revenge (tmdb:1223601)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 109877,
+  "fails": []
+ },
+ {
+  "slug": "genre-westerns-new",
+  "shape": "wide",
+  "bg": "Dutton Ranch (tmdb:299167)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 63944,
+  "fails": []
+ },
+ {
+  "slug": "genre-action-top",
+  "shape": "wide",
+  "bg": "The Lord of the Rings: The Return of the King (tmdb:122)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 63361,
+  "fails": []
+ },
+ {
+  "slug": "genre-adventure-top",
+  "shape": "wide",
+  "bg": "The Lord of the Rings: The Two Towers (tmdb:121)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 158916,
+  "fails": []
+ },
+ {
+  "slug": "genre-animation-top",
+  "shape": "wide",
+  "bg": "Takopi's Original Sin (tmdb:284445)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 152026,
+  "fails": []
+ },
+ {
+  "slug": "genre-anime-top",
+  "shape": "wide",
+  "bg": "Frieren: Beyond Journey's End (tmdb:209867)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 105881,
+  "fails": []
+ },
+ {
+  "slug": "genre-comedy-top",
+  "shape": "wide",
+  "bg": "The Good Bad Mother (tmdb:214999)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 186882,
+  "fails": []
+ },
+ {
+  "slug": "genre-crime-top",
+  "shape": "wide",
+  "bg": "Breaking Bad (tmdb:1396)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 137462,
+  "fails": []
+ },
+ {
+  "slug": "genre-documentary-top",
+  "shape": "wide",
+  "bg": "Selena Gomez: My Mind & Me (tmdb:1022256)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 55448,
+  "fails": []
+ },
+ {
+  "slug": "genre-drama-top",
+  "shape": "wide",
+  "bg": "When Life Gives You Tangerines (tmdb:219246)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 92593,
+  "fails": []
+ },
+ {
+  "slug": "genre-family-top",
+  "shape": "wide",
+  "bg": "Wizards Beyond Waverly Place (tmdb:245026)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 124837,
+  "fails": []
+ },
+ {
+  "slug": "genre-fantasy-top",
+  "shape": "wide",
+  "bg": "The Green Mile (tmdb:497)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 139922,
+  "fails": []
+ },
+ {
+  "slug": "genre-history-top",
+  "shape": "wide",
+  "bg": "Schindler's List (tmdb:424)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 167243,
+  "fails": []
+ },
+ {
+  "slug": "genre-horror-top",
+  "shape": "wide",
+  "bg": "The Shining (tmdb:694)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 71891,
+  "fails": []
+ },
+ {
+  "slug": "genre-kids-top",
+  "shape": "wide",
+  "bg": "Superbook (tmdb:44931)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 126546,
+  "fails": []
+ },
+ {
+  "slug": "genre-music-top",
+  "shape": "wide",
+  "bg": "Whiplash (tmdb:244786)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 114352,
+  "fails": []
+ },
+ {
+  "slug": "genre-mystery-top",
+  "shape": "wide",
+  "bg": "Lord of Mysteries (tmdb:232230)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 129769,
+  "fails": []
+ },
+ {
+  "slug": "genre-reality-top",
+  "shape": "wide",
+  "bg": "Run BTS! (tmdb:77696)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 112909,
+  "fails": []
+ },
+ {
+  "slug": "genre-romance-top",
+  "shape": "wide",
+  "bg": "Your Name. (tmdb:372058)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 108877,
+  "fails": []
+ },
+ {
+  "slug": "genre-sci-fi-top",
+  "shape": "wide",
+  "bg": "Spider-Man: Into the Spider-Verse (tmdb:324857)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 90162,
+  "fails": []
+ },
+ {
+  "slug": "genre-thriller-top",
+  "shape": "wide",
+  "bg": "Parasite (tmdb:496243)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 96562,
+  "fails": []
+ },
+ {
+  "slug": "genre-war-top",
+  "shape": "wide",
+  "bg": "Grave of the Fireflies (tmdb:12477)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 100585,
+  "fails": []
+ },
+ {
+  "slug": "genre-westerns-top",
+  "shape": "wide",
+  "bg": "Cowboy Bebop (tmdb:30991)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 123700,
+  "fails": []
+ },
+ {
+  "slug": "network-hbo",
+  "shape": "wide",
+  "bg": "Game of Thrones (tmdb:1399)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 0, whitened)",
+  "bytes": 82867,
+  "fails": []
+ },
+ {
+  "slug": "network-amc",
+  "shape": "wide",
+  "bg": "The Walking Dead (tmdb:1402)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 0, whitened)",
+  "bytes": 106254,
+  "fails": []
+ },
+ {
+  "slug": "network-fx",
+  "shape": "wide",
+  "bg": "American Horror Story (tmdb:1413)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 0, whitened)",
+  "bytes": 101464,
+  "fails": []
+ },
+ {
+  "slug": "network-bbc-one",
+  "shape": "wide",
+  "bg": "Peaky Blinders (tmdb:60574)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 126)",
+  "bytes": 82700,
+  "fails": []
+ },
+ {
+  "slug": "network-apple-tv",
+  "shape": "wide",
+  "bg": "Severance (tmdb:95396)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 0, whitened)",
+  "bytes": 81232,
+  "fails": []
+ },
+ {
+  "slug": "network-netflix",
+  "shape": "wide",
+  "bg": "Stranger Things (tmdb:66732)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 89, whitened)",
+  "bytes": 86730,
+  "fails": []
+ },
+ {
+  "slug": "network-showtime",
+  "shape": "wide",
+  "bg": "Dexter (tmdb:1405)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 91, whitened)",
+  "bytes": 115939,
+  "fails": []
+ },
+ {
+  "slug": "network-adult-swim",
+  "shape": "wide",
+  "bg": "Rick and Morty (tmdb:60625)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 0, whitened)",
+  "bytes": 115478,
+  "fails": []
+ },
+ {
+  "slug": "network-comedy-central",
+  "shape": "wide",
+  "bg": "South Park (tmdb:2190)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 64, whitened)",
+  "bytes": 93130,
+  "fails": []
+ },
+ {
+  "slug": "network-cartoon-network",
+  "shape": "wide",
+  "bg": "Adventure Time (tmdb:15260)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 0, whitened)",
+  "bytes": 171669,
+  "fails": []
+ },
+ {
+  "slug": "network-nickelodeon",
+  "shape": "wide",
+  "bg": "Avatar: The Last Airbender (tmdb:246)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 137)",
+  "bytes": 67368,
+  "fails": []
+ },
+ {
+  "slug": "network-disney-channel",
+  "shape": "wide",
+  "bg": "Gravity Falls (tmdb:40075)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 0, whitened)",
+  "bytes": 139734,
+  "fails": []
+ },
+ {
+  "slug": "network-history",
+  "shape": "wide",
+  "bg": "Project Blue Book (tmdb:79649)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 134)",
+  "bytes": 59239,
+  "fails": []
+ },
+ {
+  "slug": "network-discovery",
+  "shape": "wide",
+  "bg": "MythBusters (tmdb:1428)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 0, whitened)",
+  "bytes": 131610,
+  "fails": []
+ },
+ {
+  "slug": "network-national-geographic",
+  "shape": "wide",
+  "bg": "Cosmos (tmdb:58474)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 63, whitened)",
+  "bytes": 88310,
+  "fails": []
+ },
+ {
+  "slug": "network-aande",
+  "shape": "wide",
+  "bg": "Unforgettable (tmdb:39276)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 0, whitened)",
+  "bytes": 130932,
+  "fails": []
+ },
+ {
+  "slug": "network-hulu",
+  "shape": "wide",
+  "bg": "The Act (tmdb:82883)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 159)",
+  "bytes": 90969,
+  "fails": []
+ },
+ {
+  "slug": "network-prime-video",
+  "shape": "wide",
+  "bg": "The Boys (tmdb:76479)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 102, whitened)",
+  "bytes": 83793,
+  "fails": []
+ },
+ {
+  "slug": "network-peacock",
+  "shape": "wide",
+  "bg": "The Croods: Family Tree (tmdb:132559)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 11, whitened)",
+  "bytes": 126055,
+  "fails": []
+ },
+ {
+  "slug": "network-hbo-max",
+  "shape": "wide",
+  "bg": "Peacemaker (tmdb:110492)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 49, whitened)",
+  "bytes": 83984,
+  "fails": []
+ },
+ {
+  "slug": "network-paramountplus",
+  "shape": "wide",
+  "bg": "Criminal Minds (tmdb:4057)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 88, whitened)",
+  "bytes": 87876,
+  "fails": []
+ },
+ {
+  "slug": "network-pbs",
+  "shape": "wide",
+  "bg": "Cosmos: A Personal Voyage (tmdb:1430)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 77, whitened)",
+  "bytes": 176840,
+  "fails": []
+ },
+ {
+  "slug": "network-mtv",
+  "shape": "wide",
+  "bg": "Teen Wolf (tmdb:34524)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 0, whitened)",
+  "bytes": 123126,
+  "fails": []
+ },
+ {
+  "slug": "network-starz",
+  "shape": "wide",
+  "bg": "Spartacus (tmdb:46296)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 221)",
+  "bytes": 96380,
+  "fails": []
+ },
+ {
+  "slug": "network-the-cw",
+  "shape": "wide",
+  "bg": "Riverdale (tmdb:69050)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "network wordmark (luma 117)",
+  "bytes": 69847,
+  "fails": []
+ },
+ {
+  "slug": "studio-pixar",
+  "shape": "wide",
+  "bg": "Finding Nemo (tmdb:12)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 153707,
+  "fails": []
+ },
+ {
+  "slug": "studio-walt-disney-animation",
+  "shape": "wide",
+  "bg": "Zootopia (tmdb:269149)",
+  "title_px": 104,
+  "title_lines": 2,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 158451,
+  "fails": []
+ },
+ {
+  "slug": "studio-dreamworks-animation",
+  "shape": "wide",
+  "bg": "Shrek (tmdb:808)",
+  "title_px": 104,
+  "title_lines": 2,
+  "logo": "company wordmark (luma 42, whitened)",
+  "bytes": 147717,
+  "fails": []
+ },
+ {
+  "slug": "studio-a24",
+  "shape": "wide",
+  "bg": "Everything Everywhere All at Once (tmdb:545611)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 15, whitened)",
+  "bytes": 87811,
+  "fails": []
+ },
+ {
+  "slug": "studio-blumhouse",
+  "shape": "wide",
+  "bg": "Get Out (tmdb:419430)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 67001,
+  "fails": []
+ },
+ {
+  "slug": "studio-studio-ghibli",
+  "shape": "wide",
+  "bg": "Howl's Moving Castle (tmdb:4935)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 95562,
+  "fails": []
+ },
+ {
+  "slug": "studio-illumination",
+  "shape": "wide",
+  "bg": "Despicable Me (tmdb:20352)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 104473,
+  "fails": []
+ },
+ {
+  "slug": "studio-warner-bros-pictures",
+  "shape": "wide",
+  "bg": "The Matrix (tmdb:603)",
+  "title_px": 104,
+  "title_lines": 2,
+  "logo": "company wordmark (luma 127)",
+  "bytes": 103442,
+  "fails": []
+ },
+ {
+  "slug": "studio-universal",
+  "shape": "wide",
+  "bg": "Back to the Future (tmdb:105)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 66, whitened)",
+  "bytes": 202965,
+  "fails": []
+ },
+ {
+  "slug": "studio-neon",
+  "shape": "wide",
+  "bg": "The Monkey (tmdb:1124620)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 42342,
+  "fails": []
+ },
+ {
+  "slug": "studio-legendary",
+  "shape": "wide",
+  "bg": "The Dark Knight Rises (tmdb:49026)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 166538,
+  "fails": []
+ },
+ {
+  "slug": "studio-lionsgate",
+  "shape": "wide",
+  "bg": "The Hunger Games (tmdb:70160)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 70733,
+  "fails": []
+ },
+ {
+  "slug": "studio-focus-features",
+  "shape": "wide",
+  "bg": "Eternal Sunshine of the Spotless Mind (tmdb:38)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 1, whitened)",
+  "bytes": 122173,
+  "fails": []
+ },
+ {
+  "slug": "studio-searchlight",
+  "shape": "wide",
+  "bg": "The Grand Budapest Hotel (tmdb:120467)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 157695,
+  "fails": []
+ },
+ {
+  "slug": "studio-laika",
+  "shape": "wide",
+  "bg": "Corpse Bride (tmdb:3933)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 97052,
+  "fails": []
+ },
+ {
+  "slug": "studio-aardman",
+  "shape": "wide",
+  "bg": "Chicken Run (tmdb:7443)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 115)",
+  "bytes": 93465,
+  "fails": []
+ },
+ {
+  "slug": "studio-new-line",
+  "shape": "wide",
+  "bg": "Se7en (tmdb:807)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 0, whitened)",
+  "bytes": 79327,
+  "fails": []
+ },
+ {
+  "slug": "studio-amblin",
+  "shape": "wide",
+  "bg": "Jurassic Park (tmdb:329)",
+  "title_px": 104,
+  "title_lines": 1,
+  "logo": "company wordmark (luma 94, whitened)",
+  "bytes": 143458,
+  "fails": []
+ },
+ {
+  "slug": "series-007",
+  "shape": "wide",
+  "bg": "/dOSECZImeyZldoq0ObieBE0lwie.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 41032,
+  "fails": []
+ },
+ {
+  "slug": "series-alien",
+  "shape": "wide",
+  "bg": "/6X42JnSMdo3dPAswOHUuvebdTq7.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 39630,
+  "fails": []
+ },
+ {
+  "slug": "series-avatar",
+  "shape": "wide",
+  "bg": "/4uwX70EzaWVcGUXMtXPoexlNAff.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 43022,
+  "fails": []
+ },
+ {
+  "slug": "series-back-to-the-future",
+  "shape": "wide",
+  "bg": "/c9C9Pg2QctyjZHRmS0P8rZg1OTA.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 90973,
+  "fails": []
+ },
+ {
+  "slug": "series-bad-boys",
+  "shape": "wide",
+  "bg": "/r8kZJbi6UNhilLhM5WhauYELIR8.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 119208,
+  "fails": []
+ },
+ {
+  "slug": "series-cars",
+  "shape": "wide",
+  "bg": "/A8DqaTGwZ8iCEjWMNRsZumzfKLw.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 36966,
+  "fails": []
+ },
+ {
+  "slug": "series-the-conjuring",
+  "shape": "wide",
+  "bg": "/hD9zZYKYb1xBgcm8XIfyvclSkjs.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 63624,
+  "fails": []
+ },
+ {
+  "slug": "series-creed",
+  "shape": "wide",
+  "bg": "/2hscwDISGOGGcHgn2ttogcnlWvl.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 70214,
+  "fails": []
+ },
+ {
+  "slug": "series-the-dark-knight",
+  "shape": "wide",
+  "bg": "/xyhrCEdB4XRkelfVsqXeUZ6rLHi.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 140810,
+  "fails": []
+ },
+ {
+  "slug": "series-dc-universe",
+  "shape": "wide",
+  "bg": "Suicide Squad (tmdb:297761)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 111606,
+  "fails": []
+ },
+ {
+  "slug": "series-despicable-me",
+  "shape": "wide",
+  "bg": "/37xamYKRUGCRux532lKcZdVGYuR.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 86171,
+  "fails": []
+ },
+ {
+  "slug": "series-die-hard",
+  "shape": "wide",
+  "bg": "/nKShbIW0wJnSbl3t8uPje0QhTb7.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 40302,
+  "fails": []
+ },
+ {
+  "slug": "series-dune",
+  "shape": "wide",
+  "bg": "/fahk0Fu7VUUfK6IkTt1R3waOD9F.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 49398,
+  "fails": []
+ },
+ {
+  "slug": "series-fast-and-furious",
+  "shape": "wide",
+  "bg": "/z5A5W3WYJc3UVEWljSGwdjDgQ0j.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 91179,
+  "fails": []
+ },
+ {
+  "slug": "series-frozen",
+  "shape": "wide",
+  "bg": "/s3vdRkK7KZFUDC8HEJo2GRKyVhW.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 87522,
+  "fails": []
+ },
+ {
+  "slug": "series-ghostbusters",
+  "shape": "wide",
+  "bg": "/guigdRPHN65fsgZHmvVvBOyiArf.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 68907,
+  "fails": []
+ },
+ {
+  "slug": "series-the-godfather",
+  "shape": "wide",
+  "bg": "/28eqCQ51SuLfkbzhQE7jCmTfYfy.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 50916,
+  "fails": []
+ },
+ {
+  "slug": "series-halloween",
+  "shape": "wide",
+  "bg": "/hUa3JDVZ1L0U7jSfFu4uvzoCJxs.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 44493,
+  "fails": []
+ },
+ {
+  "slug": "series-the-hangover",
+  "shape": "wide",
+  "bg": "/9tpB49XNPEvxEkdsIkJWP0sZWtf.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 75928,
+  "fails": []
+ },
+ {
+  "slug": "series-harry-potter",
+  "shape": "wide",
+  "bg": "/4gV0rKUjB1nLUdZB4zIltLvNZZr.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 62724,
+  "fails": []
+ },
+ {
+  "slug": "series-how-to-train-your-dragon",
+  "shape": "wide",
+  "bg": "/mvcfPkOvgDJG2lEAxTz0NKqoQLo.jpg",
+  "title_px": 104,
+  "title_lines": 2,
+  "bytes": 72718,
+  "fails": []
+ },
+ {
+  "slug": "series-the-hunger-games",
+  "shape": "wide",
+  "bg": "/Ipp7cegtub4t0mu7xaKLQkYoGc.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 189975,
+  "fails": []
+ },
+ {
+  "slug": "series-ice-age",
+  "shape": "wide",
+  "bg": "/2aMEn3wawIXva2xFFlQ2NClLEeW.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 92011,
+  "fails": []
+ },
+ {
+  "slug": "series-indiana-jones",
+  "shape": "wide",
+  "bg": "/s4xWmz9PEjPERSRcd7H7xMJpYvE.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 104550,
+  "fails": []
+ },
+ {
+  "slug": "series-jason-bourne",
+  "shape": "wide",
+  "bg": "/vA5xMglyZv7yzDTj1qUTU4OvelV.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 69962,
+  "fails": []
+ },
+ {
+  "slug": "series-john-wick",
+  "shape": "wide",
+  "bg": "/fSwYa5q2xRkBoOOjueLpkLf3N1m.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 88299,
+  "fails": []
+ },
+ {
+  "slug": "series-jurassic-park",
+  "shape": "wide",
+  "bg": "/njFixYzIxX8jsn6KMSEtAzi4avi.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 114078,
+  "fails": []
+ },
+ {
+  "slug": "series-kill-bill",
+  "shape": "wide",
+  "bg": "/voSMLsbi3f0YMGuC8DvflOEB3lo.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 70236,
+  "fails": []
+ },
+ {
+  "slug": "series-knives-out",
+  "shape": "wide",
+  "bg": "/G7qYINSq5xyDd0I0zn3DpAssA0.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 213265,
+  "fails": []
+ },
+ {
+  "slug": "series-kung-fu-panda",
+  "shape": "wide",
+  "bg": "/2nbtv33hEk2CTnuMhTGZgsFdi3K.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 86984,
+  "fails": []
+ },
+ {
+  "slug": "series-lethal-weapon",
+  "shape": "wide",
+  "bg": "/jSslTHuJS86fp4SVJKP9oBhE4s6.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 138949,
+  "fails": []
+ },
+ {
+  "slug": "series-lord-of-the-rings",
+  "shape": "wide",
+  "bg": "/bccR2CGTWVVSZAG0yqmy3DIvhTX.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 118484,
+  "fails": []
+ },
+ {
+  "slug": "series-mad-max",
+  "shape": "wide",
+  "bg": "/zI0q2ENcQOLECbe0gAEGlncVh2j.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 215886,
+  "fails": []
+ },
+ {
+  "slug": "series-madagascar",
+  "shape": "wide",
+  "bg": "/lzTIAbvMeGWB7PUrmBZXulGA28M.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 111022,
+  "fails": []
+ },
+ {
+  "slug": "series-marvel-cinematic-universe",
+  "shape": "wide",
+  "bg": "Guardians of the Galaxy (tmdb:118340)",
+  "title_px": 104,
+  "title_lines": 2,
+  "bytes": 150691,
+  "fails": []
+ },
+ {
+  "slug": "series-the-matrix",
+  "shape": "wide",
+  "bg": "/bRm2DEgUiYciDw3myHuYFInD7la.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 107184,
+  "fails": []
+ },
+ {
+  "slug": "series-maze-runner",
+  "shape": "wide",
+  "bg": "/9BX8MUXmOa9i7oyTMx9OmbzkLev.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 93494,
+  "fails": []
+ },
+ {
+  "slug": "series-men-in-black",
+  "shape": "wide",
+  "bg": "/xKz6YaOvmnIJQ3MYIpnaa7FBaAB.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 72356,
+  "fails": []
+ },
+ {
+  "slug": "series-mission-impossible",
+  "shape": "wide",
+  "bg": "/mroWh717g0Ah2c0rrPGW6f3EWMM.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 108774,
+  "fails": []
+ },
+ {
+  "slug": "series-monsterverse",
+  "shape": "wide",
+  "bg": "Kong: Skull Island (tmdb:293167)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 72537,
+  "fails": []
+ },
+ {
+  "slug": "series-oceans",
+  "shape": "wide",
+  "bg": "/7WUSrq8DqSkVgv1vmhBvav5bPoB.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 58155,
+  "fails": []
+ },
+ {
+  "slug": "series-pirates-of-the-caribbean",
+  "shape": "wide",
+  "bg": "/wxgD3fB5lQ2sGJLog0rvXW049Pf.jpg",
+  "title_px": 104,
+  "title_lines": 2,
+  "bytes": 152846,
+  "fails": []
+ },
+ {
+  "slug": "series-planet-of-the-apes",
+  "shape": "wide",
+  "bg": "/wBiFfCAuYzuSOl0sFnkQMB5BEZx.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 95781,
+  "fails": []
+ },
+ {
+  "slug": "series-predator",
+  "shape": "wide",
+  "bg": "/u1CTqTYRUVyLwlEd1z1VJrVBp0J.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 26285,
+  "fails": []
+ },
+ {
+  "slug": "series-rocky",
+  "shape": "wide",
+  "bg": "/yaXXemxz3ePNSrqNtc4ZAbuxJRv.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 106631,
+  "fails": []
+ },
+ {
+  "slug": "series-rush-hour",
+  "shape": "wide",
+  "bg": "/Atik4QqBg8IrTPiCzaj9AcI9p1i.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 53197,
+  "fails": []
+ },
+ {
+  "slug": "series-saw",
+  "shape": "wide",
+  "bg": "/q6XF2qbrxdv3OwZPnXgecDRft1O.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 24511,
+  "fails": []
+ },
+ {
+  "slug": "series-scary-movie",
+  "shape": "wide",
+  "bg": "/4YFCPV5KXWgIfQ8oTEeIJvtuxVj.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 90605,
+  "fails": []
+ },
+ {
+  "slug": "series-scream",
+  "shape": "wide",
+  "bg": "/fG6GzZAwtsW3v2mhB4EyQLMRjUV.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 28744,
+  "fails": []
+ },
+ {
+  "slug": "series-shrek",
+  "shape": "wide",
+  "bg": "/lhsd1zCsq5UquvcNalmhuddV3tI.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 115427,
+  "fails": []
+ },
+ {
+  "slug": "series-spider-man",
+  "shape": "wide",
+  "bg": "/waZqriYTuBE3WqXI3SDGi3kfDQE.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 151468,
+  "fails": []
+ },
+ {
+  "slug": "series-star-wars",
+  "shape": "wide",
+  "bg": "/iY2ujEY2m68OTTlPFTiHub9joHS.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 159358,
+  "fails": []
+ },
+ {
+  "slug": "series-terminator",
+  "shape": "wide",
+  "bg": "/sCnBEw2Yu6foEjs4Xb4eMddYHRo.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 98152,
+  "fails": []
+ },
+ {
+  "slug": "series-toy-story",
+  "shape": "wide",
+  "bg": "/hApclyB9NEZEQujAVajzi5iWE4a.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 134150,
+  "fails": []
+ },
+ {
+  "slug": "series-transformers",
+  "shape": "wide",
+  "bg": "/zvZBNNDWd5LcsIBpDhJyCB2MDT7.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 100296,
+  "fails": []
+ },
+ {
+  "slug": "series-twilight",
+  "shape": "wide",
+  "bg": "/3be0BffeZTyMbj4Ndzo6Y877SBQ.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 77642,
+  "fails": []
+ },
+ {
+  "slug": "series-x-men",
+  "shape": "wide",
+  "bg": "/ykVHlrE3aSvHYeIXOrWDsYZ18vv.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 52764,
+  "fails": []
+ },
+ {
+  "slug": "theme-superheroes",
+  "shape": "wide",
+  "bg": "WandaVision (tmdb:85271)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 161800,
+  "fails": []
+ },
+ {
+  "slug": "theme-zombies",
+  "shape": "wide",
+  "bg": "I Am Legend (tmdb:6479)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 100868,
+  "fails": []
+ },
+ {
+  "slug": "theme-space-epics",
+  "shape": "wide",
+  "bg": "Star Wars (tmdb:11)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 167438,
+  "fails": []
+ },
+ {
+  "slug": "theme-spies",
+  "shape": "wide",
+  "bg": "Kingsman: The Secret Service (tmdb:207703)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 86204,
+  "fails": []
+ },
+ {
+  "slug": "theme-aliens",
+  "shape": "wide",
+  "bg": "Guardians of the Galaxy Vol. 2 (tmdb:283995)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 143405,
+  "fails": []
+ },
+ {
+  "slug": "theme-robots-and-ai",
+  "shape": "wide",
+  "bg": "Westworld (tmdb:63247)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 121971,
+  "fails": []
+ },
+ {
+  "slug": "theme-dystopian",
+  "shape": "wide",
+  "bg": "Attack on Titan (tmdb:1429)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 161244,
+  "fails": []
+ },
+ {
+  "slug": "theme-disaster",
+  "shape": "wide",
+  "bg": "2012 (tmdb:14161)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 122821,
+  "fails": []
+ },
+ {
+  "slug": "theme-creature-features",
+  "shape": "wide",
+  "bg": "Pacific Rim (tmdb:68726)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 142694,
+  "fails": []
+ },
+ {
+  "slug": "theme-psychological",
+  "shape": "wide",
+  "bg": "Mr. Robot (tmdb:62560)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 56252,
+  "fails": []
+ },
+ {
+  "slug": "theme-myths-and-legends",
+  "shape": "wide",
+  "bg": "Moana (tmdb:277834)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 185882,
+  "fails": []
+ },
+ {
+  "slug": "theme-heist",
+  "shape": "wide",
+  "bg": "Ant-Man (tmdb:102899)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 106830,
+  "fails": []
+ },
+ {
+  "slug": "theme-time-travel",
+  "shape": "wide",
+  "bg": "Avengers: Endgame (tmdb:299534)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 150428,
+  "fails": []
+ },
+ {
+  "slug": "decade-1960s",
+  "shape": "wide",
+  "bg": "2001: A Space Odyssey (tmdb:62)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 96496,
+  "fails": []
+ },
+ {
+  "slug": "decade-1970s",
+  "shape": "wide",
+  "bg": "Alien (tmdb:348)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 43332,
+  "fails": []
+ },
+ {
+  "slug": "decade-1980s",
+  "shape": "wide",
+  "bg": "The Simpsons (tmdb:456)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 87432,
+  "fails": []
+ },
+ {
+  "slug": "decade-1990s",
+  "shape": "wide",
+  "bg": "Friends (tmdb:1668)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 94561,
+  "fails": []
+ },
+ {
+  "slug": "decade-2000s",
+  "shape": "wide",
+  "bg": "Grey's Anatomy (tmdb:1416)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 94121,
+  "fails": []
+ },
+ {
+  "slug": "decade-2010s",
+  "shape": "wide",
+  "bg": "Money Heist (tmdb:71446)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 130267,
+  "fails": []
+ },
+ {
+  "slug": "decade-2020s",
+  "shape": "wide",
+  "bg": "Spider-Man: No Way Home (tmdb:634649)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 152505,
+  "fails": []
+ },
+ {
+  "slug": "awards-oscar-best-picture",
+  "shape": "wide",
+  "bg": "One Battle After Another (tmdb:1054867)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 79626,
+  "fails": []
+ },
+ {
+  "slug": "awards-oscar-best-picture-nominees",
+  "shape": "wide",
+  "bg": "Sentimental Value (tmdb:1124566)",
+  "title_px": 104,
+  "title_lines": 2,
+  "bytes": 104937,
+  "fails": []
+ },
+ {
+  "slug": "awards-palme-dor",
+  "shape": "wide",
+  "bg": "Fjord (tmdb:1401459)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 104086,
+  "fails": []
+ },
+ {
+  "slug": "awards-bafta-best-film",
+  "shape": "wide",
+  "bg": "Conclave (tmdb:974576)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 85143,
+  "fails": []
+ },
+ {
+  "slug": "awards-golden-globe-best-picture",
+  "shape": "wide",
+  "bg": "Hamnet (tmdb:858024)",
+  "title_px": 104,
+  "title_lines": 2,
+  "bytes": 110479,
+  "fails": []
+ },
+ {
+  "slug": "awards-emmy-best-series",
+  "shape": "wide",
+  "bg": "Widow's Bay (tmdb:270476)",
+  "title_px": 104,
+  "title_lines": 2,
+  "bytes": 104967,
+  "fails": []
+ },
+ {
+  "slug": "awards-sundance-gjp",
+  "shape": "wide",
+  "bg": "Atropia (tmdb:1239288)",
+  "title_px": 104,
+  "title_lines": 2,
+  "bytes": 58345,
+  "fails": []
+ },
+ {
+  "slug": "acclaimed-acclaimed-movies",
+  "shape": "wide",
+  "bg": "The Godfather Part II (tmdb:240)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 132371,
+  "fails": []
+ },
+ {
+  "slug": "acclaimed-acclaimed-tv",
+  "shape": "wide",
+  "bg": "One Piece (tmdb:37854)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 172112,
+  "fails": []
+ },
+ {
+  "slug": "acclaimed-hidden-gem-movies",
+  "shape": "wide",
+  "bg": "October Sky (tmdb:13466)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 120810,
+  "fails": []
+ },
+ {
+  "slug": "acclaimed-hidden-gem-tv",
+  "shape": "wide",
+  "bg": "Gomorrah (tmdb:61068)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 91060,
+  "fails": []
+ },
+ {
+  "slug": "standup",
+  "shape": "wide",
+  "bg": "Bo Burnham: Inside (tmdb:823754)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 77112,
+  "fails": []
+ },
+ {
+  "slug": "standup-new",
+  "shape": "wide",
+  "bg": "Ricky Gervais: Mortality (tmdb:1312150)",
+  "title_px": 104,
+  "title_lines": 1,
+  "bytes": 69709,
+  "fails": []
+ },
+ {
+  "slug": "standup-top",
+  "shape": "wide",
+  "bg": "Dave Chappelle: Killin' Them Softly (tmdb:16275)",
+  "title_px": 104,
+  "title_lines": 2,
+  "bytes": 91372,
+  "fails": []
+ },
+ {
+  "slug": "dir-greta-gerwig",
+  "shape": "poster",
+  "bg": "/dxKAhpkz4XNwmRzMG5QOpXjPZ1N.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 72832,
+  "fails": []
+ },
+ {
+  "slug": "dir-jordan-peele",
+  "shape": "poster",
+  "bg": "/kFUKn5g3ebpyZ3CSZZZo2HFWRNQ.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 79307,
+  "fails": []
+ },
+ {
+  "slug": "dir-ari-aster",
+  "shape": "poster",
+  "bg": "/45lOHyHwdMgyKm6u3jwLtyfwOjc.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 63559,
+  "fails": []
+ },
+ {
+  "slug": "dir-robert-eggers",
+  "shape": "poster",
+  "bg": "/8Mbq0G8FguELKC8zNFunapPpkt5.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 65038,
+  "fails": []
+ },
+ {
+  "slug": "dir-ryan-coogler",
+  "shape": "poster",
+  "bg": "/dux4DCDaL6c639DTXGiV7nm1wcN.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 61679,
+  "fails": []
+ },
+ {
+  "slug": "dir-alex-garland",
+  "shape": "poster",
+  "bg": "/qSWzYnDw68xm4i5xprH9BwQ6q25.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 68519,
+  "fails": []
+ },
+ {
+  "slug": "dir-barry-jenkins",
+  "shape": "poster",
+  "bg": "/6nld5eQwiJmuLmyesk4EUeCaoo3.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 73975,
+  "fails": []
+ },
+ {
+  "slug": "dir-emerald-fennell",
+  "shape": "poster",
+  "bg": "/ytyHUsPb7Saulczm8nCJHypIWQF.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 74519,
+  "fails": []
+ },
+ {
+  "slug": "dir-daniel-kwan",
+  "shape": "poster",
+  "bg": "/rVAZLUZhuKCmdzhCsSiOf8j64IA.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 77434,
+  "fails": []
+ },
+ {
+  "slug": "dir-celine-song",
+  "shape": "poster",
+  "bg": "/y3LRIOp63f96fCSf2eTANgY8bQU.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 64252,
+  "fails": []
+ },
+ {
+  "slug": "dir-coralie-fargeat",
+  "shape": "poster",
+  "bg": "/weElmtGXU0eqSDyJxh32ZBgIpqw.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64670,
+  "fails": []
+ },
+ {
+  "slug": "dir-jon-watts",
+  "shape": "poster",
+  "bg": "/fkXChMX6CUXY1yOxBehAzvaTCl7.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 84151,
+  "fails": []
+ },
+ {
+  "slug": "dir-dan-trachtenberg",
+  "shape": "poster",
+  "bg": "/crABZLMi5SAz7rKm0wV6JUOeKs5.jpg",
+  "title_px": 68,
+  "title_lines": 2,
+  "bytes": 64601,
+  "fails": []
+ },
+ {
+  "slug": "dir-nia-dacosta",
+  "shape": "poster",
+  "bg": "/zRyaLNXLT2gKgPvLreyg3GeEIdD.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 64416,
+  "fails": []
+ },
+ {
+  "slug": "dir-osgood-perkins",
+  "shape": "poster",
+  "bg": "/sshAqrQ2DV2TUsgBAr1XaYqqxkm.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 53111,
+  "fails": []
+ },
+ {
+  "slug": "dir-zach-cregger",
+  "shape": "poster",
+  "bg": "/bpFGFfWYIrZVK7WjwkVLwIoMKEb.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 67211,
+  "fails": []
+ },
+ {
+  "slug": "dir-trey-edward-shults",
+  "shape": "poster",
+  "bg": "/5MBULjl0vpafarD0A4tRraQPuQu.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64820,
+  "fails": []
+ },
+ {
+  "slug": "dir-kogonada",
+  "shape": "poster",
+  "bg": "/vtAELNwYG6DNHgUS9rBxHTIISS9.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 51787,
+  "fails": []
+ },
+ {
+  "slug": "dir-olivia-wilde",
+  "shape": "poster",
+  "bg": "/eODi1QKamyVa41eSK2SjU20VAZS.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 67007,
+  "fails": []
+ },
+ {
+  "slug": "dir-parker-finn",
+  "shape": "poster",
+  "bg": "/lw1I0voNLS2llYTlDgd6qZzAMZ6.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 87862,
+  "fails": []
+ },
+ {
+  "slug": "dir-halina-reijn",
+  "shape": "poster",
+  "bg": "/su9FMcM5wKfZiSNs35OLlot4hLd.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 71104,
+  "fails": []
+ },
+ {
+  "slug": "dir-destin-daniel-cretton",
+  "shape": "poster",
+  "bg": "/wtA2EtkvCyxu4oWECzqAF7G8IZH.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 83141,
+  "fails": []
+ },
+ {
+  "slug": "dir-brady-corbet",
+  "shape": "poster",
+  "bg": "/o5RVawgYeKSzMt8o0VLg38ulHZX.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 69133,
+  "fails": []
+ },
+ {
+  "slug": "dir-christopher-nolan",
+  "shape": "poster",
+  "bg": "/xuAIuYSmsUzKlUMBFGVZaWsY3DZ.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 66922,
+  "fails": []
+ },
+ {
+  "slug": "dir-quentin-tarantino",
+  "shape": "poster",
+  "bg": "/1gjcpAa99FAOWGnrUvHEXXsRs7o.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 58341,
+  "fails": []
+ },
+ {
+  "slug": "dir-david-fincher",
+  "shape": "poster",
+  "bg": "/tpEczFclQZeKAiCeKZZ0adRvtfz.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 83966,
+  "fails": []
+ },
+ {
+  "slug": "dir-paul-thomas-anderson",
+  "shape": "poster",
+  "bg": "/wKAs2LtLYSUzt3ZZ8pnxMwuEWuR.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 74671,
+  "fails": []
+ },
+ {
+  "slug": "dir-joel-coen",
+  "shape": "poster",
+  "bg": "/rgVaJNkZCgMarUcZuUAsVfXMWk3.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 85672,
+  "fails": []
+ },
+ {
+  "slug": "dir-wes-anderson",
+  "shape": "poster",
+  "bg": "/s03CeUeC5yAXyB1acqP0zGNo2SC.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 67249,
+  "fails": []
+ },
+ {
+  "slug": "dir-denis-villeneuve",
+  "shape": "poster",
+  "bg": "/zdDx9Xs93UIrJFWYApYR28J8M6b.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 73276,
+  "fails": []
+ },
+ {
+  "slug": "dir-steven-soderbergh",
+  "shape": "poster",
+  "bg": "/y8JlSDcQzd7gAaKyxFpExupMwDz.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 89629,
+  "fails": []
+ },
+ {
+  "slug": "dir-spike-lee",
+  "shape": "poster",
+  "bg": "/2KOHXgk2uoRXl6u7V9xpAIo3uay.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 67163,
+  "fails": []
+ },
+ {
+  "slug": "dir-darren-aronofsky",
+  "shape": "poster",
+  "bg": "/tOjz8mVI2HeQBvU6KNjIExMBsXL.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 51809,
+  "fails": []
+ },
+ {
+  "slug": "dir-david-lynch",
+  "shape": "poster",
+  "bg": "/wwBzRDoIW6Ld64h6OkQ6ImCZKsR.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 79630,
+  "fails": []
+ },
+ {
+  "slug": "dir-tim-burton",
+  "shape": "poster",
+  "bg": "/yHEHAHQpN9PfSEQx1UxZPczhcAi.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 73291,
+  "fails": []
+ },
+ {
+  "slug": "dir-bong-joon-ho",
+  "shape": "poster",
+  "bg": "/stwnTvZAoD8gEJEDHpDQyLCyDy5.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 76728,
+  "fails": []
+ },
+ {
+  "slug": "dir-sofia-coppola",
+  "shape": "poster",
+  "bg": "/dzHC2LxmarkBxWLhjp2DRa5oCev.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 65320,
+  "fails": []
+ },
+ {
+  "slug": "dir-richard-linklater",
+  "shape": "poster",
+  "bg": "/xSctxeZQzQbZoaxIvcDeHlDjbiN.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 88994,
+  "fails": []
+ },
+ {
+  "slug": "dir-ang-lee",
+  "shape": "poster",
+  "bg": "/jrmdsPZI5WT4rmOl20Gb1Y2femb.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 64148,
+  "fails": []
+ },
+ {
+  "slug": "dir-park-chan-wook",
+  "shape": "poster",
+  "bg": "/jsSFCVB7MhuVbSLwTgESiXEiNjt.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 63163,
+  "fails": []
+ },
+ {
+  "slug": "dir-danny-boyle",
+  "shape": "poster",
+  "bg": "/b5qQpFHmgNyvV1t81ou17Jt2fRj.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 67799,
+  "fails": []
+ },
+ {
+  "slug": "dir-michael-mann",
+  "shape": "poster",
+  "bg": "/kEYrCk6y6siUOxUlMD2KyFuRBQK.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 54788,
+  "fails": []
+ },
+ {
+  "slug": "dir-martin-mcdonagh",
+  "shape": "poster",
+  "bg": "/pyDaAVKa8akTLHXzeTyF8oGymXN.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 46591,
+  "fails": []
+ },
+ {
+  "slug": "dir-sam-mendes",
+  "shape": "poster",
+  "bg": "/5z89X9rB76JDblqMQ52fviwXxAN.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 56556,
+  "fails": []
+ },
+ {
+  "slug": "dir-yorgos-lanthimos",
+  "shape": "poster",
+  "bg": "/dvtv8eV1O8Fl385ctOu3sqO2PbD.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 60980,
+  "fails": []
+ },
+ {
+  "slug": "dir-damien-chazelle",
+  "shape": "poster",
+  "bg": "/14kRZ3XxNMyBv717YQSXr3wCucy.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 80556,
+  "fails": []
+ },
+ {
+  "slug": "dir-alfred-hitchcock",
+  "shape": "poster",
+  "bg": "/108fiNM6poRieMg7RIqLJRxdAwG.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 50364,
+  "fails": []
+ },
+ {
+  "slug": "dir-stanley-kubrick",
+  "shape": "poster",
+  "bg": "/yFT0VyIelI9aegZrsAwOG5iVP4v.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 58319,
+  "fails": []
+ },
+ {
+  "slug": "dir-akira-kurosawa",
+  "shape": "poster",
+  "bg": "/g2iwSho2vJxVz7cbD1FAKAmPD6A.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 96329,
+  "fails": []
+ },
+ {
+  "slug": "dir-orson-welles",
+  "shape": "poster",
+  "bg": "/e9lGmqQq3EsHeUQgQLByo275hcc.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 69156,
+  "fails": []
+ },
+ {
+  "slug": "dir-billy-wilder",
+  "shape": "poster",
+  "bg": "/nWV9BDDCbRegP7etiPjl3vYnJEq.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 64598,
+  "fails": []
+ },
+ {
+  "slug": "dir-john-ford",
+  "shape": "poster",
+  "bg": "/ffgVJWV8pDomSdTkjOqdrwMX9G6.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 68548,
+  "fails": []
+ },
+ {
+  "slug": "dir-francis-ford-coppola",
+  "shape": "poster",
+  "bg": "/3Pblihd6KjXliie9vj4iQJwbNPU.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 110225,
+  "fails": []
+ },
+ {
+  "slug": "dir-martin-scorsese",
+  "shape": "poster",
+  "bg": "/g3DjfKsgZQWZiw30I20hZVk1oMX.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 65779,
+  "fails": []
+ },
+ {
+  "slug": "dir-steven-spielberg",
+  "shape": "poster",
+  "bg": "/tZxcg19YQ3e8fJ0pOs7hjlnmmr6.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 85639,
+  "fails": []
+ },
+ {
+  "slug": "dir-ridley-scott",
+  "shape": "poster",
+  "bg": "/zABJmN9opmqD4orWl3KSdCaSo7Q.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 69667,
+  "fails": []
+ },
+ {
+  "slug": "dir-ingmar-bergman",
+  "shape": "poster",
+  "bg": "/nkmOaXNRoioViN9OQf2n9Iu6akA.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 70924,
+  "fails": []
+ },
+ {
+  "slug": "dir-federico-fellini",
+  "shape": "poster",
+  "bg": "/r0GTpMWUrxgPRbMmv38mNggOBvA.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 66034,
+  "fails": []
+ },
+ {
+  "slug": "dir-frank-capra",
+  "shape": "poster",
+  "bg": "/1OTZ7CEdEawDgA4qiBidpWTKE2x.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 57257,
+  "fails": []
+ },
+ {
+  "slug": "dir-howard-hawks",
+  "shape": "poster",
+  "bg": "/hG2oF9wZlqwGqP6EhG0qaN9Afg7.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 76290,
+  "fails": []
+ },
+ {
+  "slug": "dir-david-lean",
+  "shape": "poster",
+  "bg": "/dzwMuydy2x3JwaTBfBSq8c02qz4.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 74577,
+  "fails": []
+ },
+ {
+  "slug": "dir-sidney-lumet",
+  "shape": "poster",
+  "bg": "/hjj3V2DkPJ46zo5uz9bsZQzAk6R.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 85680,
+  "fails": []
+ },
+ {
+  "slug": "dir-elia-kazan",
+  "shape": "poster",
+  "bg": "/j8jRoJHrA0QN6MchFpRYDy6ubJF.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 67974,
+  "fails": []
+ },
+ {
+  "slug": "dir-sergio-leone",
+  "shape": "poster",
+  "bg": "/2576qoW8l9Z1nKGM10ar60aIwUu.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 101394,
+  "fails": []
+ },
+ {
+  "slug": "dir-robert-altman",
+  "shape": "poster",
+  "bg": "/wB1R6patGi35oaxKU5PWEGJlIZg.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 83964,
+  "fails": []
+ },
+ {
+  "slug": "dir-john-huston",
+  "shape": "poster",
+  "bg": "/saIbkr0jPzscRBKNG1suhgd3Yxb.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 102775,
+  "fails": []
+ },
+ {
+  "slug": "dir-clint-eastwood",
+  "shape": "poster",
+  "bg": "/8TwdCfeOZH7ucRlfLZ6wObxa7cO.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 79191,
+  "fails": []
+ },
+ {
+  "slug": "dir-brian-de-palma",
+  "shape": "poster",
+  "bg": "/4xleWFdhtVC7faer6Ru2eyEgfTv.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 57624,
+  "fails": []
+ },
+ {
+  "slug": "dir-william-wyler",
+  "shape": "poster",
+  "bg": "/lcuY8HJaw9FAq1osItPsiTQXLzh.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 69588,
+  "fails": []
+ },
+ {
+  "slug": "dir-james-cameron",
+  "shape": "poster",
+  "bg": "/2Hh4Jos62luf90CCglP5K32qaWO.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 47015,
+  "fails": []
+ },
+ {
+  "slug": "dir-john-mctiernan",
+  "shape": "poster",
+  "bg": "/yVfDkVbgQHD1A7JSV8Z47EjB1mU.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 98094,
+  "fails": []
+ },
+ {
+  "slug": "dir-kathryn-bigelow",
+  "shape": "poster",
+  "bg": "/P4mC54xIOIAiUdLphk6B9yPiDO.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 61307,
+  "fails": []
+ },
+ {
+  "slug": "dir-george-miller",
+  "shape": "poster",
+  "bg": "/35NQ8HjFXQlGYDz9UkhT08lKl5C.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 73262,
+  "fails": []
+ },
+ {
+  "slug": "dir-john-woo",
+  "shape": "poster",
+  "bg": "/s7sDmQq8cegHnsTmD0u2eZ4ArYZ.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 91505,
+  "fails": []
+ },
+ {
+  "slug": "dir-tony-scott",
+  "shape": "poster",
+  "bg": "/5PYRgW97xk9iNVC8dS0seoIliRR.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 71928,
+  "fails": []
+ },
+ {
+  "slug": "dir-michael-bay",
+  "shape": "poster",
+  "bg": "/8I9H9IKROECFEn7usvyChbRMhbI.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 73169,
+  "fails": []
+ },
+ {
+  "slug": "dir-chad-stahelski",
+  "shape": "poster",
+  "bg": "/eRCryGwKDH4XqUlrdkERmeBWPo8.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 48388,
+  "fails": []
+ },
+ {
+  "slug": "dir-paul-greengrass",
+  "shape": "poster",
+  "bg": "/35y15k2QAgLUwXQ9R60DPeftCbB.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 89566,
+  "fails": []
+ },
+ {
+  "slug": "dir-christopher-mcquarrie",
+  "shape": "poster",
+  "bg": "/xVbQBRpqzKkllUAvjJbgnAmTwaZ.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 72618,
+  "fails": []
+ },
+ {
+  "slug": "dir-richard-donner",
+  "shape": "poster",
+  "bg": "/wjRecQiVLUAm6jwyT5craxhg3lD.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 63961,
+  "fails": []
+ },
+ {
+  "slug": "dir-walter-hill",
+  "shape": "poster",
+  "bg": "Walter Hill (alternate TMDB profile photo)",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 79901,
+  "fails": []
+ },
+ {
+  "slug": "dir-sam-peckinpah",
+  "shape": "poster",
+  "bg": "/9Y0twse2LT6ArANkM2pmPPIDgxF.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 85970,
+  "fails": []
+ },
+ {
+  "slug": "dir-don-siegel",
+  "shape": "poster",
+  "bg": "/wjhr8oJr3fVfOphN7lIlr0R6nF9.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 87958,
+  "fails": []
+ },
+ {
+  "slug": "dir-guy-ritchie",
+  "shape": "poster",
+  "bg": "/9pLUnjMgIEWXi0mlHYzie9cKUTD.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 82753,
+  "fails": []
+ },
+ {
+  "slug": "dir-matthew-vaughn",
+  "shape": "poster",
+  "bg": "/Dnbz3B7yy4u0abixuD5LakZgsy.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 59073,
+  "fails": []
+ },
+ {
+  "slug": "dir-david-leitch",
+  "shape": "poster",
+  "bg": "/aWDxGlWkFVhs80DQMEE5A7c7YBr.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 86027,
+  "fails": []
+ },
+ {
+  "slug": "dir-justin-lin",
+  "shape": "poster",
+  "bg": "/w0ryazdt8iS3GBrjXfv0FIwvUGY.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 84276,
+  "fails": []
+ },
+ {
+  "slug": "dir-doug-liman",
+  "shape": "poster",
+  "bg": "/5pPcmwI7GMZ45CyrYLJ3n0IXm6e.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 55968,
+  "fails": []
+ },
+ {
+  "slug": "dir-antoine-fuqua",
+  "shape": "poster",
+  "bg": "/9zh0MmYIw1BP8V7y9N9K5Rjew4C.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 49927,
+  "fails": []
+ },
+ {
+  "slug": "dir-martin-campbell",
+  "shape": "poster",
+  "bg": "/xAaNHXBrwTPDjZRs5vDD0fMO9bx.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 60027,
+  "fails": []
+ },
+ {
+  "slug": "dir-zack-snyder",
+  "shape": "poster",
+  "bg": "/iD0GDqkvJXDXiNEZej198hjt3Tt.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 55227,
+  "fails": []
+ },
+ {
+  "slug": "dir-robert-rodriguez",
+  "shape": "poster",
+  "bg": "/4Cwsa3PqeGRGtsgKoYOyxql0uUy.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 81233,
+  "fails": []
+ },
+ {
+  "slug": "dir-hayao-miyazaki",
+  "shape": "poster",
+  "bg": "/ouhjt9KugzhWtdEyBPipihB3ic8.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 73273,
+  "fails": []
+ },
+ {
+  "slug": "dir-brad-bird",
+  "shape": "poster",
+  "bg": "/zB9Uz0Rs1K9uwHffXRFaBwwSYI.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 53723,
+  "fails": []
+ },
+ {
+  "slug": "dir-andrew-stanton",
+  "shape": "poster",
+  "bg": "/fo6ePCWEVB0L1sccrvB99Iaoqcg.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 60505,
+  "fails": []
+ },
+ {
+  "slug": "dir-lee-unkrich",
+  "shape": "poster",
+  "bg": "/crb297utC6W4HSstOe5djDPTwEN.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 52651,
+  "fails": []
+ },
+ {
+  "slug": "dir-john-lasseter",
+  "shape": "poster",
+  "bg": "/xlrE4VD2VbZCDpaNdWCpH1ZihPS.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 61026,
+  "fails": []
+ },
+ {
+  "slug": "dir-pete-docter",
+  "shape": "poster",
+  "bg": "/vITDphkNpSn1LP5gUEheAnlclnl.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 71163,
+  "fails": []
+ },
+ {
+  "slug": "dir-isao-takahata",
+  "shape": "poster",
+  "bg": "/qbvnGLByh0N9ni7gZSREIgvO1sM.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 58472,
+  "fails": []
+ },
+ {
+  "slug": "dir-ron-clements",
+  "shape": "poster",
+  "bg": "/u9k9yg2EGlDsxYo3ehf35yRUfcD.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 72669,
+  "fails": []
+ },
+ {
+  "slug": "dir-john-musker",
+  "shape": "poster",
+  "bg": "/vSn1d9JpEpECu9cQbRGTFWZdLhA.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 70996,
+  "fails": []
+ },
+ {
+  "slug": "dir-henry-selick",
+  "shape": "poster",
+  "bg": "/2LvtcpV8njWrp2W9eXmTNjsAWev.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 60251,
+  "fails": []
+ },
+ {
+  "slug": "dir-chris-sanders",
+  "shape": "poster",
+  "bg": "/8mKI9aPT5btPz0n0O3knHjKMDCe.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 54996,
+  "fails": []
+ },
+ {
+  "slug": "dir-dean-deblois",
+  "shape": "poster",
+  "bg": "/nnaiwvrJdfjpsdqjuyYlq9S0uMA.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 68382,
+  "fails": []
+ },
+ {
+  "slug": "dir-genndy-tartakovsky",
+  "shape": "poster",
+  "bg": "/neLR8ws82ezlbhOyUvhtLXwQZWL.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 86544,
+  "fails": []
+ },
+ {
+  "slug": "dir-phil-lord",
+  "shape": "poster",
+  "bg": "/2MagibFHZxky3FmMubyABUnf4lw.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 50588,
+  "fails": []
+ },
+ {
+  "slug": "dir-don-bluth",
+  "shape": "poster",
+  "bg": "/vzeIEidWO7v2Dfw7iMv3Xjnmfwd.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 70450,
+  "fails": []
+ },
+ {
+  "slug": "dir-nick-park",
+  "shape": "poster",
+  "bg": "/C51kzgPopTjOkLewW9Pt8f2YIG.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 70292,
+  "fails": []
+ },
+ {
+  "slug": "dir-makoto-shinkai",
+  "shape": "poster",
+  "bg": "/z8TN4Nkmhem6XqcnH2jMn5Ayf97.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 49103,
+  "fails": []
+ },
+ {
+  "slug": "dir-satoshi-kon",
+  "shape": "poster",
+  "bg": "/b7Oqg1bjS0e2iEzEjYWnsyVVagt.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 57620,
+  "fails": []
+ },
+ {
+  "slug": "dir-mamoru-hosoda",
+  "shape": "poster",
+  "bg": "/MBrgo5yaOdV454lUgDJsqvbdxP.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 66929,
+  "fails": []
+ },
+ {
+  "slug": "dir-rich-moore",
+  "shape": "poster",
+  "bg": "/oIAmkZf9LuJuMqR8zSchoD3FJT8.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 70043,
+  "fails": []
+ },
+ {
+  "slug": "dir-byron-howard",
+  "shape": "poster",
+  "bg": "/ePJXkxrD44nM0VB7Xx9Q4ityzfT.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 63078,
+  "fails": []
+ },
+ {
+  "slug": "dir-chris-buck",
+  "shape": "poster",
+  "bg": "/ponaYm3Xr1Pki8JVDSIzfA4NkNw.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 83875,
+  "fails": []
+ },
+ {
+  "slug": "dir-wolfgang-reitherman",
+  "shape": "poster",
+  "bg": "/biIAk3hrc7Ed2ZnjadMiMS1EswM.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 52221,
+  "fails": []
+ },
+ {
+  "slug": "dir-tomm-moore",
+  "shape": "poster",
+  "bg": "/gqUcu5yEtNgnCaA2jtSOs8DV1Gg.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 66960,
+  "fails": []
+ },
+ {
+  "slug": "dir-mel-brooks",
+  "shape": "poster",
+  "bg": "/c21qNcMJlHnRolfhQhZOVacjtwI.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 50646,
+  "fails": []
+ },
+ {
+  "slug": "dir-harold-ramis",
+  "shape": "poster",
+  "bg": "/kmTMTxthkDAsygk3Am4IUSVYYRi.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 89000,
+  "fails": []
+ },
+ {
+  "slug": "dir-judd-apatow",
+  "shape": "poster",
+  "bg": "/7iD2D263nT0ZOF6vuUojQYQ5cbf.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 94141,
+  "fails": []
+ },
+ {
+  "slug": "dir-adam-mckay",
+  "shape": "poster",
+  "bg": "/vOyZXNJq7Oo01LPtSD5AZHjctgH.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 84766,
+  "fails": []
+ },
+ {
+  "slug": "dir-ivan-reitman",
+  "shape": "poster",
+  "bg": "/8ejFmktp7g6qdJsNa1TU68saSuq.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 56898,
+  "fails": []
+ },
+ {
+  "slug": "dir-john-hughes",
+  "shape": "poster",
+  "bg": "/7QBh9D3Qjf667Q549VeJAAV7O38.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 89062,
+  "fails": []
+ },
+ {
+  "slug": "dir-john-landis",
+  "shape": "poster",
+  "bg": "/nXKdxxELgAaGecCpxAWCoj6TV3f.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 70863,
+  "fails": []
+ },
+ {
+  "slug": "dir-rob-reiner",
+  "shape": "poster",
+  "bg": "/rcmPU3YlhHQVzZlV197qhmRsgEL.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 58948,
+  "fails": []
+ },
+ {
+  "slug": "dir-woody-allen",
+  "shape": "poster",
+  "bg": "/wcPQgZLDibuej1RwNTy1R2U2ZJw.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 54018,
+  "fails": []
+ },
+ {
+  "slug": "dir-edgar-wright",
+  "shape": "poster",
+  "bg": "/3BqgbeAkNnDcIVtrDvG6LJnEkZK.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 82025,
+  "fails": []
+ },
+ {
+  "slug": "dir-taika-waititi",
+  "shape": "poster",
+  "bg": "/ww6L2ksfJNMbuiIdDuvVKndUHsv.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 71439,
+  "fails": []
+ },
+ {
+  "slug": "dir-peter-farrelly",
+  "shape": "poster",
+  "bg": "/3PDYOFfk5NLmNcEz6SFZmdmqVZr.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 83633,
+  "fails": []
+ },
+ {
+  "slug": "dir-todd-phillips",
+  "shape": "poster",
+  "bg": "/A6FPht87DiqXzp456WjakLi2AtP.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 86144,
+  "fails": []
+ },
+ {
+  "slug": "dir-jay-roach",
+  "shape": "poster",
+  "bg": "/48uTxNDRlnP56quVewyByotKAen.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 73378,
+  "fails": []
+ },
+ {
+  "slug": "dir-paul-feig",
+  "shape": "poster",
+  "bg": "/mE3eFY3gq1UQ7Rj2He2YbZ7PFya.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 65274,
+  "fails": []
+ },
+ {
+  "slug": "dir-christopher-guest",
+  "shape": "poster",
+  "bg": "/ofLhsKLZ4YAet8XIsNj7oA3blgh.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 79351,
+  "fails": []
+ },
+ {
+  "slug": "dir-blake-edwards",
+  "shape": "poster",
+  "bg": "/tEUBu225EVmJKGxJSX936OvRet5.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 72199,
+  "fails": []
+ },
+ {
+  "slug": "dir-david-zucker",
+  "shape": "poster",
+  "bg": "/13iJccfZeC0X9WZgJnlI7ZphL7l.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 63997,
+  "fails": []
+ },
+ {
+  "slug": "dir-amy-heckerling",
+  "shape": "poster",
+  "bg": "/hIc3bQxLOPAcpGJ1CVFuzpzJRZ0.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 65994,
+  "fails": []
+ },
+ {
+  "slug": "dir-nora-ephron",
+  "shape": "poster",
+  "bg": "/5m0iu8lT0TVu0nKk5eWOR7w2K0a.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 71442,
+  "fails": []
+ },
+ {
+  "slug": "dir-kevin-smith",
+  "shape": "poster",
+  "bg": "/g8sC36zUTkSTh7y9HjWa4Rbr0JP.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 58523,
+  "fails": []
+ },
+ {
+  "slug": "dir-chris-columbus",
+  "shape": "poster",
+  "bg": "/yCyEz90NqjEXKZ7HYcEhDXlLlPc.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 52198,
+  "fails": []
+ },
+ {
+  "slug": "dir-frank-oz",
+  "shape": "poster",
+  "bg": "/mb2JbT8s6LIgaxj6QTph0NW1pmI.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 73282,
+  "fails": []
+ },
+ {
+  "slug": "dir-john-carpenter",
+  "shape": "poster",
+  "bg": "/3Qp0mg61u1qSZNJh30BFEUZrIMG.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 42882,
+  "fails": []
+ },
+ {
+  "slug": "dir-wes-craven",
+  "shape": "poster",
+  "bg": "/eqwl6owrYykeTGTpKxwcAkbEJmg.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 59882,
+  "fails": []
+ },
+ {
+  "slug": "dir-george-a-romero",
+  "shape": "poster",
+  "bg": "/w2zVF92x149qK79ZxwUowcSp2c6.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 71384,
+  "fails": []
+ },
+ {
+  "slug": "dir-tobe-hooper",
+  "shape": "poster",
+  "bg": "/rE5TqnAvgaKjWwWZ9AsoU9KcUGU.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 120454,
+  "fails": []
+ },
+ {
+  "slug": "dir-sam-raimi",
+  "shape": "poster",
+  "bg": "/8gssvwiPrFRuFRlr5ruKx68k1Jl.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 60489,
+  "fails": []
+ },
+ {
+  "slug": "dir-david-cronenberg",
+  "shape": "poster",
+  "bg": "/3xh4e2gWHDilMLtucHzDGsmJMuQ.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 75114,
+  "fails": []
+ },
+ {
+  "slug": "dir-william-friedkin",
+  "shape": "poster",
+  "bg": "/r9JJ3VDB7VeDol7cEGsS4NyM6d5.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 67538,
+  "fails": []
+ },
+ {
+  "slug": "dir-dario-argento",
+  "shape": "poster",
+  "bg": "/2WjQlcLxhvmO9NtCfNh2npMVYqp.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 111285,
+  "fails": []
+ },
+ {
+  "slug": "dir-james-wan",
+  "shape": "poster",
+  "bg": "/bNJccMIKzCtYnndcOKniSKCzo5Y.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 61433,
+  "fails": []
+ },
+ {
+  "slug": "dir-mike-flanagan",
+  "shape": "poster",
+  "bg": "/sjnAyb7un3eS7THLQQzJBzkv2Yo.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 73809,
+  "fails": []
+ },
+ {
+  "slug": "dir-guillermo-del-toro",
+  "shape": "poster",
+  "bg": "/cWvt8FdPAH0j3QtLzAN1j7ZJJrr.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 81084,
+  "fails": []
+ },
+ {
+  "slug": "dir-leigh-whannell",
+  "shape": "poster",
+  "bg": "/wvoTbsROOHfCqJ3Voe9zpal429L.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 68585,
+  "fails": []
+ },
+ {
+  "slug": "dir-ti-west",
+  "shape": "poster",
+  "bg": "/y65ZHU9m830lbdbggxC8eOT123S.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 63459,
+  "fails": []
+ },
+ {
+  "slug": "dir-rob-zombie",
+  "shape": "poster",
+  "bg": "/kkl4gjIJ1pyEJhNp2B2HricD2v7.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 98157,
+  "fails": []
+ },
+ {
+  "slug": "dir-eli-roth",
+  "shape": "poster",
+  "bg": "/qQTkpxzh1FlBGL1HD5hzdUMxv49.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 57638,
+  "fails": []
+ },
+ {
+  "slug": "dir-scott-derrickson",
+  "shape": "poster",
+  "bg": "/caapCMfXLifC7XveUiY653xWBsZ.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 73406,
+  "fails": []
+ },
+ {
+  "slug": "dir-joe-dante",
+  "shape": "poster",
+  "bg": "/2Aev68oWboAC31dj8eJnEUzH41x.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 66033,
+  "fails": []
+ },
+ {
+  "slug": "dir-stuart-gordon",
+  "shape": "poster",
+  "bg": "/9LZpmQx9pwgFInRbbAFEkyUMGlc.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 59164,
+  "fails": []
+ },
+ {
+  "slug": "dir-james-whale",
+  "shape": "poster",
+  "bg": "/cXE0gUlXfx7qqZMdnUb5AeQMKHr.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 47743,
+  "fails": []
+ },
+ {
+  "slug": "dir-george-lucas",
+  "shape": "poster",
+  "bg": "/mDLDvsx8PaZoEThkBdyaG1JxPdf.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 60728,
+  "fails": []
+ },
+ {
+  "slug": "dir-paul-verhoeven",
+  "shape": "poster",
+  "bg": "/r8k5pnuKZN3PUIizakuiTzEdjJJ.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 116121,
+  "fails": []
+ },
+ {
+  "slug": "dir-robert-zemeckis",
+  "shape": "poster",
+  "bg": "/lPYDQ5LYNJ12rJZENtyASmVZ1Ql.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 70788,
+  "fails": []
+ },
+ {
+  "slug": "dir-terry-gilliam",
+  "shape": "poster",
+  "bg": "/7qBkaXxANmnb6hqQCBc4iWqXEL6.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 99492,
+  "fails": []
+ },
+ {
+  "slug": "dir-lana-wachowski",
+  "shape": "poster",
+  "bg": "/4nE4ttPQBuw1virOz0LYT08c1Vm.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 87595,
+  "fails": []
+ },
+ {
+  "slug": "dir-neill-blomkamp",
+  "shape": "poster",
+  "bg": "/yj40QEEfjbRFnlwY0XunocNKdAe.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64597,
+  "fails": []
+ },
+ {
+  "slug": "dir-duncan-jones",
+  "shape": "poster",
+  "bg": "/1YD0ODUMoibJTNbgWwN0l0d1sT0.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 62677,
+  "fails": []
+ },
+ {
+  "slug": "dir-jj-abrams",
+  "shape": "poster",
+  "bg": "/k4IWd2RV5kY1kAL2VgKQwFvnCLP.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 74147,
+  "fails": []
+ },
+ {
+  "slug": "dir-luc-besson",
+  "shape": "poster",
+  "bg": "/bLVPnHMVFZ7wrF6ovMVF5U1UX89.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 81481,
+  "fails": []
+ },
+ {
+  "slug": "dir-rian-johnson",
+  "shape": "poster",
+  "bg": "/ggwlJvCn0laNGjcvwGchuwC00hQ.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 53077,
+  "fails": []
+ },
+ {
+  "slug": "dir-gareth-edwards",
+  "shape": "poster",
+  "bg": "/9yyQHl0ATKz2uymdS8kOzwsa5PU.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 49773,
+  "fails": []
+ },
+ {
+  "slug": "dir-robert-wise",
+  "shape": "poster",
+  "bg": "/fOMU2lb9usmqdoC1sMcLOdBmLgV.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 101869,
+  "fails": []
+ },
+ {
+  "slug": "dir-joseph-kosinski",
+  "shape": "poster",
+  "bg": "/oWLUXWY0j8TYzwnf2wETYWO181S.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 56329,
+  "fails": []
+ },
+ {
+  "slug": "dir-roland-emmerich",
+  "shape": "poster",
+  "bg": "/mN8x74uv9yQ7dJl8nh2q26mkY8v.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 67149,
+  "fails": []
+ },
+ {
+  "slug": "actor-zendaya",
+  "shape": "poster",
+  "bg": "/1qup8tSt95HLbcy2c2xrx4iJNxv.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 74183,
+  "fails": []
+ },
+ {
+  "slug": "actor-florence-pugh",
+  "shape": "poster",
+  "bg": "/2URrZb95t3kY6pLroKny3Enmabp.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 62304,
+  "fails": []
+ },
+ {
+  "slug": "actor-austin-butler",
+  "shape": "poster",
+  "bg": "/atdAs4pFGjUQ4m2W8kJYly7N6cC.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 70098,
+  "fails": []
+ },
+ {
+  "slug": "actor-jenna-ortega",
+  "shape": "poster",
+  "bg": "/cV4x7jNmsGLdKZn5I6xVF3Ltnmg.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 63174,
+  "fails": []
+ },
+ {
+  "slug": "actor-anya-taylor-joy",
+  "shape": "poster",
+  "bg": "/qYNofOjlRke2MlJVihmJmEdQI4v.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 61195,
+  "fails": []
+ },
+ {
+  "slug": "actor-sydney-sweeney",
+  "shape": "poster",
+  "bg": "/qYiaSl0Eb7G3VaxOg8PxExCFwon.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 69900,
+  "fails": []
+ },
+ {
+  "slug": "actor-jacob-elordi",
+  "shape": "poster",
+  "bg": "/qZNRPWCP2c5d0YaYLTzHXU9Rdoe.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 71298,
+  "fails": []
+ },
+ {
+  "slug": "actor-paul-mescal",
+  "shape": "poster",
+  "bg": "/vrzZ41TGNAFgfmZjC2sOJySzBLd.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 66401,
+  "fails": []
+ },
+ {
+  "slug": "actor-barry-keoghan",
+  "shape": "poster",
+  "bg": "/ngoitknM6hw8fffLywyvjzy6Iti.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64532,
+  "fails": []
+ },
+ {
+  "slug": "actor-glen-powell",
+  "shape": "poster",
+  "bg": "/fUnIaJkdgvQTztyR1nLeUceSzly.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 61906,
+  "fails": []
+ },
+ {
+  "slug": "actor-margaret-qualley",
+  "shape": "poster",
+  "bg": "/4LeaweyyTXCNs9V5swAuU4gGgZC.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 49585,
+  "fails": []
+ },
+ {
+  "slug": "actor-mikey-madison",
+  "shape": "poster",
+  "bg": "/nsWQNYBTBYE2TCzGpyXTpA0TTEz.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 60773,
+  "fails": []
+ },
+ {
+  "slug": "actor-josh-oconnor",
+  "shape": "poster",
+  "bg": "/pVv0zCvpNyuWoJcABq8RrM90FsK.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 77715,
+  "fails": []
+ },
+ {
+  "slug": "actor-tom-holland",
+  "shape": "poster",
+  "bg": "/xKBAaPIa1c7tzZD3Y0MhBLv4hPE.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 74390,
+  "fails": []
+ },
+ {
+  "slug": "actor-rachel-zegler",
+  "shape": "poster",
+  "bg": "/a1RxUQd3HExVgt8laH4VaUytdz.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 50233,
+  "fails": []
+ },
+ {
+  "slug": "actor-ayo-edebiri",
+  "shape": "poster",
+  "bg": "/wrqYWaAmVPM2yueEEQUtMo6kCp2.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 72246,
+  "fails": []
+ },
+ {
+  "slug": "actor-jeremy-allen-white",
+  "shape": "poster",
+  "bg": "/pXRADDRhprgaQ4Bri44NH3bYeu6.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 93681,
+  "fails": []
+ },
+ {
+  "slug": "actor-cailee-spaeny",
+  "shape": "poster",
+  "bg": "/6gUzyMnwo7TjZA7E1Amd1GI8JGw.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64951,
+  "fails": []
+ },
+ {
+  "slug": "actor-harris-dickinson",
+  "shape": "poster",
+  "bg": "/pqqnYWWHa3Va80EXofXrVlRqIDM.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 65503,
+  "fails": []
+ },
+ {
+  "slug": "actor-daisy-edgar-jones",
+  "shape": "poster",
+  "bg": "/4Fdc3VSoVhkkEZNx5Zpz3AU6DYz.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 62121,
+  "fails": []
+ },
+ {
+  "slug": "actor-rachel-sennott",
+  "shape": "poster",
+  "bg": "/zvx8lP4p3gvijQLg235e3xjxrFG.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 72037,
+  "fails": []
+ },
+ {
+  "slug": "actor-mike-faist",
+  "shape": "poster",
+  "bg": "/x9lTvlseMJwoeooPAkuPGtDwyTl.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 71376,
+  "fails": []
+ },
+ {
+  "slug": "actor-jodie-comer",
+  "shape": "poster",
+  "bg": "/AfsBpnfw0E2h8NZK4zkFcOjYlEb.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 83412,
+  "fails": []
+ },
+ {
+  "slug": "actor-kelvin-harrison-jr",
+  "shape": "poster",
+  "bg": "/uRViX11fZQGmO9p91ZH7QVh2l5y.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 83432,
+  "fails": []
+ },
+ {
+  "slug": "actor-jk-simmons",
+  "shape": "poster",
+  "bg": "/ScmKoJ9eiSUOthAt1PDNLi8Fkw.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 52744,
+  "fails": []
+ },
+ {
+  "slug": "actor-steve-buscemi",
+  "shape": "poster",
+  "bg": "/n0pZumkrcZrAPMoPq684RhYnjPV.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 61770,
+  "fails": []
+ },
+ {
+  "slug": "actor-john-c-reilly",
+  "shape": "poster",
+  "bg": "/iDQ8w4qcxU3le5ZWoCKpHs1QNok.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 55394,
+  "fails": []
+ },
+ {
+  "slug": "actor-stanley-tucci",
+  "shape": "poster",
+  "bg": "/q4TanMDI5Rgsvw4SfyNbPBh4URr.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 60427,
+  "fails": []
+ },
+ {
+  "slug": "actor-christopher-walken",
+  "shape": "poster",
+  "bg": "/ApgDL7nudR9T2GpjCG4vESgymO2.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 87899,
+  "fails": []
+ },
+ {
+  "slug": "actor-willem-dafoe",
+  "shape": "poster",
+  "bg": "/ui8e4sgZAwMPi3hzEO53jyBJF9B.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 73606,
+  "fails": []
+ },
+ {
+  "slug": "actor-sam-rockwell",
+  "shape": "poster",
+  "bg": "/afYhNpLwpa65Yy0Q0g00FNFhzx5.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 77896,
+  "fails": []
+ },
+ {
+  "slug": "actor-paul-giamatti",
+  "shape": "poster",
+  "bg": "/wbrVVJRr5TwhDZuvijBgOorzcAb.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 100875,
+  "fails": []
+ },
+ {
+  "slug": "actor-john-goodman",
+  "shape": "poster",
+  "bg": "/yyYqoyKHO7hE1zpgEV2XlqYWcNV.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 66822,
+  "fails": []
+ },
+ {
+  "slug": "actor-samuel-l-jackson",
+  "shape": "poster",
+  "bg": "/AiAYAqwpM5xmiFrAIeQvUXDCVvo.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 79663,
+  "fails": []
+ },
+ {
+  "slug": "actor-william-h-macy",
+  "shape": "poster",
+  "bg": "/hdVEGSrP8qWlJnt0v5vSVcGOjy7.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 102706,
+  "fails": []
+ },
+ {
+  "slug": "actor-jeffrey-wright",
+  "shape": "poster",
+  "bg": "/yGcuHGW4glqRpOPxgiCvjcren7F.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 75308,
+  "fails": []
+ },
+ {
+  "slug": "actor-richard-jenkins",
+  "shape": "poster",
+  "bg": "/muT3RZG9hiKaKojD751RcQ5tGEy.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 75623,
+  "fails": []
+ },
+ {
+  "slug": "actor-margo-martindale",
+  "shape": "poster",
+  "bg": "/6ANuYnZZJTuQLL4bbt8vH1qDYje.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64391,
+  "fails": []
+ },
+ {
+  "slug": "actor-allison-janney",
+  "shape": "poster",
+  "bg": "/kSaSnQ9xU8eVNL0mTppab95dZA8.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 94273,
+  "fails": []
+ },
+ {
+  "slug": "actor-octavia-spencer",
+  "shape": "poster",
+  "bg": "/zDGydyM1fmvNWzQlTAns9IZjNxT.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 82724,
+  "fails": []
+ },
+ {
+  "slug": "actor-kathy-bates",
+  "shape": "poster",
+  "bg": "/qZRTzTjV4OC1Ii9a0n8QBS9zMOd.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 66816,
+  "fails": []
+ },
+ {
+  "slug": "actor-jennifer-coolidge",
+  "shape": "poster",
+  "bg": "/hcpbV0dY4ZJxmZi1WcAWe8euqV2.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 85601,
+  "fails": []
+ },
+ {
+  "slug": "actor-bill-nighy",
+  "shape": "poster",
+  "bg": "/ixFI2YCGNGJfwlpI8iyhvVZRg8C.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 58057,
+  "fails": []
+ },
+ {
+  "slug": "actor-brendan-gleeson",
+  "shape": "poster",
+  "bg": "/ctPPJu5ZYDZr1IPmzoNpezczrm0.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 78404,
+  "fails": []
+ },
+ {
+  "slug": "actor-harry-dean-stanton",
+  "shape": "poster",
+  "bg": "/9zOTpVMwMHNjPFBNoPy9vOBT1NC.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 77150,
+  "fails": []
+ },
+ {
+  "slug": "actor-danny-trejo",
+  "shape": "poster",
+  "bg": "/7JrUkRGBscZ1Hy5JinaaXjjzSCF.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 67847,
+  "fails": []
+ },
+ {
+  "slug": "actor-walton-goggins",
+  "shape": "poster",
+  "bg": "/5lcVMJbWrNDFiWa1WxK4oR8zwev.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 76442,
+  "fails": []
+ },
+ {
+  "slug": "actor-alan-arkin",
+  "shape": "poster",
+  "bg": "/lTMMpkqL0G3WeFNfbtdP5COZEiX.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 75567,
+  "fails": []
+ },
+ {
+  "slug": "actor-brian-cox",
+  "shape": "poster",
+  "bg": "/scSjbFCTRngXlkJRoKptM5kQGw7.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 61033,
+  "fails": []
+ },
+ {
+  "slug": "actor-humphrey-bogart",
+  "shape": "poster",
+  "bg": "/4pk2VbOb2td7iBZyir6Ji46HH4N.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 73722,
+  "fails": []
+ },
+ {
+  "slug": "actor-marlon-brando",
+  "shape": "poster",
+  "bg": "/fuTEPMsBtV1zE98ujPONbKiYDc2.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 87956,
+  "fails": []
+ },
+ {
+  "slug": "actor-james-stewart",
+  "shape": "poster",
+  "bg": "/3CU3yG3rCTlG3SwxI9iUOzfHtfX.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 89189,
+  "fails": []
+ },
+ {
+  "slug": "actor-cary-grant",
+  "shape": "poster",
+  "bg": "/lcNAirMFcyM7WIiCmaabjbNZVOJ.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 74596,
+  "fails": []
+ },
+ {
+  "slug": "actor-katharine-hepburn",
+  "shape": "poster",
+  "bg": "/hzBSOe6bburyMeeCqD9kR9tRfdD.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 87355,
+  "fails": []
+ },
+ {
+  "slug": "actor-bette-davis",
+  "shape": "poster",
+  "bg": "/dr7UzpC9055ByCdCUHvTP1qsD2X.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 70770,
+  "fails": []
+ },
+ {
+  "slug": "actor-audrey-hepburn",
+  "shape": "poster",
+  "bg": "/hwPHPRz7YqmcRAlvhag5VPeoaoC.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64398,
+  "fails": []
+ },
+ {
+  "slug": "actor-marilyn-monroe",
+  "shape": "poster",
+  "bg": "/vcp6rHL2sZWdlJQDEWsEe0jAAe1.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 72378,
+  "fails": []
+ },
+ {
+  "slug": "actor-ingrid-bergman",
+  "shape": "poster",
+  "bg": "/jXEE0P6705JbMAJ2nwtHjmqkd5F.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 87071,
+  "fails": []
+ },
+ {
+  "slug": "actor-gregory-peck",
+  "shape": "poster",
+  "bg": "/2Ojm5IwpTF5qdMTjEmdBh8UZM6K.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 85520,
+  "fails": []
+ },
+ {
+  "slug": "actor-henry-fonda",
+  "shape": "poster",
+  "bg": "/6wXWsqSXF3wCsGcwVqiszy6RX9X.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 75992,
+  "fails": []
+ },
+ {
+  "slug": "actor-john-wayne",
+  "shape": "poster",
+  "bg": "/4VmiGmCwSnratHtYmT2AyXrdQ64.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 106603,
+  "fails": []
+ },
+ {
+  "slug": "actor-elizabeth-taylor",
+  "shape": "poster",
+  "bg": "/eMUUN7yGSSH4G4dcqnKAZTquZP.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 57700,
+  "fails": []
+ },
+ {
+  "slug": "actor-sidney-poitier",
+  "shape": "poster",
+  "bg": "/fhMiCe3ScxBGKEX6Y6flEJm7iHd.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 82140,
+  "fails": []
+ },
+ {
+  "slug": "actor-paul-newman",
+  "shape": "poster",
+  "bg": "/5K9gQEzuQ0DeNO6KKEb5xK8iOVD.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 73986,
+  "fails": []
+ },
+ {
+  "slug": "actor-robert-redford",
+  "shape": "poster",
+  "bg": "/m5ayL8ASLdaaFYzqJZNYvrKRuhD.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 82843,
+  "fails": []
+ },
+ {
+  "slug": "actor-jack-nicholson",
+  "shape": "poster",
+  "bg": "/6h12pZsgj3WWjMtykUgfLkLEBWz.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 76624,
+  "fails": []
+ },
+ {
+  "slug": "actor-al-pacino",
+  "shape": "poster",
+  "bg": "/m8HAAjq1T75JypKk0v1FFQn4ysZ.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 81685,
+  "fails": []
+ },
+ {
+  "slug": "actor-robert-de-niro",
+  "shape": "poster",
+  "bg": "/cT8htcckIuyI1Lqwt1CvD02ynTh.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 67884,
+  "fails": []
+ },
+ {
+  "slug": "actor-meryl-streep",
+  "shape": "poster",
+  "bg": "/emAAzyK1rJ6aiMi0wsWYp51EC3h.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 89532,
+  "fails": []
+ },
+ {
+  "slug": "actor-dustin-hoffman",
+  "shape": "poster",
+  "bg": "/yFjTzJHE6AFbwQifOlnNDzmiwlq.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 67767,
+  "fails": []
+ },
+ {
+  "slug": "actor-clint-eastwood",
+  "shape": "poster",
+  "bg": "/8TwdCfeOZH7ucRlfLZ6wObxa7cO.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 78814,
+  "fails": []
+ },
+ {
+  "slug": "actor-sophia-loren",
+  "shape": "poster",
+  "bg": "/lxhkn933v8EuBHvfTWSS5SQQnJ4.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 54562,
+  "fails": []
+ },
+ {
+  "slug": "actor-toshiro-mifune",
+  "shape": "poster",
+  "bg": "/cZ5ybA7cDA0EBMaM5jX2f7RNBVb.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64985,
+  "fails": []
+ },
+ {
+  "slug": "actor-arnold-schwarzenegger",
+  "shape": "poster",
+  "bg": "/dgCABuZp2HBehCT84O4WBp7KIoe.jpg",
+  "title_px": 56,
+  "title_lines": 2,
+  "bytes": 70266,
+  "fails": []
+ },
+ {
+  "slug": "actor-sylvester-stallone",
+  "shape": "poster",
+  "bg": "/gn3pDWthJqR0VDYGViGD3048og7.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 50200,
+  "fails": []
+ },
+ {
+  "slug": "actor-keanu-reeves",
+  "shape": "poster",
+  "bg": "/8RZLOyYGsoRe9p44q3xin9QkMHv.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 65378,
+  "fails": []
+ },
+ {
+  "slug": "actor-bruce-willis",
+  "shape": "poster",
+  "bg": "/w3aXr1e7gQCn8MSp1vW4sXHn99P.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 48973,
+  "fails": []
+ },
+ {
+  "slug": "actor-tom-cruise",
+  "shape": "poster",
+  "bg": "/maf8PhSvDCdEwjEMbYfGpojR5RP.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 55110,
+  "fails": []
+ },
+ {
+  "slug": "actor-harrison-ford",
+  "shape": "poster",
+  "bg": "/pjBMJVPpcZK23Vt1nzr1zEBTWrP.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 86553,
+  "fails": []
+ },
+ {
+  "slug": "actor-mel-gibson",
+  "shape": "poster",
+  "bg": "/jnqHMaOslt8cef2atSmOpGRvNla.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 72989,
+  "fails": []
+ },
+ {
+  "slug": "actor-jackie-chan",
+  "shape": "poster",
+  "bg": "/nraZoTzwJQPHspAVsKfgl3RXKKa.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 65901,
+  "fails": []
+ },
+ {
+  "slug": "actor-jet-li",
+  "shape": "poster",
+  "bg": "/c4s8INzU0ZAujCQ1YmphCmcsNzl.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 71066,
+  "fails": []
+ },
+ {
+  "slug": "actor-bruce-lee",
+  "shape": "poster",
+  "bg": "/uUC3N3sIuFLD0ZpNyc58NxW1Pzf.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 77216,
+  "fails": []
+ },
+ {
+  "slug": "actor-jason-statham",
+  "shape": "poster",
+  "bg": "/8l6lmrmKFDvhDjMJPj6tBpJdhaA.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 86779,
+  "fails": []
+ },
+ {
+  "slug": "actor-dwayne-johnson",
+  "shape": "poster",
+  "bg": "/5QApZVV8FUFlVxQpIK3Ew6cqotq.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 66894,
+  "fails": []
+ },
+ {
+  "slug": "actor-vin-diesel",
+  "shape": "poster",
+  "bg": "/tEoUF0RJqHnskmBOJiDEQhyN7Ok.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 54623,
+  "fails": []
+ },
+ {
+  "slug": "actor-jean-claude-van-damme",
+  "shape": "poster",
+  "bg": "/7DP3bm3MS0qa0L8tBLHGebbCu6H.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 79974,
+  "fails": []
+ },
+ {
+  "slug": "actor-steven-seagal",
+  "shape": "poster",
+  "bg": "/fGNIEpn3JqOckY3ahnJX9x3qA94.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 81987,
+  "fails": []
+ },
+ {
+  "slug": "actor-chuck-norris",
+  "shape": "poster",
+  "bg": "/m3uLikdhi9qObRvGVHsKX5H93lR.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 96794,
+  "fails": []
+ },
+ {
+  "slug": "actor-liam-neeson",
+  "shape": "poster",
+  "bg": "/sRLev3wJioBgun3ZoeAUFpkLy0D.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 65224,
+  "fails": []
+ },
+ {
+  "slug": "actor-charlize-theron",
+  "shape": "poster",
+  "bg": "/gd7ShD0yt4bsR2STeQ19KQ6hvXL.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 67586,
+  "fails": []
+ },
+ {
+  "slug": "actor-angelina-jolie",
+  "shape": "poster",
+  "bg": "/bXNxIKcJ5cNNW8QFrBPWcfTSu9x.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 90277,
+  "fails": []
+ },
+ {
+  "slug": "actor-michelle-yeoh",
+  "shape": "poster",
+  "bg": "/i6fHvGt7Rb8oVyjjdQVV6vEHB94.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 49455,
+  "fails": []
+ },
+ {
+  "slug": "actor-kurt-russell",
+  "shape": "poster",
+  "bg": "/6g1d98oH4miG4k0ZiZWmF3Dt0bO.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 77794,
+  "fails": []
+ },
+ {
+  "slug": "actor-wesley-snipes",
+  "shape": "poster",
+  "bg": "/iDmPuZXAGheRMbMyB80acMWYJ2s.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 72245,
+  "fails": []
+ },
+ {
+  "slug": "actor-nicolas-cage",
+  "shape": "poster",
+  "bg": "/y1RtezurZYveYkVNRht7CwEgSYY.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 57343,
+  "fails": []
+ },
+ {
+  "slug": "actor-chris-hemsworth",
+  "shape": "poster",
+  "bg": "/piQGdoIQOF3C1EI5cbYZLAW1gfj.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 78322,
+  "fails": []
+ },
+ {
+  "slug": "actor-milla-jovovich",
+  "shape": "poster",
+  "bg": "/usWnHCzbADijULREZYSJ0qfM00y.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 88330,
+  "fails": []
+ },
+ {
+  "slug": "actor-adam-sandler",
+  "shape": "poster",
+  "bg": "/iTMnXrPfC1rmom6a9q4hy6YSJWG.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 74284,
+  "fails": []
+ },
+ {
+  "slug": "actor-will-ferrell",
+  "shape": "poster",
+  "bg": "/yjGbyQzVjpQl8xFkFGa7JxKZWQb.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 73686,
+  "fails": []
+ },
+ {
+  "slug": "actor-eddie-murphy",
+  "shape": "poster",
+  "bg": "/qgjMfefsKwSYsyCaIX46uyOXIpy.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 59629,
+  "fails": []
+ },
+ {
+  "slug": "actor-robin-williams",
+  "shape": "poster",
+  "bg": "/iYdeP6K0qz44Wg2Nw9LPJGMBkQ5.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 68724,
+  "fails": []
+ },
+ {
+  "slug": "actor-jim-carrey",
+  "shape": "poster",
+  "bg": "/y3U9QfPN6sJaGl6l68xjwWj28ig.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 52096,
+  "fails": []
+ },
+ {
+  "slug": "actor-steve-martin",
+  "shape": "poster",
+  "bg": "/d0KthX8hVWU9BxTCG1QUO8FURRm.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 61368,
+  "fails": []
+ },
+ {
+  "slug": "actor-bill-murray",
+  "shape": "poster",
+  "bg": "/nnCsJc9x3ZiG3AFyiyc3FPehppy.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 73502,
+  "fails": []
+ },
+ {
+  "slug": "actor-ben-stiller",
+  "shape": "poster",
+  "bg": "/scgpxhI05JpdNXXfmpK6z0rPOWN.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 67206,
+  "fails": []
+ },
+ {
+  "slug": "actor-chevy-chase",
+  "shape": "poster",
+  "bg": "/xmAcHXakDi0elKsCl2sRjtobQnx.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 78702,
+  "fails": []
+ },
+ {
+  "slug": "actor-mike-myers",
+  "shape": "poster",
+  "bg": "/gjfDl52Kk02MPgUYFjs9bOy33OY.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 56334,
+  "fails": []
+ },
+ {
+  "slug": "actor-john-candy",
+  "shape": "poster",
+  "bg": "/uvLWbMDE6UfWNF5tfrsrC9NqeEA.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 76781,
+  "fails": []
+ },
+ {
+  "slug": "actor-leslie-nielsen",
+  "shape": "poster",
+  "bg": "/rMz3ZUmFE7lQCP51Ql7IcMHJIUZ.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 62815,
+  "fails": []
+ },
+ {
+  "slug": "actor-dan-aykroyd",
+  "shape": "poster",
+  "bg": "/iVMmeVJx8IpCEjlGBZWzIWvX5Qo.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 43750,
+  "fails": []
+ },
+ {
+  "slug": "actor-gene-wilder",
+  "shape": "poster",
+  "bg": "/mwwOSWS2m8ArpiUKnoxVVyT8fND.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 94584,
+  "fails": []
+ },
+ {
+  "slug": "actor-richard-pryor",
+  "shape": "poster",
+  "bg": "/5hLh0btIkqYPbDmJ0i4WZo9OAt2.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 57639,
+  "fails": []
+ },
+ {
+  "slug": "actor-peter-sellers",
+  "shape": "poster",
+  "bg": "/sCVIv2DGoC9U16anTjLwMxKBPZ.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 102779,
+  "fails": []
+ },
+ {
+  "slug": "actor-steve-carell",
+  "shape": "poster",
+  "bg": "/sSxw69G0znJuettMYGDCAXfSwSY.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 62771,
+  "fails": []
+ },
+ {
+  "slug": "actor-paul-rudd",
+  "shape": "poster",
+  "bg": "/6jtwNOLKy0LdsRAKwZqgYMAfd5n.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 64714,
+  "fails": []
+ },
+ {
+  "slug": "actor-owen-wilson",
+  "shape": "poster",
+  "bg": "/5A46lNOwmpX77jAdhyKxU7e2Hub.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 77545,
+  "fails": []
+ },
+ {
+  "slug": "actor-vince-vaughn",
+  "shape": "poster",
+  "bg": "/qImHvsd7SFJh46Ujx50xUfkeMNz.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64009,
+  "fails": []
+ },
+ {
+  "slug": "actor-seth-rogen",
+  "shape": "poster",
+  "bg": "/nYl9bvQzaPQLzlf0wf75clLN6Hi.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 74846,
+  "fails": []
+ },
+ {
+  "slug": "actor-jack-black",
+  "shape": "poster",
+  "bg": "/59IhgCtiWI5yTfzPhsjzg7GjCjm.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 100861,
+  "fails": []
+ },
+ {
+  "slug": "actor-melissa-mccarthy",
+  "shape": "poster",
+  "bg": "/yl0qva0O4u92fvtItakdvKmKrW9.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 87185,
+  "fails": []
+ },
+ {
+  "slug": "actor-kristen-wiig",
+  "shape": "poster",
+  "bg": "/6U6UGztBwk7c4lg8n5BS5QOByot.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 82603,
+  "fails": []
+ },
+ {
+  "slug": "actor-tina-fey",
+  "shape": "poster",
+  "bg": "/yPTAi1iucXf85UpiFPtyiTSM6do.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 59411,
+  "fails": []
+ },
+ {
+  "slug": "actor-tom-hanks",
+  "shape": "poster",
+  "bg": "/oFvZoKI6lvU03n4YoNGAll9rkas.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 53653,
+  "fails": []
+ },
+ {
+  "slug": "actor-denzel-washington",
+  "shape": "poster",
+  "bg": "/jj2Gcobpopokal0YstuCQW0ldJ4.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 55683,
+  "fails": []
+ },
+ {
+  "slug": "actor-morgan-freeman",
+  "shape": "poster",
+  "bg": "/905k0RFzH0Kd6gx8oSxRdnr6FL.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 90259,
+  "fails": []
+ },
+ {
+  "slug": "actor-anthony-hopkins",
+  "shape": "poster",
+  "bg": "/iaf7SHSkGDpnyrDh1Jolilwk2TD.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 63481,
+  "fails": []
+ },
+ {
+  "slug": "actor-daniel-day-lewis",
+  "shape": "poster",
+  "bg": "/3kNA9VcmymoEwT0btQ4bvMYxzcP.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 70262,
+  "fails": []
+ },
+ {
+  "slug": "actor-leonardo-dicaprio",
+  "shape": "poster",
+  "bg": "/wo2hJpn04vbtmh0B9utCFdsQhxM.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 75232,
+  "fails": []
+ },
+ {
+  "slug": "actor-cate-blanchett",
+  "shape": "poster",
+  "bg": "/vUuEHiAR0eD3XEJhg2DWIjymUAA.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 70317,
+  "fails": []
+ },
+ {
+  "slug": "actor-viola-davis",
+  "shape": "poster",
+  "bg": "/xDssw6vpYNRjsybvMPRE30e0dPN.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 73305,
+  "fails": []
+ },
+ {
+  "slug": "actor-kate-winslet",
+  "shape": "poster",
+  "bg": "/6qNnMsKtKz9si5rabpUEG85UfHp.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 86499,
+  "fails": []
+ },
+ {
+  "slug": "actor-joaquin-phoenix",
+  "shape": "poster",
+  "bg": "/u38k3hQBDwNX0VA22aQceDp9Iyv.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 67067,
+  "fails": []
+ },
+ {
+  "slug": "actor-julianne-moore",
+  "shape": "poster",
+  "bg": "/3YF19rWusxWfEI59ZM33dFhasRq.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 80946,
+  "fails": []
+ },
+ {
+  "slug": "actor-frances-mcdormand",
+  "shape": "poster",
+  "bg": "/gBkoteKZshmQXEyEoyT6WE7N0tF.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 99058,
+  "fails": []
+ },
+ {
+  "slug": "actor-christian-bale",
+  "shape": "poster",
+  "bg": "/7Pxez9J8fuPd2Mn9kex13YALrCQ.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 53753,
+  "fails": []
+ },
+ {
+  "slug": "actor-matt-damon",
+  "shape": "poster",
+  "bg": "/aCvBXTAR9B1qRjIRzMBYhhbm1fR.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 45829,
+  "fails": []
+ },
+ {
+  "slug": "actor-brad-pitt",
+  "shape": "poster",
+  "bg": "/ajNaPmXVVMJFg9GWmu6MJzTaXdV.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 59229,
+  "fails": []
+ },
+ {
+  "slug": "actor-nicole-kidman",
+  "shape": "poster",
+  "bg": "/4KSQDodyBtTDMaREYgMdWD1LbH1.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 77749,
+  "fails": []
+ },
+ {
+  "slug": "actor-amy-adams",
+  "shape": "poster",
+  "bg": "/gn0K6c6d1L6qQrRc86iL8uyIqiF.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 81009,
+  "fails": []
+ },
+ {
+  "slug": "actor-sean-penn",
+  "shape": "poster",
+  "bg": "/9glqNTVpFpdN1nFklKaHPUyCwR6.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 67730,
+  "fails": []
+ },
+ {
+  "slug": "actor-natalie-portman",
+  "shape": "poster",
+  "bg": "/edPU5HxncLWa1YkgRPNkSd68ONG.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 91615,
+  "fails": []
+ },
+ {
+  "slug": "actor-gary-oldman",
+  "shape": "poster",
+  "bg": "/yhaSM5habNNI1Tf4ALRwRk3VvSZ.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 93400,
+  "fails": []
+ },
+ {
+  "slug": "actor-emma-thompson",
+  "shape": "poster",
+  "bg": "/zQ0hWHh3tzaOOziPbABQI8s9WCu.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 73867,
+  "fails": []
+ },
+ {
+  "slug": "actor-jodie-foster",
+  "shape": "poster",
+  "bg": "/5emVgsLFlU6SmeBIFsF2Y7aqwtG.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 72855,
+  "fails": []
+ },
+ {
+  "slug": "actor-russell-crowe",
+  "shape": "poster",
+  "bg": "/3IBZF0qCZMZ7zJYlgrH0sQzNZV.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 69925,
+  "fails": []
+ },
+ {
+  "slug": "actor-glenn-close",
+  "shape": "poster",
+  "bg": "/4VHZ1GfLwN7MUgApy0LCBzdDF9L.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 71601,
+  "fails": []
+ },
+ {
+  "slug": "actor-philip-seymour-hoffman",
+  "shape": "poster",
+  "bg": "/50rqDkmvXwjwVhFH7q6ph2Rkw7S.jpg",
+  "title_px": 64,
+  "title_lines": 2,
+  "bytes": 80451,
+  "fails": []
+ },
+ {
+  "slug": "actor-jamie-lee-curtis",
+  "shape": "poster",
+  "bg": "/eWKubKAAssRzmFwCZKh1mdYqGCH.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 63470,
+  "fails": []
+ },
+ {
+  "slug": "actor-vincent-price",
+  "shape": "poster",
+  "bg": "/7JIv7U5kwveryP7hrPYgHlKea4d.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 62481,
+  "fails": []
+ },
+ {
+  "slug": "actor-robert-englund",
+  "shape": "poster",
+  "bg": "/cjGEkiavinHa1dnetDvnEhlD2Wm.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64057,
+  "fails": []
+ },
+ {
+  "slug": "actor-boris-karloff",
+  "shape": "poster",
+  "bg": "/fVi0QkiziavXB8HnWk5NzRcnCO1.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 40206,
+  "fails": []
+ },
+ {
+  "slug": "actor-bela-lugosi",
+  "shape": "poster",
+  "bg": "/fwimu7WKcaJXIjaDwYQg42GxUxa.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 46191,
+  "fails": []
+ },
+ {
+  "slug": "actor-christopher-lee",
+  "shape": "poster",
+  "bg": "/dA26fBr3t7mKqjn3OYW6kbD1LXM.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 80466,
+  "fails": []
+ },
+ {
+  "slug": "actor-peter-cushing",
+  "shape": "poster",
+  "bg": "/if5g03wn6uvHx7F6FxXHLebKc0q.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 60653,
+  "fails": []
+ },
+ {
+  "slug": "actor-lon-chaney-jr",
+  "shape": "poster",
+  "bg": "/4DHZ2jXQFbTuslsaOmrmrJ9HMMd.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 52854,
+  "fails": []
+ },
+ {
+  "slug": "actor-donald-pleasence",
+  "shape": "poster",
+  "bg": "/crtSwLnlrEidYFPupkVBSL9wK9Z.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 64236,
+  "fails": []
+ },
+ {
+  "slug": "actor-bruce-campbell",
+  "shape": "poster",
+  "bg": "/p9335ljr7luOWsfwZSOlsIzFJKE.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 68278,
+  "fails": []
+ },
+ {
+  "slug": "actor-neve-campbell",
+  "shape": "poster",
+  "bg": "/zQzNg6Kiufj2VCltprI6jilNtl3.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 63694,
+  "fails": []
+ },
+ {
+  "slug": "actor-tony-todd",
+  "shape": "poster",
+  "bg": "/cNUIRoewwiLi8JxyA1J2zb1z5SN.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 61371,
+  "fails": []
+ },
+ {
+  "slug": "actor-brad-dourif",
+  "shape": "poster",
+  "bg": "/ex7AmuHM3owhUetYZAyOmN1ehWS.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 85678,
+  "fails": []
+ },
+ {
+  "slug": "actor-jeffrey-combs",
+  "shape": "poster",
+  "bg": "/dfWcxKNsyGuN18GjWkbOmMhO4c9.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 56316,
+  "fails": []
+ },
+ {
+  "slug": "actor-tobin-bell",
+  "shape": "poster",
+  "bg": "/wyyfG5Pml4G1Y3Aw873LIe32wsl.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 98645,
+  "fails": []
+ },
+ {
+  "slug": "actor-patrick-wilson",
+  "shape": "poster",
+  "bg": "/oym6H2QD9esk4yABjCHaUoNAOa8.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 58051,
+  "fails": []
+ },
+ {
+  "slug": "actor-vera-farmiga",
+  "shape": "poster",
+  "bg": "/5Vs7huBmTKftwlsc2BPAntyaQYj.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 68359,
+  "fails": []
+ },
+ {
+  "slug": "actor-lin-shaye",
+  "shape": "poster",
+  "bg": "/aL87Za52elH81zMiXQn5C7AXAeg.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 83318,
+  "fails": []
+ },
+ {
+  "slug": "actor-toni-collette",
+  "shape": "poster",
+  "bg": "/lzXRh16qe4HHeBN6tMyw0DHvaMn.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 103050,
+  "fails": []
+ },
+ {
+  "slug": "actor-mia-goth",
+  "shape": "poster",
+  "bg": "/rwko7XVaKFcJH1dtAIIsrgLMzHb.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 74524,
+  "fails": []
+ },
+ {
+  "slug": "actor-samara-weaving",
+  "shape": "poster",
+  "bg": "/ngVKl0sxrut5PPMAIDsfXrVjA1R.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 83846,
+  "fails": []
+ },
+ {
+  "slug": "actor-linda-blair",
+  "shape": "poster",
+  "bg": "/diMBw4RF5HIFnBak6C2Obq3n2Dt.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 71822,
+  "fails": []
+ },
+ {
+  "slug": "actor-barbara-crampton",
+  "shape": "poster",
+  "bg": "/AaLIWSrUgHIESuJEh6w7UD5RzV4.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 56879,
+  "fails": []
+ },
+ {
+  "slug": "actor-danielle-harris",
+  "shape": "poster",
+  "bg": "/hgoVrVDEujZTZoxpElzXBSlIUyU.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 67902,
+  "fails": []
+ },
+ {
+  "slug": "dir-francois-truffaut",
+  "shape": "poster",
+  "bg": "/3bXLtipaybsje01LlQvHvuUAZNq.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 101155,
+  "fails": []
+ },
+ {
+  "slug": "dir-alfonso-cuaron",
+  "shape": "poster",
+  "bg": "/gaHhrzPfxfc3cbQLkDt54gtP3n1.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 67268,
+  "fails": []
+ },
+ {
+  "slug": "dir-alejandro-gonzalez-inarritu",
+  "shape": "poster",
+  "bg": "/5Mx0RilUcVjXzmeKYAZJJ0WXZMQ.jpg",
+  "title_px": 56,
+  "title_lines": 2,
+  "bytes": 82008,
+  "fails": []
+ },
+ {
+  "slug": "dir-chloe-zhao",
+  "shape": "poster",
+  "bg": "/r8DmTdOqHbDUydCOVb277rncPTK.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 84873,
+  "fails": []
+ },
+ {
+  "slug": "dir-fede-alvarez",
+  "shape": "poster",
+  "bg": "/1LULCZie16dlfQKDpZYrQDAVzEk.jpg",
+  "title_px": 72,
+  "title_lines": 1,
+  "bytes": 78890,
+  "fails": []
+ },
+ {
+  "slug": "actor-timothee-chalamet",
+  "shape": "poster",
+  "bg": "/dFxpwRpmzpVfP1zjluH68DeQhyj.jpg",
+  "title_px": 72,
+  "title_lines": 2,
+  "bytes": 60654,
+  "fails": []
+ }
+]

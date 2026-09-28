@@ -68,7 +68,7 @@ def logo_image(logo):
         provs = tmdb('/watch/providers/movie', watch_region='US')['results'] + \
             tmdb('/watch/providers/tv', watch_region='US')['results']
         path = next(p['logo_path'] for p in provs if p['provider_id'] == logo['id'])
-        return fetch_image(path, 'w300')
+        return fetch_image(path, 'original')
     if logo['kind'] in ('network', 'company'):
         path = tmdb(f"/{logo['kind']}/{logo['id']}").get('logo_path')
         return fetch_image(path, 'w500') if path else None
@@ -211,7 +211,13 @@ if __name__ == '__main__':
         if fails:
             failed.append(f"{c['slug']}: {'; '.join(fails)}")
         print(f"{c['slug']:<45} {log.get('bytes', 0):>7} B  {'FAIL ' + '; '.join(fails) if fails else 'ok'}", flush=True)
-    (ROOT / 'art' / 'render-log.json').write_text(json.dumps(logs, indent=1, ensure_ascii=False), encoding='utf-8')
+    log_file = ROOT / 'art' / 'render-log.json'          # merged by slug, so partial renders keep earlier entries
+    try:
+        merged = {l['slug']: l for l in json.loads(log_file.read_text(encoding='utf-8'))}
+    except (OSError, ValueError):
+        merged = {}
+    merged.update({l['slug']: l for l in logs})
+    log_file.write_text(json.dumps(list(merged.values()), indent=1, ensure_ascii=False), encoding='utf-8')
     total = sum(l.get('bytes', 0) for l in logs)
     print(f'rendered {len(logs)}, total {total:,} B, failed {len(failed)}')
     for f in failed:

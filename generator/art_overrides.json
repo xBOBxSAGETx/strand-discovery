@@ -1,0 +1,41 @@
+{
+ "_avoid": {
+  "_why": "titles never used as a card background: 558912 Weinstein doc, 1033148 Die My Love (suggestive), 1232449 Young Hearts (shirtless teen), 899082 Harry Potter reunion (reads as a HP card), 1612018 Jackass: Best and Last (not documentary-looking)",
+  "titles": [
+   "movie:558912",
+   "movie:1033148",
+   "movie:1232449",
+   "movie:899082",
+   "movie:1612018"
+  ]
+ },
+ "streaming-paramountplus": {
+  "logo": {
+   "kind": "network",
+   "id": 4330
+  },
+  "_why": "provider 2616 icon reads 'Paramount+ Essential'"
+ },
+ "streaming-peacock": {
+  "logo": {
+   "kind": "network",
+   "id": 3353
+  },
+  "_why": "provider icon is a tiny wordmark"
+ },
+ "series-the-conjuring": {
+  "bg": {
+   "kind": "movie",
+   "id": 259693
+  },
+  "_why": "collection backdrop is a hanging noose; use The Conjuring 2 backdrop"
+ },
+ "dir-walter-hill": {
+  "bg": {
+   "kind": "path",
+   "path": "/s7DSYOX6pSWrQneSVRXiHjfG2fh.jpg",
+   "from": "Walter Hill (alternate TMDB profile photo)"
+  },
+  "_why": "TMDB's primary profile photo doesn't show him (copilot compared all three)"
+ }
+}
