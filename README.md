@@ -98,10 +98,37 @@ the cards fall back to the stored dates and the other sources (never empty).
 First run: *Actions -> build-and-deploy -> Run workflow* with `arrivals_backfill` on reads the last 3 months once
 (about 30k TMDB requests, 25 minutes); the daily run reads only recent posts.
 
+### Date-driven cards
+Four cards follow the calendar or TMDB's daily data. Each is one library, in an existing folder (no extra shelf):
+
+| Card (catalog id) | Folder | Rule |
+|---|---|---|
+| Just Hit Digital (`sd-just-hit-digital`) | Streaming · New | Movies whose **first** US digital (TMDB release type 4) or TV (6) release is in the last 30 days, newest first, at least 5 votes. TMDB matches any typed date in the window, so a title that went digital earlier and only has a later re-release entry is dropped. **Includes PVOD rentals** (premium rentals): playback is via debrid, so a digital release is what counts. |
+| Trending · Movies (`sd-trending-movies`) | Streaming · Popular | TMDB `/trending/movie/week` in TMDB's order, up to 200 titles: released titles only (release date on or before today), no adult titles. **Theatrical titles are included on purpose**: leaked WEB-DLs of films still in cinemas do get cached on TorBox. |
+| Trending · TV (`sd-trending-tv`) | Streaming · Popular | TMDB `/trending/tv/week` in TMDB's order, up to 200 titles: released titles only, no adult titles, no talk shows or news. |
+| Seasonal · Now (`sd-theme-seasonal-now`) | Themes | One fixed library whose content switches by date (table below). Movies and TV by vote count, at least 10 votes, movies at least 20 minutes (half-hour specials count), up to 300 per medium. |
+
+Seasonal · Now (windows inclusive, keyword ids checked by name on TMDB):
+
+| Dates | Season | TMDB keywords |
+|---|---|---|
+| Jun 1 – Aug 31 | Summer | 13088 summer, 14714 summer vacation, 5767 summer camp |
+| Oct 1 – Oct 31 | Halloween | 3335 halloween, 232795 halloween night |
+| Nov 1 – Nov 28 | Thanksgiving | 4543 thanksgiving (Nov 28 is the latest possible US Thanksgiving) |
+| Nov 29 – Dec 31 | Christmas | 207317 christmas, 260365 christmas eve (TV: christmas only) |
+| any other day | Best of the Past Year | no keyword: the most-voted movies and shows first released in the last 365 days |
+
+A season with fewer than 20 titles also uses Best of the Past Year, so the card is never empty. At a season switch the
+card can lose more than 70% of its titles: the build prints a warning for it, which is expected. The run report
+(`report.csv`) names the season in force. The seasons live in `generator/make_spec.py` (`SEASONS`).
+
 ### Secrets and variables (names only)
 - Secrets: `TMDB_API_KEY` (TMDB v3 key), `SD_STATE_KEY` (encrypts the first_seen backup). Planned: Movie of the Night
   and Watchmode keys (accuracy monitoring).
 - Variables: `SD_SCHEDULE_DEPLOY` (`on` = scheduled deploys), `SD_KINDS_OFF` / `SD_KEEP` (staged rollout).
+- Generator environment for tests and local dry runs only (never set in the workflows): `SD_TODAY=YYYY-MM-DD` makes
+  `generator/build.py` treat that date as today for every date rule (released-only cutoff, the Just Hit Digital
+  window, the Seasonal · Now season), e.g. `SD_TODAY=2026-10-15` shows the Halloween season.
 - The values live only in the owner's secrets folder on their PC (and in GitHub's encrypted secrets); never in this
   repo. The people-list source CSV and the Strand shelf files are private too and are not in this repo.
 
