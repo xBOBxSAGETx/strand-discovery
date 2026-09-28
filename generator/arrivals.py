@@ -64,7 +64,7 @@ UA = 'strand-discovery/1.0 (personal non-commercial; +https://github.com/xBOBxSA
 # 'arrivals-v2': the earlier namespace ('arrivals') held page bodies; it is deleted on start and never read again.
 HTTP_ROOT = Path(os.environ.get('SD_HTTP_CACHE', 'cache/http'))
 HTTP_CACHE = HTTP_ROOT / 'arrivals-v2'
-PARSER_VERSION = 3              # bump on ANY parser change: stored parsed data from another version is refetched in full
+PARSER_VERSION = 4              # bump on ANY parser change: stored parsed data from another version is refetched in full
 # politeness: at least 3 s between requests to any host; film-book.com's robots Crawl-delay is 5 s; Vital Thrills
 # rate-limits (HTTP 429 to 17 fetches at ~1 s spacing from a GitHub runner, 2026-09-28): 5 s as a courtesy
 DELAY = {'film-book.com': 5.0, 'vitalthrills.com': 5.0}
@@ -372,6 +372,17 @@ def heading_date(line, year):
 # A title line ("Leaving Las Vegas", "- Leaving Neverland") is not a section heading: it needs a preposition or "soon".
 DEPARTURES = re.compile(r"^(##h\d\s+)?(what.s\s+|titles?\s+|movies?\s+|shows?\s+)?(leaving|expiring|departing|last chance)\b"
                         r"(.*\b(in|on|from|this|at the end of)\b|\s+soon\b)", re.I)
+# Vital Thrills' Netflix posts end with an all-caps 'LEAVING NETFLIX' heading and 'LEAVING AUGUST 1' date headings
+# (v3 missed them: ~20 departing titles dated the Netflix card; 427 departure rows in 9 posts). Case-sensitive on purpose:
+# an all-caps line starting LEAVING/EXPIRING/DEPARTING is a heading, a title in a list is not written that way.
+DEPARTURES_CAPS = re.compile(r"^(##h\d\s+)?(LEAVING|EXPIRING|DEPARTING)\b")
+DEPARTURES_DATED = re.compile(r"^(##h\d\s+)?(leaving|expiring|departing)\s+" + MON_RX + r"\s+\d{1,2}\b", re.I)
+
+
+def is_departures(line):
+    """True for a line that starts a departures section (see DEPARTURES*)."""
+    ln = line.replace('**', '').strip()
+    return bool(DEPARTURES.search(ln) or DEPARTURES_CAPS.search(ln) or DEPARTURES_DATED.search(ln))
 
 
 def dated_rows(lines, service, year, month, source, url, start=None, stop=None, prefix=False, bullets_only=False,
@@ -391,7 +402,7 @@ def dated_rows(lines, service, year, month, source, url, start=None, stop=None, 
             continue
         if stop and re.search(stop, ln, re.I):
             break
-        if DEPARTURES.search(ln.replace('**', '').strip()):
+        if is_departures(ln):
             break
         if ln.lower() in ('date', 'show', 'title') and not table:
             table = True                                # Film-Book table: date / title / category / status cells
@@ -880,6 +891,8 @@ def merge(signals, key, rec, today):
     """Record one accepted row as an observation of the title's arrivals (see module doc)."""
     date, prec, src, pop, kind, season, url = rec
     v = signals.get(key)
+    if isinstance(v, dict) and not any(len(o) >= 7 and o[5] == PARSER_VERSION for o in v['o']):
+        v = None                                    # only other-version observations: start clean (no stale popularity)
     if not isinstance(v, dict):                     # new key (or an old-format entry: rebuilt from today's rows)
         v = signals[key] = {'o': [], 'p': 0, 'k': kind, 's': 'announced'}
     ob = [date, prec, src, season or 0]
