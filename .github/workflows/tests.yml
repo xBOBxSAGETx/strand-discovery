@@ -1,7 +1,8 @@
 name: tests
 
-# PR gate: runs the offline test suite on every pull request. Standard library only, no secrets, no network
-# (the tests use local 127.0.0.1 fake servers). Separate from build-and-deploy and its `pages` concurrency group.
+# PR gate: runs the offline test suite on every pull request. No secrets, no network beyond the one pinned pip
+# install below (the tests use local 127.0.0.1 fake servers). Separate from build-and-deploy and its `pages`
+# concurrency group.
 on:
   pull_request:
   workflow_dispatch:
@@ -24,6 +25,9 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
+      # The art tests (generator/art*.py) need Pillow; the version is pinned in requirements-dev.txt.
+      - name: install test dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements-dev.txt
       - name: unittest suite
         env:
           TMDB_API_KEY: unused
