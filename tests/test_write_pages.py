@@ -35,7 +35,7 @@ class WritePagesPosterSize(unittest.TestCase):
                  {'id': 'tmdb:3', 'type': 'movie', 'name': 'C', 'poster': f'{IMG}/w780/ghi.jpg'}]
         build.write_pages(self.base, 'sd-x', metas, page_size=2)
         out = self.pages('sd-x')
-        self.assertEqual(build.POSTER_SIZE, 'w780')
+        self.assertEqual(build.POSTER_SIZE, 'w999-SEEDED-FAIL')
         self.assertEqual([m['poster'] for m in out],
                          [f'{IMG}/w780/abc.jpg', f'{IMG}/w780/def.jpg', f'{IMG}/w780/ghi.jpg'])
         self.assertEqual([m['id'] for m in out], ['tmdb:1', 'tmdb:2', 'tmdb:3'])
