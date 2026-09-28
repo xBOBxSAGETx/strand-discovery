@@ -1018,12 +1018,18 @@ def events(obs):
     return out
 
 
+def current_obs(v, today):
+    """The observations of the latest event that has started; the earliest scheduled one when none has started yet."""
+    evs = events(v['o'])
+    started = [e for e in evs if e[0][0] <= today]
+    return started[-1] if started else evs[0]
+
+
 def current_event(v, today):
     """(date, precision, sources, needs_confirmation, future) of the latest event that has started; the earliest
     scheduled one when none has started yet."""
-    evs = events(v['o'])
-    started = [e for e in evs if e[0][0] <= today]
-    ev = started[-1] if started else evs[0]
+    ev = current_obs(v, today)
+    started = ev[0][0] <= today
     best = min(ev, key=lambda o: (PREC[o[1]], o[0]))
     return (best[0], best[1], sorted({o[2] for o in ev}), all(o[4] for o in ev), not started)
 
@@ -1036,6 +1042,27 @@ ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}   # TMDB netwo
 SINGLE_SOURCE_DROP = os.environ.get('SD_ARRIVALS_SINGLE_SOURCE_DROP', '0') == '1'
 SINGLE_SOURCE_DAYS = 21
 _orphan_memo = {}
+# Baseline guard (copilot ruling 2026-09-28): an arrival DATED AFTER the logger's baseline date, for a title that was on
+# the service at the baseline and never left since (first_seen item ['baseline', last seen at the last run]), is a
+# pre-listing or a rotation, not an arrival: dropped whatever its precision (e.g. 23 of Plex's 55 October 2026 items).
+# Past-dated events are untouched (they arrived before the baseline). Exception: an event that names a NEW season
+# (season >= 2) of a show already on the service is a real arrival ("new seasons of returning shows count") and is kept;
+# set BASELINE_GUARD_KEEP_NEW_SEASONS = False to drop those too (60 of 112 drops on the 2026-09-27 replay).
+BASELINE_GUARD_KEEP_NEW_SEASONS = True
+GUARD_DROPS = {}                # refresh(): {provider: [key, ...]} dropped by the baseline guard on its last call
+
+
+def pre_listed(prov, key, ev):
+    """Baseline guard: True when the event `ev` (current_obs) is dated after the provider's baseline and the title was
+    present at the baseline and is still present (never removed since)."""
+    base, last = prov.get('baseline'), prov.get('last_run')
+    date = min(o[0] for o in ev)
+    if not base or not last or date <= base:
+        return False
+    it = (prov.get('items') or {}).get(fs_key(key))
+    if not (it and it[0] == 'baseline' and it[1] >= last):
+        return False
+    return not (BASELINE_GUARD_KEEP_NEW_SEASONS and any((o[3] or 0) > 1 for o in ev))
 
 
 def network_orphan(svc, media, tid):
@@ -1065,6 +1092,7 @@ def refresh(state, today, present=None):
     lo = (dt.date.fromisoformat(today) - dt.timedelta(days=WINDOW)).isoformat()
     cut = (dt.date.fromisoformat(today) - dt.timedelta(days=PRUNE_DAYS)).isoformat()
     out = {}
+    GUARD_DROPS.clear()
     for svc, prov in (state or {}).get('providers', {}).items():
         sig = prov.get('signals') or {}
         for k in list(sig):
@@ -1084,6 +1112,9 @@ def refresh(state, today, present=None):
             if present:
                 v['s'] = 'confirmed' if present(svc, media, int(tid)) else 'announced'
             date, prec, srcs, needs_conf, future = current_event(v, today)
+            if pre_listed(prov, k, current_obs(v, today)):
+                GUARD_DROPS.setdefault(svc, []).append(k)   # baseline guard (see BASELINE_GUARD_KEEP_NEW_SEASONS)
+                continue
             if future or not lo <= date <= today or (needs_conf and v['s'] != 'confirmed'):
                 continue
             status = v['s']
@@ -1156,6 +1187,7 @@ def main():
               (r['date'], r['precision'], r['source'], r['popularity'],
                'season' if (r.get('season') or 0) > 1 else 'title', r.get('season'), r.get('url')), today)
     cands = refresh(work, today, present)
+    guarded = {s: set(ks) for s, ks in GUARD_DROPS.items()}
     for r in acc:
         r['on_service'] = present(r['service'], r['tmdb_media'], r['tmdb_id'])
     if state is not None:
@@ -1172,7 +1204,8 @@ def main():
             date, prec, srcs, needs_conf, future = current_event(v, today)
             arrivals.setdefault(svc, {})[k] = {'date': date, 'precision': prec, 'source': srcs[0], 'sources': srcs,
                                               'status': v['s'], 'popularity': v['p'], 'kind': v['k'],
-                                              **({'future': True} if future else {})}
+                                              **({'future': True} if future else {}),
+                                              **({'pre_listed': True} if k in guarded.get(svc, ()) else {})}
     (out / 'arrivals.json').write_text(json.dumps({'generated': today, 'since': since.isoformat(),
                                                    'services': arrivals}, indent=1), encoding='utf-8')
     cols = ['source', 'service', 'date', 'precision', 'title', 'year', 'season', 'media', 'accepted', 'how',
@@ -1206,7 +1239,10 @@ def main():
                'state': 'merged' if state is not None else 'missing (logger failed): signals not stored',
                'sources': {s: {'items': stats.get(s, {}).get('items', 0), 'posts': stats.get(s, {}).get('posts', 0),
                                **per[s], 'notes': stats.get(s, {}).get('notes', [])} for s in SOURCES},
-               'candidates': {s: len(c) for s, c in cands.items()}, 'tmdb_requests': build._calls[0],
+               'candidates': {s: len(c) for s, c in cands.items()},
+               # baseline guard notes: items dated after the baseline for titles on the service since the baseline
+               'baseline_guard_dropped': {s: len(ks) for s, ks in sorted(guarded.items())},
+               'tmdb_requests': build._calls[0],
                'fetch': fetch_stats, 'seconds': round(time.monotonic() - t0), 'warnings': warnings}
     (out / 'arrivals_summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
     print(json.dumps({k: summary[k] for k in ('mode', 'state', 'tmdb_requests', 'seconds', 'candidates')}), flush=True)

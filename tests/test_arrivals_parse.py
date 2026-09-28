@@ -1,4 +1,4 @@
-"""Parser tests for generator/arrivals.py (standard library only; no network, no TMDB):
+"""Parser and baseline-guard tests for generator/arrivals.py (standard library only; no network, no TMDB):
 
     python -m unittest discover -s tests
 
@@ -120,6 +120,49 @@ class VitalThrillsTrailingDates(unittest.TestCase):
                                  '<p>Rivers of Stone | Available in North America | 1 x 60\'</p>'),
                          'britbox', 'britbox', 2026, 6, VT_URL)
         self.assertEqual(titles(rows), ['Moor Lane'])
+
+
+class BaselineGuard(unittest.TestCase):
+    """refresh(): an arrival dated after the logger baseline, for a title present at the baseline and never removed,
+    is dropped (pre-listing / rotation); past-dated events and titles that arrived after the baseline are kept."""
+
+    def state(self):
+        sig = {}
+        for key, date, kind, season in (('movie:1', '2026-10-01', 'title', None),     # present at baseline -> dropped
+                                        ('movie:2', '2026-10-01', 'title', None),     # first seen after baseline
+                                        ('movie:3', '2026-09-20', 'title', None),     # past-dated
+                                        ('series:4', '2026-10-02', 'season', 3),      # new season of a present show
+                                        ('movie:5', '2026-10-01', 'title', None)):    # present at baseline, then left
+            a.merge(sig, key, (date, 'day', 'vt', 1.0, kind, season, 'https://example.test/guard'), '2026-09-15')
+        items = {'m:1': ['baseline', '2026-10-10'], 'm:2': ['2026-10-01', '2026-10-10'],
+                 'm:3': ['baseline', '2026-10-10'], 't:4': ['baseline', '2026-10-10'], 'm:5': ['baseline', '2026-09-30']}
+        return {'providers': {'x': {'baseline': '2026-09-28', 'last_run': '2026-10-10', 'items': items, 'signals': sig}}}
+
+    def keys(self, today='2026-10-10'):
+        return sorted(c['key'] for c in a.refresh(self.state(), today, lambda s, m, i: True)['x'])
+
+    def test_present_at_baseline_and_dated_after_is_dropped(self):
+        self.assertEqual(self.keys(), ['movie:2', 'movie:3', 'movie:5', 'series:4'])
+        self.assertEqual(a.GUARD_DROPS, {'x': ['movie:1']})
+
+    def test_not_present_at_baseline_is_kept(self):
+        self.assertIn('movie:2', self.keys())
+        self.assertIn('movie:5', self.keys())               # left the service after the baseline: a real re-arrival
+
+    def test_past_dated_is_untouched(self):
+        self.assertIn('movie:3', self.keys())
+
+    def test_future_item_is_dropped_before_its_date_too(self):
+        self.keys('2026-09-29')
+        self.assertIn('movie:1', a.GUARD_DROPS['x'])
+
+    def test_new_season_switch(self):
+        try:
+            a.BASELINE_GUARD_KEEP_NEW_SEASONS = False
+            self.assertNotIn('series:4', self.keys())
+            self.assertEqual(sorted(a.GUARD_DROPS['x']), ['movie:1', 'series:4'])
+        finally:
+            a.BASELINE_GUARD_KEEP_NEW_SEASONS = True
 
 
 if __name__ == '__main__':
