@@ -9,20 +9,6 @@
    "movie:1612018"
   ]
  },
- "streaming-paramountplus": {
-  "logo": {
-   "kind": "network",
-   "id": 4330
-  },
-  "_why": "provider 2616 icon reads 'Paramount+ Essential'"
- },
- "streaming-peacock": {
-  "logo": {
-   "kind": "network",
-   "id": 3353
-  },
-  "_why": "provider icon is a tiny wordmark"
- },
  "series-the-conjuring": {
   "bg": {
    "kind": "movie",
@@ -37,5 +23,20 @@
    "from": "Walter Hill (alternate TMDB profile photo)"
   },
   "_why": "TMDB's primary profile photo doesn't show him (copilot compared all three)"
+ },
+ "streaming-peacock": {
+  "logo_src": {
+   "kind": "network",
+   "id": 3353
+  },
+  "_why": "TMDB has the Peacock wordmark only as a network (3353)"
+ },
+ "streaming-netflix-kids": {
+  "logo_src": {
+   "kind": "network",
+   "id": 213
+  },
+  "logo_sub": "KIDS",
+  "_why": "no Netflix Kids wordmark on TMDB: the Netflix wordmark + KIDS"
  }
 }

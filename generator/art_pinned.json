@@ -1,0 +1,2017 @@
+{
+ "_note": "approved photo-card backgrounds (art commit 1f477dd, reviewed sheet by sheet); art_plan keeps them as-is",
+ "pinned": {
+  "genre-action": {
+   "kind": "path",
+   "path": "/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg",
+   "from": "Inception (tmdb:27205)"
+  },
+  "genre-adventure": {
+   "kind": "path",
+   "path": "/rFj9IKlL75B2pXhZA60jkNWvxeW.jpg",
+   "from": "Deadpool (tmdb:293660)"
+  },
+  "genre-animation": {
+   "kind": "path",
+   "path": "/jJKZaTBNenlFclQyjrnvzkRmvWE.jpg",
+   "from": "Inside Out (tmdb:150540)"
+  },
+  "genre-anime": {
+   "kind": "path",
+   "path": "/6oaL4DP75yABrd5EbC4H2zq5ghc.jpg",
+   "from": "Spirited Away (tmdb:129)"
+  },
+  "genre-comedy": {
+   "kind": "path",
+   "path": "/rwYvhVv0vwbulMwxOfEsuAr1JrT.jpg",
+   "from": "The Big Bang Theory (tmdb:1418)"
+  },
+  "genre-crime": {
+   "kind": "path",
+   "path": "/pNjh59JSxChQktamG3LMp9ZoQzp.jpg",
+   "from": "The Shawshank Redemption (tmdb:278)"
+  },
+  "genre-documentary": {
+   "kind": "path",
+   "path": "/6GdneIKJFjv5ArM5b6kKJQ4o8z4.jpg",
+   "from": "Seven Deadly Sins (tmdb:27240)"
+  },
+  "genre-drama": {
+   "kind": "path",
+   "path": "/c6OLXfKAk5BKeR6broC8pYiCquX.jpg",
+   "from": "Fight Club (tmdb:550)"
+  },
+  "genre-family": {
+   "kind": "path",
+   "path": "/hGGC9gKo7CFE3fW07RA587e5kol.jpg",
+   "from": "Up (tmdb:14160)"
+  },
+  "genre-fantasy": {
+   "kind": "path",
+   "path": "/oiwc338EoBgS4sEI2ixAny4KQKg.jpg",
+   "from": "The Lord of the Rings: The Fellowship of the Ring (tmdb:120)"
+  },
+  "genre-history": {
+   "kind": "path",
+   "path": "/8FCHJ21JBQOgATY2WI8vwYAiXg8.jpg",
+   "from": "The Imitation Game (tmdb:205596)"
+  },
+  "genre-horror": {
+   "kind": "path",
+   "path": "/qVGpxnjrGlHaSTCqTQI6viBDSfp.jpg",
+   "from": "It (tmdb:346364)"
+  },
+  "genre-kids": {
+   "kind": "path",
+   "path": "/lH22EnM0ofC7GsVGU8dAA2RXV1c.jpg",
+   "from": "Miraculous: Tales of Ladybug & Cat Noir (tmdb:65334)"
+  },
+  "genre-music": {
+   "kind": "path",
+   "path": "/g7CHF8gTLGooTbP4GznIGwaqAGL.jpg",
+   "from": "Coco (tmdb:354912)"
+  },
+  "genre-mystery": {
+   "kind": "path",
+   "path": "/rbZvGN1A1QyZuoKzhCw8QPmf2q0.jpg",
+   "from": "Shutter Island (tmdb:11324)"
+  },
+  "genre-reality": {
+   "kind": "path",
+   "path": "/iZQj2vw0wImBJZ2rBqzNySD2FgJ.jpg",
+   "from": "The Kardashians (tmdb:154521)"
+  },
+  "genre-romance": {
+   "kind": "path",
+   "path": "/nlPCdZlHtRNcF6C9hzUH4ebmV1w.jpg",
+   "from": "La La Land (tmdb:313369)"
+  },
+  "genre-sci-fi": {
+   "kind": "path",
+   "path": "/mDfJG3LC3Dqb67AZ52x3Z0jU0uB.jpg",
+   "from": "Avengers: Infinity War (tmdb:299536)"
+  },
+  "genre-thriller": {
+   "kind": "path",
+   "path": "/rlay2M5QYvi6igbGcFjq8jxeusY.jpg",
+   "from": "Joker (tmdb:475557)"
+  },
+  "genre-war": {
+   "kind": "path",
+   "path": "/hwNtEmmugU5Yd7hpfprNWI0DGIn.jpg",
+   "from": "Inglourious Basterds (tmdb:16869)"
+  },
+  "genre-westerns": {
+   "kind": "path",
+   "path": "/hEQYZq2CDB2LSJVxxlazdBOKeyW.jpg",
+   "from": "The Revenant (tmdb:281957)"
+  },
+  "genre-action-top": {
+   "kind": "path",
+   "path": "/ctiw6FZK4N36LmkjSklWEbuvlq9.jpg",
+   "from": "The Lord of the Rings: The Return of the King (tmdb:122)"
+  },
+  "genre-adventure-top": {
+   "kind": "path",
+   "path": "/6G73mNyooWAEQTpckPSnFxFoNmc.jpg",
+   "from": "The Lord of the Rings: The Two Towers (tmdb:121)"
+  },
+  "genre-animation-top": {
+   "kind": "path",
+   "path": "/6omimfVty4JD3LXzI5LHEGhXjwn.jpg",
+   "from": "Takopi's Original Sin (tmdb:284445)"
+  },
+  "genre-anime-top": {
+   "kind": "path",
+   "path": "/rBOnrVlck7BIlGeWVlzYiZeg4l2.jpg",
+   "from": "Frieren: Beyond Journey's End (tmdb:209867)"
+  },
+  "genre-comedy-top": {
+   "kind": "path",
+   "path": "/zOZqdv7UTc2sP2Tu5Cxj8j1M2r8.jpg",
+   "from": "The Good Bad Mother (tmdb:214999)"
+  },
+  "genre-crime-top": {
+   "kind": "path",
+   "path": "/tsRy63Mu5cu8etL1X7ZLyf7UP1M.jpg",
+   "from": "Breaking Bad (tmdb:1396)"
+  },
+  "genre-documentary-top": {
+   "kind": "path",
+   "path": "/u3MWQCdHyCK7IADtat4sVmBXd9U.jpg",
+   "from": "Selena Gomez: My Mind & Me (tmdb:1022256)"
+  },
+  "genre-drama-top": {
+   "kind": "path",
+   "path": "/a9qlroMOHewiDsUR93PYMVfpbF5.jpg",
+   "from": "When Life Gives You Tangerines (tmdb:219246)"
+  },
+  "genre-family-top": {
+   "kind": "path",
+   "path": "/TxicZcsiP9VHYXMYHm4IEHnwv9.jpg",
+   "from": "Wizards Beyond Waverly Place (tmdb:245026)"
+  },
+  "genre-fantasy-top": {
+   "kind": "path",
+   "path": "/amZavErrjrdgDwhsIdpWxHNenIx.jpg",
+   "from": "The Green Mile (tmdb:497)"
+  },
+  "genre-history-top": {
+   "kind": "path",
+   "path": "/zb6fM1CX41D9rF9hdgclu0peUmy.jpg",
+   "from": "Schindler's List (tmdb:424)"
+  },
+  "genre-horror-top": {
+   "kind": "path",
+   "path": "/AdKA2F1SzYPhSZdEbjH1Zh75UVQ.jpg",
+   "from": "The Shining (tmdb:694)"
+  },
+  "genre-kids-top": {
+   "kind": "path",
+   "path": "/vDVf9hNQvybKjiXfgHLThTVp3q8.jpg",
+   "from": "Superbook (tmdb:44931)"
+  },
+  "genre-music-top": {
+   "kind": "path",
+   "path": "/fRGxZuo7jJUWQsVg9PREb98Aclp.jpg",
+   "from": "Whiplash (tmdb:244786)"
+  },
+  "genre-mystery-top": {
+   "kind": "path",
+   "path": "/gdvUUqWutEulHSB4JBoWWnbsLo6.jpg",
+   "from": "Lord of Mysteries (tmdb:232230)"
+  },
+  "genre-reality-top": {
+   "kind": "path",
+   "path": "/c8dm74uPCMA27iKAR1WnHKTsI9h.jpg",
+   "from": "Run BTS! (tmdb:77696)"
+  },
+  "genre-romance-top": {
+   "kind": "path",
+   "path": "/mMtUybQ6hL24FXo0F3Z4j2KG7kZ.jpg",
+   "from": "Your Name. (tmdb:372058)"
+  },
+  "genre-sci-fi-top": {
+   "kind": "path",
+   "path": "/1ntePsIqeklfmrQJqZPncCydsqY.jpg",
+   "from": "Spider-Man: Into the Spider-Verse (tmdb:324857)"
+  },
+  "genre-thriller-top": {
+   "kind": "path",
+   "path": "/TU9NIjwzjoKPwQHoHshkFcQUCG.jpg",
+   "from": "Parasite (tmdb:496243)"
+  },
+  "genre-war-top": {
+   "kind": "path",
+   "path": "/aHaqZpOL7UyVu0nKqp3SMz0o2E1.jpg",
+   "from": "Grave of the Fireflies (tmdb:12477)"
+  },
+  "genre-westerns-top": {
+   "kind": "path",
+   "path": "/A4PHx94G7mvM3b8vsDJ5HEaQ6uv.jpg",
+   "from": "Cowboy Bebop (tmdb:30991)"
+  },
+  "series-007": {
+   "kind": "collection",
+   "id": 645
+  },
+  "series-alien": {
+   "kind": "collection",
+   "id": 8091
+  },
+  "series-avatar": {
+   "kind": "collection",
+   "id": 87096
+  },
+  "series-back-to-the-future": {
+   "kind": "collection",
+   "id": 264
+  },
+  "series-bad-boys": {
+   "kind": "collection",
+   "id": 14890
+  },
+  "series-cars": {
+   "kind": "collection",
+   "id": 87118
+  },
+  "series-the-conjuring": {
+   "kind": "movie",
+   "id": 259693
+  },
+  "series-creed": {
+   "kind": "collection",
+   "id": 553717
+  },
+  "series-the-dark-knight": {
+   "kind": "collection",
+   "id": 263
+  },
+  "series-dc-universe": {
+   "kind": "path",
+   "path": "/wAk0yKrhAmvsoMvlKs4QImhvK5X.jpg",
+   "from": "Suicide Squad (tmdb:297761)"
+  },
+  "series-despicable-me": {
+   "kind": "collection",
+   "id": 86066
+  },
+  "series-die-hard": {
+   "kind": "collection",
+   "id": 1570
+  },
+  "series-dune": {
+   "kind": "collection",
+   "id": 726871
+  },
+  "series-fast-and-furious": {
+   "kind": "collection",
+   "id": 9485
+  },
+  "series-frozen": {
+   "kind": "collection",
+   "id": 386382
+  },
+  "series-ghostbusters": {
+   "kind": "collection",
+   "id": 2980
+  },
+  "series-the-godfather": {
+   "kind": "collection",
+   "id": 230
+  },
+  "series-halloween": {
+   "kind": "collection",
+   "id": 91361
+  },
+  "series-the-hangover": {
+   "kind": "collection",
+   "id": 86119
+  },
+  "series-harry-potter": {
+   "kind": "collection",
+   "id": 1241
+  },
+  "series-how-to-train-your-dragon": {
+   "kind": "collection",
+   "id": 89137
+  },
+  "series-the-hunger-games": {
+   "kind": "collection",
+   "id": 131635
+  },
+  "series-ice-age": {
+   "kind": "collection",
+   "id": 8354
+  },
+  "series-indiana-jones": {
+   "kind": "collection",
+   "id": 84
+  },
+  "series-jason-bourne": {
+   "kind": "collection",
+   "id": 31562
+  },
+  "series-john-wick": {
+   "kind": "collection",
+   "id": 404609
+  },
+  "series-jurassic-park": {
+   "kind": "collection",
+   "id": 328
+  },
+  "series-kill-bill": {
+   "kind": "collection",
+   "id": 2883
+  },
+  "series-knives-out": {
+   "kind": "collection",
+   "id": 722971
+  },
+  "series-kung-fu-panda": {
+   "kind": "collection",
+   "id": 77816
+  },
+  "series-lethal-weapon": {
+   "kind": "collection",
+   "id": 945
+  },
+  "series-lord-of-the-rings": {
+   "kind": "collection",
+   "id": 119
+  },
+  "series-mad-max": {
+   "kind": "collection",
+   "id": 8945
+  },
+  "series-madagascar": {
+   "kind": "collection",
+   "id": 14740
+  },
+  "series-marvel-cinematic-universe": {
+   "kind": "path",
+   "path": "/uLtVbjvS1O7gXL8lUOwsFOH4man.jpg",
+   "from": "Guardians of the Galaxy (tmdb:118340)"
+  },
+  "series-the-matrix": {
+   "kind": "collection",
+   "id": 2344
+  },
+  "series-maze-runner": {
+   "kind": "collection",
+   "id": 295130
+  },
+  "series-men-in-black": {
+   "kind": "collection",
+   "id": 86055
+  },
+  "series-mission-impossible": {
+   "kind": "collection",
+   "id": 87359
+  },
+  "series-monsterverse": {
+   "kind": "path",
+   "path": "/nVodCGKYLpqNC8YwQAbivKlWCgZ.jpg",
+   "from": "Kong: Skull Island (tmdb:293167)"
+  },
+  "series-oceans": {
+   "kind": "collection",
+   "id": 304
+  },
+  "series-pirates-of-the-caribbean": {
+   "kind": "collection",
+   "id": 295
+  },
+  "series-planet-of-the-apes": {
+   "kind": "collection",
+   "id": 1709
+  },
+  "series-predator": {
+   "kind": "collection",
+   "id": 399
+  },
+  "series-rocky": {
+   "kind": "collection",
+   "id": 1575
+  },
+  "series-rush-hour": {
+   "kind": "collection",
+   "id": 90863
+  },
+  "series-saw": {
+   "kind": "collection",
+   "id": 656
+  },
+  "series-scary-movie": {
+   "kind": "collection",
+   "id": 4246
+  },
+  "series-scream": {
+   "kind": "collection",
+   "id": 2602
+  },
+  "series-shrek": {
+   "kind": "collection",
+   "id": 2150
+  },
+  "series-spider-man": {
+   "kind": "collection",
+   "id": 556
+  },
+  "series-star-wars": {
+   "kind": "collection",
+   "id": 10
+  },
+  "series-terminator": {
+   "kind": "collection",
+   "id": 528
+  },
+  "series-toy-story": {
+   "kind": "collection",
+   "id": 10194
+  },
+  "series-transformers": {
+   "kind": "collection",
+   "id": 8650
+  },
+  "series-twilight": {
+   "kind": "collection",
+   "id": 33514
+  },
+  "series-x-men": {
+   "kind": "collection",
+   "id": 748
+  },
+  "theme-superheroes": {
+   "kind": "path",
+   "path": "/cq62fLH3vwOmiaLKMqkDI86tPtH.jpg",
+   "from": "WandaVision (tmdb:85271)"
+  },
+  "theme-zombies": {
+   "kind": "path",
+   "path": "/ePgD1cwmklyrFBjl6z96IuixuSY.jpg",
+   "from": "I Am Legend (tmdb:6479)"
+  },
+  "theme-space-epics": {
+   "kind": "path",
+   "path": "/zqkmTXzjkAgXmEWLRsY4UpTWCeo.jpg",
+   "from": "Star Wars (tmdb:11)"
+  },
+  "theme-spies": {
+   "kind": "path",
+   "path": "/qzUIOTk0E3F1zjvYjcBRTKUTgf9.jpg",
+   "from": "Kingsman: The Secret Service (tmdb:207703)"
+  },
+  "theme-aliens": {
+   "kind": "path",
+   "path": "/aJn9XeesqsrSLKcHfHP4u5985hn.jpg",
+   "from": "Guardians of the Galaxy Vol. 2 (tmdb:283995)"
+  },
+  "theme-robots-and-ai": {
+   "kind": "path",
+   "path": "/rX5hvSRB2k4YoIvRg6Zky52rWk0.jpg",
+   "from": "Westworld (tmdb:63247)"
+  },
+  "theme-dystopian": {
+   "kind": "path",
+   "path": "/rqbCbjB19amtOtFQbb3K2lgm2zv.jpg",
+   "from": "Attack on Titan (tmdb:1429)"
+  },
+  "theme-disaster": {
+   "kind": "path",
+   "path": "/4P71rDf6roxVskbvdcbNayVMpXd.jpg",
+   "from": "2012 (tmdb:14161)"
+  },
+  "theme-creature-features": {
+   "kind": "path",
+   "path": "/9X7Im1YuBhyHYVD8r7CAONPJR5k.jpg",
+   "from": "Pacific Rim (tmdb:68726)"
+  },
+  "theme-psychological": {
+   "kind": "path",
+   "path": "/uJUe985oIuRiD3hmHQYskIMc2WU.jpg",
+   "from": "Mr. Robot (tmdb:62560)"
+  },
+  "theme-myths-and-legends": {
+   "kind": "path",
+   "path": "/qLVNZFHYUR6Li64He67SWl6BHQe.jpg",
+   "from": "Moana (tmdb:277834)"
+  },
+  "theme-heist": {
+   "kind": "path",
+   "path": "/1K3JmSNUN8OpjYsCjc0Hy0SYxAb.jpg",
+   "from": "Ant-Man (tmdb:102899)"
+  },
+  "theme-time-travel": {
+   "kind": "path",
+   "path": "/7RyHsO4yDXtBv1zUU3mTpHeQ0d5.jpg",
+   "from": "Avengers: Endgame (tmdb:299534)"
+  },
+  "decade-1960s": {
+   "kind": "path",
+   "path": "/w5IDXtifKntw0ajv2co7jFlTQDM.jpg",
+   "from": "2001: A Space Odyssey (tmdb:62)"
+  },
+  "decade-1970s": {
+   "kind": "path",
+   "path": "/AmR3JG1VQVxU8TfAvljUhfSFUOx.jpg",
+   "from": "Alien (tmdb:348)"
+  },
+  "decade-1980s": {
+   "kind": "path",
+   "path": "/jIArNHIekrCSVgdMbKPAXpPY03Y.jpg",
+   "from": "The Simpsons (tmdb:456)"
+  },
+  "decade-1990s": {
+   "kind": "path",
+   "path": "/l0qVZIpXtIo7km9u5Yqh0nKPOr5.jpg",
+   "from": "Friends (tmdb:1668)"
+  },
+  "decade-2000s": {
+   "kind": "path",
+   "path": "/jP0Rhj9OTPDAwQlHQwOLFDdeE8t.jpg",
+   "from": "Grey's Anatomy (tmdb:1416)"
+  },
+  "decade-2010s": {
+   "kind": "path",
+   "path": "/gFZriCkpJYsApPZEF3jhxL4yLzG.jpg",
+   "from": "Money Heist (tmdb:71446)"
+  },
+  "decade-2020s": {
+   "kind": "path",
+   "path": "/iQFcwSGbZXMkeyKrxbPnwnRo5fl.jpg",
+   "from": "Spider-Man: No Way Home (tmdb:634649)"
+  },
+  "awards-oscar-best-picture": {
+   "kind": "path",
+   "path": "/zpEWFNqoN8Qg1SzMMHmaGyOBTdW.jpg",
+   "from": "One Battle After Another (tmdb:1054867)"
+  },
+  "awards-oscar-best-picture-nominees": {
+   "kind": "path",
+   "path": "/oLgtpxK4aGZ7S8aiE3rDwahqkL2.jpg",
+   "from": "Sentimental Value (tmdb:1124566)"
+  },
+  "awards-palme-dor": {
+   "kind": "path",
+   "path": "/rCYzSP07jCA1HuFvrwgaEAPHitT.jpg",
+   "from": "Fjord (tmdb:1401459)"
+  },
+  "awards-bafta-best-film": {
+   "kind": "path",
+   "path": "/eZzNdjNDvaSoyywy9ICg2UmFwul.jpg",
+   "from": "Conclave (tmdb:974576)"
+  },
+  "awards-golden-globe-best-picture": {
+   "kind": "path",
+   "path": "/yt9m5CiU2MZkQoNl1kqLPODNR4t.jpg",
+   "from": "Hamnet (tmdb:858024)"
+  },
+  "awards-emmy-best-series": {
+   "kind": "path",
+   "path": "/yx0sfeYOoXol2fjT22SXo9YyviI.jpg",
+   "from": "Widow's Bay (tmdb:270476)"
+  },
+  "awards-sundance-gjp": {
+   "kind": "path",
+   "path": "/af7mgiKiFRdlsv01F18AP5rHEz6.jpg",
+   "from": "Atropia (tmdb:1239288)"
+  },
+  "acclaimed-acclaimed-movies": {
+   "kind": "path",
+   "path": "/kGzFbGhp99zva6oZODW5atUtnqi.jpg",
+   "from": "The Godfather Part II (tmdb:240)"
+  },
+  "acclaimed-acclaimed-tv": {
+   "kind": "path",
+   "path": "/2rmK7mnchw9Xr3XdiTFSxTTLXqv.jpg",
+   "from": "One Piece (tmdb:37854)"
+  },
+  "acclaimed-hidden-gem-movies": {
+   "kind": "path",
+   "path": "/c6uIPrMgvDzhEGSKuZc8aw6NfC.jpg",
+   "from": "October Sky (tmdb:13466)"
+  },
+  "acclaimed-hidden-gem-tv": {
+   "kind": "path",
+   "path": "/qVyqPzx6wD3Wm3HD4iy3PrJYxGX.jpg",
+   "from": "Gomorrah (tmdb:61068)"
+  },
+  "standup": {
+   "kind": "path",
+   "path": "/9sfVyE3sP2dkCwDyV7UlYP5TAAR.jpg",
+   "from": "Bo Burnham: Inside (tmdb:823754)"
+  },
+  "standup-new": {
+   "kind": "path",
+   "path": "/ggzUa7gPXs7mnLhJEcwP9r10Z9e.jpg",
+   "from": "Ricky Gervais: Mortality (tmdb:1312150)"
+  },
+  "standup-top": {
+   "kind": "path",
+   "path": "/aUzHaxk28Zkp7WniZXrnbibEvFi.jpg",
+   "from": "Dave Chappelle: Killin' Them Softly (tmdb:16275)"
+  },
+  "dir-alfred-hitchcock": {
+   "kind": "person",
+   "id": 2636
+  },
+  "dir-stanley-kubrick": {
+   "kind": "person",
+   "id": 240
+  },
+  "dir-akira-kurosawa": {
+   "kind": "person",
+   "id": 5026
+  },
+  "dir-orson-welles": {
+   "kind": "person",
+   "id": 40
+  },
+  "dir-billy-wilder": {
+   "kind": "person",
+   "id": 3146
+  },
+  "dir-john-ford": {
+   "kind": "person",
+   "id": 8500
+  },
+  "dir-francis-ford-coppola": {
+   "kind": "person",
+   "id": 1776
+  },
+  "dir-martin-scorsese": {
+   "kind": "person",
+   "id": 1032
+  },
+  "dir-steven-spielberg": {
+   "kind": "person",
+   "id": 488
+  },
+  "dir-ridley-scott": {
+   "kind": "person",
+   "id": 578
+  },
+  "dir-ingmar-bergman": {
+   "kind": "person",
+   "id": 6648
+  },
+  "dir-federico-fellini": {
+   "kind": "person",
+   "id": 4415
+  },
+  "dir-frank-capra": {
+   "kind": "person",
+   "id": 2662
+  },
+  "dir-howard-hawks": {
+   "kind": "person",
+   "id": 11435
+  },
+  "dir-david-lean": {
+   "kind": "person",
+   "id": 12238
+  },
+  "dir-sidney-lumet": {
+   "kind": "person",
+   "id": 39996
+  },
+  "dir-elia-kazan": {
+   "kind": "person",
+   "id": 2746
+  },
+  "dir-sergio-leone": {
+   "kind": "person",
+   "id": 4385
+  },
+  "dir-robert-altman": {
+   "kind": "person",
+   "id": 9789
+  },
+  "dir-john-huston": {
+   "kind": "person",
+   "id": 6593
+  },
+  "dir-clint-eastwood": {
+   "kind": "person",
+   "id": 190
+  },
+  "dir-brian-de-palma": {
+   "kind": "person",
+   "id": 1150
+  },
+  "dir-william-wyler": {
+   "kind": "person",
+   "id": 10001
+  },
+  "dir-francois-truffaut": {
+   "kind": "person",
+   "id": 1650
+  },
+  "dir-christopher-nolan": {
+   "kind": "person",
+   "id": 525
+  },
+  "dir-quentin-tarantino": {
+   "kind": "person",
+   "id": 138
+  },
+  "dir-david-fincher": {
+   "kind": "person",
+   "id": 7467
+  },
+  "dir-paul-thomas-anderson": {
+   "kind": "person",
+   "id": 4762
+  },
+  "dir-joel-coen": {
+   "kind": "person",
+   "id": 1223
+  },
+  "dir-wes-anderson": {
+   "kind": "person",
+   "id": 5655
+  },
+  "dir-denis-villeneuve": {
+   "kind": "person",
+   "id": 137427
+  },
+  "dir-steven-soderbergh": {
+   "kind": "person",
+   "id": 1884
+  },
+  "dir-spike-lee": {
+   "kind": "person",
+   "id": 5281
+  },
+  "dir-darren-aronofsky": {
+   "kind": "person",
+   "id": 6431
+  },
+  "dir-david-lynch": {
+   "kind": "person",
+   "id": 5602
+  },
+  "dir-tim-burton": {
+   "kind": "person",
+   "id": 510
+  },
+  "dir-alfonso-cuaron": {
+   "kind": "person",
+   "id": 11218
+  },
+  "dir-bong-joon-ho": {
+   "kind": "person",
+   "id": 21684
+  },
+  "dir-sofia-coppola": {
+   "kind": "person",
+   "id": 1769
+  },
+  "dir-richard-linklater": {
+   "kind": "person",
+   "id": 564
+  },
+  "dir-ang-lee": {
+   "kind": "person",
+   "id": 1614
+  },
+  "dir-park-chan-wook": {
+   "kind": "person",
+   "id": 10099
+  },
+  "dir-alejandro-gonzalez-inarritu": {
+   "kind": "person",
+   "id": 223
+  },
+  "dir-danny-boyle": {
+   "kind": "person",
+   "id": 2034
+  },
+  "dir-michael-mann": {
+   "kind": "person",
+   "id": 638
+  },
+  "dir-martin-mcdonagh": {
+   "kind": "person",
+   "id": 54472
+  },
+  "dir-sam-mendes": {
+   "kind": "person",
+   "id": 39
+  },
+  "dir-yorgos-lanthimos": {
+   "kind": "person",
+   "id": 122423
+  },
+  "dir-damien-chazelle": {
+   "kind": "person",
+   "id": 136495
+  },
+  "dir-greta-gerwig": {
+   "kind": "person",
+   "id": 45400
+  },
+  "dir-jordan-peele": {
+   "kind": "person",
+   "id": 291263
+  },
+  "dir-ari-aster": {
+   "kind": "person",
+   "id": 1145520
+  },
+  "dir-robert-eggers": {
+   "kind": "person",
+   "id": 138781
+  },
+  "dir-ryan-coogler": {
+   "kind": "person",
+   "id": 1056121
+  },
+  "dir-chloe-zhao": {
+   "kind": "person",
+   "id": 1395183
+  },
+  "dir-alex-garland": {
+   "kind": "person",
+   "id": 2036
+  },
+  "dir-barry-jenkins": {
+   "kind": "person",
+   "id": 92784
+  },
+  "dir-emerald-fennell": {
+   "kind": "person",
+   "id": 1252934
+  },
+  "dir-daniel-kwan": {
+   "kind": "person",
+   "id": 1383612
+  },
+  "dir-celine-song": {
+   "kind": "person",
+   "id": 2518227
+  },
+  "dir-coralie-fargeat": {
+   "kind": "person",
+   "id": 1607016
+  },
+  "dir-jon-watts": {
+   "kind": "person",
+   "id": 1293994
+  },
+  "dir-dan-trachtenberg": {
+   "kind": "person",
+   "id": 568322
+  },
+  "dir-nia-dacosta": {
+   "kind": "person",
+   "id": 1795072
+  },
+  "dir-osgood-perkins": {
+   "kind": "person",
+   "id": 90609
+  },
+  "dir-zach-cregger": {
+   "kind": "person",
+   "id": 84833
+  },
+  "dir-trey-edward-shults": {
+   "kind": "person",
+   "id": 1423660
+  },
+  "dir-kogonada": {
+   "kind": "person",
+   "id": 1555636
+  },
+  "dir-olivia-wilde": {
+   "kind": "person",
+   "id": 59315
+  },
+  "dir-parker-finn": {
+   "kind": "person",
+   "id": 2218465
+  },
+  "dir-halina-reijn": {
+   "kind": "person",
+   "id": 39847
+  },
+  "dir-destin-daniel-cretton": {
+   "kind": "person",
+   "id": 1144604
+  },
+  "dir-brady-corbet": {
+   "kind": "person",
+   "id": 55493
+  },
+  "dir-john-carpenter": {
+   "kind": "person",
+   "id": 11770
+  },
+  "dir-wes-craven": {
+   "kind": "person",
+   "id": 5140
+  },
+  "dir-george-a-romero": {
+   "kind": "person",
+   "id": 14999
+  },
+  "dir-tobe-hooper": {
+   "kind": "person",
+   "id": 10051
+  },
+  "dir-sam-raimi": {
+   "kind": "person",
+   "id": 7623
+  },
+  "dir-david-cronenberg": {
+   "kind": "person",
+   "id": 224
+  },
+  "dir-william-friedkin": {
+   "kind": "person",
+   "id": 15175
+  },
+  "dir-dario-argento": {
+   "kind": "person",
+   "id": 4955
+  },
+  "dir-james-wan": {
+   "kind": "person",
+   "id": 2127
+  },
+  "dir-mike-flanagan": {
+   "kind": "person",
+   "id": 551463
+  },
+  "dir-guillermo-del-toro": {
+   "kind": "person",
+   "id": 10828
+  },
+  "dir-leigh-whannell": {
+   "kind": "person",
+   "id": 2128
+  },
+  "dir-ti-west": {
+   "kind": "person",
+   "id": 101542
+  },
+  "dir-rob-zombie": {
+   "kind": "person",
+   "id": 16848
+  },
+  "dir-eli-roth": {
+   "kind": "person",
+   "id": 16847
+  },
+  "dir-scott-derrickson": {
+   "kind": "person",
+   "id": 55499
+  },
+  "dir-fede-alvarez": {
+   "kind": "person",
+   "id": 932248
+  },
+  "dir-joe-dante": {
+   "kind": "person",
+   "id": 4600
+  },
+  "dir-stuart-gordon": {
+   "kind": "person",
+   "id": 27991
+  },
+  "dir-james-whale": {
+   "kind": "person",
+   "id": 2917
+  },
+  "dir-james-cameron": {
+   "kind": "person",
+   "id": 2710
+  },
+  "dir-john-mctiernan": {
+   "kind": "person",
+   "id": 1090
+  },
+  "dir-kathryn-bigelow": {
+   "kind": "person",
+   "id": 14392
+  },
+  "dir-george-miller": {
+   "kind": "person",
+   "id": 20629
+  },
+  "dir-john-woo": {
+   "kind": "person",
+   "id": 11401
+  },
+  "dir-tony-scott": {
+   "kind": "person",
+   "id": 893
+  },
+  "dir-michael-bay": {
+   "kind": "person",
+   "id": 865
+  },
+  "dir-chad-stahelski": {
+   "kind": "person",
+   "id": 40644
+  },
+  "dir-paul-greengrass": {
+   "kind": "person",
+   "id": 25598
+  },
+  "dir-christopher-mcquarrie": {
+   "kind": "person",
+   "id": 9033
+  },
+  "dir-richard-donner": {
+   "kind": "person",
+   "id": 7187
+  },
+  "dir-walter-hill": {
+   "kind": "path",
+   "path": "/s7DSYOX6pSWrQneSVRXiHjfG2fh.jpg",
+   "from": "Walter Hill (alternate TMDB profile photo)"
+  },
+  "dir-sam-peckinpah": {
+   "kind": "person",
+   "id": 7767
+  },
+  "dir-don-siegel": {
+   "kind": "person",
+   "id": 14773
+  },
+  "dir-guy-ritchie": {
+   "kind": "person",
+   "id": 956
+  },
+  "dir-matthew-vaughn": {
+   "kind": "person",
+   "id": 957
+  },
+  "dir-david-leitch": {
+   "kind": "person",
+   "id": 40684
+  },
+  "dir-justin-lin": {
+   "kind": "person",
+   "id": 58189
+  },
+  "dir-doug-liman": {
+   "kind": "person",
+   "id": 11694
+  },
+  "dir-antoine-fuqua": {
+   "kind": "person",
+   "id": 20907
+  },
+  "dir-martin-campbell": {
+   "kind": "person",
+   "id": 10702
+  },
+  "dir-zack-snyder": {
+   "kind": "person",
+   "id": 15217
+  },
+  "dir-robert-rodriguez": {
+   "kind": "person",
+   "id": 2294
+  },
+  "dir-george-lucas": {
+   "kind": "person",
+   "id": 1
+  },
+  "dir-paul-verhoeven": {
+   "kind": "person",
+   "id": 10491
+  },
+  "dir-robert-zemeckis": {
+   "kind": "person",
+   "id": 24
+  },
+  "dir-terry-gilliam": {
+   "kind": "person",
+   "id": 280
+  },
+  "dir-lana-wachowski": {
+   "kind": "person",
+   "id": 9340
+  },
+  "dir-neill-blomkamp": {
+   "kind": "person",
+   "id": 82194
+  },
+  "dir-duncan-jones": {
+   "kind": "person",
+   "id": 81850
+  },
+  "dir-jj-abrams": {
+   "kind": "person",
+   "id": 15344
+  },
+  "dir-luc-besson": {
+   "kind": "person",
+   "id": 59
+  },
+  "dir-rian-johnson": {
+   "kind": "person",
+   "id": 67367
+  },
+  "dir-gareth-edwards": {
+   "kind": "person",
+   "id": 129894
+  },
+  "dir-robert-wise": {
+   "kind": "person",
+   "id": 1744
+  },
+  "dir-joseph-kosinski": {
+   "kind": "person",
+   "id": 86270
+  },
+  "dir-roland-emmerich": {
+   "kind": "person",
+   "id": 6046
+  },
+  "dir-hayao-miyazaki": {
+   "kind": "person",
+   "id": 608
+  },
+  "dir-brad-bird": {
+   "kind": "person",
+   "id": 7087
+  },
+  "dir-andrew-stanton": {
+   "kind": "person",
+   "id": 7
+  },
+  "dir-lee-unkrich": {
+   "kind": "person",
+   "id": 8
+  },
+  "dir-john-lasseter": {
+   "kind": "person",
+   "id": 7879
+  },
+  "dir-pete-docter": {
+   "kind": "person",
+   "id": 12890
+  },
+  "dir-isao-takahata": {
+   "kind": "person",
+   "id": 628
+  },
+  "dir-ron-clements": {
+   "kind": "person",
+   "id": 15810
+  },
+  "dir-john-musker": {
+   "kind": "person",
+   "id": 15811
+  },
+  "dir-henry-selick": {
+   "kind": "person",
+   "id": 57646
+  },
+  "dir-chris-sanders": {
+   "kind": "person",
+   "id": 66193
+  },
+  "dir-dean-deblois": {
+   "kind": "person",
+   "id": 69797
+  },
+  "dir-genndy-tartakovsky": {
+   "kind": "person",
+   "id": 185438
+  },
+  "dir-phil-lord": {
+   "kind": "person",
+   "id": 107446
+  },
+  "dir-don-bluth": {
+   "kind": "person",
+   "id": 40345
+  },
+  "dir-nick-park": {
+   "kind": "person",
+   "id": 7314
+  },
+  "dir-makoto-shinkai": {
+   "kind": "person",
+   "id": 74091
+  },
+  "dir-satoshi-kon": {
+   "kind": "person",
+   "id": 40333
+  },
+  "dir-mamoru-hosoda": {
+   "kind": "person",
+   "id": 81718
+  },
+  "dir-rich-moore": {
+   "kind": "person",
+   "id": 165787
+  },
+  "dir-byron-howard": {
+   "kind": "person",
+   "id": 76595
+  },
+  "dir-chris-buck": {
+   "kind": "person",
+   "id": 15774
+  },
+  "dir-wolfgang-reitherman": {
+   "kind": "person",
+   "id": 57314
+  },
+  "dir-tomm-moore": {
+   "kind": "person",
+   "id": 96676
+  },
+  "dir-mel-brooks": {
+   "kind": "person",
+   "id": 14639
+  },
+  "dir-harold-ramis": {
+   "kind": "person",
+   "id": 1524
+  },
+  "dir-judd-apatow": {
+   "kind": "person",
+   "id": 41039
+  },
+  "dir-adam-mckay": {
+   "kind": "person",
+   "id": 55710
+  },
+  "dir-ivan-reitman": {
+   "kind": "person",
+   "id": 8858
+  },
+  "dir-john-hughes": {
+   "kind": "person",
+   "id": 11505
+  },
+  "dir-john-landis": {
+   "kind": "person",
+   "id": 4610
+  },
+  "dir-rob-reiner": {
+   "kind": "person",
+   "id": 3026
+  },
+  "dir-woody-allen": {
+   "kind": "person",
+   "id": 1243
+  },
+  "dir-edgar-wright": {
+   "kind": "person",
+   "id": 11090
+  },
+  "dir-taika-waititi": {
+   "kind": "person",
+   "id": 55934
+  },
+  "dir-peter-farrelly": {
+   "kind": "person",
+   "id": 7396
+  },
+  "dir-todd-phillips": {
+   "kind": "person",
+   "id": 57130
+  },
+  "dir-jay-roach": {
+   "kind": "person",
+   "id": 6737
+  },
+  "dir-paul-feig": {
+   "kind": "person",
+   "id": 116805
+  },
+  "dir-christopher-guest": {
+   "kind": "person",
+   "id": 13524
+  },
+  "dir-blake-edwards": {
+   "kind": "person",
+   "id": 1927
+  },
+  "dir-david-zucker": {
+   "kind": "person",
+   "id": 12987
+  },
+  "dir-amy-heckerling": {
+   "kind": "person",
+   "id": 57434
+  },
+  "dir-nora-ephron": {
+   "kind": "person",
+   "id": 9248
+  },
+  "dir-kevin-smith": {
+   "kind": "person",
+   "id": 19303
+  },
+  "dir-chris-columbus": {
+   "kind": "person",
+   "id": 10965
+  },
+  "dir-frank-oz": {
+   "kind": "person",
+   "id": 7908
+  },
+  "actor-zendaya": {
+   "kind": "person",
+   "id": 505710
+  },
+  "actor-timothee-chalamet": {
+   "kind": "person",
+   "id": 1190668
+  },
+  "actor-florence-pugh": {
+   "kind": "person",
+   "id": 1373737
+  },
+  "actor-austin-butler": {
+   "kind": "person",
+   "id": 86654
+  },
+  "actor-jenna-ortega": {
+   "kind": "person",
+   "id": 974169
+  },
+  "actor-anya-taylor-joy": {
+   "kind": "person",
+   "id": 1397778
+  },
+  "actor-sydney-sweeney": {
+   "kind": "person",
+   "id": 115440
+  },
+  "actor-jacob-elordi": {
+   "kind": "person",
+   "id": 2034418
+  },
+  "actor-paul-mescal": {
+   "kind": "person",
+   "id": 2326151
+  },
+  "actor-barry-keoghan": {
+   "kind": "person",
+   "id": 1290466
+  },
+  "actor-glen-powell": {
+   "kind": "person",
+   "id": 83271
+  },
+  "actor-margaret-qualley": {
+   "kind": "person",
+   "id": 1392137
+  },
+  "actor-mikey-madison": {
+   "kind": "person",
+   "id": 1640439
+  },
+  "actor-josh-oconnor": {
+   "kind": "person",
+   "id": 1206334
+  },
+  "actor-tom-holland": {
+   "kind": "person",
+   "id": 1136406
+  },
+  "actor-rachel-zegler": {
+   "kind": "person",
+   "id": 2217977
+  },
+  "actor-ayo-edebiri": {
+   "kind": "person",
+   "id": 2195140
+  },
+  "actor-jeremy-allen-white": {
+   "kind": "person",
+   "id": 206905
+  },
+  "actor-cailee-spaeny": {
+   "kind": "person",
+   "id": 1683343
+  },
+  "actor-harris-dickinson": {
+   "kind": "person",
+   "id": 1716493
+  },
+  "actor-daisy-edgar-jones": {
+   "kind": "person",
+   "id": 2230991
+  },
+  "actor-rachel-sennott": {
+   "kind": "person",
+   "id": 1976054
+  },
+  "actor-mike-faist": {
+   "kind": "person",
+   "id": 1423520
+  },
+  "actor-jodie-comer": {
+   "kind": "person",
+   "id": 1388593
+  },
+  "actor-kelvin-harrison-jr": {
+   "kind": "person",
+   "id": 1344361
+  },
+  "actor-jk-simmons": {
+   "kind": "person",
+   "id": 18999
+  },
+  "actor-steve-buscemi": {
+   "kind": "person",
+   "id": 884
+  },
+  "actor-john-c-reilly": {
+   "kind": "person",
+   "id": 4764
+  },
+  "actor-stanley-tucci": {
+   "kind": "person",
+   "id": 2283
+  },
+  "actor-christopher-walken": {
+   "kind": "person",
+   "id": 4690
+  },
+  "actor-willem-dafoe": {
+   "kind": "person",
+   "id": 5293
+  },
+  "actor-sam-rockwell": {
+   "kind": "person",
+   "id": 6807
+  },
+  "actor-paul-giamatti": {
+   "kind": "person",
+   "id": 13242
+  },
+  "actor-john-goodman": {
+   "kind": "person",
+   "id": 1230
+  },
+  "actor-samuel-l-jackson": {
+   "kind": "person",
+   "id": 2231
+  },
+  "actor-william-h-macy": {
+   "kind": "person",
+   "id": 3905
+  },
+  "actor-jeffrey-wright": {
+   "kind": "person",
+   "id": 2954
+  },
+  "actor-richard-jenkins": {
+   "kind": "person",
+   "id": 28633
+  },
+  "actor-margo-martindale": {
+   "kind": "person",
+   "id": 452
+  },
+  "actor-allison-janney": {
+   "kind": "person",
+   "id": 19
+  },
+  "actor-octavia-spencer": {
+   "kind": "person",
+   "id": 6944
+  },
+  "actor-kathy-bates": {
+   "kind": "person",
+   "id": 8534
+  },
+  "actor-jennifer-coolidge": {
+   "kind": "person",
+   "id": 38334
+  },
+  "actor-bill-nighy": {
+   "kind": "person",
+   "id": 2440
+  },
+  "actor-brendan-gleeson": {
+   "kind": "person",
+   "id": 2039
+  },
+  "actor-harry-dean-stanton": {
+   "kind": "person",
+   "id": 5048
+  },
+  "actor-danny-trejo": {
+   "kind": "person",
+   "id": 11160
+  },
+  "actor-walton-goggins": {
+   "kind": "person",
+   "id": 27740
+  },
+  "actor-alan-arkin": {
+   "kind": "person",
+   "id": 1903
+  },
+  "actor-brian-cox": {
+   "kind": "person",
+   "id": 1248
+  },
+  "actor-humphrey-bogart": {
+   "kind": "person",
+   "id": 4110
+  },
+  "actor-marlon-brando": {
+   "kind": "person",
+   "id": 3084
+  },
+  "actor-james-stewart": {
+   "kind": "person",
+   "id": 854
+  },
+  "actor-cary-grant": {
+   "kind": "person",
+   "id": 2638
+  },
+  "actor-katharine-hepburn": {
+   "kind": "person",
+   "id": 6598
+  },
+  "actor-bette-davis": {
+   "kind": "person",
+   "id": 3380
+  },
+  "actor-audrey-hepburn": {
+   "kind": "person",
+   "id": 1932
+  },
+  "actor-marilyn-monroe": {
+   "kind": "person",
+   "id": 3149
+  },
+  "actor-ingrid-bergman": {
+   "kind": "person",
+   "id": 4111
+  },
+  "actor-gregory-peck": {
+   "kind": "person",
+   "id": 8487
+  },
+  "actor-henry-fonda": {
+   "kind": "person",
+   "id": 4958
+  },
+  "actor-john-wayne": {
+   "kind": "person",
+   "id": 4165
+  },
+  "actor-elizabeth-taylor": {
+   "kind": "person",
+   "id": 3635
+  },
+  "actor-sidney-poitier": {
+   "kind": "person",
+   "id": 16897
+  },
+  "actor-paul-newman": {
+   "kind": "person",
+   "id": 3636
+  },
+  "actor-robert-redford": {
+   "kind": "person",
+   "id": 4135
+  },
+  "actor-jack-nicholson": {
+   "kind": "person",
+   "id": 514
+  },
+  "actor-al-pacino": {
+   "kind": "person",
+   "id": 1158
+  },
+  "actor-robert-de-niro": {
+   "kind": "person",
+   "id": 380
+  },
+  "actor-meryl-streep": {
+   "kind": "person",
+   "id": 5064
+  },
+  "actor-dustin-hoffman": {
+   "kind": "person",
+   "id": 4483
+  },
+  "actor-clint-eastwood": {
+   "kind": "person",
+   "id": 190
+  },
+  "actor-sophia-loren": {
+   "kind": "person",
+   "id": 16757
+  },
+  "actor-toshiro-mifune": {
+   "kind": "person",
+   "id": 7450
+  },
+  "actor-arnold-schwarzenegger": {
+   "kind": "person",
+   "id": 1100
+  },
+  "actor-sylvester-stallone": {
+   "kind": "person",
+   "id": 16483
+  },
+  "actor-keanu-reeves": {
+   "kind": "person",
+   "id": 6384
+  },
+  "actor-bruce-willis": {
+   "kind": "person",
+   "id": 62
+  },
+  "actor-tom-cruise": {
+   "kind": "person",
+   "id": 500
+  },
+  "actor-harrison-ford": {
+   "kind": "person",
+   "id": 3
+  },
+  "actor-mel-gibson": {
+   "kind": "person",
+   "id": 2461
+  },
+  "actor-jackie-chan": {
+   "kind": "person",
+   "id": 18897
+  },
+  "actor-jet-li": {
+   "kind": "person",
+   "id": 1336
+  },
+  "actor-bruce-lee": {
+   "kind": "person",
+   "id": 19429
+  },
+  "actor-jason-statham": {
+   "kind": "person",
+   "id": 976
+  },
+  "actor-dwayne-johnson": {
+   "kind": "person",
+   "id": 18918
+  },
+  "actor-vin-diesel": {
+   "kind": "person",
+   "id": 12835
+  },
+  "actor-jean-claude-van-damme": {
+   "kind": "person",
+   "id": 15111
+  },
+  "actor-steven-seagal": {
+   "kind": "person",
+   "id": 23880
+  },
+  "actor-chuck-norris": {
+   "kind": "person",
+   "id": 51576
+  },
+  "actor-liam-neeson": {
+   "kind": "person",
+   "id": 3896
+  },
+  "actor-charlize-theron": {
+   "kind": "person",
+   "id": 6885
+  },
+  "actor-angelina-jolie": {
+   "kind": "person",
+   "id": 11701
+  },
+  "actor-michelle-yeoh": {
+   "kind": "person",
+   "id": 1620
+  },
+  "actor-kurt-russell": {
+   "kind": "person",
+   "id": 6856
+  },
+  "actor-wesley-snipes": {
+   "kind": "person",
+   "id": 10814
+  },
+  "actor-nicolas-cage": {
+   "kind": "person",
+   "id": 2963
+  },
+  "actor-chris-hemsworth": {
+   "kind": "person",
+   "id": 74568
+  },
+  "actor-milla-jovovich": {
+   "kind": "person",
+   "id": 63
+  },
+  "actor-adam-sandler": {
+   "kind": "person",
+   "id": 19292
+  },
+  "actor-will-ferrell": {
+   "kind": "person",
+   "id": 23659
+  },
+  "actor-eddie-murphy": {
+   "kind": "person",
+   "id": 776
+  },
+  "actor-robin-williams": {
+   "kind": "person",
+   "id": 2157
+  },
+  "actor-jim-carrey": {
+   "kind": "person",
+   "id": 206
+  },
+  "actor-steve-martin": {
+   "kind": "person",
+   "id": 67773
+  },
+  "actor-bill-murray": {
+   "kind": "person",
+   "id": 1532
+  },
+  "actor-ben-stiller": {
+   "kind": "person",
+   "id": 7399
+  },
+  "actor-chevy-chase": {
+   "kind": "person",
+   "id": 54812
+  },
+  "actor-mike-myers": {
+   "kind": "person",
+   "id": 12073
+  },
+  "actor-john-candy": {
+   "kind": "person",
+   "id": 7180
+  },
+  "actor-leslie-nielsen": {
+   "kind": "person",
+   "id": 7633
+  },
+  "actor-dan-aykroyd": {
+   "kind": "person",
+   "id": 707
+  },
+  "actor-gene-wilder": {
+   "kind": "person",
+   "id": 3460
+  },
+  "actor-richard-pryor": {
+   "kind": "person",
+   "id": 9309
+  },
+  "actor-peter-sellers": {
+   "kind": "person",
+   "id": 12446
+  },
+  "actor-steve-carell": {
+   "kind": "person",
+   "id": 4495
+  },
+  "actor-paul-rudd": {
+   "kind": "person",
+   "id": 22226
+  },
+  "actor-owen-wilson": {
+   "kind": "person",
+   "id": 887
+  },
+  "actor-vince-vaughn": {
+   "kind": "person",
+   "id": 4937
+  },
+  "actor-seth-rogen": {
+   "kind": "person",
+   "id": 19274
+  },
+  "actor-jack-black": {
+   "kind": "person",
+   "id": 70851
+  },
+  "actor-melissa-mccarthy": {
+   "kind": "person",
+   "id": 55536
+  },
+  "actor-kristen-wiig": {
+   "kind": "person",
+   "id": 41091
+  },
+  "actor-tina-fey": {
+   "kind": "person",
+   "id": 56323
+  },
+  "actor-tom-hanks": {
+   "kind": "person",
+   "id": 31
+  },
+  "actor-denzel-washington": {
+   "kind": "person",
+   "id": 5292
+  },
+  "actor-morgan-freeman": {
+   "kind": "person",
+   "id": 192
+  },
+  "actor-anthony-hopkins": {
+   "kind": "person",
+   "id": 4173
+  },
+  "actor-daniel-day-lewis": {
+   "kind": "person",
+   "id": 11856
+  },
+  "actor-leonardo-dicaprio": {
+   "kind": "person",
+   "id": 6193
+  },
+  "actor-cate-blanchett": {
+   "kind": "person",
+   "id": 112
+  },
+  "actor-viola-davis": {
+   "kind": "person",
+   "id": 19492
+  },
+  "actor-kate-winslet": {
+   "kind": "person",
+   "id": 204
+  },
+  "actor-joaquin-phoenix": {
+   "kind": "person",
+   "id": 73421
+  },
+  "actor-julianne-moore": {
+   "kind": "person",
+   "id": 1231
+  },
+  "actor-frances-mcdormand": {
+   "kind": "person",
+   "id": 3910
+  },
+  "actor-christian-bale": {
+   "kind": "person",
+   "id": 3894
+  },
+  "actor-matt-damon": {
+   "kind": "person",
+   "id": 1892
+  },
+  "actor-brad-pitt": {
+   "kind": "person",
+   "id": 287
+  },
+  "actor-nicole-kidman": {
+   "kind": "person",
+   "id": 2227
+  },
+  "actor-amy-adams": {
+   "kind": "person",
+   "id": 9273
+  },
+  "actor-sean-penn": {
+   "kind": "person",
+   "id": 2228
+  },
+  "actor-natalie-portman": {
+   "kind": "person",
+   "id": 524
+  },
+  "actor-gary-oldman": {
+   "kind": "person",
+   "id": 64
+  },
+  "actor-emma-thompson": {
+   "kind": "person",
+   "id": 7056
+  },
+  "actor-jodie-foster": {
+   "kind": "person",
+   "id": 1038
+  },
+  "actor-russell-crowe": {
+   "kind": "person",
+   "id": 934
+  },
+  "actor-glenn-close": {
+   "kind": "person",
+   "id": 515
+  },
+  "actor-philip-seymour-hoffman": {
+   "kind": "person",
+   "id": 1233
+  },
+  "actor-jamie-lee-curtis": {
+   "kind": "person",
+   "id": 8944
+  },
+  "actor-vincent-price": {
+   "kind": "person",
+   "id": 1905
+  },
+  "actor-robert-englund": {
+   "kind": "person",
+   "id": 5139
+  },
+  "actor-boris-karloff": {
+   "kind": "person",
+   "id": 2922
+  },
+  "actor-bela-lugosi": {
+   "kind": "person",
+   "id": 1547
+  },
+  "actor-christopher-lee": {
+   "kind": "person",
+   "id": 113
+  },
+  "actor-peter-cushing": {
+   "kind": "person",
+   "id": 5
+  },
+  "actor-lon-chaney-jr": {
+   "kind": "person",
+   "id": 4072
+  },
+  "actor-donald-pleasence": {
+   "kind": "person",
+   "id": 9221
+  },
+  "actor-bruce-campbell": {
+   "kind": "person",
+   "id": 11357
+  },
+  "actor-neve-campbell": {
+   "kind": "person",
+   "id": 9206
+  },
+  "actor-tony-todd": {
+   "kind": "person",
+   "id": 19384
+  },
+  "actor-brad-dourif": {
+   "kind": "person",
+   "id": 1370
+  },
+  "actor-jeffrey-combs": {
+   "kind": "person",
+   "id": 27993
+  },
+  "actor-tobin-bell": {
+   "kind": "person",
+   "id": 2144
+  },
+  "actor-patrick-wilson": {
+   "kind": "person",
+   "id": 17178
+  },
+  "actor-vera-farmiga": {
+   "kind": "person",
+   "id": 21657
+  },
+  "actor-lin-shaye": {
+   "kind": "person",
+   "id": 7401
+  },
+  "actor-toni-collette": {
+   "kind": "person",
+   "id": 3051
+  },
+  "actor-mia-goth": {
+   "kind": "person",
+   "id": 1137824
+  },
+  "actor-samara-weaving": {
+   "kind": "person",
+   "id": 1372369
+  },
+  "actor-linda-blair": {
+   "kind": "person",
+   "id": 37366
+  },
+  "actor-barbara-crampton": {
+   "kind": "person",
+   "id": 27995
+  },
+  "actor-danielle-harris": {
+   "kind": "person",
+   "id": 21320
+  }
+ }
+}

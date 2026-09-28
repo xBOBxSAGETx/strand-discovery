@@ -6,1116 +6,964 @@
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Netflix",
-   "bg": {
-    "kind": "path",
-    "path": "/fn4n6uOYcB6Uh89nbNPoU2w80RV.jpg",
-    "from": "Spider-Man: Homecoming (tmdb:315635)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 213
    },
-   "logo": {
-    "kind": "provider",
-    "id": 8
-   }
+   "icon_provider": 8,
+   "badge": null
   },
   {
    "slug": "streaming-disneyplus",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Disney+",
-   "bg": {
-    "kind": "path",
-    "path": "/9BBTo63ANSmhC4e6r62OJFuK2GL.jpg",
-    "from": "The Avengers (tmdb:24428)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2739
    },
-   "logo": {
-    "kind": "provider",
-    "id": 337
-   }
+   "icon_provider": 337,
+   "badge": null
   },
   {
    "slug": "streaming-hbo-max",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "HBO Max",
-   "bg": {
-    "kind": "path",
-    "path": "/9FE5eD92WfVCiivM9Pq9GVSrlWk.jpg",
-    "from": "The Dark Knight (tmdb:155)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 3186
    },
-   "logo": {
-    "kind": "provider",
-    "id": 1899
-   }
+   "icon_provider": 1899,
+   "badge": null
   },
   {
    "slug": "streaming-apple-tv",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Apple TV",
-   "bg": {
-    "kind": "path",
-    "path": "/7Nwnmyzrtd0FkcRyPqmdzTPppQa.jpg",
-    "from": "The Wolf of Wall Street (tmdb:106646)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2552
    },
-   "logo": {
-    "kind": "provider",
-    "id": 350
-   }
+   "icon_provider": 350,
+   "badge": null
   },
   {
    "slug": "streaming-paramountplus",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Paramount+",
-   "bg": {
-    "kind": "path",
-    "path": "/8sNiAPPYU14PUepFNeSNGUTiHW.jpg",
-    "from": "Interstellar (tmdb:157336)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 4330
    },
-   "_why": "provider 2616 icon reads 'Paramount+ Essential'"
+   "icon_provider": 2616,
+   "badge": null
   },
   {
    "slug": "streaming-prime-video",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Prime Video",
-   "bg": {
-    "kind": "path",
-    "path": "/suaEOtk1N1sgg2MTM7oZd2cfVp3.jpg",
-    "from": "Pulp Fiction (tmdb:680)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 1024
    },
-   "logo": {
-    "kind": "provider",
-    "id": 9
-   }
+   "icon_provider": 9,
+   "badge": null
   },
   {
    "slug": "streaming-hulu",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Hulu",
-   "bg": {
-    "kind": "path",
-    "path": "/vL5LR6WdxWPjLPFRLe133jXWsh5.jpg",
-    "from": "Avatar (tmdb:19995)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 453
    },
-   "logo": {
-    "kind": "provider",
-    "id": 15
-   }
+   "icon_provider": 15,
+   "badge": null
   },
   {
    "slug": "streaming-peacock",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Peacock",
-   "bg": {
-    "kind": "path",
-    "path": "/lvOLivVeX3DVVcwfVkxKf0R22D8.jpg",
-    "from": "Harry Potter and the Philosopher's Stone (tmdb:671)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 3353
    },
-   "_why": "provider icon is a tiny wordmark"
+   "icon_provider": 386,
+   "badge": null
   },
   {
    "slug": "streaming-starz",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Starz",
-   "bg": {
-    "kind": "path",
-    "path": "/kIBK5SKwgqIIuRKhhWrJn3XkbPq.jpg",
-    "from": "Avengers: Age of Ultron (tmdb:99861)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 318
    },
-   "logo": {
-    "kind": "provider",
-    "id": 43
-   }
+   "icon_provider": 43,
+   "badge": null
   },
   {
    "slug": "streaming-discoveryplus",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Discovery+",
-   "bg": {
-    "kind": "path",
-    "path": "/qmRUwosX4BsCj6QanpBYScLl3Sp.jpg",
-    "from": "Planet Earth (tmdb:1044)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 4353
    },
-   "logo": {
-    "kind": "provider",
-    "id": 520
-   }
+   "icon_provider": 520,
+   "badge": null
   },
   {
    "slug": "streaming-netflix-kids",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Netflix Kids",
-   "bg": {
-    "kind": "path",
-    "path": "/budvUJdSNKVzEkNdoh4qa4r7Vj1.jpg",
-    "from": "Barbie in the Nutcracker (tmdb:15167)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 213
    },
-   "logo": {
-    "kind": "provider",
-    "id": 175
-   }
+   "icon_provider": 175,
+   "badge": null,
+   "logo_sub": "KIDS"
   },
   {
    "slug": "streaming-crunchyroll",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Crunchyroll",
-   "bg": {
-    "kind": "path",
-    "path": "/z0YhJvomqedHF85bplUJEotkN5l.jpg",
-    "from": "Naruto Shippūden (tmdb:31910)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 198847
    },
-   "logo": {
-    "kind": "provider",
-    "id": 283
-   }
+   "icon_provider": 283,
+   "badge": null
   },
   {
    "slug": "streaming-mubi",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "MUBI",
-   "bg": {
-    "kind": "path",
-    "path": "/t18ocAG0cpgC1AP288SseqmXqB5.jpg",
-    "from": "The Babadook (tmdb:242224)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 8303
    },
-   "logo": {
-    "kind": "provider",
-    "id": 11
-   }
+   "icon_provider": 11,
+   "badge": null
   },
   {
    "slug": "streaming-criterion-channel",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Criterion Channel",
-   "bg": {
-    "kind": "path",
-    "path": "/aYcnDyLMnpKce1FOYUpZrXtgUye.jpg",
-    "from": "The Silence of the Lambs (tmdb:274)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 10932
    },
-   "logo": {
-    "kind": "provider",
-    "id": 258
-   }
+   "icon_provider": 258,
+   "badge": null
   },
   {
    "slug": "streaming-rakuten-viki",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Rakuten Viki",
-   "bg": {
-    "kind": "path",
-    "path": "/ol0H2DGp4ifBHA4JDlCpwJWxnY2.jpg",
-    "from": "My Hero Academia (tmdb:65930)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 344
-   }
+   },
+   "icon_provider": 344,
+   "badge": null
   },
   {
    "slug": "streaming-magellantv",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "MagellanTV",
-   "bg": {
-    "kind": "path",
-    "path": "/heQXuVyPcPzG98NdU3VtXzWhD4N.jpg",
-    "from": "An Honest Liar (tmdb:262481)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 551
-   }
+   },
+   "icon_provider": 551,
+   "badge": null
   },
   {
    "slug": "streaming-shudder",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Shudder",
-   "bg": {
-    "kind": "path",
-    "path": "/rbBe9WQ1OqCxzgwskOTnaY6JdUA.jpg",
-    "from": "The Others (tmdb:1933)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2949
    },
-   "logo": {
-    "kind": "provider",
-    "id": 99
-   }
+   "icon_provider": 99,
+   "badge": null
   },
   {
    "slug": "streaming-amcplus",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "AMC+",
-   "bg": {
-    "kind": "path",
-    "path": "/2oZklIzUbvZXXzIFzv7Hi68d6xf.jpg",
-    "from": "Django Unchained (tmdb:68718)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 226350
    },
-   "logo": {
-    "kind": "provider",
-    "id": 526
-   }
+   "icon_provider": 526,
+   "badge": null
   },
   {
    "slug": "streaming-britbox",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "BritBox",
-   "bg": {
-    "kind": "path",
-    "path": "/8rvLEmdI4gLrMO1rLqbNdnNcPFE.jpg",
-    "from": "Sherlock (tmdb:19885)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 159102
    },
-   "logo": {
-    "kind": "provider",
-    "id": 151
-   }
+   "icon_provider": 151,
+   "badge": null
   },
   {
    "slug": "streaming-tubi",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Tubi",
-   "bg": {
-    "kind": "path",
-    "path": "/dF6FjTZzRTENfB4R17HDN20jLT2.jpg",
-    "from": "Jurassic World (tmdb:135397)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 153734
    },
-   "logo": {
-    "kind": "provider",
-    "id": 73
-   }
+   "icon_provider": 73,
+   "badge": null
   },
   {
    "slug": "streaming-pluto-tv",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Pluto TV",
-   "bg": {
-    "kind": "path",
-    "path": "/ff2ti5DkA9UYLzyqhQfI2kZqEuh.jpg",
-    "from": "John Wick (tmdb:245891)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 300
-   }
+   },
+   "icon_provider": 300,
+   "badge": null
   },
   {
    "slug": "streaming-the-roku-channel",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "The Roku Channel",
-   "bg": {
-    "kind": "path",
-    "path": "/7Wev9JMo6R5XAfz2KDvXb7oPMmy.jpg",
-    "from": "Memento (tmdb:77)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 207
-   }
+   },
+   "icon_provider": 207,
+   "badge": null
   },
   {
    "slug": "streaming-kanopy",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Kanopy",
-   "bg": {
-    "kind": "path",
-    "path": "/66Kn4XWhkuPkJxOJyPEx4U2CUfN.jpg",
-    "from": "Forrest Gump (tmdb:13)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 122372
    },
-   "logo": {
-    "kind": "provider",
-    "id": 191
-   }
+   "icon_provider": 191,
+   "badge": null
   },
   {
    "slug": "streaming-hoopla",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Hoopla",
-   "bg": {
-    "kind": "path",
-    "path": "/xXCuto8YVp5RFqBJ7yKmVmLOWpF.jpg",
-    "from": "Titanic (tmdb:597)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 212
-   }
+   },
+   "icon_provider": 212,
+   "badge": null
   },
   {
    "slug": "streaming-plex",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Plex",
-   "bg": {
-    "kind": "path",
-    "path": "/dvDkq5Mcv27vpHRvF1ywFGroh03.jpg",
-    "from": "Fear the Walking Dead (tmdb:62286)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 538
-   }
+   },
+   "icon_provider": 538,
+   "badge": null
   },
   {
    "slug": "streaming-acorn-tv",
    "shape": "wide",
    "eyebrow": "Streaming",
    "title": "Acorn TV",
-   "bg": {
-    "kind": "path",
-    "path": "/A2qdFRq9oJDC5E7fbgSS4POUMDF.jpg",
-    "from": "Luther (tmdb:1426)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2697
    },
-   "logo": {
-    "kind": "provider",
-    "id": 87
-   }
+   "icon_provider": 87,
+   "badge": null
   },
   {
    "slug": "streaming-netflix-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Netflix",
-   "bg": {
-    "kind": "path",
-    "path": "/hpXBJxLD2SEf8l2CspmSeiHrBKX.jpg",
-    "from": "Frankenstein (tmdb:1062722)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 213
    },
-   "logo": {
-    "kind": "provider",
-    "id": 8
-   }
+   "icon_provider": 8,
+   "badge": "New"
   },
   {
    "slug": "streaming-disneyplus-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Disney+",
-   "bg": {
-    "kind": "path",
-    "path": "/iN41Ccw4DctL8npfmYg1j5Tr1eb.jpg",
-    "from": "Avatar: Fire and Ash (tmdb:83533)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2739
    },
-   "logo": {
-    "kind": "provider",
-    "id": 337
-   }
+   "icon_provider": 337,
+   "badge": "New"
   },
   {
    "slug": "streaming-hbo-max-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "HBO Max",
-   "bg": {
-    "kind": "path",
-    "path": "/dqmMWNWfLnExDRpMtIMqI97GQFR.jpg",
-    "from": "Backrooms (tmdb:1083381)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 3186
    },
-   "logo": {
-    "kind": "provider",
-    "id": 1899
-   }
+   "icon_provider": 1899,
+   "badge": "New"
   },
   {
    "slug": "streaming-apple-tv-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Apple TV",
-   "bg": {
-    "kind": "path",
-    "path": "/ulm1ex4JFYJByyaPyqTr47MFyEQ.jpg",
-    "from": "Pluribus (tmdb:225171)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2552
    },
-   "logo": {
-    "kind": "provider",
-    "id": 350
-   }
+   "icon_provider": 350,
+   "badge": "New"
   },
   {
    "slug": "streaming-paramountplus-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Paramount+",
-   "bg": {
-    "kind": "path",
-    "path": "/aHj7d7wSLqrg5cjAcgHhiGr97Ih.jpg",
-    "from": "The Running Man (tmdb:798645)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 4330
    },
-   "_why": "provider 2616 icon reads 'Paramount+ Essential'"
+   "icon_provider": 2616,
+   "badge": "New"
   },
   {
    "slug": "streaming-prime-video-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Prime Video",
-   "bg": {
-    "kind": "path",
-    "path": "/8Tfys3mDZVp4tNoH2ktm06a0Tau.jpg",
-    "from": "Project Hail Mary (tmdb:687163)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 1024
    },
-   "logo": {
-    "kind": "provider",
-    "id": 9
-   }
+   "icon_provider": 9,
+   "badge": "New"
   },
   {
    "slug": "streaming-hulu-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Hulu",
-   "bg": {
-    "kind": "path",
-    "path": "/82lM4GJ9uuNvNDOEpxFy77uv4Ak.jpg",
-    "from": "Predator: Badlands (tmdb:1242898)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 453
    },
-   "logo": {
-    "kind": "provider",
-    "id": 15
-   }
+   "icon_provider": 15,
+   "badge": "New"
   },
   {
    "slug": "streaming-peacock-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Peacock",
-   "bg": {
-    "kind": "path",
-    "path": "/uoTZOIXnkcTgJe1emITpsQq7sPu.jpg",
-    "from": "Obsession (tmdb:1339713)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 3353
    },
-   "_why": "provider icon is a tiny wordmark"
+   "icon_provider": 386,
+   "badge": "New"
   },
   {
    "slug": "streaming-starz-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Starz",
-   "bg": {
-    "kind": "path",
-    "path": "/ufSwlnECLoUbBjPrFqEQcWBzHwc.jpg",
-    "from": "Michael (tmdb:936075)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 318
    },
-   "logo": {
-    "kind": "provider",
-    "id": 43
-   }
+   "icon_provider": 43,
+   "badge": "New"
   },
   {
    "slug": "streaming-discoveryplus-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Discovery+",
-   "bg": {
-    "kind": "path",
-    "path": "/8XpdtLahoQ0dem3wQ4ksTUsXk51.jpg",
-    "from": "Louvre Heist: Minute by Minute (tmdb:1588671)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 4353
    },
-   "logo": {
-    "kind": "provider",
-    "id": 520
-   }
+   "icon_provider": 520,
+   "badge": "New"
   },
   {
    "slug": "streaming-netflix-kids-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Netflix Kids",
-   "bg": {
-    "kind": "path",
-    "path": "/7OrV2aAH5Yp7hA9zCCvUloLvZtl.jpg",
-    "from": "PAW Patrol (tmdb:57532)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 213
    },
-   "logo": {
-    "kind": "provider",
-    "id": 175
-   }
+   "icon_provider": 175,
+   "badge": "New",
+   "logo_sub": "KIDS"
   },
   {
    "slug": "streaming-crunchyroll-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Crunchyroll",
-   "bg": {
-    "kind": "path",
-    "path": "/5NmmaK9dt38UXOwzPC2t9yR3HTv.jpg",
-    "from": "Witch Hat Atelier (tmdb:196950)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 198847
    },
-   "logo": {
-    "kind": "provider",
-    "id": 283
-   }
+   "icon_provider": 283,
+   "badge": "New"
   },
   {
    "slug": "streaming-mubi-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "MUBI",
-   "bg": {
-    "kind": "path",
-    "path": "/baIjN7xPyw2In1CuHACTgzcsF20.jpg",
-    "from": "La Grazia (tmdb:1397364)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 8303
    },
-   "logo": {
-    "kind": "provider",
-    "id": 11
-   }
+   "icon_provider": 11,
+   "badge": "New"
   },
   {
    "slug": "streaming-criterion-channel-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Criterion Channel",
-   "bg": {
-    "kind": "path",
-    "path": "/vzIKxaav4Q5KBDDfYpphMzRQEOG.jpg",
-    "from": "The Little Sister (tmdb:961077)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 10932
    },
-   "logo": {
-    "kind": "provider",
-    "id": 258
-   }
+   "icon_provider": 258,
+   "badge": "New"
   },
   {
    "slug": "streaming-rakuten-viki-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Rakuten Viki",
-   "bg": {
-    "kind": "path",
-    "path": "/iDnZoZvv220H6pigUWt3BlfPdxQ.jpg",
-    "from": "Dear X (tmdb:256226)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 344
-   }
+   },
+   "icon_provider": 344,
+   "badge": "New"
   },
   {
    "slug": "streaming-magellantv-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "MagellanTV",
-   "bg": {
-    "kind": "path",
-    "path": "/nMdyDnHiRpJ2sfqk3JfUb3CvME4.jpg",
-    "from": "Atlantis (tmdb:47054)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 551
-   }
+   },
+   "icon_provider": 551,
+   "badge": "New"
   },
   {
    "slug": "streaming-shudder-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Shudder",
-   "bg": {
-    "kind": "path",
-    "path": "/mPtPJzBkwksUoMEKpkZqxBrlKpZ.jpg",
-    "from": "Good Boy (tmdb:1422096)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2949
    },
-   "logo": {
-    "kind": "provider",
-    "id": 99
-   }
+   "icon_provider": 99,
+   "badge": "New"
   },
   {
    "slug": "streaming-amcplus-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "AMC+",
-   "bg": {
-    "kind": "path",
-    "path": "/sb76azrAXr9U13uEQxNP5e3fujY.jpg",
-    "from": "Over Your Dead Body (tmdb:1390300)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 226350
    },
-   "logo": {
-    "kind": "provider",
-    "id": 526
-   }
+   "icon_provider": 526,
+   "badge": "New"
   },
   {
    "slug": "streaming-britbox-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "BritBox",
-   "bg": {
-    "kind": "path",
-    "path": "/ff6y85mMOnsLPcgUS0q3zX1N7WO.jpg",
-    "from": "The Other Bennet Sister (tmdb:273866)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 159102
    },
-   "logo": {
-    "kind": "provider",
-    "id": 151
-   }
+   "icon_provider": 151,
+   "badge": "New"
   },
   {
    "slug": "streaming-tubi-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Tubi",
-   "bg": {
-    "kind": "path",
-    "path": "/mPy1xSASQ9NYWJdAGx2C2sOsnNw.jpg",
-    "from": "The Odyssey (tmdb:1698863)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 153734
    },
-   "logo": {
-    "kind": "provider",
-    "id": 73
-   }
+   "icon_provider": 73,
+   "badge": "New"
   },
   {
    "slug": "streaming-pluto-tv-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Pluto TV",
-   "bg": {
-    "kind": "path",
-    "path": "/9SKidFo89hRhvXfsHeCOF4GhQz3.jpg",
-    "from": "Little Brother (tmdb:979157)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 300
-   }
+   },
+   "icon_provider": 300,
+   "badge": "New"
   },
   {
    "slug": "streaming-the-roku-channel-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "The Roku Channel",
-   "bg": {
-    "kind": "path",
-    "path": "/zoa11EvyuasC3j7PmH1QGftrSvf.jpg",
-    "from": "Among Us (tmdb:229544)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 207
-   }
+   },
+   "icon_provider": 207,
+   "badge": "New"
   },
   {
    "slug": "streaming-kanopy-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Kanopy",
-   "bg": {
-    "kind": "path",
-    "path": "/puqQGxK9HYITUKhCdREg3XOLlZd.jpg",
-    "from": "Cold Storage (tmdb:696393)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 122372
    },
-   "logo": {
-    "kind": "provider",
-    "id": 191
-   }
+   "icon_provider": 191,
+   "badge": "New"
   },
   {
    "slug": "streaming-hoopla-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Hoopla",
-   "bg": {
-    "kind": "path",
-    "path": "/zUninC7dOHfzwcgCqQMLQjlMtiy.jpg",
-    "from": "Citizen Vigilante (tmdb:1413976)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 212
-   }
+   },
+   "icon_provider": 212,
+   "badge": "New"
   },
   {
    "slug": "streaming-plex-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Plex",
-   "bg": {
-    "kind": "path",
-    "path": "/zhoMwQofjgVec5Sin05hWECJtVQ.jpg",
-    "from": "It Was Just an Accident (tmdb:1456349)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 538
-   }
+   },
+   "icon_provider": 538,
+   "badge": "New"
   },
   {
    "slug": "streaming-acorn-tv-new",
    "shape": "wide",
-   "eyebrow": "New on Streaming",
+   "eyebrow": "Streaming",
    "title": "Acorn TV",
-   "bg": {
-    "kind": "path",
-    "path": "/yGUbGli2M3UKnEPpeLaqH6ewhqa.jpg",
-    "from": "Murder Before Evensong (tmdb:280571)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2697
    },
-   "logo": {
-    "kind": "provider",
-    "id": 87
-   }
+   "icon_provider": 87,
+   "badge": "New"
   },
   {
    "slug": "streaming-netflix-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Netflix",
-   "bg": {
-    "kind": "path",
-    "path": "/84beTJf26mfhoasUlKSOiNSutyS.jpg",
-    "from": "Dilwale Dulhania Le Jayenge (tmdb:19404)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 213
    },
-   "logo": {
-    "kind": "provider",
-    "id": 8
-   }
+   "icon_provider": 8,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-disneyplus-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Disney+",
-   "bg": {
-    "kind": "path",
-    "path": "/k9pshruhCpJAdH9RaGJO6jaWQ4X.jpg",
-    "from": "The Empire Strikes Back (tmdb:1891)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2739
    },
-   "logo": {
-    "kind": "provider",
-    "id": 337
-   }
+   "icon_provider": 337,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-hbo-max-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "HBO Max",
-   "bg": {
-    "kind": "path",
-    "path": "/z3BkMbCy5ajZPMyKEUwsPHuz2cV.jpg",
-    "from": "The Pitt (tmdb:250307)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 3186
    },
-   "logo": {
-    "kind": "provider",
-    "id": 1899
-   }
+   "icon_provider": 1899,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-apple-tv-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Apple TV",
-   "bg": {
-    "kind": "path",
-    "path": "/jrFL1KBSDO5vTM7AB6sXnx6Flc0.jpg",
-    "from": "Dickinson (tmdb:89901)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2552
    },
-   "logo": {
-    "kind": "provider",
-    "id": 350
-   }
+   "icon_provider": 350,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-paramountplus-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Paramount+",
-   "bg": {
-    "kind": "path",
-    "path": "/tSPT36ZKlP2WVHJLM4cQPLSzv3b.jpg",
-    "from": "The Godfather (tmdb:238)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 4330
    },
-   "_why": "provider 2616 icon reads 'Paramount+ Essential'"
+   "icon_provider": 2616,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-prime-video-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Prime Video",
-   "bg": {
-    "kind": "path",
-    "path": "/3siv3RaQrdr2tQiv9jHq71sLlzo.jpg",
-    "from": "The Chosen (tmdb:85077)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 1024
    },
-   "logo": {
-    "kind": "provider",
-    "id": 9
-   }
+   "icon_provider": 9,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-hulu-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Hulu",
-   "bg": {
-    "kind": "path",
-    "path": "/qqHQsStV6exghCM7zbObuYBiYxw.jpg",
-    "from": "12 Angry Men (tmdb:389)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 453
    },
-   "logo": {
-    "kind": "provider",
-    "id": 15
-   }
+   "icon_provider": 15,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-peacock-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Peacock",
-   "bg": {
-    "kind": "path",
-    "path": "/mufF1aYvwdpKerhq5R1YrVcbJLY.jpg",
-    "from": "Psycho (tmdb:539)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 3353
    },
-   "_why": "provider icon is a tiny wordmark"
+   "icon_provider": 386,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-starz-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Starz",
-   "bg": {
-    "kind": "path",
-    "path": "/kH8xW7K2Gp1KOXoeewcLPkfqZ8K.jpg",
-    "from": "The Hate U Give (tmdb:470044)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 318
    },
-   "logo": {
-    "kind": "provider",
-    "id": 43
-   }
+   "icon_provider": 43,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-crunchyroll-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Crunchyroll",
-   "bg": {
-    "kind": "path",
-    "path": "/gqTz24ZRsCP6AKjARmEivY7m0cK.jpg",
-    "from": "Chainsaw Man - The Movie: Reze Arc (tmdb:1218925)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 198847
    },
-   "logo": {
-    "kind": "provider",
-    "id": 283
-   }
+   "icon_provider": 283,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-mubi-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "MUBI",
-   "bg": {
-    "kind": "path",
-    "path": "/dZklTql88IDOmkC3JAYQSTgyK6f.jpg",
-    "from": "Twin Peaks (tmdb:1920)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 8303
    },
-   "logo": {
-    "kind": "provider",
-    "id": 11
-   }
+   "icon_provider": 11,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-criterion-channel-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Criterion Channel",
-   "bg": {
-    "kind": "path",
-    "path": "/nC3IjYhUgZWgfKfFX0ygMigFwgc.jpg",
-    "from": "Harakiri (tmdb:14537)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 10932
    },
-   "logo": {
-    "kind": "provider",
-    "id": 258
-   }
+   "icon_provider": 258,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-rakuten-viki-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Rakuten Viki",
-   "bg": {
-    "kind": "path",
-    "path": "/gd9kxeEEONj5SECs4GA8Ddn3czI.jpg",
-    "from": "Ne Zha 2 (tmdb:980477)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 344
-   }
+   },
+   "icon_provider": 344,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-shudder-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Shudder",
-   "bg": {
-    "kind": "path",
-    "path": "/sLq72hBx8Xs2IISVsZJqgjOd31b.jpg",
-    "from": "The Cabinet of Dr. Caligari (tmdb:234)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "network",
+    "id": 2949
    },
-   "logo": {
-    "kind": "provider",
-    "id": 99
-   }
+   "icon_provider": 99,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-amcplus-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "AMC+",
-   "bg": {
-    "kind": "path",
-    "path": "/eYDTiJ88jfMJ5Vp3a0OAEihBzZX.jpg",
-    "from": "Mad Men (tmdb:1104)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 226350
    },
-   "logo": {
-    "kind": "provider",
-    "id": 526
-   }
+   "icon_provider": 526,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-britbox-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "BritBox",
-   "bg": {
-    "kind": "path",
-    "path": "/kv20JYfmzLyYi1vV0ocryyju3zl.jpg",
-    "from": "Evil Under the Sun (tmdb:4193)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 159102
    },
-   "logo": {
-    "kind": "provider",
-    "id": 151
-   }
+   "icon_provider": 151,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-tubi-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Tubi",
-   "bg": {
-    "kind": "path",
-    "path": "/bFKKyCI89Xq98Gul8cGox8K3sZa.jpg",
-    "from": "Hunter x Hunter (tmdb:46298)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 153734
    },
-   "logo": {
-    "kind": "provider",
-    "id": 73
-   }
+   "icon_provider": 73,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-pluto-tv-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Pluto TV",
-   "bg": {
-    "kind": "path",
-    "path": "/z8IPicmEKXUO4I2UDdMEqw7RqOE.jpg",
-    "from": "Death Note (tmdb:13916)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 300
-   }
+   },
+   "icon_provider": 300,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-the-roku-channel-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "The Roku Channel",
-   "bg": {
-    "kind": "path",
-    "path": "/x4biAVdPVCghBlsVIzB6NmbghIz.jpg",
-    "from": "The Good, the Bad and the Ugly (tmdb:429)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 207
-   }
+   },
+   "icon_provider": 207,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-kanopy-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Kanopy",
-   "bg": {
-    "kind": "path",
-    "path": "/1lOGkpGa9SjZ2uP1PxfxDkSXRNs.jpg",
-    "from": "Freaks and Geeks (tmdb:2382)"
+   "style": "logo",
+   "logo_src": {
+    "kind": "company",
+    "id": 122372
    },
-   "logo": {
-    "kind": "provider",
-    "id": 191
-   }
+   "icon_provider": 191,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-hoopla-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Hoopla",
-   "bg": {
-    "kind": "path",
-    "path": "/xyWKrni8WrYzqn7ztvI5nIY0h62.jpg",
-    "from": "¿Quieres ser mi hijo? (tmdb:1181678)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 212
-   }
+   },
+   "icon_provider": 212,
+   "badge": "Top Rated"
   },
   {
    "slug": "streaming-plex-top",
    "shape": "wide",
-   "eyebrow": "Top Rated · Streaming",
+   "eyebrow": "Streaming",
    "title": "Plex",
-   "bg": {
-    "kind": "path",
-    "path": "/uvCkSZwCTKnBtBOvDpcOvQA6xBg.jpg",
-    "from": "Fighting Spirit (tmdb:42705)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "provider",
     "id": 538
-   }
+   },
+   "icon_provider": 538,
+   "badge": "Top Rated"
   },
   {
    "slug": "genre-action",
@@ -1351,233 +1199,149 @@
   {
    "slug": "genre-action-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Action",
-   "bg": {
-    "kind": "path",
-    "path": "/4EAAwpylq313qrDqpCxulUrXBNF.jpg",
-    "from": "Mortal Kombat II (tmdb:931285)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-adventure-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Adventure",
-   "bg": {
-    "kind": "path",
-    "path": "/kxQiIJ4gVcD3K6o14MJ72p5yRcE.jpg",
-    "from": "The Super Mario Galaxy Movie (tmdb:1226863)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-animation-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Animation",
-   "bg": {
-    "kind": "path",
-    "path": "/lgotja3xMoJZbynwHfcQcJAEMWH.jpg",
-    "from": "Zootopia 2 (tmdb:1084242)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-anime-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Anime",
-   "bg": {
-    "kind": "path",
-    "path": "/4ZZiOP4Imzv6ULF9QczvfQ1VdEO.jpg",
-    "from": "Scarlet (tmdb:1406657)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-comedy-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Comedy",
-   "bg": {
-    "kind": "path",
-    "path": "/fiRDzpcJe7qz3yIR43hdXIE3NHv.jpg",
-    "from": "Wake Up Dead Man: A Knives Out Mystery (tmdb:812583)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-crime-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Crime",
-   "bg": {
-    "kind": "path",
-    "path": "/qO55CD8tgVL1T4WKn6zYFFiD6lL.jpg",
-    "from": "The Punisher: One Last Kill (tmdb:1439930)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-documentary-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Documentary",
-   "bg": {
-    "kind": "path",
-    "path": "/8X2R9uLys3SmkRuQAmSI96xxJAF.jpg",
-    "from": "The Dinosaurs (tmdb:313298)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-drama-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Drama",
-   "bg": {
-    "kind": "path",
-    "path": "/Af907x5h9W1wVis8XrSd7ynTWuy.jpg",
-    "from": "The Devil Wears Prada 2 (tmdb:1314481)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-family-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Family",
-   "bg": {
-    "kind": "path",
-    "path": "/u53UYu5XG2hNgWGvs3xGhAVzypl.jpg",
-    "from": "Hoppers (tmdb:1327819)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-fantasy-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Fantasy",
-   "bg": {
-    "kind": "path",
-    "path": "/zMwhWailP1WY7sb6AoE6b8ugoy.jpg",
-    "from": "Swapped (tmdb:1007757)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-history-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "History",
-   "bg": {
-    "kind": "path",
-    "path": "/bf5TG9RODkPXmtJSgf8Iymof1wl.jpg",
-    "from": "Nuremberg (tmdb:1214931)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-horror-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Horror",
-   "bg": {
-    "kind": "path",
-    "path": "/xugEpZk9YQ0DIz1aFvH5HGkqpZK.jpg",
-    "from": "Lee Cronin's The Mummy (tmdb:1304313)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-kids-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Kids",
-   "bg": {
-    "kind": "path",
-    "path": "/5W4ST8DCqSUQh4itmwUJ6dVMeZs.jpg",
-    "from": "Winx Club: The Magic Is Back (tmdb:286822)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-music-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Music",
-   "bg": {
-    "kind": "path",
-    "path": "/oOczvrnhpXUmqCbyKYFj4FQExAo.jpg",
-    "from": "Springsteen: Deliver Me from Nowhere (tmdb:1230368)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-mystery-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Mystery",
-   "bg": {
-    "kind": "path",
-    "path": "/zTnAnYIn0Iv3cn0ZHlzLhou3ybm.jpg",
-    "from": "The Housemaid (tmdb:1368166)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-reality-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Reality",
-   "bg": {
-    "kind": "path",
-    "path": "/823qOjKt0V0N9S6h2uoqu1IA15f.jpg",
-    "from": "Physical: Asia (tmdb:293613)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-romance-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Romance",
-   "bg": {
-    "kind": "path",
-    "path": "/1oKLEA9JOhvaBwLpqjROisvWMy7.jpg",
-    "from": "The Drama (tmdb:1325734)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-sci-fi-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Sci-Fi",
-   "bg": {
-    "kind": "path",
-    "path": "/flxau5Iu7bChQHsESqvGZ3FQRaI.jpg",
-    "from": "Disclosure Day (tmdb:1275779)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-thriller-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Thriller",
-   "bg": {
-    "kind": "path",
-    "path": "/6yeVcxFR0j08vlv2OlL6zbewm4D.jpg",
-    "from": "War Machine (tmdb:1265609)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-war-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "War",
-   "bg": {
-    "kind": "path",
-    "path": "/10MiMMNzWeE53cHhSlfroPiO8vi.jpg",
-    "from": "Sisu: Road to Revenge (tmdb:1223601)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-westerns-new",
    "shape": "wide",
-   "eyebrow": "New · Genre",
+   "eyebrow": "Genre",
    "title": "Westerns",
-   "bg": {
-    "kind": "path",
-    "path": "/ewlmL0nxo2lLqBj69upgp2gjHpV.jpg",
-    "from": "Dutton Ranch (tmdb:299167)"
-   }
+   "style": "type"
   },
   {
    "slug": "genre-action-top",
@@ -1815,645 +1579,559 @@
    "shape": "wide",
    "eyebrow": "Network",
    "title": "HBO",
-   "bg": {
-    "kind": "path",
-    "path": "/zZqpAXxVSBtxV9qPBcscfXBcL2w.jpg",
-    "from": "Game of Thrones (tmdb:1399)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 49
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-amc",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "AMC",
-   "bg": {
-    "kind": "path",
-    "path": "/rAOjnEFTuNysY7bot8zonhImGMh.jpg",
-    "from": "The Walking Dead (tmdb:1402)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 174
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-fx",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "FX",
-   "bg": {
-    "kind": "path",
-    "path": "/5G4Bnc4Q0YUK1bwLEUYmIsmm2Ib.jpg",
-    "from": "American Horror Story (tmdb:1413)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 88
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-bbc-one",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "BBC One",
-   "bg": {
-    "kind": "path",
-    "path": "/dzq83RHwQcnP6WGJ6YkenIqeaa5.jpg",
-    "from": "Peaky Blinders (tmdb:60574)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 4
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-apple-tv",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Apple TV",
-   "bg": {
-    "kind": "path",
-    "path": "/ixgFmf1X59PUZam2qbAfskx2gQr.jpg",
-    "from": "Severance (tmdb:95396)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 2552
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-netflix",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Netflix",
-   "bg": {
-    "kind": "path",
-    "path": "/9P4IIMYY3HifqeruZq0ZZ9g7YUi.jpg",
-    "from": "Stranger Things (tmdb:66732)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 213
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-showtime",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Showtime",
-   "bg": {
-    "kind": "path",
-    "path": "/nS5ZSmrX92lu1GYAlXZye1mkDfd.jpg",
-    "from": "Dexter (tmdb:1405)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 67
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-adult-swim",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Adult Swim",
-   "bg": {
-    "kind": "path",
-    "path": "/5BDNWWHweQL0q1fmTv7gmRXfnl4.jpg",
-    "from": "Rick and Morty (tmdb:60625)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 80
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-comedy-central",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Comedy Central",
-   "bg": {
-    "kind": "path",
-    "path": "/3UviYOlhn8EgXMBuiT6MnUuo1w9.jpg",
-    "from": "South Park (tmdb:2190)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 47
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-cartoon-network",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Cartoon Network",
-   "bg": {
-    "kind": "path",
-    "path": "/pe4B3OYBb7qYCdkAz7nKWordbls.jpg",
-    "from": "Adventure Time (tmdb:15260)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 56
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-nickelodeon",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Nickelodeon",
-   "bg": {
-    "kind": "path",
-    "path": "/7oBGhqJIghRBvOwo5Qe0yM0cnMc.jpg",
-    "from": "Avatar: The Last Airbender (tmdb:246)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 13
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-disney-channel",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Disney Channel",
-   "bg": {
-    "kind": "path",
-    "path": "/lhg7eA6CTOCL10QNVdKiyxkgPsL.jpg",
-    "from": "Gravity Falls (tmdb:40075)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 54
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-history",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "History",
-   "bg": {
-    "kind": "path",
-    "path": "/xsTo4EoKxk27FvY5Stwuw6CGYt.jpg",
-    "from": "Project Blue Book (tmdb:79649)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 65
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-discovery",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Discovery",
-   "bg": {
-    "kind": "path",
-    "path": "/edhROlXRob3TopjWJ5898GSvQpI.jpg",
-    "from": "MythBusters (tmdb:1428)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 64
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-national-geographic",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "National Geographic",
-   "bg": {
-    "kind": "path",
-    "path": "/2Nwbv0hrN8sThLvgooShcPqmFrO.jpg",
-    "from": "Cosmos (tmdb:58474)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 43
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-aande",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "A&E",
-   "bg": {
-    "kind": "path",
-    "path": "/xadC4VMl6UPRdBINAUgTBmYL7BF.jpg",
-    "from": "Unforgettable (tmdb:39276)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 129
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-hulu",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Hulu",
-   "bg": {
-    "kind": "path",
-    "path": "/1yhQGQH7pfKdIY2xJSYNdp8ReD6.jpg",
-    "from": "The Act (tmdb:82883)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 453
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-prime-video",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Prime Video",
-   "bg": {
-    "kind": "path",
-    "path": "/bq28ajZaoMyzEIm6REelqyqtEDZ.jpg",
-    "from": "The Boys (tmdb:76479)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 1024
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-peacock",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Peacock",
-   "bg": {
-    "kind": "path",
-    "path": "/5QKGJ4nEjAq4TSTvhJw5PrNcIbu.jpg",
-    "from": "The Croods: Family Tree (tmdb:132559)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 3353
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-hbo-max",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "HBO Max",
-   "bg": {
-    "kind": "path",
-    "path": "/aJcUU3LMlqMKBi8L3eaxGfAbd4G.jpg",
-    "from": "Peacemaker (tmdb:110492)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 3186
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-paramountplus",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Paramount+",
-   "bg": {
-    "kind": "path",
-    "path": "/tUtXfyVy54BY7eJnRtI8Xnmr1ZL.jpg",
-    "from": "Criminal Minds (tmdb:4057)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 4330
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-pbs",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "PBS",
-   "bg": {
-    "kind": "path",
-    "path": "/hjJ5XDKP7XY2ADUuMdHM5NsC32s.jpg",
-    "from": "Cosmos: A Personal Voyage (tmdb:1430)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 14
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-mtv",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "MTV",
-   "bg": {
-    "kind": "path",
-    "path": "/1F2RnXLc0fmRt7iWfBK4mNVsjno.jpg",
-    "from": "Teen Wolf (tmdb:34524)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 33
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-starz",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "Starz",
-   "bg": {
-    "kind": "path",
-    "path": "/zbfXS4o6UykeXsD8djFTyV7Cj4N.jpg",
-    "from": "Spartacus (tmdb:46296)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 318
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "network-the-cw",
    "shape": "wide",
    "eyebrow": "Network",
    "title": "The CW",
-   "bg": {
-    "kind": "path",
-    "path": "/kb9XvtEnDhBVVit4eeKygqll4EA.jpg",
-    "from": "Riverdale (tmdb:69050)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "network",
     "id": 71
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-pixar",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Pixar",
-   "bg": {
-    "kind": "path",
-    "path": "/eCynaAOgYYiw5yN5lBwz3IxqvaW.jpg",
-    "from": "Finding Nemo (tmdb:12)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 3
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-walt-disney-animation",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Walt Disney Animation",
-   "bg": {
-    "kind": "path",
-    "path": "/9tOkjBEiiGcaClgJFtwocStZvIT.jpg",
-    "from": "Zootopia (tmdb:269149)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 6125
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-dreamworks-animation",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "DreamWorks Animation",
-   "bg": {
-    "kind": "path",
-    "path": "/w0eKUOEog2ImtktCHAMUZws8qif.jpg",
-    "from": "Shrek (tmdb:808)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 521
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-a24",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "A24",
-   "bg": {
-    "kind": "path",
-    "path": "/fIwiFha3WPu5nHkBeMQ4GzEk0Hv.jpg",
-    "from": "Everything Everywhere All at Once (tmdb:545611)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 41077
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-blumhouse",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Blumhouse",
-   "bg": {
-    "kind": "path",
-    "path": "/bBQHALHRAaaORlPNXv7fNcRXYdx.jpg",
-    "from": "Get Out (tmdb:419430)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 3172
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-studio-ghibli",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Studio Ghibli",
-   "bg": {
-    "kind": "path",
-    "path": "/nv5wwZou159v5OC61i4ElR7OqyY.jpg",
-    "from": "Howl's Moving Castle (tmdb:4935)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 10342
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-illumination",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Illumination",
-   "bg": {
-    "kind": "path",
-    "path": "/2XSeKDmIa2KxaiJy4J9e8FrIZhk.jpg",
-    "from": "Despicable Me (tmdb:20352)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 6704
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-warner-bros-pictures",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Warner Bros. Pictures",
-   "bg": {
-    "kind": "path",
-    "path": "/tlm8UkiQsitc8rSuIAscQDCnP8d.jpg",
-    "from": "The Matrix (tmdb:603)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 174
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-universal",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Universal",
-   "bg": {
-    "kind": "path",
-    "path": "/5bzPWQ2dFUl2aZKkp7ILJVVkRed.jpg",
-    "from": "Back to the Future (tmdb:105)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 33
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-neon",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "NEON",
-   "bg": {
-    "kind": "path",
-    "path": "/cjZ7No0DX2L3ielLSoUOMYPw7C.jpg",
-    "from": "The Monkey (tmdb:1124620)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 90733
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-legendary",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Legendary",
-   "bg": {
-    "kind": "path",
-    "path": "/c3OHQncTAnKFhdOTX7D3LTW6son.jpg",
-    "from": "The Dark Knight Rises (tmdb:49026)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 923
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-lionsgate",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Lionsgate",
-   "bg": {
-    "kind": "path",
-    "path": "/3sndNmvdF0R8AeyCmVoNv8LKtNy.jpg",
-    "from": "The Hunger Games (tmdb:70160)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 1632
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-focus-features",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Focus Features",
-   "bg": {
-    "kind": "path",
-    "path": "/W1ffLQGHoxfAOq0ZYdPtJlvAdb.jpg",
-    "from": "Eternal Sunshine of the Spotless Mind (tmdb:38)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 10146
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-searchlight",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Searchlight",
-   "bg": {
-    "kind": "path",
-    "path": "/jK65srQczOKTpW62wPxwwKztGgE.jpg",
-    "from": "The Grand Budapest Hotel (tmdb:120467)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 127929
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-laika",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "LAIKA",
-   "bg": {
-    "kind": "path",
-    "path": "/v23fWgJUEt8EMmvn19btIacxP8E.jpg",
-    "from": "Corpse Bride (tmdb:3933)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 11537
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-aardman",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Aardman",
-   "bg": {
-    "kind": "path",
-    "path": "/3eYkMSjWbvTaZso7ow5ub9ikNNq.jpg",
-    "from": "Chicken Run (tmdb:7443)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 297
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-new-line",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "New Line",
-   "bg": {
-    "kind": "path",
-    "path": "/i5H7zusQGsysGQ8i6P361Vnr0n2.jpg",
-    "from": "Se7en (tmdb:807)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 12
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "studio-amblin",
    "shape": "wide",
    "eyebrow": "Studio",
    "title": "Amblin",
-   "bg": {
-    "kind": "path",
-    "path": "/4SyDTF02R5BepqSdQmOaNCHObzF.jpg",
-    "from": "Jurassic Park (tmdb:329)"
-   },
-   "logo": {
+   "style": "logo",
+   "logo_src": {
     "kind": "company",
     "id": 56
-   }
+   },
+   "icon_provider": null,
+   "badge": null
   },
   {
    "slug": "series-007",

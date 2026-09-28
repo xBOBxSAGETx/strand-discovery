@@ -163,14 +163,18 @@ def render(card):
     line_h = title_f.size * 1.08
     y = h - margin - line_h * len(lines)
     eyebrow_f = font(26 if card['shape'] == 'wide' else 22, 'Bold')
-    draw.text((margin, y - eyebrow_f.size - 14), card['eyebrow'].upper(), font=eyebrow_f, fill=ACCENT)
+    ey = (margin, y - eyebrow_f.size - 14)
+    draw.text(ey, card['eyebrow'].upper(), font=eyebrow_f, fill=ACCENT)
+    boxes = [('eyebrow', draw.textbbox(ey, card['eyebrow'].upper(), font=eyebrow_f))]
     for i, line in enumerate(lines):
         draw.text((margin, y + i * line_h), line, font=title_f, fill=(255, 255, 255))
+        boxes.append((f'title line {i + 1}', draw.textbbox((margin, y + i * line_h), line, font=title_f)))
     if logo_kind == 'provider':                       # square app icon, rounded corners
         logo = logo_image(card['logo']).resize((150, 150), Image.LANCZOS)
         mask = Image.new('L', logo.size, 0)
         ImageDraw.Draw(mask).rounded_rectangle((0, 0, 149, 149), radius=30, fill=255)
         base.paste(logo, (margin, margin), mask)
+        boxes.append(('logo', (margin, margin, margin + 150, margin + 150)))
         log['logo'] = 'provider icon'
     elif logo_kind:                                   # transparent wordmark, fitted inside the box, top-left
         logo = logo_image(card['logo'])
@@ -182,12 +186,33 @@ def render(card):
             scale = min(bw / logo.width, bh / logo.height)
             logo = logo.resize((max(1, round(logo.width * scale)), max(1, round(logo.height * scale))), Image.LANCZOS)
             base.alpha_composite(logo, (margin, margin))
+            boxes.append(('logo', (margin, margin, margin + logo.width, margin + logo.height)))
             log['logo'] = f'{logo_kind} wordmark (luma {mean}{", whitened" if mean < 110 else ""})'
+    import art_logo                                   # 4% safe-area assert, same as the logo / type cards
+    art_logo.check_bounds(boxes, size, fails, log)
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"{card['slug']}.jpg"
     out = base.convert('RGB')
     if out.size != size:
         fails.append(f'size {out.size} != {size}')
+    out.save(path, 'JPEG', quality=QUALITY, optimize=True, progressive=True)
+    log['bytes'] = path.stat().st_size
+    if log['bytes'] >= MAX_BYTES:
+        fails.append(f"{log['bytes']} B >= {MAX_BYTES}")
+    return path, log, fails
+
+
+def render_any(card):
+    """Photo card (render) or, for style 'logo' / 'type', a logo / typographic card (art_logo); same file checks."""
+    if card.get('style') not in ('logo', 'type'):
+        return render(card)
+    import art_logo                                   # imported here: art_logo imports this module
+    img, log, fails = (art_logo.render_logo if card['style'] == 'logo' else art_logo.render_type)(card)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / f"{card['slug']}.jpg"
+    out = img.convert('RGB')
+    if out.size != SIZES[card['shape']]:
+        fails.append(f"size {out.size} != {SIZES[card['shape']]}")
     out.save(path, 'JPEG', quality=QUALITY, optimize=True, progressive=True)
     log['bytes'] = path.stat().st_size
     if log['bytes'] >= MAX_BYTES:
@@ -203,7 +228,7 @@ if __name__ == '__main__':
         if only and c['slug'] not in only:
             continue
         try:
-            p, log, fails = render(c)
+            p, log, fails = render_any(c)
         except Exception as e:                        # one bad card must not stop the other renders
             log, fails = {'slug': c['slug']}, [f'render error {type(e).__name__}']
         log['fails'] = fails

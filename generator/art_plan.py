@@ -23,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import build  # noqa: E402  (reuses its throttled, key-safe tmdb() and the durable cache)
 
 HERE = Path(__file__).resolve().parent
+LOGO_SOURCES = json.loads((HERE / 'logo_sources.json').read_text(encoding='utf-8'))     if (HERE / 'logo_sources.json').exists() else {}      # written by logo_sources.py
 LOOKAHEAD = 40        # candidates tried per card before giving up on a unique, acceptable backdrop
 DOCUMENTARY = 99
 # TMDB TV genres that merge two film genres (Action & Adventure, Sci-Fi & Fantasy, War & Politics): cards using one
@@ -91,7 +92,9 @@ def main():
     overrides = json.loads((HERE / 'art_overrides.json').read_text(encoding='utf-8')) \
         if (HERE / 'art_overrides.json').exists() else {}
     avoid = set(overrides.pop('_avoid', {}).get('titles', []))
-    used = set()                                  # backdrop paths already used by any card
+    pinned = json.loads((HERE / 'art_pinned.json').read_text(encoding='utf-8'))['pinned']         if (HERE / 'art_pinned.json').exists() else {}
+    # approved backgrounds stay as they are and are reserved first, so no other card can take them
+    used = {b['path'] for b in pinned.values() if b.get('kind') == 'path'}
     cards, problems, skipped = [], [], {'documentary': 0, 'taste': 0, 'avoid': 0, 'duplicate': 0}
     try:
         for c in spec['catalogs']:
@@ -100,7 +103,28 @@ def main():
             shape = shape.pop()
             assert (shape == 'poster') == (c['kind'] in ('director', 'actor')), f"{c['slug']}: people must be poster"
             card = {'slug': c['slug'], 'shape': shape, 'eyebrow': c['eyebrow'], 'title': c.get('art_title', c['title'])}
-            if c['kind'] in ('director', 'actor'):
+            logo_key = (f"streaming:{c['provider']}" if c.get('provider') else
+                        f"streaming:{c['slug'][len('streaming-'):].rsplit('-top', 1)[0]}" if c['slug'].startswith('streaming-')
+                        else c['slug'] if c['slug'].startswith(('network-', 'studio-')) else None)
+            if logo_key and logo_key in LOGO_SOURCES:
+                # service / network / studio cards: the brand's own logo, never a movie still (static art can't go stale)
+                src = LOGO_SOURCES[logo_key]
+                card.update(style='logo', logo_src={'kind': src['kind'], 'id': src['id']},
+                            icon_provider=src.get('icon_provider'),
+                            badge={'new': 'New', 'top': 'Top Rated'}.get(c.get('sort')),
+                            eyebrow={'streaming': 'Streaming', 'network': 'Network', 'studio': 'Studio'}[
+                                'streaming' if logo_key.startswith('streaming:') else c['slug'].split('-')[0]])
+                base = c['slug'].rsplit('-new', 1)[0].rsplit('-top', 1)[0]
+                card.update({k: v for k, v in overrides.get(base, {}).items() if not k.startswith('_')})
+                cards.append(card)
+                continue
+            if c['slug'].startswith('genre-') and c.get('sort') == 'new':
+                card.update(style='type', eyebrow='Genre')          # typographic "NEW" card on a genre colour
+                cards.append(card)
+                continue
+            if c['slug'] in pinned:
+                card['bg'] = pinned[c['slug']]
+            elif c['kind'] in ('director', 'actor'):
                 card['bg'] = {'kind': 'person', 'id': c['person_id']}
             elif c['kind'] == 'franchise':
                 card['bg'] = {'kind': 'collection', 'id': c['collection_ids'][0]}
