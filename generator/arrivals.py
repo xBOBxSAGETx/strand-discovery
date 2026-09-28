@@ -13,9 +13,9 @@ snapshots) needs 14 days of history. These sources publish the dates directly:
   fb    Film-Book streaming-schedule category feed -> each post (robots Crawl-delay 5 s)
   plex  plex.tv blog "New on Plex in <Month>" (month precision)
 Politeness: identifiable User-Agent, <= 1 request/s per host (Crawl-delay honoured), on-disk HTTP cache with ETag /
-Last-Modified conditional GET (cache/http/arrivals). Only title / date / service / TMDB id / source URL are kept -
-never the sources' text; nothing is republished except TMDB ids and dates inside our catalogs. Private,
-non-commercial use.
+Last-Modified conditional GET (cache/http/arrivals-v2: validators + parsed rows only, never page text). Only title /
+date / service / TMDB id / source URL are kept - never the sources' text; nothing is republished except TMDB ids and
+dates inside our catalogs. Private, non-commercial use.
 
 Every row is resolved to TMDB by exact title (+ year / media / season, films >= 40 min, on-service tie-break); anything
 not exact or ambiguous is a CHECK row and is not used. Later seasons of returning shows count (copilot ruling).
@@ -55,39 +55,88 @@ PREC = {'day': 0, 'week': 1, 'month': 2}
 
 # ---------------------------------------------------------------- polite HTTP ------------------------------------
 UA = 'strand-discovery/1.0 (personal non-commercial; +https://github.com/xBOBxSAGETx/strand-discovery)'
-HTTP_CACHE = Path(os.environ.get('SD_HTTP_CACHE', 'cache/http')) / 'arrivals'
+# The cache keeps NO source text: per (parser, URL) only the validators (ETag / Last-Modified), status, fetch time and
+# the parser's output (feed item titles / links / dates, sitemap URL lists, parsed title rows). A 304 or a fresh
+# record returns the stored parsed data; the parser only ever sees freshly fetched text, which is never written.
+# 'arrivals-v2': the earlier namespace ('arrivals') held page bodies; it is deleted on start and never read again.
+HTTP_ROOT = Path(os.environ.get('SD_HTTP_CACHE', 'cache/http'))
+HTTP_CACHE = HTTP_ROOT / 'arrivals-v2'
+PARSER_VERSION = 1              # bump on ANY parser change: stored parsed data from another version is refetched in full
 DELAY = {'film-book.com': 5.0}          # robots.txt Crawl-delay
 DEFAULT_DELAY = 1.1
 _last = {}
-fetch_stats = {'requests': 0, 'cache_fresh': 0, 'not_modified': 0, 'errors': 0}
+fetch_stats = {'requests': 0, 'cache_fresh': 0, 'not_modified': 0, 'errors': 0, 'stale_fallback': 0,
+               'scan_removed': 0}
+TEXT_KEYS = {'body', 'text', 'content', 'html', 'xml'}
+MARKUP = re.compile(r'<\s*/?\s*(html|head|body|rss|channel|item|feed|entry|article|div|p|span|script|style|loc|'
+                    r'urlset|sitemapindex|\?xml|!\[CDATA)\b', re.I)
+MAX_STR = 1000                  # parsed values are titles, dates, URLs, short title lines - never prose
 
 
-def _paths(url):
-    h = hashlib.sha256(url.encode()).hexdigest()[:24]
-    return HTTP_CACHE / f'{h}.body', HTTP_CACHE / f'{h}.meta.json'
+def _assert_no_text(obj, where):
+    """Raise if a record about to be persisted (or found on disk) carries source text."""
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k in TEXT_KEYS:
+                raise AssertionError(f'{where}: text field {k!r} in the HTTP cache')
+            _assert_no_text(v, where)
+    elif isinstance(obj, list):
+        for v in obj:
+            _assert_no_text(v, where)
+    elif isinstance(obj, str) and (len(obj) > MAX_STR or MARKUP.search(obj)):
+        raise AssertionError(f'{where}: raw markup / long text in the HTTP cache ({len(obj)} chars)')
 
 
-def get(url, max_age=20.0):
-    """(status, text, from_cache). Cached copies younger than max_age hours are reused; older ones are revalidated
-    (304 -> the cached body). A network error falls back to a stale copy if there is one."""
+def scan_http_cache():
+    """On start: delete the old body-bearing namespace, and any record that is not clean parsed data."""
+    old = HTTP_ROOT / 'arrivals'
+    if old.is_dir():
+        for f in old.iterdir():
+            f.unlink(missing_ok=True)
+            fetch_stats['scan_removed'] += 1
+        old.rmdir()
+    if not HTTP_CACHE.is_dir():
+        return
+    for f in HTTP_CACHE.iterdir():
+        try:
+            if f.suffix != '.json':
+                raise AssertionError('not a parsed record')
+            _assert_no_text(json.loads(f.read_text(encoding='utf-8')), f.name)
+        except (AssertionError, OSError, ValueError):
+            f.unlink(missing_ok=True)
+            fetch_stats['scan_removed'] += 1
+
+
+def _record_path(url, parser):
+    return HTTP_CACHE / (hashlib.sha256(f'{parser}|{url}'.encode()).hexdigest()[:24] + '.json')
+
+
+def get_parsed(url, parser, parse, max_age=20.0):
+    """(status, data, from_cache). `parse(text)` -> JSON-serialisable data; `parser` names it (with PARSER_VERSION it
+    keys the record). Records younger than max_age hours are reused; older ones are revalidated with ETag /
+    Last-Modified (304 -> the stored data). A network error falls back to the stored data if there is any."""
     q = urllib.parse.urlparse(url)
     if re.search(r'(^|&)s=', q.query or ''):
         raise ValueError(f'search URLs are not allowed by robots.txt: {url}')
-    body_p, meta_p = _paths(url)
-    meta = json.loads(meta_p.read_text(encoding='utf-8')) if meta_p.exists() else None
-    if meta and body_p.exists() and time.time() - meta['fetched'] < max_age * 3600:
+    rec_p = _record_path(url, parser)
+    try:
+        rec = json.loads(rec_p.read_text(encoding='utf-8')) if rec_p.exists() else None
+    except (OSError, ValueError):
+        rec = None
+    usable = bool(rec) and rec.get('v') == PARSER_VERSION and 'data' in rec
+    if usable and time.time() - rec['fetched'] < max_age * 3600 and os.environ.get('SD_HTTP_REVALIDATE') != '1':
         fetch_stats['cache_fresh'] += 1
-        return meta['status'], body_p.read_text(encoding='utf-8'), True
+        return rec['status'], rec['data'], True
     host = q.netloc.lower().removeprefix('www.')
     wait = _last.get(host, 0) + DELAY.get(host, DEFAULT_DELAY) - time.time()
     if wait > 0:
         time.sleep(wait)
     headers = {'User-Agent': UA, 'Accept-Encoding': 'identity'}
-    if meta and body_p.exists():
-        if meta.get('etag'):
-            headers['If-None-Match'] = meta['etag']
-        if meta.get('last_modified'):
-            headers['If-Modified-Since'] = meta['last_modified']
+    if usable:                                 # another parser version: full refetch, no conditional headers
+        if rec.get('etag'):
+            headers['If-None-Match'] = rec['etag']
+        if rec.get('last_modified'):
+            headers['If-Modified-Since'] = rec['last_modified']
     fetch_stats['requests'] += 1
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60) as r:
@@ -95,25 +144,34 @@ def get(url, max_age=20.0):
             etag, lm = r.headers.get('ETag'), r.headers.get('Last-Modified')
     except urllib.error.HTTPError as e:
         _last[host] = time.time()
-        if e.code == 304 and meta:
+        if e.code == 304 and usable:
             fetch_stats['not_modified'] += 1
-            meta['fetched'] = time.time()
-            meta_p.write_text(json.dumps(meta), encoding='utf-8')
-            return 200, body_p.read_text(encoding='utf-8'), True
+            rec['fetched'] = time.time()
+            _write(rec_p, rec)
+            return 200, rec['data'], True
         fetch_stats['errors'] += 1
-        return e.code, '', False
-    except Exception:                          # network error: a stale copy beats nothing
+        return e.code, None, False
+    except Exception:                          # network error: the stored parsed data beats nothing
         _last[host] = time.time()
         fetch_stats['errors'] += 1
-        if meta and body_p.exists():
-            return meta['status'], body_p.read_text(encoding='utf-8'), True
-        return 0, '', False
+        if usable:
+            fetch_stats['stale_fallback'] += 1
+            return rec['status'], rec['data'], True
+        return 0, None, False
     _last[host] = time.time()
+    data = parse(text)
+    del text                                   # the source text goes no further than the parser
+    _write(rec_p, {'url': url, 'parser': parser, 'v': PARSER_VERSION, 'status': status, 'etag': etag,
+                   'last_modified': lm, 'fetched': time.time(), 'data': data})
+    return status, data, False
+
+
+def _write(path, rec):
+    _assert_no_text(rec, path.name)            # every write is checked: parsed data only
     HTTP_CACHE.mkdir(parents=True, exist_ok=True)
-    body_p.write_text(text, encoding='utf-8')
-    meta_p.write_text(json.dumps({'url': url, 'status': status, 'etag': etag, 'last_modified': lm,
-                                  'fetched': time.time()}), encoding='utf-8')
-    return status, text, False
+    tmp = path.with_suffix('.tmp')
+    tmp.write_text(json.dumps(rec, separators=(',', ':')), encoding='utf-8')
+    tmp.replace(path)
 
 
 # ---------------------------------------------------------------- text helpers -----------------------------------
@@ -175,6 +233,22 @@ def feed_items(xml):
         out.append({'title': html.unescape(re.sub(r'<!\[CDATA\[|\]\]>', '', g('title'))).replace('’', "'"),
                     'link': g('link').strip(), 'pub': pub, 'content': content.group(1) if content else ''})
     return out
+
+
+def feed_links(xml):
+    """Parser: feed items without their text - title, link, publication date (ISO) only."""
+    return [{'title': it['title'], 'link': it['link'], 'pub': it['pub'].isoformat() if it['pub'] else None}
+            for it in feed_items(xml)]
+
+
+def loc_urls(xml):
+    """Parser: the <loc> URLs of a sitemap / sitemap index."""
+    return re.findall(r'<loc>(.*?)</loc>', xml)
+
+
+def _dates(items):
+    """Stored feed items -> the pub field back as a date."""
+    return [{**it, 'pub': dt.date.fromisoformat(it['pub']) if it.get('pub') else None} for it in items]
 
 
 def clean(raw):
@@ -364,44 +438,56 @@ def dated_rows(lines, service, year, month, source, url, start=None, stop=None, 
 
 
 # ---------------------------------------------------------------- sources -----------------------------------------
+def _won_item_rows(it):
+    """Rows of one What's on Netflix feed item (its content is in the feed), or None if it is not a new-arrivals post."""
+    t = it['title']
+    weekly = re.search(r'this week', t, re.I) and re.search(r'new', t, re.I) and 'UK' not in t
+    first = re.search(r'(adds|added).*for (\w+) 1st', t, re.I)
+    if not (weekly or first) or not it['pub']:
+        return None
+    rows, on, media = [], False, None
+    for ln in text_lines(it['content']):
+        if re.search(r'full list of new releases', ln, re.I):
+            on = True
+            continue
+        if not on:
+            continue
+        if ln.startswith('##h3'):
+            break                                       # next section (Top 10 ...)
+        if ln.startswith('##h4'):
+            media = 'series' if re.search(r'tv|series|shows', ln, re.I) else 'movie'
+            continue
+        if not ln.startswith('- '):
+            continue
+        c = clean(ln[2:])
+        if not c:
+            continue
+        c['media'] = c['media'] if c['season'] else media
+        if weekly:                                      # no per-day dates in the roundup: the week's START
+            date, prec = it['pub'] - dt.timedelta(days=6), 'week'
+        else:
+            date, prec = dt.date(it['pub'].year, MONTHS[first.group(2).lower()], 1), 'day'
+        rows.append({**c, 'service': 'netflix', 'date': date.isoformat(), 'precision': prec,
+                     'source': 'won', 'url': it['link'], 'raw': ln[2:120]})
+    return rows
+
+
+def won_feed(xml):
+    """Parser: the What's on Netflix feed -> items with their parsed rows (the post text itself is not kept)."""
+    return [{'title': it['title'], 'link': it['link'], 'pub': it['pub'].isoformat() if it['pub'] else None,
+             'rows': _won_item_rows(it)} for it in feed_items(xml)]
+
+
 def src_won(since, backfill, stats):
     rows = []
-    st, xml, _ = get('https://www.whats-on-netflix.com/whats-new/feed/')
-    items = feed_items(xml) if st == 200 else []
+    st, data, _ = get_parsed('https://www.whats-on-netflix.com/whats-new/feed/', 'won-feed', won_feed)
+    items = _dates(data) if st == 200 else []
     stats['won'] = {'posts': 0, 'items': len(items), 'errors': [] if st == 200 else [f'feed HTTP {st}'], 'notes': []}
     for it in items:
-        if not it['pub'] or it['pub'] < since:
-            continue
-        t = it['title']
-        weekly = re.search(r'this week', t, re.I) and re.search(r'new', t, re.I) and 'UK' not in t
-        first = re.search(r'(adds|added).*for (\w+) 1st', t, re.I)
-        if not (weekly or first):
+        if not it['pub'] or it['pub'] < since or it['rows'] is None:
             continue
         stats['won']['posts'] += 1
-        lines, on, media = text_lines(it['content']), False, None
-        for ln in lines:
-            if re.search(r'full list of new releases', ln, re.I):
-                on = True
-                continue
-            if not on:
-                continue
-            if ln.startswith('##h3'):
-                break                                   # next section (Top 10 ...)
-            if ln.startswith('##h4'):
-                media = 'series' if re.search(r'tv|series|shows', ln, re.I) else 'movie'
-                continue
-            if not ln.startswith('- '):
-                continue
-            c = clean(ln[2:])
-            if not c:
-                continue
-            c['media'] = c['media'] if c['season'] else media
-            if weekly:                                  # no per-day dates in the roundup: the week's START
-                date, prec = it['pub'] - dt.timedelta(days=6), 'week'
-            else:
-                date, prec = dt.date(it['pub'].year, MONTHS[first.group(2).lower()], 1), 'day'
-            rows.append({**c, 'service': 'netflix', 'date': date.isoformat(), 'precision': prec,
-                         'source': 'won', 'url': it['link'], 'raw': ln[2:120]})
+        rows += it['rows']
     return rows
 
 
@@ -415,13 +501,13 @@ def post_body(t):
 
 def sitemap_posts(site, index, n=3):
     """Post URLs from the newest n post sitemaps listed in a WordPress sitemap index."""
-    st, xml, _ = get(f'{site}/{index}', max_age=20)
-    maps = [u for u in re.findall(r'<loc>(.*?)</loc>', xml) if re.search(r'post-sitemap\d*\.xml', u)] if st == 200 else []
+    st, locs, _ = get_parsed(f'{site}/{index}', 'sitemap', loc_urls, max_age=20)
+    maps = [u for u in locs if re.search(r'post-sitemap\d*\.xml', u)] if st == 200 else []
     maps.sort(key=lambda u: int((re.search(r'post-sitemap(\d*)\.xml', u).group(1) or 1)))
     urls = []
     for u in maps[-n:]:
-        s, x, _ = get(u, max_age=20)
-        urls += re.findall(r'<loc>(.*?)</loc>', x) if s == 200 else []
+        s, x, _ = get_parsed(u, 'sitemap', loc_urls, max_age=20)
+        urls += x if s == 200 else []
     return urls
 
 
@@ -430,8 +516,8 @@ def src_vt(months, backfill, stats):
     if backfill:
         urls = sitemap_posts('https://www.vitalthrills.com', 'sitemap_index.xml')
     else:
-        st, xml, _ = get('https://www.vitalthrills.com/tag/streaming-schedule/feed/')
-        urls = [it['link'] for it in feed_items(xml)] if st == 200 else []
+        st, items, _ = get_parsed('https://www.vitalthrills.com/tag/streaming-schedule/feed/', 'feed-links', feed_links)
+        urls = [it['link'] for it in items] if st == 200 else []
         if st != 200:
             errs.append(f'tag feed HTTP {st}')
     for u in dict.fromkeys(urls):
@@ -441,13 +527,14 @@ def src_vt(months, backfill, stats):
         svc, mon, year = VT_SERVICES[m.group(1)], MONTHS[m.group(2)], int(m.group(3))
         if not in_window(year, mon):
             continue
-        s, t, _ = get(u, max_age=72)
+        s, r, _ = get_parsed(u, 'vt-post', lambda t, svc=svc, year=year, mon=mon, u=u: dated_rows(
+            text_lines(post_body(t)), svc, year, mon, 'vt', u, start=r'^(##h2 )?.*(schedules?|titles)$',
+            stop=r'^#\w|^tags?:|related posts|^##h2 (sports|live|fast channels|espn)', prefix=svc == 'disney+hulu'),
+            max_age=72)
         if s != 200:
             errs.append(f'{u}: HTTP {s}')
             continue
         posts += 1
-        r = dated_rows(text_lines(post_body(t)), svc, year, mon, 'vt', u, start=r'^(##h2 )?.*(schedules?|titles)$',
-                       stop=r'^#\w|^tags?:|related posts|^##h2 (sports|live|fast channels|espn)', prefix=svc == 'disney+hulu')
         if not r:
             notes.append(f'{u}: 0 rows')
         rows += r
@@ -460,8 +547,8 @@ def src_wodp(months, backfill, stats):
     if backfill:
         urls = sitemap_posts('https://whatsondisneyplus.com', 'sitemap.xml')          # its index (no sitemap_index)
     else:
-        st, xml, _ = get('https://whatsondisneyplus.com/feed/')
-        urls = [it['link'] for it in feed_items(xml)] if st == 200 else []
+        st, items, _ = get_parsed('https://whatsondisneyplus.com/feed/', 'feed-links', feed_links)
+        urls = [it['link'] for it in items] if st == 200 else []
         if st != 200:
             errs.append(f'feed HTTP {st}')
     for u in dict.fromkeys(urls):
@@ -472,14 +559,14 @@ def src_wodp(months, backfill, stats):
         svc, mon, year = WODP[m.group(1)], MONTHS[m.group(2)], int(m.group(3))
         if not in_window(year, mon):
             continue
-        s, t, _ = get(u, max_age=72)
+        s, r, _ = get_parsed(u, 'wodp-post', lambda t, svc=svc, year=year, mon=mon, u=u: dated_rows(
+            text_lines(post_body(t)), svc, year, mon, 'wodp', u, start=None,
+            stop=r'looking forward to|for the latest|let me know', bullets_only=True, heading_marker=True,
+            h3_titles=True, drop_prefixes=('hulu', 'espn') if svc == 'disneyplus' else ('espn',)), max_age=72)
         if s != 200:
             errs.append(f'{u}: HTTP {s}')
             continue
         posts += 1
-        r = dated_rows(text_lines(post_body(t)), svc, year, mon, 'wodp', u, start=None,
-                       stop=r'looking forward to|for the latest|let me know', bullets_only=True, heading_marker=True,
-                       h3_titles=True, drop_prefixes=('hulu', 'espn') if svc == 'disneyplus' else ('espn',))
         if not r:
             notes.append(f'{u}: 0 rows')
         rows += r
@@ -492,11 +579,11 @@ def src_fb(months, backfill, stats):
     feeds = ['https://film-book.com/category/streaming-schedule/feed/']        # ~120 posts: 3+ months (no paging)
     items = []
     for f in feeds:
-        st, xml, _ = get(f)
+        st, data, _ = get_parsed(f, 'feed-links', feed_links)
         if st != 200:
             errs.append(f'feed HTTP {st}' if f == feeds[0] else f'{f}: HTTP {st}')
             continue
-        items += feed_items(xml)
+        items += data
     seen = set()
     for it in items:
         if it['link'] in seen:
@@ -508,19 +595,19 @@ def src_fb(months, backfill, stats):
         svc = FB_SERVICES.get(m.group(1).strip().lower())
         if not svc or svc in DROPPED or not in_window(int(m.group(3)), MONTHS[m.group(2).lower()]):
             continue
-        s, t, _ = get(it['link'], max_age=72)
+        year, mon, link = int(m.group(3)), MONTHS[m.group(2).lower()], it['link']
+        s, r, _ = get_parsed(link, 'fb-post', lambda t, svc=svc, year=year, mon=mon, link=link: dated_rows(
+            text_lines(t[t.find('<article'):]), svc, year, mon, 'fb', link,
+            start=r'^##h3 .*schedule$', stop=r'^(more .* streaming|view all streaming|share this|about the author|'
+                                           r'tags:|leave a (reply|comment)|##h[23] .*(leav(?:ing)|coming soon)|'
+                                           r'back to top|you may also like|recent posts|popular posts|'
+                                           r'movie trailer|^contest$|newsletter|trending on filmbook|'
+                                           r'latest video|^flickr$|^tags$|^subscribe$|delivered to your inbox)',
+            strip_prefix=svc in ('disneyplus', 'hulu'), heading_year=False), max_age=72)
         if s != 200:
             errs.append(f"{it['link']}: HTTP {s}")
             continue
         posts += 1
-        i = t.find('<article')
-        r = dated_rows(text_lines(t[i:]), svc, int(m.group(3)), MONTHS[m.group(2).lower()], 'fb', it['link'],
-                       start=r'^##h3 .*schedule$', stop=r'^(more .* streaming|view all streaming|share this|about the author|'
-                                                      r'tags:|leave a (reply|comment)|##h[23] .*(leav(?:ing)|coming soon)|'
-                                                      r'back to top|you may also like|recent posts|popular posts|'
-                                                      r'movie trailer|^contest$|newsletter|trending on filmbook|'
-                                                      r'latest video|^flickr$|^tags$|^subscribe$|delivered to your inbox)',
-                       strip_prefix=svc in ('disneyplus', 'hulu'), heading_year=False)
         r = [x for x in r if not re.search(r'schedule:|streaming release|^advertisement', x['raw'], re.I)]
         if not r:
             notes.append(f"{it['link']}: 0 dated rows (month-level format, not parsed)")
@@ -529,36 +616,61 @@ def src_fb(months, backfill, stats):
     return rows
 
 
+def _plex_month(it):
+    m = re.match(r'new on plex in (\w+)', it['title'], re.I)
+    if not m or m.group(1).lower() not in MONTHS or not it['pub']:
+        return None
+    mon = MONTHS[m.group(1).lower()]
+    return it['pub'].year + (1 if mon < it['pub'].month - 6 else 0), mon
+
+
+def _plex_rows(text, year, mon, link):
+    return dated_rows(text_lines(text), 'plex', year, mon, 'plex', link, start=r'^##h\d new on plex in',
+                      stop=r'^##h\d', default_date=(dt.date(year, mon, 1), 'month'))
+
+
+def plex_feed(xml):
+    """Parser: the Plex blog feed -> items; a "New on Plex in <Month>" item carries its parsed rows when the feed
+    holds the post (rows None = fetch the post page)."""
+    out = []
+    for it in feed_items(xml):
+        ym = _plex_month(it)
+        out.append({'title': it['title'], 'link': it['link'], 'pub': it['pub'].isoformat() if it['pub'] else None,
+                    'rows': _plex_rows(it['content'], *ym, it['link']) if ym and it['content'] else None})
+    return out
+
+
 def src_plex(months, backfill, stats):
     rows, posts, errs, notes = [], 0, [], []
-    st, xml, _ = get('https://www.plex.tv/blog/feed/')
+    st, data, _ = get_parsed('https://www.plex.tv/blog/feed/', 'plex-feed', plex_feed)
+    items = _dates(data) if st == 200 else []
     if st != 200:
         errs.append(f'feed HTTP {st}')
-    for it in (feed_items(xml) if st == 200 else []):
+    for it in items:
         m = re.match(r'new on plex in (\w+)', it['title'], re.I)
         if not m or m.group(1).lower() not in months:
             continue
-        mon = MONTHS[m.group(1).lower()]
-        year = it['pub'].year + (1 if mon < it['pub'].month - 6 else 0)
-        body = it['content'] or get(it['link'], max_age=72)[1]
+        year, mon = _plex_month(it)
+        r = it['rows']
+        if r is None:                                   # the feed did not carry the post: its page
+            s, r, _ = get_parsed(it['link'], 'plex-post', lambda t, year=year, mon=mon, link=it['link']:
+                                 _plex_rows(t, year, mon, link), max_age=72)
+            r = r if s == 200 else []
         posts += 1
-        r = dated_rows(text_lines(body), 'plex', year, mon, 'plex', it['link'], start=r'^##h\d new on plex in',
-                       stop=r'^##h\d', default_date=(dt.date(year, mon, 1), 'month'))
         if not r:
             notes.append(f"{it['link']}: 0 rows")
         rows += r
-    stats['plex'] = {'posts': posts, 'items': len(feed_items(xml)) if st == 200 else 0, 'errors': errs, 'notes': notes}
+    stats['plex'] = {'posts': posts, 'items': len(items), 'errors': errs, 'notes': notes}
     return rows
 
 
 def prune_http_cache(days=120):
-    """Drop cached pages not fetched for `days` (the durable cache is saved every run; posts that old are unused)."""
+    """Drop records not fetched for `days` (the durable cache is saved every run; posts that old are unused)."""
     cut = time.time() - days * 86400
-    for meta_p in HTTP_CACHE.glob('*.meta.json'):
+    for rec_p in HTTP_CACHE.glob('*.json'):
         try:
-            if json.loads(meta_p.read_text(encoding='utf-8'))['fetched'] < cut:
-                meta_p.with_name(meta_p.name.replace('.meta.json', '.body')).unlink(missing_ok=True)
-                meta_p.unlink()
+            if json.loads(rec_p.read_text(encoding='utf-8'))['fetched'] < cut:
+                rec_p.unlink()
         except (OSError, ValueError, KeyError):
             pass
 
@@ -800,6 +912,7 @@ def main():
                     key=lambda m: MONTHS[m])
     _WIN.update(lo=since, hi=today_d + dt.timedelta(days=45))
     t0 = time.monotonic()
+    scan_http_cache()                                   # old body-bearing cache out; only clean parsed records stay
     state = load_state(STATE_DIR)
     pids = {s: p for s, p in providers().items() if s not in DROPPED}
     present = Presence(state, pids)
