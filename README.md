@@ -64,6 +64,10 @@ TMDB says what is on a service, not when it arrived, so the New cards are ordere
 A card switches to arrival order once it has 10 dated arrivals in the last 45 days. A schedule entry dated in the
 future is shown only after its date AND once the title is really on the service (JustWatch data via TMDB); titles are
 matched to TMDB by exact title only (anything ambiguous is left out). New seasons of returning shows count.
+Day-dated items from a published schedule are trusted for the whole 45-day window. Week/month roundup items (e.g. the
+weekly What's on Netflix recap, Plex's monthly list) need confirmation after 7 days: TMDB (JustWatch) must list the
+title on the service, otherwise it leaves the card. (A Netflix-network series that TMDB has no US provider data for at
+all counts as on Netflix.) Only titles, years, seasons, dates and post URLs are kept from the sources - not their text.
 Politeness: identifiable User-Agent, at most 1 request/s per site (Film-Book's 5 s crawl delay honoured), conditional
 GET from a private cache, never search URLs; personal, non-commercial use. Only TMDB ids and dates end up in the
 catalogs - the sources' text is never republished. A failing source or a format change shows in the health issue and

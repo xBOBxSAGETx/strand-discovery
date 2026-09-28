@@ -29,7 +29,8 @@ Signals are merged into the durable first_seen state (<SD_STATE>/first_seen.json
     among equals; a scheduled (future) event never hides a past one
   - status is recomputed daily: "confirmed" when the logger saw the title on the service today, else "announced"
   - a signal first recorded with a future date is shown only once its date has passed AND it is confirmed
-  - an unconfirmed past arrival is shown for its first 7 days only (F1); a Netflix-network series with no US
+  - an unconfirmed past roundup item (week / month precision) is shown for its first 7 days only; day-dated schedule
+    items are trusted for the whole window (F1); a Netflix-network series with no US
     provider data at all on TMDB counts as confirmed on Netflix (F2)
   - pruned after 180 days (TMDB terms)
 <SD_STATE>/signal_candidates.json (per provider, the signals build.py may show today) is written by this step and,
@@ -63,13 +64,13 @@ UA = 'strand-discovery/1.0 (personal non-commercial; +https://github.com/xBOBxSA
 # 'arrivals-v2': the earlier namespace ('arrivals') held page bodies; it is deleted on start and never read again.
 HTTP_ROOT = Path(os.environ.get('SD_HTTP_CACHE', 'cache/http'))
 HTTP_CACHE = HTTP_ROOT / 'arrivals-v2'
-PARSER_VERSION = 1              # bump on ANY parser change: stored parsed data from another version is refetched in full
+PARSER_VERSION = 2              # bump on ANY parser change: stored parsed data from another version is refetched in full
 DELAY = {'film-book.com': 5.0}          # robots.txt Crawl-delay
 DEFAULT_DELAY = 1.1
 _last = {}
 fetch_stats = {'requests': 0, 'cache_fresh': 0, 'not_modified': 0, 'errors': 0, 'stale_fallback': 0,
                'scan_removed': 0}
-TEXT_KEYS = {'body', 'text', 'content', 'html', 'xml'}
+TEXT_KEYS = {'body', 'text', 'content', 'html', 'xml', 'raw'}   # 'raw': source lines are not kept either
 MARKUP = re.compile(r'<\s*/?\s*(html|head|body|rss|channel|item|feed|entry|article|div|p|span|script|style|loc|'
                     r'urlset|sitemapindex|\?xml|!\[CDATA)\b', re.I)
 MAX_STR = 1000                  # parsed values are titles, dates, URLs, short title lines - never prose
@@ -339,7 +340,7 @@ def heading_date(line, year):
 
 def dated_rows(lines, service, year, month, source, url, start=None, stop=None, prefix=False, bullets_only=False,
                heading_marker=False, heading_year=None, default_date=None, h3_titles=False, drop_prefixes=(),
-               strip_prefix=False):
+               strip_prefix=False, skip_lines=None):
     """Walk the lines after `start` (regex): date headings set the date, other lines are titles. heading_marker: a
     date heading must be a '##h' line; heading_year False: a heading carrying a year is ignored (Film-Book sidebar);
     default_date: the date before any heading; dates outside the post month +- 1 are ignored (sidebars / links)."""
@@ -428,14 +429,17 @@ def dated_rows(lines, service, year, month, source, url, start=None, stop=None, 
                 if service not in here:
                     continue
                 ln = m.group(2)
+        if skip_lines and re.search(skip_lines, ln[:120], re.I):
+            continue
         c = clean(ln)
         if not c:
             continue
         if c['media'] is None and media:
             c['media'] = media
         for sv in svcs:
+            # the source line itself is not kept: only what it yields (a "short" hint for the runtime rule)
             rows.append({**c, 'service': sv, 'date': ln_date.isoformat(), 'precision': ln_prec,
-                         'source': source, 'url': url, 'raw': ln[:120]})
+                         'source': source, 'url': url, **({'short': True} if re.search(r'short', ln[:120], re.I) else {})})
     return rows
 
 
@@ -470,7 +474,8 @@ def _won_item_rows(it):
         else:
             date, prec = dt.date(it['pub'].year, MONTHS[first.group(2).lower()], 1), 'day'
         rows.append({**c, 'service': 'netflix', 'date': date.isoformat(), 'precision': prec,
-                     'source': 'won', 'url': it['link'], 'raw': ln[2:120]})
+                     'source': 'won', 'url': it['link'],
+                     **({'short': True} if re.search(r'short', ln[2:120], re.I) else {})})
     return rows
 
 
@@ -605,12 +610,12 @@ def src_fb(months, backfill, stats):
                                            r'back to top|you may also like|recent posts|popular posts|'
                                            r'movie trailer|^contest$|newsletter|trending on filmbook|'
                                            r'latest video|^flickr$|^tags$|^subscribe$|delivered to your inbox)',
-            strip_prefix=svc in ('disneyplus', 'hulu'), heading_year=False), max_age=72)
+            strip_prefix=svc in ('disneyplus', 'hulu'), heading_year=False,
+            skip_lines=r'schedule:|streaming release|^advertisement'), max_age=72)
         if s != 200:
             errs.append(f"{it['link']}: HTTP {s}")
             continue
         posts += 1
-        r = [x for x in r if not re.search(r'schedule:|streaming release|^advertisement', x['raw'], re.I)]
         if not r:
             notes.append(f"{it['link']}: 0 dated rows (month-level format, not parsed)")
         rows += r
@@ -790,7 +795,7 @@ def _resolve(row, present):
                 rt = build.stable(f"runtime:{r['id']}", lambda: build.tmdb(f"/movie/{r['id']}").get('runtime') or 0)
             except RuntimeError:
                 rt = 0
-            if rt and rt < 40 and not re.search(r'short', row.get('raw', ''), re.I):
+            if rt and rt < 40 and not row.get('short'):
                 continue
         feats.append((m, r))
     exact = feats
@@ -862,7 +867,8 @@ def current_event(v, today):
     return (best[0], best[1], sorted({o[2] for o in ev}), all(o[4] for o in ev), not started)
 
 
-ANNOUNCED_DAYS = 7              # F1: an arrival not (yet) seen on the service is shown for its first 7 days only
+ANNOUNCED_DAYS = 7              # F1: a week/month-precision (roundup) arrival not seen on the service: first 7 days only;
+#                                 day-dated items from a published schedule are trusted for the whole window
 NETFLIX_NETWORK = 213
 _orphan_memo = {}
 
@@ -910,9 +916,9 @@ def refresh(state, today, present=None):
             if future or not lo <= date <= today or (needs_conf and v['s'] != 'confirmed'):
                 continue
             status = v['s']
-            if status != 'confirmed' and (dt.date.fromisoformat(today) - dt.date.fromisoformat(date)).days > ANNOUNCED_DAYS:
+            if status != 'confirmed' and prec != 'day' and                     (dt.date.fromisoformat(today) - dt.date.fromisoformat(date)).days > ANNOUNCED_DAYS:
                 if not (svc == 'netflix' and netflix_orphan(media, int(tid))):
-                    continue                        # F1: never confirmed on the service after a week -> not shown
+                    continue                        # F1: a roundup item never confirmed after a week -> not shown
                 status = 'confirmed (Netflix network, no provider data)'                  # F2
             cands.append({'key': k, 'date': date, 'precision': prec, 'sources': srcs, 'status': status,
                           'popularity': v['p'], 'kind': v['k']})
@@ -994,7 +1000,7 @@ def main():
                                               **({'future': True} if future else {})}
     (out / 'arrivals.json').write_text(json.dumps({'generated': today, 'since': since.isoformat(),
                                                    'services': arrivals}, indent=1), encoding='utf-8')
-    cols = ['source', 'service', 'date', 'precision', 'raw', 'title', 'year', 'season', 'media', 'accepted', 'how',
+    cols = ['source', 'service', 'date', 'precision', 'title', 'year', 'season', 'media', 'accepted', 'how',
             'tmdb_media', 'tmdb_id', 'tmdb_title', 'tmdb_year', 'on_service', 'url']
     for name, sel in (('rows.csv', rows), ('check_rows.csv', [r for r in rows if not r.get('accepted')])):
         with open(out / name, 'w', newline='', encoding='utf-8') as f:
