@@ -762,9 +762,12 @@ def src_wodp(months, backfill, stats):
 # in-window post is read, the listing is checked again only every CATCHUP_RESCAN_DAYS (0 requests in between).
 # A 429/503 in the catch-up stops that host (circuit breaker) and is a note, not a health warning; the catch-up
 # resumes next run. CATCHUP_STALL_RUNS runs in a row without progress while posts are pending = one warning.
+# (A 429 in the regular feed path stays ONE health warning per stopped host, as before.) Weekly, reread() also
+# revalidates the done posts of the current and next month, within the same per-run cap.
 CATCHUP_MAX = {'vt': VT_BACKFILL_MAX, 'wodp': 20}
 CATCHUP_RESCAN_DAYS = 3
 CATCHUP_STALL_RUNS = 3
+CATCHUP_REREAD_DAYS = 7         # weekly re-read of the current + next month's done posts (titles added mid-month)
 CATCHUP_SOURCES = {'vt': ('https://www.vitalthrills.com', 'sitemap_index.xml', vt_match, vt_post, 'vt-post'),
                    'wodp': ('https://whatsondisneyplus.com', 'sitemap.xml', wodp_match, wodp_post, 'wodp-post')}
 PARSED_OK = {'vt': set(), 'wodp': set()}      # posts read (HTTP 200) by this run's feed / backfill path
@@ -795,11 +798,11 @@ def catchup(state, months, today_d, backfill):
         due = st.get('pending') != 0 or age is None or age >= CATCHUP_RESCAN_DAYS
         rep = report[name] = {'listed': st['listed'], 'done': len(done), 'pending': st.get('pending'),
                               'fetched': 0, 'read': 0, 'cap': cap, 'notes': notes}
+        fetched = 0                                          # requests this run: catch-up + re-read share the cap
         if backfill or not due:
             rep['state'] = ('manual backfill run (progress recorded, no catch-up fetches)' if backfill else
                             f"done (listing re-checked on {dt.date.fromisoformat(st['scanned']) + dt.timedelta(days=CATCHUP_RESCAN_DAYS)})")
-            continue
-        if host in _stopped:
+        elif host in _stopped:
             rep['state'] = f'skipped: {host} stopped earlier in this run ({_stopped[host]})'
             st['stalled'] = st.get('stalled', 0) + 1
         else:
@@ -811,7 +814,7 @@ def catchup(state, months, today_d, backfill):
             else:
                 # newest month first: this and next month's posts date the New cards; older months only history
                 todo = sorted((u for u in inwin if u not in done), key=lambda u: inwin[u][-2:], reverse=True)
-                fetched, read, stop = 0, 0, None
+                read, stop = 0, None
                 for u in todo:
                     if host in _stopped:
                         stop = _stopped[host]
@@ -839,23 +842,75 @@ def catchup(state, months, today_d, backfill):
                 rep.update(listed=len(inwin), done=len(inwin) - pending, pending=pending, fetched=fetched, read=read,
                            eta_runs=-(-pending // cap),
                            state=('done' if not pending else f'stopped: {stop}' if stop else 'catching up'))
+        if not backfill:
+            fetched = reread(name, st, done, match, fetch, host, cap, fetched, months, today_d, rows, rep)
         if st.get('pending') and st['stalled'] >= CATCHUP_STALL_RUNS:
             warns.append(f"{name} catch-up: no progress for {st['stalled']} runs in a row with {st['pending']} posts "
                          f"pending ({rep['state']})")
     return rows, report, warns, led
 
 
+def reread(name, st, done, match, fetch, host, cap, fetched, months, today_d, rows, rep):
+    """Weekly re-read: schedules gain titles mid-month, and a done post that has left the feed is not read again
+    otherwise. Every CATCHUP_REREAD_DAYS a cycle queues the done posts of the CURRENT and NEXT month (not those the
+    feed path read today: it revalidates them itself); the queue is worked off in later runs within the per-run cap
+    (conditional GET, one request each), so a 429 or the cap only defers the rest. state: st['reread'] =
+    {'last': date the current cycle started, 'queue': [urls]}. Returns the updated request count."""
+    today = today_d.isoformat()
+    rr = st.setdefault('reread', {'last': None, 'queue': []})
+    if rr.get('last') is None:
+        rr['last'] = today                               # the posts were just read: first re-read in a week
+    elif not rr['queue'] and (today_d - dt.date.fromisoformat(rr['last'])).days >= CATCHUP_REREAD_DAYS:
+        cur = (today_d.year, today_d.month)
+        nxt = (today_d.year + today_d.month // 12, today_d.month % 12 + 1)
+        rr['queue'] = sorted(u for u in done if (i := match(u, months)) and tuple(i[-2:]) in (cur, nxt)
+                             and u not in PARSED_OK[name] and done[u] != today)
+        rr['last'] = today
+    got, stop = 0, None
+    for u in list(rr['queue']):
+        info = match(u, months)
+        if not info:
+            rr['queue'].remove(u)                        # out of the window since the cycle started
+            continue
+        if host in _stopped:
+            stop = _stopped[host]
+            break
+        if fetched >= cap:
+            break                                        # the rest on the next run
+        fetched += 1
+        s, r, note = fetch(u, info, max_age=0)           # revalidate (If-None-Match / If-Modified-Since)
+        if host in _stopped:                             # 429 twice: the stored data came back, not a re-read
+            stop = _stopped[host]
+            break
+        if s == 200 or s in GONE:
+            rr['queue'].remove(u)
+            rows += r
+            got += 1
+            if s != 200:
+                rep['notes'].append(f'{u}: HTTP {s} on re-read (gone)')
+        else:
+            rep['notes'].append(f'{u}: HTTP {s} on re-read (retried next run)')
+    rep['fetched'] = fetched
+    rep['reread'] = {'cycle_started': rr['last'], 'read': got, 'queued': len(rr['queue']),
+                     'next_cycle': (dt.date.fromisoformat(rr['last']) + dt.timedelta(days=CATCHUP_REREAD_DAYS)).isoformat(),
+                     **({'stopped': stop} if stop else {})}
+    return fetched
+
+
 def catchup_line(name, rep):
     """'vt catch-up: 20/38 posts, 18 left, ETA 1 run (fetched 20 this run)' / 'wodp catch-up: done (9/9 posts)'."""
     if 'error' in rep:
         return f"{name} catch-up: FAILED ({rep['error']}) - stored progress kept, retried next run"
+    rr = rep.get('reread') or {}
+    rr_txt = (f"; weekly re-read: {rr['read']} re-read, {rr['queued']} queued"
+              f"{' (' + rr['stopped'] + ')' if rr.get('stopped') else ''}") if rr.get('read') or rr.get('queued') else ''
     if rep.get('pending') is None:
-        return f"{name} catch-up: {rep.get('state', 'not run')}"
+        return f"{name} catch-up: {rep.get('state', 'not run')}{rr_txt}"
     if not rep['pending']:
-        return f"{name} catch-up: {rep.get('state', 'done')} ({rep['done']}/{rep['listed']} posts)"
+        return f"{name} catch-up: {rep.get('state', 'done')} ({rep['done']}/{rep['listed']} posts){rr_txt}"
     eta = rep.get('eta_runs', -(-rep['pending'] // max(1, rep.get('cap', 1))))
     return (f"{name} catch-up: {rep['done']}/{rep['listed']} posts, {rep['pending']} left, ETA {eta} "
-            f"run{'s' if eta != 1 else ''} (fetched {rep.get('fetched', 0)} this run; {rep.get('state', '')})")
+            f"run{'s' if eta != 1 else ''} (fetched {rep.get('fetched', 0)} this run; {rep.get('state', '')}){rr_txt}")
 
 
 def departures_signature(rows):
