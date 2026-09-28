@@ -42,11 +42,13 @@ FREE_SERVICES = {'Tubi', 'Pluto TV', 'Plex'}
 # (playback is via debrid, so "rent" still means watchable) - explicit here, the single source for build + first_seen.
 MONETIZATION = {'Plex': 'free|ads|rent'}
 # dropped by the user 2026-09-28: Crunchyroll, Rakuten Viki, The Roku Channel, Kanopy, Hoopla
-STREAMING = [('Netflix', '8'), ('Disney+', '337'), ('HBO Max', '1899'), ('Apple TV', '350'), ('Paramount+', '2616|2303'),
-             ('Prime Video', '9'), ('Hulu', '15'), ('Peacock', '386|387'), ('Starz', '43'), ('Discovery+', '520'),
+# channel provider ids (Amazon / Apple / Roku channels of the same service) added 2026-09-28 only where >= 60% of
+# the top-40 titles they add are confirmed on another listing of the service (accuracy/providers/channel_ids.md)
+STREAMING = [('Netflix', '8'), ('Disney+', '337'), ('HBO Max', '1899'), ('Apple TV', '350'), ('Paramount+', '2616|2303|582|1853'),
+             ('Prime Video', '9'), ('Hulu', '15'), ('Peacock', '386|387'), ('Starz', '43|634|1794'), ('Discovery+', '520'),
              ('Netflix Kids', '175'), ('MUBI', '11'), ('Criterion Channel', '258'), ('MagellanTV', '551'),
-             ('Shudder', '99'), ('AMC+', '526'), ('BritBox', '151'), ('Tubi', '73'), ('Pluto TV', '300'), ('Plex', '538'),
-             ('Acorn TV', '87')]
+             ('Shudder', '99|204|2049'), ('AMC+', '526|635|1854'), ('BritBox', '151'), ('Tubi', '73'), ('Pluto TV', '300'), ('Plex', '538'),
+             ('Acorn TV', '87|196|2034')]
 NETWORKS = [('HBO', 49), ('AMC', 174), ('FX', 88), ('BBC One', 4), ('Apple TV', 2552), ('Netflix', 213),
             ('Showtime', 67), ('Adult Swim', 80), ('Comedy Central', 47), ('Cartoon Network', 56), ('Nickelodeon', 13),
             ('Disney Channel', 54), ('History', 65), ('Discovery', 64), ('National Geographic', 43), ('A&E', 129),

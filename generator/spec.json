@@ -299,12 +299,12 @@
    "min_votes": 10,
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "2616|2303",
+    "with_watch_providers": "2616|2303|582|1853",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "2616|2303",
+    "with_watch_providers": "2616|2303|582|1853",
     "with_watch_monetization_types": "flatrate"
    }
   },
@@ -403,12 +403,12 @@
    "min_votes": 10,
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "43",
+    "with_watch_providers": "43|634|1794",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "43",
+    "with_watch_providers": "43|634|1794",
     "with_watch_monetization_types": "flatrate"
    }
   },
@@ -559,12 +559,12 @@
    "min_votes": 10,
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "99",
+    "with_watch_providers": "99|204|2049",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "99",
+    "with_watch_providers": "99|204|2049",
     "with_watch_monetization_types": "flatrate"
    }
   },
@@ -585,12 +585,12 @@
    "min_votes": 10,
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "526",
+    "with_watch_providers": "526|635|1854",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "526",
+    "with_watch_providers": "526|635|1854",
     "with_watch_monetization_types": "flatrate"
    }
   },
@@ -715,12 +715,12 @@
    "min_votes": 10,
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "87",
+    "with_watch_providers": "87|196|2034",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "87",
+    "with_watch_providers": "87|196|2034",
     "with_watch_monetization_types": "flatrate"
    }
   },
@@ -853,12 +853,12 @@
    "min_votes": 5,
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "2616|2303",
+    "with_watch_providers": "2616|2303|582|1853",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "2616|2303",
+    "with_watch_providers": "2616|2303|582|1853",
     "with_watch_monetization_types": "flatrate"
    },
    "tv_air_window": 45,
@@ -965,12 +965,12 @@
    "min_votes": 5,
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "43",
+    "with_watch_providers": "43|634|1794",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "43",
+    "with_watch_providers": "43|634|1794",
     "with_watch_monetization_types": "flatrate"
    },
    "tv_air_window": 45,
@@ -1133,12 +1133,12 @@
    "min_votes": 5,
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "99",
+    "with_watch_providers": "99|204|2049",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "99",
+    "with_watch_providers": "99|204|2049",
     "with_watch_monetization_types": "flatrate"
    },
    "tv_air_window": 45,
@@ -1161,12 +1161,12 @@
    "min_votes": 5,
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "526",
+    "with_watch_providers": "526|635|1854",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "526",
+    "with_watch_providers": "526|635|1854",
     "with_watch_monetization_types": "flatrate"
    },
    "tv_air_window": 45,
@@ -1301,12 +1301,12 @@
    "min_votes": 5,
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "87",
+    "with_watch_providers": "87|196|2034",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "87",
+    "with_watch_providers": "87|196|2034",
     "with_watch_monetization_types": "flatrate"
    },
    "tv_air_window": 45,
@@ -1452,12 +1452,12 @@
    },
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "2616|2303",
+    "with_watch_providers": "2616|2303|582|1853",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "2616|2303",
+    "with_watch_providers": "2616|2303|582|1853",
     "with_watch_monetization_types": "flatrate"
    },
    "min_age_days": 180
@@ -1572,12 +1572,12 @@
    },
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "43",
+    "with_watch_providers": "43|634|1794",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "43",
+    "with_watch_providers": "43|634|1794",
     "with_watch_monetization_types": "flatrate"
    },
    "min_age_days": 180
@@ -1662,12 +1662,12 @@
    },
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "99",
+    "with_watch_providers": "99|204|2049",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "99",
+    "with_watch_providers": "99|204|2049",
     "with_watch_monetization_types": "flatrate"
    },
    "min_age_days": 180
@@ -1692,12 +1692,12 @@
    },
    "movie": {
     "watch_region": "US",
-    "with_watch_providers": "526",
+    "with_watch_providers": "526|635|1854",
     "with_watch_monetization_types": "flatrate"
    },
    "series": {
     "watch_region": "US",
-    "with_watch_providers": "526",
+    "with_watch_providers": "526|635|1854",
     "with_watch_monetization_types": "flatrate"
    },
    "min_age_days": 180

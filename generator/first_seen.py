@@ -55,6 +55,12 @@ def providers():
     return sorted(out, key=lambda p: p['free'])            # subscription services first
 
 
+def query_signature(p):
+    """What decides which titles a provider's enumeration can see: its provider ids + monetization, per medium."""
+    return '|'.join(f"{m}:{p[m].get('with_watch_providers')}:{p[m].get('with_watch_monetization_types')}"
+                    for m in ('movie', 'series'))
+
+
 def base_params(p, media, dflt):
     q = dict(p[media])                  # monetization comes from the spec card (make_spec: MONETIZATION / FREE_SERVICES)
     q.setdefault('with_watch_monetization_types', 'free|ads' if p['free'] else 'flatrate')
@@ -157,7 +163,15 @@ def main():
         for k, v in {'baseline': today, 'last_add': None, 'last_run': None, 'items': {}}.items():
             prov.setdefault(k, v)                        # a provider may exist with arrival signals only
         items = prov['items']
-        is_baseline = prov['baseline'] == today
+        # a changed query (channel provider ids added, monetization changed) makes titles visible that were on the
+        # service all along: on that run they are recorded as baseline, never as arrivals (no flood in New). State
+        # written before this field existed counts as changed once. Existing items keep their dates.
+        sig = query_signature(p)
+        requeried = prov.get('ids') != sig and bool(items)
+        prov['ids'] = sig
+        if requeried:
+            summary.setdefault('rebaselined', []).append(p['slug'])
+        is_baseline = prov['baseline'] == today or requeried
         # presence is judged against this provider's previous RUN, not the calendar: a gap in our own runs
         # (workflow outage) must not turn a whole catalogue into "new arrivals"
         last_run = prov.get('last_run') if prov.get('last_run') != today else prov.get('prev_run')
