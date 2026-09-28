@@ -80,5 +80,49 @@
  "network-paramountplus": {
   "logo_colour": "#ffffff",
   "_why": "blue script on the deep-blue field was the weakest card; white like the streaming Paramount+ card (copilot review 2026-09-28)"
+ },
+ "series-twilight": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 8966,
+   "path": "/8EUdQFZzIdKEGmEliGWcu7GTTHc.png"
+  },
+  "_why": "the top-voted Twilight logo carries a \"1\" (first film) under the wordmark; this one is the plain wordmark (worker self-read 2026-09-28)"
+ },
+ "series-saw": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 176,
+   "path": "/nussT8miNnbajyOLmoqeP9Ss2pi.png"
+  },
+  "_why": "the top-voted Saw logo is dark grunge letters, near-illegible on a dark photo; this is the red SAW wordmark (worker self-read 2026-09-28)"
+ },
+ "series-transformers": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 1858,
+   "path": "/sRdt54X9wXUvCEwG4CdVyxFcC8y.png"
+  },
+  "_why": "the top-voted Transformers logo is dark metallic and low-contrast; this is a flat white TRANSFORMERS wordmark (worker self-read 2026-09-28)"
+ },
+ "series-alien": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 348,
+   "path": "/6kh259JU0GCXvfV3LMFieWq4Um8.png"
+  },
+  "_why": "the classic tall-letter ALIEN wordmark; the top-voted file is a 1920x109 spaced strip (too thin) and the next a generic condensed font (worker self-read 2026-09-28)"
+ },
+ "series-dune": {
+  "title_logo_pin": false,
+  "_why": "every TMDB Dune logo is a hairline strip or says \"PART ONE\"; keep the typeset title (worker self-read 2026-09-28)"
+ },
+ "series-lethal-weapon": {
+  "title_logo_pin": {
+   "kind": "movie",
+   "id": 941,
+   "path": "/lrQ91gIq5GGLP8wXbjXmuAyV0Cm.png"
+  },
+  "_why": "the top-voted logo is dark red (17% of its pixels readable on a dark photo); this is the brighter red stacked wordmark (worker self-read 2026-09-28)"
  }
 }

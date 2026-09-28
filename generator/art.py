@@ -2,7 +2,8 @@
 
 Wide 1280x720 for everything except people (poster 600x900). Images come from TMDB (TMDB_API_KEY env, never printed).
 Every render is checked (exact size, title fits in <= 2 lines, background found, file < MAX_BYTES, logo drawn when
-specced); failures are listed and the run exits 1. A per-card log goes to art/render-log.json.
+specced; a Movie Series title logo inside the 4% safe area and legible on its photo); failures are listed and the
+run exits 1. A per-card log goes to art/render-log.json.
 
   python art.py [slug ...]
 """
@@ -136,6 +137,90 @@ def fit_lines(draw, text, max_w, start, weight, max_lines=2):
     return None, [text]                       # does not fit: reported as a failure by render()
 
 
+TITLE_LOGO_BOX = {'wide': (0.50, 0.34), 'poster': (0.80, 0.22)}   # title logo fits in this share of the card (w, h)
+TITLE_LOGO_MIN_W = 200                          # narrower after the fit = unreadable on a TV row: fail
+TITLE_LOGO_MIN_H = {'wide': 60, 'poster': 40}   # a thin strip after the fit: fail
+MIN_TITLE_CONTRAST = 3.0                        # WCAG ratio, each logo pixel vs the photo pixel right under it...
+MIN_LEGIBLE_SHARE = 0.90                        # ...reached by at least this share of a FLAT logo's opaque pixels
+MIN_LEGIBLE_SHARE_MULTI = 0.50                  # multi-colour logos (emblems, outlines) carry inner contrast: >= half
+FLAT_LOGO_SD = 30                               # luminance std-dev below this = a one-colour logo (may be recoloured)
+
+
+def title_logo_xy(size, lw, lh, margin):
+    """Bottom-left, where the typeset title sits."""
+    return margin, size[1] - margin - lh
+
+
+def legible_share(logo, under):
+    """Share of the logo's opaque pixels whose colour reaches MIN_TITLE_CONTRAST against the photo pixel under it
+    (both sampled at <= 160 px wide). A mean-vs-mean check would pass a white logo over a black-and-white stripe."""
+    import art_logo
+    s = min(1.0, 160 / logo.width)
+    sz = (max(1, round(logo.width * s)), max(1, round(logo.height * s)))
+    lg, bg = logo.resize(sz, Image.BOX), under.convert('RGB').resize(sz, Image.BOX)
+    n = ok = 0
+    for (r, g, b, a), px in zip(lg.getdata(), bg.getdata()):
+        if a > 128:
+            n += 1
+            ok += art_logo.contrast((r, g, b), px) >= MIN_TITLE_CONTRAST
+    return ok / n if n else 1.0
+
+
+def is_flat(logo):
+    """One-colour logo (a plain wordmark): its opaque pixels' luminance barely varies."""
+    from PIL import ImageStat
+    mask = logo.getchannel('A').point(lambda a: 255 if a > 128 else 0)
+    return not mask.getbbox() or ImageStat.Stat(logo.convert('L'), mask).stddev[0] < FLAT_LOGO_SD
+
+
+def draw_title_logo(base, card, margin, fails, log):
+    """Composite card['title_logo'] (planned by art_plan) bottom-left. Returns (base, top y, boxes). Legibility: see
+    legible_share(). A flat (one-colour) logo below MIN_LEGIBLE_SHARE is recoloured white or near-black, whichever
+    reads better, and re-checked. A multi-colour logo is never recoloured (that turned Toy Story and the Dark Knight
+    bat into white blobs in the first samples); it needs MIN_LEGIBLE_SHARE_MULTI. Below the bar = a failed card
+    (fix: a title_logo_pin or a typeset fallback in art_overrides.json)."""
+    import art_logo
+    tl = card['title_logo']
+    size = SIZES[card['shape']]
+    logo = fetch_image(tl['path'], 'original')
+    bbox = logo.getchannel('A').point(lambda a: 255 if a > 20 else 0).getbbox()    # trim transparent margins
+    if bbox:
+        logo = logo.crop(bbox)
+    bw, bh = (size[0] * TITLE_LOGO_BOX[card['shape']][0], size[1] * TITLE_LOGO_BOX[card['shape']][1])
+    scale = min(bw / logo.width, bh / logo.height)
+    lw, lh = max(1, round(logo.width * scale)), max(1, round(logo.height * scale))
+    logo = logo.resize((lw, lh), Image.LANCZOS)
+    if lw < TITLE_LOGO_MIN_W or lh < TITLE_LOGO_MIN_H[card['shape']]:
+        fails.append(f'title logo too small after fit ({lw}x{lh}px)')
+    x, y = title_logo_xy(size, lw, lh, margin)
+    under = base.crop((x, y, x + lw, y + lh))         # the photo right under the logo (off-canvas parts read black)
+    share = legible_share(logo, under)
+    flat = is_flat(logo)
+    need = MIN_LEGIBLE_SHARE if flat else MIN_LEGIBLE_SHARE_MULTI
+    log['title_logo_kind'] = 'flat' if flat else 'multi-colour'
+    if flat and share < need:                         # recolour to the flat colour that reads best, then re-check
+        best = max([(255, 255, 255), (18, 18, 22)], key=lambda c: legible_share(art_logo.recolour(logo, c), under))
+        logo = art_logo.recolour(logo, best)
+        share = legible_share(logo, under)
+        log['title_logo_recoloured'] = '#%02x%02x%02x' % best
+    log['title_logo_legible'] = round(share, 3)
+    if share < need:
+        fails.append(f'title logo contrast: only {share:.0%} of its pixels reach {MIN_TITLE_CONTRAST}:1 '
+                     f"(need {need:.0%}, {log['title_logo_kind']})")
+    shadow = Image.new('RGBA', size, (0, 0, 0, 0))    # soft drop shadow, as on the logo cards
+    black = art_logo.recolour(logo, (0, 0, 0))
+    shadow.paste(black, (x, y + 4), black)
+    shadow = shadow.filter(ImageFilter.GaussianBlur(10))
+    shadow.putalpha(shadow.getchannel('A').point(lambda a: int(a * 0.5)))
+    base.alpha_composite(shadow)
+    layer = Image.new('RGBA', size, (0, 0, 0, 0))     # paste via a layer: the logo may be (wrongly) off-canvas
+    layer.paste(logo, (x, y), logo)
+    base.alpha_composite(layer)
+    log['title_logo'] = f"{tl['source']} {tl['path']} ({tl.get('lang') or 'untagged'}{', PINNED' if tl.get('pinned') else ''})"
+    log['title_logo_px'] = f'{lw}x{lh}'
+    return base, y, [('title logo', (x, y, x + lw, y + lh))]
+
+
 def render(card):
     """Returns (path, log dict, list of failed checks)."""
     size = SIZES[card['shape']]
@@ -153,22 +238,29 @@ def render(card):
         base = base.filter(ImageFilter.GaussianBlur(4))
     shade = Image.new('RGBA', size, (0, 0, 0, 255))
     base = Image.composite(shade, base, gradient(size, card['shape']))
-    draw = ImageDraw.Draw(base)
     margin = 64 if card['shape'] == 'wide' else 40
-    title_f, lines = fit_lines(draw, card['title'], w - 2 * margin, 104 if card['shape'] == 'wide' else 72, 'ExtraBold')
-    if title_f is None:
-        fails.append('title does not fit in 2 lines')
-        title_f = font(28, 'ExtraBold')
-    log['title_px'], log['title_lines'] = title_f.size, len(lines)
-    line_h = title_f.size * 1.08
-    y = h - margin - line_h * len(lines)
+    if (card.get('title_logo') or {}).get('path'):    # Movie Series: the franchise's own title logo (#15)
+        base, y, boxes = draw_title_logo(base, card, margin, fails, log)
+        draw = ImageDraw.Draw(base)
+    else:                                             # typeset title (also the documented title-logo fallback)
+        if card.get('title_logo'):
+            log['title_logo'] = f"fallback: {card['title_logo'].get('fallback')}"
+        draw = ImageDraw.Draw(base)
+        title_f, lines = fit_lines(draw, card['title'], w - 2 * margin, 104 if card['shape'] == 'wide' else 72, 'ExtraBold')
+        if title_f is None:
+            fails.append('title does not fit in 2 lines')
+            title_f = font(28, 'ExtraBold')
+        log['title_px'], log['title_lines'] = title_f.size, len(lines)
+        line_h = title_f.size * 1.08
+        y = h - margin - line_h * len(lines)
+        boxes = []
+        for i, line in enumerate(lines):
+            draw.text((margin, y + i * line_h), line, font=title_f, fill=(255, 255, 255))
+            boxes.append((f'title line {i + 1}', draw.textbbox((margin, y + i * line_h), line, font=title_f)))
     eyebrow_f = font(26 if card['shape'] == 'wide' else 22, 'Bold')
     ey = (margin, y - eyebrow_f.size - 14)
     draw.text(ey, card['eyebrow'].upper(), font=eyebrow_f, fill=ACCENT)
-    boxes = [('eyebrow', draw.textbbox(ey, card['eyebrow'].upper(), font=eyebrow_f))]
-    for i, line in enumerate(lines):
-        draw.text((margin, y + i * line_h), line, font=title_f, fill=(255, 255, 255))
-        boxes.append((f'title line {i + 1}', draw.textbbox((margin, y + i * line_h), line, font=title_f)))
+    boxes.insert(0, ('eyebrow', draw.textbbox(ey, card['eyebrow'].upper(), font=eyebrow_f)))
     if logo_kind == 'provider':                       # square app icon, rounded corners
         logo = logo_image(card['logo']).resize((150, 150), Image.LANCZOS)
         mask = Image.new('L', logo.size, 0)

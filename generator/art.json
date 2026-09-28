@@ -1960,6 +1960,9 @@
    "bg": {
     "kind": "collection",
     "id": 645
+   },
+   "title_logo": {
+    "fallback": "no collection logo and no film titled like the card"
    }
   },
   {
@@ -1970,6 +1973,15 @@
    "bg": {
     "kind": "collection",
     "id": 8091
+   },
+   "title_logo": {
+    "path": "/6kh259JU0GCXvfV3LMFieWq4Um8.png",
+    "lang": "en",
+    "source": "movie 348",
+    "width": 788,
+    "height": 299,
+    "votes": "1.75/2",
+    "pinned": true
    }
   },
   {
@@ -1980,6 +1992,15 @@
    "bg": {
     "kind": "collection",
     "id": 87096
+   },
+   "title_logo": {
+    "path": "/eYBa9fpSvZEYOl88ulP5fnRoCIi.png",
+    "lang": "en",
+    "source": "movie 19995",
+    "width": 1600,
+    "height": 329,
+    "votes": "6.72/9",
+    "pinned": false
    }
   },
   {
@@ -1990,6 +2011,15 @@
    "bg": {
     "kind": "collection",
     "id": 264
+   },
+   "title_logo": {
+    "path": "/jyhwiYJ05nhIkgx9UDVpUCrQ8Hm.png",
+    "lang": "en",
+    "source": "movie 105",
+    "width": 2784,
+    "height": 1283,
+    "votes": "3.33/2",
+    "pinned": false
    }
   },
   {
@@ -2000,6 +2030,15 @@
    "bg": {
     "kind": "collection",
     "id": 14890
+   },
+   "title_logo": {
+    "path": "/nUbq4tsIwnjXal1NKdSSJphQBzC.png",
+    "lang": "en",
+    "source": "movie 9737",
+    "width": 4314,
+    "height": 906,
+    "votes": "0.17/1",
+    "pinned": false
    }
   },
   {
@@ -2010,6 +2049,15 @@
    "bg": {
     "kind": "collection",
     "id": 87118
+   },
+   "title_logo": {
+    "path": "/42wamhnoKqfLBpaXm5gNthHuOLm.png",
+    "lang": "en",
+    "source": "movie 920",
+    "width": 800,
+    "height": 515,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
@@ -2021,7 +2069,16 @@
     "kind": "movie",
     "id": 259693
    },
-   "_why": "collection backdrop is a hanging noose; use The Conjuring 2 backdrop"
+   "_why": "collection backdrop is a hanging noose; use The Conjuring 2 backdrop",
+   "title_logo": {
+    "path": "/5qjvxFhRZtvm4mcV90X9QNYLZVj.png",
+    "lang": "en",
+    "source": "movie 138843",
+    "width": 1600,
+    "height": 401,
+    "votes": "10.00/4",
+    "pinned": false
+   }
   },
   {
    "slug": "series-creed",
@@ -2031,6 +2088,15 @@
    "bg": {
     "kind": "collection",
     "id": 553717
+   },
+   "title_logo": {
+    "path": "/Al4f6NqlAZV50JXFJbfMNOZLiZP.png",
+    "lang": "en",
+    "source": "movie 312221",
+    "width": 3654,
+    "height": 1204,
+    "votes": "0.00/0",
+    "pinned": false
    }
   },
   {
@@ -2041,6 +2107,15 @@
    "bg": {
     "kind": "collection",
     "id": 263
+   },
+   "title_logo": {
+    "path": "/nO5Uix3Qr4WjOyU1BMPv0okyNWm.png",
+    "lang": "en",
+    "source": "movie 155",
+    "width": 1278,
+    "height": 393,
+    "votes": "6.55/11",
+    "pinned": false
    }
   },
   {
@@ -2052,6 +2127,9 @@
     "kind": "path",
     "path": "/wAk0yKrhAmvsoMvlKs4QImhvK5X.jpg",
     "from": "Suicide Squad (tmdb:297761)"
+   },
+   "title_logo": {
+    "fallback": "no TMDB collection (keyword franchise)"
    }
   },
   {
@@ -2062,6 +2140,15 @@
    "bg": {
     "kind": "collection",
     "id": 86066
+   },
+   "title_logo": {
+    "path": "/hrAeReyKsy89ue9bMWKuTJ57GGz.png",
+    "lang": "en",
+    "source": "movie 20352",
+    "width": 1589,
+    "height": 218,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
@@ -2072,6 +2159,15 @@
    "bg": {
     "kind": "collection",
     "id": 1570
+   },
+   "title_logo": {
+    "path": "/elYpRiF6dJbnkB5yMvoWolidLvj.png",
+    "lang": "en",
+    "source": "movie 562",
+    "width": 1583,
+    "height": 253,
+    "votes": "3.33/3",
+    "pinned": false
    }
   },
   {
@@ -2082,6 +2178,9 @@
    "bg": {
     "kind": "collection",
     "id": 726871
+   },
+   "title_logo": {
+    "fallback": "override: typeset title"
    }
   },
   {
@@ -2092,6 +2191,15 @@
    "bg": {
     "kind": "collection",
     "id": 9485
+   },
+   "title_logo": {
+    "path": "/AcSNp8Xw9NXKBPcqCeoOp857gcG.png",
+    "lang": "en",
+    "source": "movie 13804",
+    "width": 4319,
+    "height": 1263,
+    "votes": "3.33/2",
+    "pinned": false
    }
   },
   {
@@ -2102,6 +2210,15 @@
    "bg": {
     "kind": "collection",
     "id": 386382
+   },
+   "title_logo": {
+    "path": "/r05nI8WQvBbdvuwVXtXuvOi0cJ9.png",
+    "lang": "en",
+    "source": "movie 109445",
+    "width": 1531,
+    "height": 358,
+    "votes": "2.28/3",
+    "pinned": false
    }
   },
   {
@@ -2112,6 +2229,15 @@
    "bg": {
     "kind": "collection",
     "id": 2980
+   },
+   "title_logo": {
+    "path": "/leBottSBAKKdT8zBAYV7GIa9FVy.png",
+    "lang": "en",
+    "source": "movie 620",
+    "width": 4302,
+    "height": 680,
+    "votes": "0.00/0",
+    "pinned": false
    }
   },
   {
@@ -2122,6 +2248,15 @@
    "bg": {
     "kind": "collection",
     "id": 230
+   },
+   "title_logo": {
+    "path": "/kysDTCloxUPJ1BILI4f8gs74fcr.png",
+    "lang": "en",
+    "source": "movie 238",
+    "width": 1660,
+    "height": 1271,
+    "votes": "5.68/11",
+    "pinned": false
    }
   },
   {
@@ -2132,6 +2267,15 @@
    "bg": {
     "kind": "collection",
     "id": 91361
+   },
+   "title_logo": {
+    "path": "/8diaqIjnZbpQupgtsv9Dun1HmLq.png",
+    "lang": "en",
+    "source": "movie 948",
+    "width": 4316,
+    "height": 640,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
@@ -2142,6 +2286,15 @@
    "bg": {
     "kind": "collection",
     "id": 86119
+   },
+   "title_logo": {
+    "path": "/zGE94lRWDqIB84MSnG8lPxHfSS.png",
+    "lang": "en",
+    "source": "movie 18785",
+    "width": 1274,
+    "height": 273,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
@@ -2152,6 +2305,9 @@
    "bg": {
     "kind": "collection",
     "id": 1241
+   },
+   "title_logo": {
+    "fallback": "no collection logo and no film titled like the card"
    }
   },
   {
@@ -2162,6 +2318,15 @@
    "bg": {
     "kind": "collection",
     "id": 89137
+   },
+   "title_logo": {
+    "path": "/fVx8L4UnxrgRjiyJFPfDt9XU6Nt.png",
+    "lang": "en",
+    "source": "movie 10191",
+    "width": 1276,
+    "height": 390,
+    "votes": "3.33/2",
+    "pinned": false
    }
   },
   {
@@ -2172,6 +2337,15 @@
    "bg": {
     "kind": "collection",
     "id": 131635
+   },
+   "title_logo": {
+    "path": "/it8umYR40tsK7aOQfA5EVem8ekJ.png",
+    "lang": "en",
+    "source": "movie 70160",
+    "width": 4264,
+    "height": 545,
+    "votes": "3.33/3",
+    "pinned": false
    }
   },
   {
@@ -2182,6 +2356,15 @@
    "bg": {
     "kind": "collection",
     "id": 8354
+   },
+   "title_logo": {
+    "path": "/o2dJGLPODV3jz9rWsX1hERFAh7X.png",
+    "lang": "en",
+    "source": "movie 425",
+    "width": 4320,
+    "height": 914,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
@@ -2192,6 +2375,9 @@
    "bg": {
     "kind": "collection",
     "id": 84
+   },
+   "title_logo": {
+    "fallback": "no collection logo and no film titled like the card"
    }
   },
   {
@@ -2202,6 +2388,15 @@
    "bg": {
     "kind": "collection",
     "id": 31562
+   },
+   "title_logo": {
+    "path": "/hXoQTvzX8LqRVodZzsKVXInCF9y.png",
+    "lang": "en",
+    "source": "movie 324668",
+    "width": 3617,
+    "height": 1267,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
@@ -2212,6 +2407,15 @@
    "bg": {
     "kind": "collection",
     "id": 404609
+   },
+   "title_logo": {
+    "path": "/eVXvH6j4qM8ZEqZfw5bZ6JGQxqZ.png",
+    "lang": "en",
+    "source": "movie 245891",
+    "width": 3603,
+    "height": 1202,
+    "votes": "3.33/2",
+    "pinned": false
    }
   },
   {
@@ -2222,6 +2426,15 @@
    "bg": {
     "kind": "collection",
     "id": 328
+   },
+   "title_logo": {
+    "path": "/ec4wy0iZFkHTxw04HyX4r06DwrH.png",
+    "lang": "en",
+    "source": "movie 329",
+    "width": 996,
+    "height": 740,
+    "votes": "3.33/3",
+    "pinned": false
    }
   },
   {
@@ -2232,6 +2445,9 @@
    "bg": {
     "kind": "collection",
     "id": 2883
+   },
+   "title_logo": {
+    "fallback": "no collection logo and no film titled like the card"
    }
   },
   {
@@ -2242,6 +2458,15 @@
    "bg": {
     "kind": "collection",
     "id": 722971
+   },
+   "title_logo": {
+    "path": "/7oCGn4lB3eWiUhts1C04c5yZd2J.png",
+    "lang": "en",
+    "source": "movie 546554",
+    "width": 4319,
+    "height": 1114,
+    "votes": "3.33/2",
+    "pinned": false
    }
   },
   {
@@ -2252,6 +2477,15 @@
    "bg": {
     "kind": "collection",
     "id": 77816
+   },
+   "title_logo": {
+    "path": "/gkpcd4k3IrkqIAqRBNLLjBHGYyr.png",
+    "lang": "en",
+    "source": "movie 9502",
+    "width": 2385,
+    "height": 729,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
@@ -2262,6 +2496,15 @@
    "bg": {
     "kind": "collection",
     "id": 945
+   },
+   "title_logo": {
+    "path": "/lrQ91gIq5GGLP8wXbjXmuAyV0Cm.png",
+    "lang": "en",
+    "source": "movie 941",
+    "width": 897,
+    "height": 273,
+    "votes": "3.33/1",
+    "pinned": true
    }
   },
   {
@@ -2272,6 +2515,9 @@
    "bg": {
     "kind": "collection",
     "id": 119
+   },
+   "title_logo": {
+    "fallback": "no collection logo and no film titled like the card"
    }
   },
   {
@@ -2282,6 +2528,15 @@
    "bg": {
     "kind": "collection",
     "id": 8945
+   },
+   "title_logo": {
+    "path": "/ztbb0QJcf6un9jiC9xbIP6aAacn.png",
+    "lang": "en",
+    "source": "movie 9659",
+    "width": 1625,
+    "height": 390,
+    "votes": "1.75/2",
+    "pinned": false
    }
   },
   {
@@ -2292,6 +2547,15 @@
    "bg": {
     "kind": "collection",
     "id": 14740
+   },
+   "title_logo": {
+    "path": "/4WxLPaAiWA2bCEW76XRwt09hmBJ.png",
+    "lang": "en",
+    "source": "movie 953",
+    "width": 2386,
+    "height": 755,
+    "votes": "3.33/2",
+    "pinned": false
    }
   },
   {
@@ -2303,6 +2567,9 @@
     "kind": "path",
     "path": "/uLtVbjvS1O7gXL8lUOwsFOH4man.jpg",
     "from": "Guardians of the Galaxy (tmdb:118340)"
+   },
+   "title_logo": {
+    "fallback": "no TMDB collection (keyword franchise)"
    }
   },
   {
@@ -2313,6 +2580,15 @@
    "bg": {
     "kind": "collection",
     "id": 2344
+   },
+   "title_logo": {
+    "path": "/qcJrhyBonM2WvkPFc3aMxxUbdtT.png",
+    "lang": "en",
+    "source": "movie 603",
+    "width": 4320,
+    "height": 723,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
@@ -2323,6 +2599,15 @@
    "bg": {
     "kind": "collection",
     "id": 295130
+   },
+   "title_logo": {
+    "path": "/aqKO27gJX5SaFka07MWBh54iLaW.png",
+    "lang": "en",
+    "source": "movie 198663",
+    "width": 2360,
+    "height": 311,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
@@ -2333,6 +2618,15 @@
    "bg": {
     "kind": "collection",
     "id": 86055
+   },
+   "title_logo": {
+    "path": "/mTevhilEOa7dqILrE9YQnNhkIQ7.png",
+    "lang": "en",
+    "source": "movie 607",
+    "width": 577,
+    "height": 308,
+    "votes": "1.75/2",
+    "pinned": false
    }
   },
   {
@@ -2343,6 +2637,15 @@
    "bg": {
     "kind": "collection",
     "id": 87359
+   },
+   "title_logo": {
+    "path": "/d4Nk4FAlEoHLNEny88SQ7Jk9ZsZ.png",
+    "lang": "en",
+    "source": "movie 954",
+    "width": 780,
+    "height": 124,
+    "votes": "2.28/3",
+    "pinned": false
    }
   },
   {
@@ -2354,6 +2657,9 @@
     "kind": "path",
     "path": "/nVodCGKYLpqNC8YwQAbivKlWCgZ.jpg",
     "from": "Kong: Skull Island (tmdb:293167)"
+   },
+   "title_logo": {
+    "fallback": "no TMDB collection (keyword franchise)"
    }
   },
   {
@@ -2364,6 +2670,9 @@
    "bg": {
     "kind": "collection",
     "id": 304
+   },
+   "title_logo": {
+    "fallback": "no collection logo and no film titled like the card"
    }
   },
   {
@@ -2374,6 +2683,9 @@
    "bg": {
     "kind": "collection",
     "id": 295
+   },
+   "title_logo": {
+    "fallback": "no collection logo and no film titled like the card"
    }
   },
   {
@@ -2384,6 +2696,15 @@
    "bg": {
     "kind": "collection",
     "id": 1709
+   },
+   "title_logo": {
+    "path": "/5Jn7FPpVjA8ZxkAmqWMvrZvQJ5b.png",
+    "lang": "en",
+    "source": "movie 871",
+    "width": 1930,
+    "height": 922,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
@@ -2394,6 +2715,15 @@
    "bg": {
     "kind": "collection",
     "id": 399
+   },
+   "title_logo": {
+    "path": "/wnGqljuqb2KBNJQ0GCEoUjcAnTU.png",
+    "lang": "en",
+    "source": "movie 106",
+    "width": 4315,
+    "height": 1026,
+    "votes": "8.03/5",
+    "pinned": false
    }
   },
   {
@@ -2404,6 +2734,15 @@
    "bg": {
     "kind": "collection",
     "id": 1575
+   },
+   "title_logo": {
+    "path": "/4ZMlbEpP1gY7QkW5UdeoVwk814x.png",
+    "lang": "en",
+    "source": "movie 1366",
+    "width": 790,
+    "height": 181,
+    "votes": "1.75/2",
+    "pinned": false
    }
   },
   {
@@ -2414,6 +2753,15 @@
    "bg": {
     "kind": "collection",
     "id": 90863
+   },
+   "title_logo": {
+    "path": "/nPxoOa0QJsXuxtYIl4YF8reKtle.png",
+    "lang": "en",
+    "source": "movie 2109",
+    "width": 4320,
+    "height": 1300,
+    "votes": "0.00/0",
+    "pinned": false
    }
   },
   {
@@ -2424,6 +2772,15 @@
    "bg": {
     "kind": "collection",
     "id": 656
+   },
+   "title_logo": {
+    "path": "/nussT8miNnbajyOLmoqeP9Ss2pi.png",
+    "lang": "en",
+    "source": "movie 176",
+    "width": 783,
+    "height": 199,
+    "votes": "0.17/3",
+    "pinned": true
    }
   },
   {
@@ -2434,6 +2791,15 @@
    "bg": {
     "kind": "collection",
     "id": 4246
+   },
+   "title_logo": {
+    "path": "/ApGPeuWjHsonS1SlG8ppmmwPL7N.png",
+    "lang": "en",
+    "source": "movie 4247",
+    "width": 1000,
+    "height": 521,
+    "votes": "2.07/5",
+    "pinned": false
    }
   },
   {
@@ -2444,6 +2810,15 @@
    "bg": {
     "kind": "collection",
     "id": 2602
+   },
+   "title_logo": {
+    "path": "/xj4tbUx6p1EFoWdrkZkAGMktgT6.png",
+    "lang": "en",
+    "source": "movie 4232",
+    "width": 4281,
+    "height": 850,
+    "votes": "3.33/3",
+    "pinned": false
    }
   },
   {
@@ -2454,6 +2829,15 @@
    "bg": {
     "kind": "collection",
     "id": 2150
+   },
+   "title_logo": {
+    "path": "/aHdDXMXOAgejOVoupZBULvcfcQG.png",
+    "lang": "en",
+    "source": "movie 808",
+    "width": 1439,
+    "height": 414,
+    "votes": "3.33/3",
+    "pinned": false
    }
   },
   {
@@ -2464,6 +2848,15 @@
    "bg": {
     "kind": "collection",
     "id": 556
+   },
+   "title_logo": {
+    "path": "/9H5oeZCO3wpm78k8JnThlPcCny9.png",
+    "lang": "en",
+    "source": "movie 557",
+    "width": 4320,
+    "height": 554,
+    "votes": "1.75/4",
+    "pinned": false
    }
   },
   {
@@ -2474,6 +2867,15 @@
    "bg": {
     "kind": "collection",
     "id": 10
+   },
+   "title_logo": {
+    "path": "/vswPivs3yuUsk5aW6DbnyeNQ4GX.png",
+    "lang": "en",
+    "source": "movie 11",
+    "width": 606,
+    "height": 290,
+    "votes": "5.79/7",
+    "pinned": false
    }
   },
   {
@@ -2484,6 +2886,15 @@
    "bg": {
     "kind": "collection",
     "id": 528
+   },
+   "title_logo": {
+    "path": "/ipgDUr7fD8adbqHfCssloIultfN.png",
+    "lang": "en",
+    "source": "movie 218",
+    "width": 2230,
+    "height": 327,
+    "votes": "1.75/4",
+    "pinned": false
    }
   },
   {
@@ -2494,6 +2905,15 @@
    "bg": {
     "kind": "collection",
     "id": 10194
+   },
+   "title_logo": {
+    "path": "/eX8LcW1zdjxvWNB5ZsZuhPO7NtP.png",
+    "lang": "en",
+    "source": "movie 862",
+    "width": 1413,
+    "height": 1064,
+    "votes": "6.20/10",
+    "pinned": false
    }
   },
   {
@@ -2504,6 +2924,15 @@
    "bg": {
     "kind": "collection",
     "id": 8650
+   },
+   "title_logo": {
+    "path": "/sRdt54X9wXUvCEwG4CdVyxFcC8y.png",
+    "lang": "en",
+    "source": "movie 1858",
+    "width": 913,
+    "height": 252,
+    "votes": "3.33/1",
+    "pinned": true
    }
   },
   {
@@ -2514,6 +2943,15 @@
    "bg": {
     "kind": "collection",
     "id": 33514
+   },
+   "title_logo": {
+    "path": "/8EUdQFZzIdKEGmEliGWcu7GTTHc.png",
+    "lang": "en",
+    "source": "movie 8966",
+    "width": 800,
+    "height": 316,
+    "votes": "1.75/2",
+    "pinned": true
    }
   },
   {
@@ -2524,6 +2962,15 @@
    "bg": {
     "kind": "collection",
     "id": 748
+   },
+   "title_logo": {
+    "path": "/bfUbOGdmttSCvar958KkUJlEOiQ.png",
+    "lang": "en",
+    "source": "movie 36657",
+    "width": 1343,
+    "height": 204,
+    "votes": "3.33/1",
+    "pinned": false
    }
   },
   {
