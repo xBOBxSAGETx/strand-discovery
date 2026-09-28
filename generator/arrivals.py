@@ -878,13 +878,19 @@ def load_state(state_dir):
 
 def merge(signals, key, rec, today):
     """Record one accepted row as an observation of the title's arrivals (see module doc)."""
-    date, prec, src, pop, kind, season = rec
+    date, prec, src, pop, kind, season, url = rec
     v = signals.get(key)
     if not isinstance(v, dict):                     # new key (or an old-format entry: rebuilt from today's rows)
         v = signals[key] = {'o': [], 'p': 0, 'k': kind, 's': 'announced'}
     ob = [date, prec, src, season or 0]
-    if not any(o[:4] == ob for o in v['o']):
-        v['o'].append(ob + [int(date > today)])
+    # observation = [date, precision, source, season, future, parser version, source URL]; the version lets a parser
+    # fix purge what the old parser recorded (see refresh), the URL says which page a signal came from
+    same = [o for o in v['o'] if o[:4] == ob]
+    if same:
+        for o in same:
+            o[5:] = [PARSER_VERSION, url]
+    else:
+        v['o'].append(ob + [int(date > today), PARSER_VERSION, url])
     v['p'] = max(v['p'], round(pop, 3))
     if kind == 'title':
         v['k'] = 'title'
@@ -949,7 +955,10 @@ def refresh(state, today, present=None):
             if not isinstance(v, dict):
                 del sig[k]                          # old format: re-recorded from the sources
                 continue
-            v['o'] = [o for o in v['o'] if o[0] >= cut]
+            # observations recorded by another parser version (or before versions were stored) are dropped: a
+            # parser fix (e.g. v3: departure sections are not arrivals) must not leave its old mistakes in the state;
+            # they come back only when their page is re-parsed (daily run or backfill)
+            v['o'] = [o for o in v['o'] if o[0] >= cut and len(o) >= 7 and o[5] == PARSER_VERSION]
             if not v['o']:
                 del sig[k]
         cands = []
@@ -1024,7 +1033,7 @@ def main():
         prov = work['providers'].setdefault(r['service'], {'items': {}})
         merge(prov.setdefault('signals', {}), f"{r['tmdb_media']}:{r['tmdb_id']}",
               (r['date'], r['precision'], r['source'], r['popularity'],
-               'season' if (r.get('season') or 0) > 1 else 'title', r.get('season')), today)
+               'season' if (r.get('season') or 0) > 1 else 'title', r.get('season'), r.get('url')), today)
     cands = refresh(work, today, present)
     for r in acc:
         r['on_service'] = present(r['service'], r['tmdb_media'], r['tmdb_id'])
