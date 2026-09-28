@@ -178,6 +178,16 @@ def disc(slug, library, title, eyebrow, folder, media, sort, movie=None, series=
     return e
 
 
+def just_hit_digital():
+    """Issue #9a: movies whose FIRST US digital (4) or TV (6) release is in the last 30 days, newest first. PVOD
+    rentals count (playback is via debrid, so a digital release = WEB-DL on TorBox). In Streaming · New: it answers
+    the same question as that folder ("what is new to watch at home"); no new shelf (owner rule)."""
+    e = disc('just-hit-digital', 'Just Hit Digital', 'Just Hit Digital', 'New · Digital', 'streaming-new', ['movie'],
+             'popular', movie={}, min_votes=5, depth=300)
+    e.update(release_types='4|6', release_window_days=30, newest_first=True)
+    return e
+
+
 def main():
     cats = []
     for v, n in VARIANTS:                                    # streaming x3
@@ -194,6 +204,8 @@ def main():
                 # history is long enough; then build.py orders the whole card by date first seen on the service
                 cats[-1]['tv_air_window'] = 45
                 cats[-1]['provider'] = slugify(name)
+        if v == 'new':
+            cats.append(just_hit_digital())                  # last card of Streaming · New (issue #9a)
     for v, n in VARIANTS:                                    # genres x3
         for name, mp, sp in GENRES:
             media = [m for m, p in (('movie', mp), ('series', sp)) if p is not None]

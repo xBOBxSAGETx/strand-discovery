@@ -1313,6 +1313,26 @@
    "provider": "acorn-tv"
   },
   {
+   "slug": "just-hit-digital",
+   "library": "Just Hit Digital",
+   "title": "Just Hit Digital",
+   "eyebrow": "New · Digital",
+   "folders": [
+    "streaming-new"
+   ],
+   "kind": "discover",
+   "media": [
+    "movie"
+   ],
+   "sort": "popular",
+   "min_votes": 5,
+   "movie": {},
+   "depth": 300,
+   "release_types": "4|6",
+   "release_window_days": 30,
+   "newest_first": true
+  },
+  {
    "slug": "streaming-netflix-top",
    "library": "Netflix · Top Rated",
    "title": "Netflix",

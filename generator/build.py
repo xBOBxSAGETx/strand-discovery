@@ -17,6 +17,8 @@ Env:
   SD_KEEP            optional: comma list of slugs kept despite SD_KINDS_OFF (the pilot's live library)
   SD_CACHE           optional: directory for the durable lookup cache (default ./cache). Holds only values that
                      don't change (movie runtimes, title previews by TMDB id); discover pages are never cached.
+  SD_TODAY           optional (tests / dry runs only): YYYY-MM-DD used as "today" for every date rule (released-only
+                     cutoff, windows, the Seasonal card's season)
 """
 import csv, datetime as dt, json, os, re, sys, threading, time, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -25,8 +27,9 @@ from pathlib import Path
 API = 'https://api.themoviedb.org/3'
 IMG = 'https://image.tmdb.org/t/p'
 HERE = Path(__file__).resolve().parent
-TODAY = dt.date.today().isoformat()
-YEAR_AGO = (dt.date.today() - dt.timedelta(days=365)).isoformat()
+TODAY_D = dt.date.fromisoformat(os.environ['SD_TODAY']) if os.environ.get('SD_TODAY') else dt.date.today()
+TODAY = TODAY_D.isoformat()
+YEAR_AGO = (TODAY_D - dt.timedelta(days=365)).isoformat()
 MIN_INTERVAL = 1 / 20          # self-throttle: 20 requests/s (TMDB publishes ~40/s)
 DROP_LIMIT = 0.30              # abort if total items fall by more than 30%
 CARD_DROP = 0.70               # a catalog "dropped" if it lost more than 70% of its items (and had >= 20)
@@ -188,13 +191,17 @@ def discover(card, media, depth, dflt):
     params = {'sort_by': sort, 'include_adult': 'false', 'vote_count.gte': votes, **card.get(media, {})}
     cutoff = TODAY
     if card.get('min_age_days'):              # e.g. hidden gems: at least a year old
-        cutoff = (dt.date.today() - dt.timedelta(days=card['min_age_days'])).isoformat()
+        cutoff = (TODAY_D - dt.timedelta(days=card['min_age_days'])).isoformat()
     if not movie and card.get('tv_air_window'):   # any episode aired recently (new seasons of old shows count)
         params.pop('first_air_date.lte', None)
-        params.update({'air_date.gte': (dt.date.today() - dt.timedelta(days=card['tv_air_window'])).isoformat(),
+        params.update({'air_date.gte': (TODAY_D - dt.timedelta(days=card['tv_air_window'])).isoformat(),
                        'air_date.lte': TODAY, 'sort_by': 'popularity.desc'})
+    window = None
     if movie:
-        params.update({'with_release_type': '4|5|6', 'release_date.lte': cutoff})
+        params.update({'with_release_type': card.get('release_types', '4|5|6'), 'release_date.lte': cutoff})
+        if card.get('release_window_days'):   # "Just hit digital": a regional release of those types in the window
+            window = (TODAY_D - dt.timedelta(days=card['release_window_days'])).isoformat()
+            params.update({'release_date.gte': window, 'region': dflt.get('region', 'US')})
         if card['sort'] in ('top', 'votes'):  # shorts/music videos rise to the top of rating order (smoke test)
             params.setdefault('with_runtime.gte', 40)
     else:
@@ -214,17 +221,24 @@ def discover(card, media, depth, dflt):
                 probe['with_keywords'] = dflt['without_keywords']
                 n = tmdb(f"/discover/{'movie' if movie else 'tv'}", page=1, **probe).get('total_results', 0)
             _excluded.setdefault(f"sd-{card['slug']}", {})[f'keywords:{media}'] = n
-    out, seen, page = [], set(), 1
-    while len(out) < depth:
+    raw, seen, page = [], set(), 1
+    while len(raw) < depth:
         data = tmdb(f"/discover/{'movie' if movie else 'tv'}", page=page, **params)
         for item in data.get('results', []):
+            # With region + with_release_type, TMDB matches ANY typed date in the window but returns the EARLIEST
+            # one as release_date (20/20 checked 2026-09-28): a title that went digital months ago matched on a later
+            # re-release entry. Keep only titles whose first such release is inside the window.
+            if window and (item.get('release_date') or '') < window:
+                continue
             if item['id'] not in seen:
                 seen.add(item['id'])
-                out.append(preview(item, media))
+                raw.append(item)
         if page >= min(data.get('total_pages', 0), 500):
             break
         page += 1
-    return out[:depth]
+    if card.get('newest_first'):              # by the returned (typed, regional) date; popularity breaks ties
+        raw.sort(key=lambda i: (i.get('release_date') or '', i.get('popularity') or 0), reverse=True)
+    return [preview(i, media) for i in raw[:depth]]
 
 
 def franchise(card):
