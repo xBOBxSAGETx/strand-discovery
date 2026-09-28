@@ -39,6 +39,7 @@ MAX_REQUESTS = 35000            # whole run (logger + build)
 MAX_MINUTES = 30
 PAGE_POOL = ThreadPoolExecutor(int(os.environ.get('SD_WORKERS') or 8))   # page fetches; the 20 req/s throttle is shared
 FREE = {'tubi', 'pluto-tv', 'plex'}   # ad-supported services
+MAX_DROP = 5          # at most this many services leave the state in one run (the 2026-09-28 drop was 5)
 
 
 def providers():
@@ -133,10 +134,15 @@ def main():
                'warnings': [], 'skipped': []}
     candidates = {}
     wanted = providers()
-    if not os.environ.get('SD_FS_ONLY'):                     # a service dropped from the spec leaves the state too
-        for gone in sorted(set(state['providers']) - {p['slug'] for p in wanted}):
-            del state['providers'][gone]
-            summary.setdefault('dropped', []).append(gone)
+    gone = sorted(set(state['providers']) - {p['slug'] for p in wanted})
+    if gone and not os.environ.get('SD_FS_ONLY'):          # a service dropped from the spec leaves the state too...
+        if len(gone) <= MAX_DROP and len(gone) <= 0.3 * len(state['providers']):
+            for g in gone:
+                del state['providers'][g]
+            summary['dropped'] = gone
+        else:                                                # ...but never a mass drop (a broken or trimmed spec)
+            summary['warnings'].append(f"{len(gone)} services missing from the spec were KEPT in the state "
+                                       f"(more than {MAX_DROP} or 30%): {gone[:8]}")
     for p in wanted:
         elapsed = (time.monotonic() - t0) / 60
         if p['free'] and (build._calls[0] + build_est > MAX_REQUESTS * 0.8 or elapsed > MAX_MINUTES * 0.5):

@@ -237,7 +237,10 @@ def _year(r):
 
 def _feature_length(movie_id):
     """A film award goes to a feature: runtime unknown (0) or >= MIN_FILM_RUNTIME. Durably cached."""
-    rt = build.stable(f'runtime:{movie_id}', lambda: build.tmdb(f'/movie/{movie_id}').get('runtime') or 0)
+    try:
+        rt = build.stable(f'runtime:{movie_id}', lambda: build.tmdb(f'/movie/{movie_id}').get('runtime') or 0)
+    except RuntimeError:             # 404 / TMDB down: runtime unknown -> keep the candidate (not cached)
+        return True
     return rt == 0 or rt >= MIN_FILM_RUNTIME
 
 
@@ -248,9 +251,11 @@ def _search(title, media, lo, hi):
                      include_adult='false').get('results', [])
     inwin = sorted((r for r in res if _year(r) is not None and lo <= _year(r) <= hi),
                    key=lambda r: -(r.get('vote_count') or 0))
-    if media == 'movie':
+    exact = [r for r in inwin if norm(r.get('title') or r.get('name') or '') == norm(title)]
+    if media == 'movie':             # every exact candidate is checked; the fuzzy fallback only needs its top few
+        exact = [r for r in exact if _feature_length(r['id'])]
         inwin = [r for r in inwin[:8] if _feature_length(r['id'])]
-    return [r for r in inwin if norm(r.get('title') or r.get('name') or '') == norm(title)], inwin
+    return exact, inwin
 
 
 def resolve(title, first_win, media, target=None):

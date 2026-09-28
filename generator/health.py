@@ -67,6 +67,8 @@ def problems(report, build_result, logger_outcome):
     if fs:
         out += [f"first_seen warning: {w}" for w in fs.get('warnings', [])]
         out += [f"first_seen skipped: {s}" for s in fs.get('skipped', [])]
+        if fs.get('dropped'):          # expected once when services are removed from the spec; closes next run
+            out.append(f"first_seen dropped the history of services no longer in the spec: {', '.join(fs['dropped'])}")
         if str(fs.get('state_source', '')).startswith('none') and summary and summary.get('first_seen', {}).get('providers'):
             if any(p.get('history_days', 0) > 0 for p in summary['first_seen']['providers'].values()):
                 out.append(f"first_seen state was not restored ({fs['state_source']}).")

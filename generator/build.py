@@ -146,9 +146,10 @@ def details_preview(media, tid):
     key = f'{media}:{tid}'
     old = _stable.get(key)
     # cached before genres were kept: refetch once (one-time migration); on failure the old entry is kept
-    stale = bool(old) and '_g' not in old['p'] and _backfill[0] < GENRE_BACKFILL_MAX
-    if stale:
-        _backfill[0] += 1
+    with _lock:
+        stale = bool(old) and '_g' not in old['p'] and _backfill[0] < GENRE_BACKFILL_MAX
+        if stale:
+            _backfill[0] += 1
     if key not in _stable or stale:
         try:
             d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}")

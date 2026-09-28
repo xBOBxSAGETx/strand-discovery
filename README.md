@@ -36,10 +36,10 @@ deploy stays served.
 | Alert | Meaning | What to do |
 |---|---|---|
 | TMDB rejected the API key (HTTP 401) | the TMDB key was revoked or rotated | create a new key on themoviedb.org (Settings → API), save it in the owner's secrets folder, then `gh secret set TMDB_API_KEY -R xBOBxSAGETx/strand-discovery < <that file>`, and re-run the workflow |
-| Build job ended failure · Guard: … | a safety check stopped the deploy: empty catalogs, the manifest count differs from the spec, total items fell > 30%, or > 10 catalogs lost > 70% | read the run report artifact (`report.csv`, `summary.json`). A TMDB outage clears on the next day's run. If catalogs were removed on purpose, re-run with `allow_catalog_removal` |
+| Build job ended failure · Guard: … | a safety check stopped the deploy: more than 40,000 TMDB requests in one run, empty catalogs, the manifest count differs from the spec, total items fell > 30%, or > 10 catalogs lost > 70% | read the run report artifact (`report.csv`, `summary.json`). A TMDB outage clears on the next day's run. If catalogs were removed on purpose, re-run with `allow_catalog_removal` |
 | Build job ended failure · Last log line: … | the generator crashed or was cancelled | open the run log; re-run once; if it repeats, fix the code |
 | first_seen logger ended failure | New cards fall back to release-date order for that day | nothing, if the next run is clean; if it repeats, check the logger step's log |
-| first_seen warning / skipped | a service's catalogue shrank > 20%, churned > 15%, had no arrivals for 7+ days, or was skipped for time/request budget | usually a TMDB/JustWatch data hiccup; check the service's New card if it persists |
+| first_seen warning / skipped / dropped | a service's catalogue shrank > 20%, churned > 15%, had no arrivals for 7+ days, or was skipped for time/request budget; "dropped" = a service removed from the spec left the state (expected once; more than 5 at once are kept and warned instead) | usually a TMDB/JustWatch data hiccup; check the service's New card if it persists |
 | first_seen state was not restored | the cache and the encrypted backup were both unavailable, so today's run started a fresh baseline (New order restarts its 14-day warm-up) | check that the secret `SD_STATE_KEY` still matches the owner's saved key |
 
 **Day-15 reminder:** once first_seen has 15 days of history, the alert job opens one `reminder` issue (once only) to

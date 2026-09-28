@@ -71,7 +71,7 @@ jobs:
           if [ -n "$CACHE_HIT" ] && [ -f state/first_seen.json.gz ]; then
             echo "SD_STATE_SOURCE=cache:$CACHE_HIT" >> "$GITHUB_ENV"; exit 0
           fi
-          run_id=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=first-seen-state&per_page=20"                    --jq '[.artifacts[] | select(.expired == false)][0].workflow_run.id // empty')
+          run_id=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=first-seen-state&per_page=20"                    --jq '[.artifacts[] | select(.expired == false and .workflow_run.head_branch == "main")][0].workflow_run.id // empty')
           if [ -z "$run_id" ] || ! gh run download "$run_id" -R "$GITHUB_REPOSITORY" -n first-seen-state -D state-backup; then
             echo "SD_STATE_SOURCE=none (fresh baseline)" >> "$GITHUB_ENV"; exit 0
           fi

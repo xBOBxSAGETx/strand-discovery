@@ -28,6 +28,20 @@ def mdblist(slug):
                 if it.get('mediatype') == 'movie' and it.get('id')}
 
 
+def sources(c, awards):
+    """(card ids->title, card source label, second ids->title, second source label)."""
+    if c['kind'] == 'mdblist':
+        card, card_src = mdblist(c['list']), f"MDBList `{c['list']}`"
+    else:
+        card, card_src = {i: '' for m, i in awards[c['awards_key']]['ids'] if m == 'movie'}, f"Wikipedia (`{c['awards_key']}`)"
+    kind, val = PAIRS[c['slug']]
+    if kind == 'wiki':
+        second, second_src = {i: '' for m, i in awards[val]['ids'] if m == 'movie'}, f'Wikipedia (`{val}`)'
+    else:
+        second, second_src = mdblist(val), f'MDBList `{val}`'
+    return card, card_src, second, second_src
+
+
 def main():
     awards = json.loads((HERE / 'awards.json').read_text(encoding='utf-8'))
     titles = {}
@@ -48,15 +62,11 @@ def main():
             print(f"| {c['title']} | {src} | none public (single source) | - | - | - |")
             continue
         excl = {i for m, i in c.get('exclude', [])}
-        if c['kind'] == 'mdblist':
-            card, card_src = mdblist(c['list']), f"MDBList `{c['list']}`"
-        else:
-            card, card_src = {i: '' for m, i in awards[c['awards_key']]['ids'] if m == 'movie'}, f"Wikipedia (`{c['awards_key']}`)"
-        kind, val = PAIRS[c['slug']]
-        if kind == 'wiki':
-            second, second_src = {i: '' for m, i in awards[val]['ids'] if m == 'movie'}, f'Wikipedia (`{val}`)'
-        else:
-            second, second_src = mdblist(val), f'MDBList `{val}`'
+        try:
+            card, card_src, second, second_src = sources(c, awards)
+        except Exception as e:                     # MDBList down / format change: report, keep the yearly job going
+            print(f"| {c['title']} | - | - | unavailable ({type(e).__name__}) | - | - |")
+            continue
         card = {i: t for i, t in card.items() if i not in excl}
         second = {i: t for i, t in second.items() if i not in excl}
         only_card, only_second = sorted(set(card) - set(second)), sorted(set(second) - set(card))
