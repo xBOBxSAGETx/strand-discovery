@@ -40,6 +40,7 @@ _last = [0.0]
 _backfill = [0]
 GENRE_BACKFILL_MAX = int(os.environ.get('SD_GENRE_BACKFILL_MAX', '3000'))   # per run; 0 = no refetch
 _calls = [0]
+_fill = [0, 0]                 # discover fill pass (issue #25): pages read, ids recovered
 _lock = threading.Lock()
 
 
@@ -214,16 +215,48 @@ def discover(card, media, depth, dflt):
                 probe['with_keywords'] = dflt['without_keywords']
                 n = tmdb(f"/discover/{'movie' if movie else 'tv'}", page=1, **probe).get('total_results', 0)
             _excluded.setdefault(f"sd-{card['slug']}", {})[f'keywords:{media}'] = n
-    out, seen, page = [], set(), 1
+    path = f"/discover/{'movie' if movie else 'tv'}"
+    out, seen, page, raw = [], set(), 1, {}
     while len(out) < depth:
-        data = tmdb(f"/discover/{'movie' if movie else 'tv'}", page=page, **params)
+        data = tmdb(path, page=page, **params)
         for item in data.get('results', []):
             if item['id'] not in seen:
                 seen.add(item['id'])
+                raw[item['id']] = item
                 out.append(preview(item, media))
         if page >= min(data.get('total_pages', 0), 500):
             break
         page += 1
+    # TMDB caches every /discover page separately (for hours), so the pages of one query can come from different
+    # ranking snapshots: ids repeat on two pages and others are never returned (issue #25). When the whole pool was
+    # read but ids are missing, read it once more in the REVERSE order (different cache entries) and merge by the
+    # sort key. Bounded by total_pages; only runs on a short card with holes.
+    total, pages = data.get('total_results', 0), data.get('total_pages', 0)
+    if len(out) < depth and len(seen) < total and 0 < pages <= 500:
+        sort_by = params['sort_by']
+        field, _, way = sort_by.rpartition('.')
+        field = {'primary_release_date': 'release_date'}.get(field, field)
+        fill = {**params, 'sort_by': f"{sort_by.rpartition('.')[0]}.{'asc' if way == 'desc' else 'desc'}"}
+        n0, used = len(seen), 0
+        for pg in range(1, pages + 1):
+            used += 1
+            for item in tmdb(path, page=pg, **fill).get('results', []):
+                if item['id'] not in seen:
+                    seen.add(item['id'])
+                    raw[item['id']] = item
+            if len(seen) >= total:
+                break
+        with _lock:
+            _fill[0] += used
+            _fill[1] += len(seen) - n0
+        print(f"  discover fill {card.get('slug')} {media}: +{len(seen) - n0} ids ({used} pages)", flush=True)
+        # one order from the current values (the stale pages' order was the problem); ties keep first-read order
+        order = {i: n for n, i in enumerate(raw)}
+        have = [i for i in raw if raw[i].get(field) not in (None, '')]
+        have.sort(key=lambda i: (raw[i][field], -order[i]) if way == 'desc' else (raw[i][field], order[i]),
+                  reverse=way == 'desc')
+        rest = [i for i in raw if raw[i].get(field) in (None, '')]
+        out = [preview(raw[i], media) for i in have + rest]
     return out[:depth]
 
 
@@ -606,6 +639,7 @@ def main():
                               'options': sum(g['options'] for g in genre_stats.values()),
                               'untagged_items': sum(g['untagged'] for g in genre_stats.values()),
                               'backfilled': _backfill[0], 'min_titles': GENRE_MIN}
+    summary['discover_fill'] = {'pages': _fill[0], 'recovered': _fill[1]}
     fs = FS_SUMMARY or {'status': 'missing (logger did not run or failed)'}
     summary['first_seen'] = {k: v for k, v in fs.items() if k != 'providers'}
     summary['first_seen']['providers'] = {p: {k: v for k, v in i.items() if k in ('size', 'adds', 'removals', 'churn',
