@@ -158,6 +158,7 @@ HERO_PAD = 14
 # When the photo under it is too bright/busy, a soft dark scrim is laid behind the eyebrow only (no card-wide
 # darkening), getting stronger step by step until the assert passes. EYEBROW_FIX = False is the seeded control.
 EYEBROW_FIX = True
+TITLE_FIX = True                                # same scrim fix for the typeset title of Movie Series fallback cards
 EYEBROW_SCRIM_ALPHAS = (110, 150, 190, 230)
 
 
@@ -168,39 +169,59 @@ def title_logo_xy(size, lw, lh, margin):
     return margin, size[1] - margin - lh
 
 
-def draw_eyebrow(base, card, xy, eyebrow_f, fails, log, check):
-    """Draw the eyebrow at xy; with check, assert its legibility and fix it with a local scrim. Returns its bbox."""
-    text = card['eyebrow'].upper()
+def draw_legible_text(base, items, fill, fails, log, key, check, fix):
+    """Draw [(xy, text, font)] in fill. With check, assert >= MIN_LEGIBLE_SHARE of the glyph pixels reach
+    MIN_TITLE_CONTRAST against the photo under them; if not and fix, lay a soft local scrim behind each item (stepped
+    alpha, each step on the original photo, never stacked) until it passes. Logs <key>_legible(_raw) / <key>_scrim.
+    Returns the bboxes."""
     draw = ImageDraw.Draw(base)
-    bbox = draw.textbbox(xy, text, font=eyebrow_f)
+    bboxes = [draw.textbbox(xy, text, font=f) for xy, text, f in items]
     if check:
         layer = Image.new('RGBA', base.size, (0, 0, 0, 0))
-        ImageDraw.Draw(layer).text(xy, text, font=eyebrow_f, fill=ACCENT)
-        glyphs = layer.crop(bbox)
-        share = legible_share(glyphs, base.crop(bbox))
-        log['eyebrow_legible_raw'] = round(share, 3)
-        orig = base.copy()                            # each step is one scrim on the original photo, not stacked
-        for alpha in (EYEBROW_SCRIM_ALPHAS if EYEBROW_FIX else ()):
+        for xy, text, f in items:
+            ImageDraw.Draw(layer).text(xy, text, font=f, fill=fill)
+        box = (min(b[0] for b in bboxes), min(b[1] for b in bboxes), max(b[2] for b in bboxes), max(b[3] for b in bboxes))
+        glyphs = layer.crop(box)
+        share = legible_share(glyphs, base.crop(box))
+        log[f'{key}_legible_raw'] = round(share, 3)
+        orig = base.copy()
+        for alpha in (EYEBROW_SCRIM_ALPHAS if fix else ()):
             if share >= MIN_LEGIBLE_SHARE:
                 break
-            pad_x, pad_y = 14, 6
             mask = Image.new('L', base.size, 0)
-            ImageDraw.Draw(mask).rounded_rectangle((bbox[0] - pad_x, bbox[1] - pad_y, bbox[2] + pad_x, bbox[3] + pad_y),
-                                                   radius=10, fill=alpha)
-            mask = mask.filter(ImageFilter.GaussianBlur(4))
+            md = ImageDraw.Draw(mask)
+            for (xy, text, f), b in zip(items, bboxes):
+                px, py = round(f.size * 0.5), round(f.size * 0.22)
+                md.rounded_rectangle((b[0] - px, b[1] - py, b[2] + px, b[3] + py), radius=max(10, f.size // 4), fill=alpha)
+            mask = mask.filter(ImageFilter.GaussianBlur(max(4, max(f.size for _, _, f in items) // 8)))
             scrim = Image.new('RGBA', base.size, (0, 0, 0, 0))
             scrim.putalpha(mask)
             trial = orig.copy()
             trial.alpha_composite(scrim)
-            share = legible_share(glyphs, trial.crop(bbox))
+            share = legible_share(glyphs, trial.crop(box))
             base.paste(trial)
-            log['eyebrow_scrim'] = alpha
-        log['eyebrow_legible'] = round(share, 3)
+            log[f'{key}_scrim'] = alpha
+        log[f'{key}_legible'] = round(share, 3)
         if share < MIN_LEGIBLE_SHARE:
-            fails.append(f'eyebrow contrast: only {share:.0%} of its pixels reach {MIN_TITLE_CONTRAST}:1 '
+            fails.append(f'{key} contrast: only {share:.0%} of its pixels reach {MIN_TITLE_CONTRAST}:1 '
                          f'(need {MIN_LEGIBLE_SHARE:.0%})')
-    ImageDraw.Draw(base).text(xy, text, font=eyebrow_f, fill=ACCENT)
-    return bbox
+    draw = ImageDraw.Draw(base)
+    for xy, text, f in items:
+        draw.text(xy, text, font=f, fill=fill)
+    return bboxes
+
+
+def draw_eyebrow(base, card, xy, eyebrow_f, fails, log, check):
+    """Draw the eyebrow at xy; with check, assert its legibility and fix it with a local scrim. Returns its bbox."""
+    return draw_legible_text(base, [(xy, card['eyebrow'].upper(), eyebrow_f)], ACCENT, fails, log, 'eyebrow',
+                             check, EYEBROW_FIX)[0]
+
+
+def title_block_area(draw, lines, f):
+    """Area of the typeset title block (widest line x stacked height), as laid out in render()."""
+    line_h = f.size * 1.08
+    bbs = [draw.textbbox((0, i * line_h), line, font=f) for i, line in enumerate(lines)]
+    return (max(b[2] for b in bbs) - min(b[0] for b in bbs)) * (bbs[-1][3] - bbs[0][1])
 
 
 def check_hero_band(boxes, size, fails, log):
@@ -315,16 +336,22 @@ def render(card):
         if title_f is None:
             fails.append('title does not fit in 2 lines')
             title_f = font(28, 'ExtraBold')
+        series_fb = bool(card.get('title_logo')) and card['shape'] == 'wide'   # Movie Series typeset fallback
+        while series_fb and title_block_area(draw, lines, title_f) > TITLE_LOGO_MAX_AREA * w * h and title_f.size > 32:
+            smaller, got = fit_lines(draw, card['title'], w - 2 * margin, title_f.size - 4, 'ExtraBold')
+            if smaller is None:
+                break
+            title_f, lines = smaller, got
+            log['title_capped'] = True                # same visual-weight cap as the title logos
         log['title_px'], log['title_lines'] = title_f.size, len(lines)
         line_h = title_f.size * 1.08
         y = h - margin - line_h * len(lines)
-        if card.get('title_logo') and card['shape'] == 'wide':    # Movie Series fallback: inside the hero band too
+        if series_fb:                                 # Movie Series fallback: inside the hero band too
             last_bottom = draw.textbbox((0, 0), lines[-1], font=title_f)[3]
             y = int(h * HERO_BAND[1]) - HERO_PAD - (len(lines) - 1) * line_h - last_bottom
-        boxes = []
-        for i, line in enumerate(lines):
-            draw.text((margin, y + i * line_h), line, font=title_f, fill=(255, 255, 255))
-            boxes.append((f'title line {i + 1}', draw.textbbox((margin, y + i * line_h), line, font=title_f)))
+        items = [((margin, y + i * line_h), line, title_f) for i, line in enumerate(lines)]
+        tb = draw_legible_text(base, items, (255, 255, 255), fails, log, 'title', series_fb, TITLE_FIX)
+        boxes = [(f'title line {i + 1}', b) for i, b in enumerate(tb)]
     eyebrow_f = font(26 if card['shape'] == 'wide' else 22, 'Bold')
     ey = (margin, y - eyebrow_f.size - 14)
     series = 'title_logo' in card                     # Movie Series (logo or fallback): eyebrow legibility asserted

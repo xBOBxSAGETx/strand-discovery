@@ -91,7 +91,7 @@ def wordmark_logo(rgb=(255, 255, 255), size=(900, 300)):
 class Render(unittest.TestCase):
     def setUp(self):
         self.saved = (art.fetch_image, art.background_path, art.OUT, art.TITLE_LOGO_BOX, art.title_logo_xy, art.gradient,
-                      art.TITLE_LOGO_MAX_AREA, art.EYEBROW_FIX)
+                      art.TITLE_LOGO_MAX_AREA, art.EYEBROW_FIX, art.TITLE_FIX)
         art.OUT = Path(_tmp) / 'cards'
         art.background_path = lambda bg: '/bg.jpg'
         self.logo_img = wordmark_logo()
@@ -100,7 +100,7 @@ class Render(unittest.TestCase):
 
     def tearDown(self):
         (art.fetch_image, art.background_path, art.OUT, art.TITLE_LOGO_BOX, art.title_logo_xy, art.gradient,
-         art.TITLE_LOGO_MAX_AREA, art.EYEBROW_FIX) = self.saved
+         art.TITLE_LOGO_MAX_AREA, art.EYEBROW_FIX, art.TITLE_FIX) = self.saved
 
     def card(self, **tl):
         return {'slug': 'series-test', 'shape': 'wide', 'eyebrow': 'Movie Series', 'title': 'Test',
@@ -240,12 +240,35 @@ class Render(unittest.TestCase):
         self.assertNotIn('eyebrow_legible', log)
         self.assertNotIn('hero_band', log)
 
-    def test_fallback_titles_sit_in_the_hero_band(self):
-        for title, n in (('Pirates of the Caribbean', 2), ('007', 1), ('How to Train Your Dragon', 2)):
+    def test_fallback_titles_sit_in_the_hero_band_under_the_area_cap(self):
+        d = ImageDraw.Draw(Image.new('RGB', (1, 1)))
+        for title, capped in (('Pirates of the Caribbean', True), ('007', False), ('How to Train Your Dragon', True)):
             card = dict(self.card(fallback='no film titled like the card'), title=title)
             _, log, fails = art.render(card)
             self.assertEqual(fails, [], title)
-            self.assertEqual((log['hero_band'], log['safe_area'], log['title_lines']), ('ok', 'ok', n), title)
+            self.assertEqual((log['hero_band'], log['safe_area']), ('ok', 'ok'), title)
+            self.assertEqual(log.get('title_capped', False), capped, (title, log['title_px']))
+            f, lines = art.fit_lines(d, title, 1280 - 128, log['title_px'], 'ExtraBold')
+            self.assertEqual((f.size, len(lines)), (log['title_px'], log['title_lines']), title)
+            self.assertLessEqual(art.title_block_area(d, lines, f), art.TITLE_LOGO_MAX_AREA * 1280 * 720, title)
+        self.assertEqual(art.render(dict(self.card(fallback='x'), title='007'))[1]['title_px'], 104)   # short: 104
+
+    def fallback_on_bright_patch(self):
+        self.bright_busy()
+        return dict(self.card(fallback='no film titled like the card'), title='Pirates of the Caribbean')
+
+    def test_control_title_on_bright_busy_patch_fails_without_fix(self):
+        art.TITLE_FIX = False
+        _, log, fails = art.render(self.fallback_on_bright_patch())
+        self.assertTrue(any(f.startswith('title contrast') for f in fails), (fails, log))
+        self.assertNotIn('title_scrim', log)
+
+    def test_title_on_bright_busy_patch_passes_with_the_scrim(self):
+        _, log, fails = art.render(self.fallback_on_bright_patch())
+        self.assertEqual(fails, [], log)
+        self.assertLess(log['title_legible_raw'], art.MIN_LEGIBLE_SHARE)
+        self.assertGreaterEqual(log['title_legible'], art.MIN_LEGIBLE_SHARE)
+        self.assertIn(log['title_scrim'], art.EYEBROW_SCRIM_ALPHAS)
 
     def test_control_thin_strip_fails_min_size(self):
         self.logo_img = wordmark_logo(size=(1920, 109))                              # the ALIEN strip: 640x36
