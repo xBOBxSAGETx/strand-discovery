@@ -68,8 +68,11 @@ Day-dated items from a published schedule are trusted for the whole 45-day windo
 weekly What's on Netflix recap, Plex's monthly list) need confirmation after 7 days: TMDB (JustWatch) must list the
 title on the service, otherwise it leaves the card. (A Netflix-network series that TMDB has no US provider data for at
 all counts as on Netflix.) Only titles, years, seasons, dates and post URLs are kept from the sources - not their text.
-Politeness: identifiable User-Agent, at most 1 request/s per site (Film-Book's 5 s crawl delay honoured), conditional
-GET from a private cache, never search URLs; personal, non-commercial use. Only TMDB ids and dates end up in the
+Politeness: identifiable User-Agent, at least 3 s between requests to any site (Film-Book's 5 s crawl delay honoured;
+Vital Thrills 5 s), conditional GET from a private cache, never search URLs; an HTTP 429/503 is honoured once
+(Retry-After) and a second one stops that site for the run (one health warning); the backfill fetches at most 20
+Vital Thrills posts per run. Departure sections of a schedule ("Leaving …") are never read as arrivals.
+Personal, non-commercial use. Only TMDB ids and dates end up in the
 catalogs - the sources' text is never republished. A failing source or a format change shows in the health issue and
 the cards fall back to the stored dates and the other sources (never empty).
 First run: *Actions -> build-and-deploy -> Run workflow* with `arrivals_backfill` on reads the last 3 months once
