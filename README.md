@@ -15,3 +15,11 @@ This product uses the TMDB API but is not endorsed or certified by TMDB.
 
 Streaming availability (which titles are on which service) is watch-provider data from
 [JustWatch](https://www.justwatch.com), provided through TMDB.
+
+## Operations
+
+- `first_seen` state (the date each title was first seen on each service) lives in the Actions cache, with an
+  encrypted 90-day artifact backup (`first-seen-state`, AES-256, key in the repo secret `SD_STATE_KEY`). The job
+  restores from the cache, else from the newest backup, else starts a fresh baseline. If the key is lost, only the
+  backup becomes unreadable; the cache keeps working, and a new key can be set at any time.
+- Scheduled deploys stay off unless the repo variable `SD_SCHEDULE_DEPLOY` is `on`.

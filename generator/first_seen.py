@@ -37,6 +37,7 @@ PRUNE_DAYS = 180
 CAP = int(os.environ.get('SD_FS_CAP') or 10000)   # TMDB discover returns at most 500 pages x 20 (env: tests only)
 MAX_REQUESTS = 35000            # whole run (logger + build)
 MAX_MINUTES = 30
+PAGE_POOL = ThreadPoolExecutor(int(os.environ.get('SD_WORKERS') or 8))   # page fetches; the 20 req/s throttle is shared
 FREE = {'tubi', 'pluto-tv', 'the-roku-channel', 'plex', 'kanopy', 'hoopla'}   # ad-supported / library services
 
 
@@ -80,9 +81,9 @@ def enumerate_catalogue(p, media, dflt):
         for r in results:
             items[r['id']] = r
 
-    def pages(params, total_pages):
-        for page in range(2, min(total_pages, 500) + 1):
-            take(build.tmdb(path, page=page, **params).get('results', []))
+    def pages(params, total_pages):             # pages 2..N in parallel (latency, not the throttle, was the limit)
+        for d in PAGE_POOL.map(lambda pg: build.tmdb(path, page=pg, **params), range(2, min(total_pages, 500) + 1)):
+            take(d.get('results', []))
 
     first = build.tmdb(path, page=1, **q)
     if first.get('total_results', 0) <= CAP:
