@@ -38,6 +38,8 @@ jobs:
     permissions:
       contents: read
       actions: read          # restore the first_seen state from the previous run's artifact if the cache is gone
+    outputs:
+      logger: ${{ steps.logger.outcome }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
@@ -120,7 +122,10 @@ jobs:
           SD_CACHE: cache
           SD_MEASURE_EXCLUSIONS: ${{ inputs.measure_exclusions && '1' || '0' }}
           SD_STATE: state
-        run: python generator/build.py out
+        # the log is kept for the health alert (guard / 401 detection); the key is never printed
+        run: |
+          set -o pipefail
+          python generator/build.py out 2>&1 | tee build.log
       - name: Run report (always, also on guard failure)
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -131,11 +136,33 @@ jobs:
             out/summary.json
             out/exclusions.json
             state/fs_summary.json
+            build.log
           if-no-files-found: warn
           retention-days: 14
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
         with:
           path: out
+
+  # One "health" issue, opened/updated on problems and closed after a clean run (GitHub emails the owner).
+  alert:
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read         # checkout of generator/health.py
+      issues: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        continue-on-error: true   # a build that died before the report still gets an alert
+        with:
+          name: run-report
+          path: report
+      - name: Update the health issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python generator/health.py report "${{ needs.build.result }}" "${{ needs.build.outputs.logger || 'unknown' }}"
 
   deploy:
     needs: build

@@ -1,0 +1,83 @@
+name: yearly-refresh
+
+on:
+  schedule:
+    - cron: '23 9 1 10 *'       # every October 1 (after the Emmys, before awards season)
+  workflow_dispatch:
+    inputs:
+      label:
+        description: 'Branch/issue suffix instead of the year (tests: e.g. "test")'
+        required: false
+        default: ''
+
+permissions: {}
+
+jobs:
+  # Re-run the Wikipedia award lists. Actions may not open PRs in this repo (repo setting), so the job pushes a
+  # branch and opens an issue with the compare link and every CHECK / UNRESOLVED title; one click creates the PR.
+  awards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write          # push the awards-refresh-YYYY branch (never main)
+      issues: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - name: Rebuild award lists
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: python generator/awards_wiki.py awards_resolve.csv
+      - name: Branch + review issue (only if the lists changed; tests always proceed)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LABEL: ${{ inputs.label }}        # user input reaches the shell only as data, never as code
+        run: |
+          if ! [[ "$LABEL" =~ ^[a-z0-9-]{0,20}$ ]]; then echo "invalid label"; exit 1; fi
+          if git diff --quiet -- generator/awards.json && [ -z "$LABEL" ]; then echo "award lists unchanged"; exit 0; fi
+          suffix="${LABEL:-$(date +%Y)}"
+          branch="awards-refresh-$suffix"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add generator/awards.json
+          git commit --allow-empty -m "Yearly award list refresh ($(date +%F))"
+          git push -f origin "$branch"
+          {
+            echo "The yearly award refresh changed \`generator/awards.json\`."
+            echo
+            echo "**Create the PR:** https://github.com/$GITHUB_REPOSITORY/compare/main...$branch?expand=1"
+            echo
+            echo "Titles that need a look (non-exact matches and unresolved):"
+            echo
+            echo '| list | latest win | Wikipedia title | TMDB | match |'
+            echo '|---|---|---|---|---|'
+            python -c "import csv; [print(f\"| {r['list']} | {r['latest_win']} | {r['wiki_title']} | {r['tmdb_id']} {r['tmdb_title']} | {r['match']} |\") for r in csv.DictReader(open('awards_resolve.csv', encoding='utf-8')) if not r['match'].startswith('exact title')]"
+          } > body.md
+          gh label create yearly --color 5319e7 --description "Yearly maintenance" 2>/dev/null || true
+          gh issue create --title "Yearly award refresh $suffix: review and merge" --label yearly --body-file body.md
+
+  people:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - name: Open the people review issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LABEL: ${{ inputs.label }}
+        run: |
+          if ! [[ "$LABEL" =~ ^[a-z0-9-]{0,20}$ ]]; then echo "invalid label"; exit 1; fi
+          curl -sf https://xbobxsagetx.github.io/strand-discovery/summary.json -o summary.json
+          python generator/people_review.py summary.json > body.md
+          gh label create yearly --color 5319e7 --description "Yearly maintenance" 2>/dev/null || true
+          suffix="${LABEL:-$(date +%Y)}"
+          gh issue create --title "Yearly review of the people lists $suffix" --label yearly --body-file body.md
