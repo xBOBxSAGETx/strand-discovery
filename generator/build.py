@@ -1,7 +1,10 @@
 """Generate the Strand Discovery static Stremio catalog addon from TMDB.
 
 Output (default ./out): manifest.json, catalog/<type>/<id>.json, catalog/<type>/<id>/skip=<n>.json,
-a terminal skip=<total>.json with {"metas": []}, summary.json and report.csv.
+a terminal skip=<total>.json with {"metas": []}, summary.json and report.csv. Each catalog also declares a genre
+extra (canonical genres present on the card, >= GENRE_MIN titles) with pre-filtered pages
+catalog/<type>/<id>/genre=<G>.json and skip=<n>&genre=<G>.json - AIOStreams' Jellyfin server turns Strand's
+genre filter into exactly these requests. No extra TMDB requests: genres come from the same responses.
 
 Env:
   TMDB_API_KEY       required (GitHub Actions secret; never printed)
@@ -34,6 +37,8 @@ CACHE_FILE = Path(os.environ.get('SD_CACHE', 'cache')) / 'stable.json'
 WORKERS = int(os.environ.get('SD_WORKERS', '6'))   # catalogs built in parallel; the 20 req/s throttle is shared
 
 _last = [0.0]
+_backfill = [0]
+GENRE_BACKFILL_MAX = int(os.environ.get('SD_GENRE_BACKFILL_MAX', '3000'))   # per run; 0 = no refetch
 _calls = [0]
 _lock = threading.Lock()
 
@@ -104,6 +109,20 @@ def named(path, field='name', **params):
     return _names[key] if field is None else _names[key].get(field, '?')
 
 
+# TMDB movie + TV genre ids -> one canonical genre list for the per-catalog genre filter (Jellyfin "Genres").
+# Names stay [A-Za-z-] so the page file names need no percent-encoding. TV Movie, News and Talk are not offered.
+CANON_GENRES = {28: ['Action'], 10759: ['Action', 'Adventure'], 12: ['Adventure'], 16: ['Animation'],
+                35: ['Comedy'], 80: ['Crime'], 99: ['Documentary'], 18: ['Drama'], 10751: ['Family'],
+                14: ['Fantasy'], 10765: ['Sci-Fi', 'Fantasy'], 36: ['History'], 27: ['Horror'], 10762: ['Kids'],
+                10402: ['Music'], 9648: ['Mystery'], 10749: ['Romance'], 878: ['Sci-Fi'], 53: ['Thriller'],
+                10752: ['War'], 10768: ['War'], 37: ['Western'], 10764: ['Reality'], 10766: ['Soap']}
+GENRE_MIN = 5          # a genre is offered on a card only with at least this many titles (and not all of them)
+
+
+def canon_genres(ids):
+    return sorted({g for i in ids or [] for g in CANON_GENRES.get(i, [])})
+
+
 def preview(item, media):
     title = item.get('title') or item.get('name')
     date = item.get('release_date') or item.get('first_air_date') or ''
@@ -112,6 +131,8 @@ def preview(item, media):
         meta['poster'] = f"{IMG}/w342{item['poster_path']}"
     if date[:4]:
         meta['releaseInfo'] = date[:4]
+    # private: canonical genres for the genre pages, stripped before anything is written
+    meta['_g'] = canon_genres(item.get('genre_ids') or [g['id'] for g in item.get('genres') or []])
     return meta
 
 
@@ -123,12 +144,20 @@ def released(item, media):
 def details_preview(media, tid):
     """Preview for one TMDB id (cached durably); None if unknown or not released yet."""
     key = f'{media}:{tid}'
-    if key not in _stable:
+    old = _stable.get(key)
+    # cached before genres were kept: refetch once (one-time migration); on failure the old entry is kept
+    stale = bool(old) and '_g' not in old['p'] and _backfill[0] < GENRE_BACKFILL_MAX
+    if stale:
+        _backfill[0] += 1
+    if key not in _stable or stale:
         try:
             d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}")
-        except RuntimeError:          # not cached: a transient failure must not stick
-            return None
-        _stable[key] = {'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or ''}             if d.get('id') else None
+            _stable[key] = ({'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or ''}
+                            if d.get('id') else None)
+        except RuntimeError:          # a transient failure must not stick
+            if not stale:
+                return None           # not cached: try again next run
+            _stable[key] = old        # keep the pre-genre entry (no genre pages for it this run)
     hit = _stable[key]
     return hit['p'] if hit and hit['d'] and hit['d'] <= TODAY else None
 
@@ -340,17 +369,39 @@ def source_of(card):
     return ' / '.join(dict.fromkeys(ids)) or '-', '; '.join(parts) + f" [{card['sort']}, votes>={votes}]"
 
 
-def write_catalog(root, media, cid, metas, page_size):
-    base = root / 'catalog' / media
-    base.mkdir(parents=True, exist_ok=True)
-    (base / f'{cid}.json').write_text(json.dumps({'metas': metas[:page_size]}, separators=(',', ':')), encoding='utf-8')
-    for skip in range(page_size, len(metas), page_size):
-        d = base / cid
-        d.mkdir(exist_ok=True)
-        (d / f'skip={skip}.json').write_text(json.dumps({'metas': metas[skip:skip + page_size]}, separators=(',', ':')), encoding='utf-8')
+def write_pages(base, cid, metas, page_size, genre=None):
+    """First page + skip pages + an empty terminal page. File names are the extras string AIOStreams sends upstream
+    (core ExtrasParser, checked on the deployed image): 'genre=G' for the first page, then 'skip=N&genre=G'."""
+    tag = f'&genre={genre}' if genre else ''
     d = base / cid
-    d.mkdir(exist_ok=True)
-    (d / f'skip={len(metas)}.json').write_text('{"metas":[]}', encoding='utf-8')   # terminal page: no 404 at the end
+    d.mkdir(parents=True, exist_ok=True)
+    first = d / f'genre={genre}.json' if genre else base / f'{cid}.json'
+    pages = [(first, metas[:page_size])]
+    pages += [(d / f'skip={skip}{tag}.json', metas[skip:skip + page_size]) for skip in range(page_size, len(metas), page_size)]
+    pages.append((d / f'skip={len(metas)}{tag}.json', []))          # terminal page: no 404 at the end
+    size = 0
+    for path, page in pages:
+        text = json.dumps({'metas': page}, separators=(',', ':'))
+        path.write_text(text, encoding='utf-8')
+        size += len(text)
+    return len(pages), size
+
+
+def write_catalog(root, media, cid, metas, page_size):
+    """The catalog's pages plus one filtered set per offered genre. Returns (genre options, genre files, bytes)."""
+    base = root / 'catalog' / media
+    genres = {}
+    for m in metas:
+        for g in m.get('_g', []):
+            genres[g] = genres.get(g, 0) + 1
+    public = [{k: v for k, v in m.items() if k != '_g'} for m in metas]   # copies: cached previews keep '_g'
+    write_pages(base, cid, public, page_size)
+    options = sorted(g for g, n in genres.items() if GENRE_MIN <= n < len(metas))
+    files = size = 0
+    for g in options:
+        f, b = write_pages(base, cid, [p for p, m in zip(public, metas) if g in m.get('_g', [])], page_size, g)
+        files, size = files + f, size + b
+    return options, files, size
 
 
 def previous_summary():
@@ -429,6 +480,7 @@ def main():
     manifest = {**spec['addon'], 'resources': ['catalog'], 'types': ['movie', 'series'], 'catalogs': [],
                 'behaviorHints': {'configurable': False}}
     counts, rows, t0 = {}, [], time.monotonic()
+    genre_stats = {}
     deny = {(m, int(i)) for m, i, _ in dflt.get('deny', [])}
     def work(card):
         metas, notes = build_one(card, dflt)
@@ -454,8 +506,11 @@ def main():
             if len(metas) < before:
                 _excluded.setdefault(cid, {})['deny'] = before - len(metas)
                 notes = f"{notes}; deny-list removed {before - len(metas)}".lstrip('; ')
-            write_catalog(root, 'movie', cid, metas, dflt['page_size'])
-            manifest['catalogs'].append({'type': 'movie', 'id': cid, 'name': card['library'], 'extra': [{'name': 'skip'}]})
+            options, gfiles, gbytes = write_catalog(root, 'movie', cid, metas, dflt['page_size'])
+            genre_stats[cid] = {'options': len(options), 'files': gfiles, 'bytes': gbytes,
+                                'untagged': sum(1 for m in metas if not m.get('_g'))}
+            extra = ([{'name': 'genre', 'options': options, 'isRequired': False}] if options else []) + [{'name': 'skip'}]
+            manifest['catalogs'].append({'type': 'movie', 'id': cid, 'name': card['library'], 'extra': extra})
             counts[cid] = len(metas)
             kinds = {t: sum(1 for m in metas if m['type'] == t) for t in ('movie', 'series')}
             rows.append([card['title'], card['library'], ' + '.join(folder_title[f] for f in card['folders']),
@@ -472,6 +527,11 @@ def main():
     (root / '.nojekyll').write_text('', encoding='utf-8')
     summary = {'generated_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'tmdb_requests': _calls[0],
                'seconds': round(time.monotonic() - t0), 'total_items': sum(counts.values()), 'catalogs': counts}
+    summary['genre_pages'] = {'files': sum(g['files'] for g in genre_stats.values()),
+                              'bytes': sum(g['bytes'] for g in genre_stats.values()),
+                              'options': sum(g['options'] for g in genre_stats.values()),
+                              'untagged_items': sum(g['untagged'] for g in genre_stats.values()),
+                              'backfilled': _backfill[0], 'min_titles': GENRE_MIN}
     fs = FS_SUMMARY or {'status': 'missing (logger did not run or failed)'}
     summary['first_seen'] = {k: v for k, v in fs.items() if k != 'providers'}
     summary['first_seen']['providers'] = {p: {k: v for k, v in i.items() if k in ('size', 'adds', 'removals', 'churn',
