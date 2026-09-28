@@ -437,6 +437,9 @@ def _read_json(p, default):
 
 FS_SUMMARY = _read_json(STATE_DIR / 'fs_summary.json', None)
 FS_CANDIDATES = _read_json(STATE_DIR / 'new_candidates.json', {})
+# arrival signals (arrivals.py, or the logger's fallback from the stored signals): per provider, date-desc
+SIGNALS = _read_json(STATE_DIR / 'signal_candidates.json', {}).get('providers', {})
+MIN_SIGNALS = 10               # a New card switches to arrival order with at least this many dated arrivals
 
 
 def first_seen_mode(card):
@@ -453,9 +456,64 @@ def first_seen_card(card, depth):
     return interleave([[strip(m) for m in c if m['type'] == t][:depth] for t in ('movie', 'series')])
 
 
+def arrival_mode(card):
+    return len(SIGNALS.get(card.get('provider') or '', [])) >= MIN_SIGNALS
+
+
+def both_kinds_early(metas, n=20):
+    """Keep date order, but make sure the first n entries hold both kinds when the card has both (Jellyfin samples
+    the first entries for the library type): the newest entry of a missing kind moves up to position n - 1."""
+    head = {m['type'] for m in metas[:n]}
+    for t in ('movie', 'series'):
+        if t not in head:
+            i = next((i for i, m in enumerate(metas) if m['type'] == t), None)
+            if i is not None and i >= n:
+                metas.insert(n - 1, metas.pop(i))
+    return metas
+
+
+def arrival_card(card, depth, dflt):
+    """New on X by ARRIVAL date: dated arrivals from published schedules (arrivals.py; confirmed or announced, last
+    45 days) merged with the titles our own daily snapshots first saw (when that history is on), newest first,
+    popularity tiebreak; then filled up with the release-date card. Returns (metas, counts)."""
+    prov = card['provider']
+    timeline, keys = [], set()
+    for c in SIGNALS.get(prov, []):
+        timeline.append((c['date'], -{'day': 0, 'week': 1, 'month': 2}[c['precision']], c['popularity'], c['key'], None))
+        keys.add(c['key'])
+    if first_seen_mode(card):
+        for m in FS_CANDIDATES.get(prov, []):
+            k = f"{m['type']}:{m['id'].split(':', 1)[1]}"
+            if k not in keys:
+                meta = {kk: v for kk, v in m.items() if kk not in ('first_seen', 'popularity')}
+                timeline.append((m['first_seen'], 0, m['popularity'], k, meta))
+                keys.add(k)
+    timeline.sort(key=lambda t: (t[0], t[1], t[2]), reverse=True)
+    cap = depth * len(card['media'])
+    out, seen, n_sig = [], set(), 0
+    for date, _, _, k, meta in timeline:
+        if len(out) >= cap:
+            break
+        if meta is None:
+            media, tid = k.split(':')
+            meta = details_preview(media, int(tid))          # durably cached; None = unknown / not released
+            n_sig += meta is not None
+        if meta and meta['id'] not in seen and meta['type'] in card['media']:
+            seen.add(meta['id'])
+            out.append(meta)
+    n_arr = len(out)
+    fill = interleave([discover(card, m, depth, dflt) for m in card['media']])
+    out += [m for m in fill if m['id'] not in seen][:max(0, cap - len(out))]
+    return both_kinds_early(out), {'signals': n_sig, 'arrivals': n_arr, 'filled': len(out) - n_arr}
+
+
 def build_one(card, dflt):
     """Returns (metas, notes)."""
     kind, notes = card['kind'], ''
+    if kind == 'discover' and arrival_mode(card):
+        metas, n = arrival_card(card, depth_of(card, dflt), dflt)
+        return metas, (f"ordered by arrival date: {n['signals']} dated arrivals + {n['arrivals'] - n['signals']} "
+                       f"first seen, then {n['filled']} by release date")
     if kind == 'discover' and first_seen_mode(card):
         return first_seen_card(card, depth_of(card, dflt)), 'ordered by date first seen on the service'
     if kind == 'discover':
@@ -552,7 +610,8 @@ def main():
     summary['first_seen']['providers'] = {p: {k: v for k, v in i.items() if k in ('size', 'adds', 'removals', 'churn',
                                                                                   'history_days', 'mode', 'sliced')}
                                           for p, i in fs.get('providers', {}).items()}
-    summary['new_card_modes'] = {c['slug']: ('first_seen' if first_seen_mode(c) else 'release_date')
+    summary['new_card_modes'] = {c['slug']: ('arrivals' if arrival_mode(c) else 'first_seen' if first_seen_mode(c)
+                                             else 'release_date')
                                  for c in spec['catalogs'] if c.get('provider')}
     (root / 'summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
     if _excluded:

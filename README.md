@@ -52,6 +52,25 @@ Pages serves whatever the last successful deploy published. To go back: revert t
 `build-and-deploy`; or, if the code is fine and only the data was bad, re-run the `deploy` job of the last good run
 (*that run → Re-run jobs → deploy*; its Pages artifact is kept 1 day) or simply run the workflow again.
 
+### New on X: arrival dates
+TMDB says what is on a service, not when it arrived, so the New cards are ordered by the date a title ARRIVED:
+1. **Published schedules** (`generator/arrivals.py`, daily step "Arrival signals", after the logger):
+   What's on Netflix (weekly "New on Netflix This Week" roundups, dated at the week's start, and "Netflix Adds ... for
+   <Month> 1st"), whatsondisneyplus.com (Disney+ US / Hulu / HBO Max monthly lists), Vital Thrills (monthly
+   schedules, via its streaming-schedule tag feed; post sitemaps for the backfill), Film-Book (streaming-schedule
+   category feed), and the Plex blog ("New on Plex in <Month>").
+2. **Our own daily snapshots** (first_seen): the day we first saw a title on the service (after 14 days of history).
+3. Otherwise newest releases (the original behaviour).
+A card switches to arrival order once it has 10 dated arrivals in the last 45 days. A schedule entry dated in the
+future is shown only after its date AND once the title is really on the service (JustWatch data via TMDB); titles are
+matched to TMDB by exact title only (anything ambiguous is left out). New seasons of returning shows count.
+Politeness: identifiable User-Agent, at most 1 request/s per site (Film-Book's 5 s crawl delay honoured), conditional
+GET from a private cache, never search URLs; personal, non-commercial use. Only TMDB ids and dates end up in the
+catalogs - the sources' text is never republished. A failing source or a format change shows in the health issue and
+the cards fall back to the stored dates and the other sources (never empty).
+First run: *Actions -> build-and-deploy -> Run workflow* with `arrivals_backfill` on reads the last 3 months once
+(about 30k TMDB requests, 25 minutes); the daily run reads only recent posts.
+
 ### Secrets and variables (names only)
 - Secrets: `TMDB_API_KEY` (TMDB v3 key), `SD_STATE_KEY` (encrypts the first_seen backup). Planned: Movie of the Night
   and Watchmode keys (accuracy monitoring).

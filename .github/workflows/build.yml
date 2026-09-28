@@ -21,6 +21,10 @@ on:
         description: 'Count titles removed by the adult-adjacent keyword rule (extra requests; report only)'
         type: boolean
         default: false
+      arrivals_backfill:
+        description: 'Arrival signals: read the last 3 months of schedule posts once (sitemaps; ~30k TMDB requests the first time)'
+        type: boolean
+        default: false
 
 # Staged rollout: repo variables SD_KINDS_OFF / SD_KEEP (Settings > Variables) apply to the daily run too.
 # Stage A: SD_KINDS_OFF=director,actor  SD_KEEP=dir-denis-villeneuve  ->  Stage B: both empty.
@@ -40,6 +44,7 @@ jobs:
       actions: read          # restore the first_seen state from the previous run's artifact if the cache is gone
     outputs:
       logger: ${{ steps.logger.outcome }}
+      arrivals: ${{ steps.arrivals.outcome }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
@@ -90,6 +95,17 @@ jobs:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           SD_CACHE: cache
         run: python generator/first_seen.py state
+      # Arrival signals (published schedules) merged into the first_seen state before it is saved; a failure leaves
+      # the logger's fallback (the stored signals) in place for the build
+      - name: Arrival signals
+        id: arrivals
+        continue-on-error: true
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          SD_CACHE: cache
+          SD_HTTP_CACHE: cache/http
+          SD_STATE: state
+        run: python generator/arrivals.py arrivals ${{ inputs.arrivals_backfill && '--backfill' || '' }}
       - name: Save first_seen state (cache)
         if: steps.logger.outcome == 'success'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -137,6 +153,9 @@ jobs:
             out/exclusions.json
             state/fs_summary.json
             build.log
+            arrivals/arrivals_summary.json
+            arrivals/parse_stats.csv
+            arrivals/check_rows.csv
           if-no-files-found: warn
           retention-days: 14
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
@@ -162,7 +181,7 @@ jobs:
       - name: Update the health issue
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python generator/health.py report "${{ needs.build.result }}" "${{ needs.build.outputs.logger || 'unknown' }}"
+        run: python generator/health.py report "${{ needs.build.result }}" "${{ needs.build.outputs.logger || 'unknown' }}" "${{ needs.build.outputs.arrivals || 'unknown' }}"
 
   deploy:
     needs: build

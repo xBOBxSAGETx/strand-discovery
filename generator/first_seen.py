@@ -153,8 +153,9 @@ def main():
         with ThreadPoolExecutor(2) as pool:                  # movie + tv in parallel; the throttle is shared
             (movies, sliced_m), (shows, sliced_t) = pool.map(lambda m: enumerate_catalogue(p, m, dflt), ('movie', 'series'))
         present = {f'm:{i}': r for i, r in movies.items()} | {f't:{i}': r for i, r in shows.items()}
-        prov = state['providers'].setdefault(p['slug'], {'baseline': today, 'last_add': None, 'last_run': None,
-                                                         'items': {}})
+        prov = state['providers'].setdefault(p['slug'], {})
+        for k, v in {'baseline': today, 'last_add': None, 'last_run': None, 'items': {}}.items():
+            prov.setdefault(k, v)                        # a provider may exist with arrival signals only
         items = prov['items']
         is_baseline = prov['baseline'] == today
         # presence is judged against this provider's previous RUN, not the calendar: a gap in our own runs
@@ -211,6 +212,11 @@ def main():
               f"requests {s['requests']:>5}{' sliced' if s['sliced'] else ''}", flush=True)
     if today not in state['runs']:
         state['runs'].append(today)
+    try:                                                 # the stored arrival signals with today's presence: the
+        import arrivals                                  # fallback for build.py if today's arrivals step fails
+        arrivals.write_candidates(state, state_dir, today, arrivals.Presence(state, {}))
+    except Exception as e:                               # never fail the logger over it
+        summary['warnings'].append(f'signal candidates not written: {type(e).__name__}: {str(e)[:200]}')
     save_state(state_dir, state)
     summary['requests'] = build._calls[0]
     summary['seconds'] = round(time.monotonic() - t0)
