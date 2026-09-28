@@ -90,7 +90,8 @@ def wordmark_logo(rgb=(255, 255, 255), size=(900, 300)):
 
 class Render(unittest.TestCase):
     def setUp(self):
-        self.saved = (art.fetch_image, art.background_path, art.OUT, art.TITLE_LOGO_BOX, art.title_logo_xy, art.gradient)
+        self.saved = (art.fetch_image, art.background_path, art.OUT, art.TITLE_LOGO_BOX, art.title_logo_xy, art.gradient,
+                      art.TITLE_LOGO_MAX_AREA)
         art.OUT = Path(_tmp) / 'cards'
         art.background_path = lambda bg: '/bg.jpg'
         self.logo_img = wordmark_logo()
@@ -98,7 +99,8 @@ class Render(unittest.TestCase):
         art.fetch_image = lambda path, size='original': (self.bg_img if path == '/bg.jpg' else self.logo_img).copy()
 
     def tearDown(self):
-        (art.fetch_image, art.background_path, art.OUT, art.TITLE_LOGO_BOX, art.title_logo_xy, art.gradient) = self.saved
+        (art.fetch_image, art.background_path, art.OUT, art.TITLE_LOGO_BOX, art.title_logo_xy, art.gradient,
+         art.TITLE_LOGO_MAX_AREA) = self.saved
 
     def card(self, **tl):
         return {'slug': 'series-test', 'shape': 'wide', 'eyebrow': 'Movie Series', 'title': 'Test',
@@ -112,6 +114,8 @@ class Render(unittest.TestCase):
         self.assertIn('movie 11 /logo.png (en)', log['title_logo'])
         self.assertGreaterEqual(log['title_logo_legible'], art.MIN_LEGIBLE_SHARE)
         self.assertNotIn('title_px', log)                        # no typeset title drawn
+        self.assertEqual(log['hero_band'], 'ok')
+        self.assertNotIn('title_logo_capped', log)
 
     def test_dark_logo_is_recoloured_and_legible(self):
         self.logo_img = wordmark_logo((20, 20, 20))
@@ -149,6 +153,7 @@ class Render(unittest.TestCase):
     # ---- seeded negative controls: each MUST fail ------------------------------------------------------------
     def test_control_oversized_logo_fails_safe_area(self):
         art.TITLE_LOGO_BOX = {'wide': (1.10, 1.10), 'poster': (1.1, 1.1)}
+        art.TITLE_LOGO_MAX_AREA = 10.0                                               # the cap would shrink it back
         _, log, fails = art.render(self.card())
         self.assertEqual(log['safe_area'], 'FAIL')
         self.assertTrue(any('outside 4% safe area' in f and 'title logo' in f for f in fails), fails)
@@ -170,6 +175,34 @@ class Render(unittest.TestCase):
         _, log, fails = art.render(self.card())
         self.assertTrue(any(f.startswith('title logo contrast') for f in fails), (fails, log))
         self.assertLess(log['title_logo_legible'], art.MIN_LEGIBLE_SHARE)
+
+    def solid(self, w, h):
+        img = Image.new('RGBA', (w + 20, h + 20), (0, 0, 0, 0))
+        ImageDraw.Draw(img).rectangle((10, 10, 9 + w, 9 + h), fill=(255, 255, 255, 255))
+        return img
+
+    def test_area_cap_shrinks_only_logos_that_fill_both_directions(self):
+        cases = {'alien 788x299': ((788, 299), True), 'toy story 324x244': ((1413, 1064), False),
+                 'dark knight 1278x361': ((1278, 361), False), 'wide strip 4:1': ((800, 200), False)}
+        for name, ((w, h), capped) in cases.items():
+            self.logo_img = self.solid(w, h)
+            _, log, fails = art.render(self.card())
+            self.assertEqual(fails, [], name)
+            self.assertEqual(log.get('title_logo_capped', False), capped, (name, log['title_logo_px']))
+            lw, lh = map(int, log['title_logo_px'].split('x'))
+            self.assertLessEqual(lw * lh, art.TITLE_LOGO_MAX_AREA * 1280 * 720 + 1300, name)
+
+    def test_samples_toy_story_and_dark_knight_keep_their_fitted_size(self):
+        for (w, h), px in (((1413, 1064), '325x245'), ((1278, 361), '640x181')):
+            self.logo_img = self.solid(w, h)
+            self.assertEqual(art.render(self.card())[1]['title_logo_px'], px)
+
+    def test_control_logo_below_hero_band_fails(self):
+        art.title_logo_xy = lambda size, lw, lh, margin: (margin, 600 - lh)          # bottom y600 > 543, inside 4%
+        _, log, fails = art.render(self.card())
+        self.assertEqual(log['safe_area'], 'ok')
+        self.assertEqual(log['hero_band'], 'FAIL')
+        self.assertTrue(any(f.startswith('outside hero band') and 'title logo' in f for f in fails), fails)
 
     def test_control_thin_strip_fails_min_size(self):
         self.logo_img = wordmark_logo(size=(1920, 109))                              # the ALIEN strip: 640x36

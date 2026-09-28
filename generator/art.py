@@ -144,11 +144,32 @@ MIN_TITLE_CONTRAST = 3.0                        # WCAG ratio, each logo pixel vs
 MIN_LEGIBLE_SHARE = 0.90                        # ...reached by at least this share of a FLAT logo's opaque pixels
 MIN_LEGIBLE_SHARE_MULTI = 0.50                  # multi-colour logos (emblems, outlines) carry inner contrast: >= half
 FLAT_LOGO_SD = 30                               # luminance std-dev below this = a one-colour logo (may be recoloured)
+# Visual-weight cap: fitted width x height <= this share of the card. A plain height cap can't tell Alien (640x242,
+# dominated the card) from Toy Story (325x245, fine); the area can. 0.13 of 1280x720 = 119,808 px2, just above the
+# largest sample that looked right (The Dark Knight 640x181 = 115,840): only logos that fill the box in BOTH
+# directions shrink (trimmed width/height between ~2.0 and ~3.4 on a wide card).
+TITLE_LOGO_MAX_AREA = 0.13
+# Strand's tvOS hero shows only the centre band of a card whose shelf fills the hero (H1 findings.md:7, observed
+# y 25-75 %; H4 uses 0.246-0.754). Movie Series is such a shelf, so on wide cards the eyebrow + title logo block
+# sits inside this band, HERO_PAD above its bottom edge, and is asserted there.
+HERO_BAND = (0.246, 0.754)
+HERO_PAD = 14
 
 
 def title_logo_xy(size, lw, lh, margin):
-    """Bottom-left, where the typeset title sits."""
+    """Left edge; bottom HERO_PAD above the hero band on wide cards, else where the typeset title sits."""
+    if size[0] > size[1]:
+        return margin, int(size[1] * HERO_BAND[1]) - HERO_PAD - lh
     return margin, size[1] - margin - lh
+
+
+def check_hero_band(boxes, size, fails, log):
+    """Fail if any element (eyebrow, title logo) leaves the vertical band the tvOS hero shows."""
+    lo, hi = size[1] * HERO_BAND[0], size[1] * HERO_BAND[1]
+    out = [f"{name} y{int(y0)}-{int(y1)}" for name, (x0, y0, x1, y1) in boxes if y0 < lo or y1 > hi]
+    log['hero_band'] = 'ok' if not out else 'FAIL'
+    if out:
+        fails.append(f'outside hero band y{int(lo)}-{int(hi)}: ' + '; '.join(out))
 
 
 def legible_share(logo, under):
@@ -188,6 +209,10 @@ def draw_title_logo(base, card, margin, fails, log):
         logo = logo.crop(bbox)
     bw, bh = (size[0] * TITLE_LOGO_BOX[card['shape']][0], size[1] * TITLE_LOGO_BOX[card['shape']][1])
     scale = min(bw / logo.width, bh / logo.height)
+    cap = TITLE_LOGO_MAX_AREA * size[0] * size[1]
+    if logo.width * logo.height * scale * scale > cap:     # visual-weight cap (see TITLE_LOGO_MAX_AREA)
+        scale = (cap / (logo.width * logo.height)) ** 0.5
+        log['title_logo_capped'] = True
     lw, lh = max(1, round(logo.width * scale)), max(1, round(logo.height * scale))
     logo = logo.resize((lw, lh), Image.LANCZOS)
     if lw < TITLE_LOGO_MIN_W or lh < TITLE_LOGO_MIN_H[card['shape']]:
@@ -281,6 +306,8 @@ def render(card):
             boxes.append(('logo', (margin, margin, margin + logo.width, margin + logo.height)))
             log['logo'] = f'{logo_kind} wordmark (luma {mean}{", whitened" if mean < 110 else ""})'
     import art_logo                                   # 4% safe-area assert, same as the logo / type cards
+    if (card.get('title_logo') or {}).get('path') and card['shape'] == 'wide':
+        check_hero_band(boxes, size, fails, log)      # eyebrow + title logo inside the tvOS hero band
     art_logo.check_bounds(boxes, size, fails, log)
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"{card['slug']}.jpg"
