@@ -343,6 +343,28 @@ def interleave(lists):
     return out
 
 
+TRENDING_SKIP_TV = {10767, 10763}      # talk, news: never on a TV card (same rule as discover)
+
+
+def trending(card, media, depth):
+    """TMDB trending this week (issue #11), in TMDB's order: released titles only, no adult, no talk/news on TV.
+    Pages are capped at depth/20 + 5 (about 15 requests per card)."""
+    tag = 'movie' if media == 'movie' else 'tv'
+    out, seen, page = [], set(), 1
+    while len(out) < depth:
+        data = tmdb(f"/trending/{tag}/{card.get('window', 'week')}", page=page)
+        for it in data.get('results', []):
+            if (it['id'] in seen or it.get('adult') or not released(it, media)
+                    or (media == 'series' and set(it.get('genre_ids') or []) & TRENDING_SKIP_TV)):
+                continue
+            seen.add(it['id'])
+            out.append(preview(it, media))
+        if page >= min(data.get('total_pages', 0), depth // 20 + 5, 500):
+            break
+        page += 1
+    return out[:depth]
+
+
 def season_of(card, day):
     """The Seasonal card's season on `day`: the first dated season whose MM-DD window (inclusive, may wrap the year)
     holds it, else the undated fallback season."""
@@ -403,6 +425,9 @@ def source_of(card):
         return card['collection_ids'], ' + '.join(names) + (f' + {len(ids)} listed titles' if ids else '')
     if k in ('director', 'actor'):
         return card['person_id'], named(f"/person/{card['person_id']}") + (' (directing)' if k == 'director' else ' (acting)')
+    if k == 'trending':
+        path = [f"/trending/{'movie' if m == 'movie' else 'tv'}/{card.get('window', 'week')}" for m in card['media']]
+        return ' + '.join(path), f"TMDB trending ({card.get('window', 'week')}), released only, depth {card['depth']}"
     if k == 'seasonal':                        # the season in force today (notes say if it fell back)
         s = season_of(card, TODAY_D)
         src_id, name = source_of(season_card(card, s))
@@ -578,6 +603,8 @@ def build_one(card, dflt):
         return interleave([discover(card, m, depth_of(card, dflt), dflt) for m in card['media']]), notes
     if kind == 'seasonal':
         return seasonal(card, dflt)
+    if kind == 'trending':
+        return interleave([trending(card, m, card['depth']) for m in card['media']]), notes
     if kind == 'franchise':
         return interleave(franchise(card)), notes
     if kind == 'director':

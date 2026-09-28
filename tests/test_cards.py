@@ -38,8 +38,8 @@ class StubTMDB:
 
     def __init__(self, pools=None):
         self.calls = []
-        self.pools = pools or (lambda path, params: [item(n, '2020-01-01', 'movie' if path.endswith('movie')
-                                                          or '/movie/' in path else 'tv') for n in range(1, 31)])
+        self.pools = pools or (lambda path, params: [item(n, '2020-01-01', 'movie' if '/movie' in path else 'tv')
+                                                     for n in range(1, 31)])
 
     def __call__(self, path, **params):
         self.calls.append((path, params))
@@ -200,6 +200,67 @@ class SeasonalNow(unittest.TestCase):
         self.assertIn('season Halloween (10-01..10-31)', report)
         self.assertIn('keyword 3335', report)
         self.assertIn('season: Halloween', report)
+
+
+class Trending(unittest.TestCase):
+    TODAY = '2026-10-15'
+
+    def setUp(self):
+        self.b = load_build(self.TODAY)
+
+    def test_spec_cards(self):
+        for slug, lib, media in (('trending-movies', 'Trending · Movies', ['movie']),
+                                 ('trending-tv', 'Trending · TV', ['series'])):
+            c = BY_SLUG[slug]
+            self.assertEqual((c['kind'], c['library'], c['media'], c['folders'], c['window'], c['depth']),
+                             ('trending', lib, media, ['streaming-popular'], 'week', 200))
+
+    def test_movies_in_tmdb_order_released_only(self):
+        pool = [item(5, '2026-10-01'), item(9, '2026-11-20'),            # 9 not released yet -> dropped
+                item(2, '2025-01-01', adult=True), item(7, '2026-10-15'), item(5, '2026-10-01'), item(3, '')]
+        stub = StubTMDB(lambda p, q: pool)
+        self.b.tmdb = stub
+        metas, _ = self.b.build_one(BY_SLUG['trending-movies'], DFLT)
+        self.assertEqual([m['id'] for m in metas], ['tmdb:5', 'tmdb:7'])
+        self.assertEqual({p for p, _ in stub.calls}, {'/trending/movie/week'})
+        self.assertEqual(metas[0]['type'], 'movie')
+        self.assertEqual(metas[0]['_g'], ['Comedy', 'Horror'])              # genre pages work from genre_ids
+
+    def test_tv_drops_talk_and_news(self):
+        pool = [item(1, '2026-01-01', 'tv'), item(2, '2026-01-01', 'tv', genre_ids=[10767]),
+                item(3, '2026-01-01', 'tv', genre_ids=[18, 10763]), item(4, '2026-01-01', 'tv')]
+        stub = StubTMDB(lambda p, q: pool)
+        self.b.tmdb = stub
+        metas, _ = self.b.build_one(BY_SLUG['trending-tv'], DFLT)
+        self.assertEqual([(m['id'], m['type']) for m in metas], [('tmdb:1', 'series'), ('tmdb:4', 'series')])
+        self.assertEqual({p for p, _ in stub.calls}, {'/trending/tv/week'})
+
+    def test_depth_and_page_cap(self):
+        many = [item(i, '2026-01-01') for i in range(1, 1001)]
+        self.b.tmdb = stub = StubTMDB(lambda p, q: many)
+        self.assertEqual(len(self.b.build_one(BY_SLUG['trending-movies'], DFLT)[0]), 200)
+        self.assertEqual(len(stub.calls), 10)
+        unreleased = [item(i, '2027-01-01') for i in range(1, 1001)]
+        self.b.tmdb = stub = StubTMDB(lambda p, q: unreleased)
+        self.assertEqual(self.b.build_one(BY_SLUG['trending-movies'], DFLT)[0], [])
+        self.assertEqual(len(stub.calls), 15, 'page cap = depth/20 + 5')
+
+
+class AllNewCardsTogether(unittest.TestCase):
+    def test_main_builds_the_four_cards_in_spec_order(self):
+        slugs = [c['slug'] for c in SPEC['catalogs']
+                 if c['slug'] in ('trending-movies', 'trending-tv', 'just-hit-digital', 'theme-seasonal-now')]
+        self.assertEqual(slugs, ['trending-movies', 'trending-tv', 'just-hit-digital', 'theme-seasonal-now'])
+        b = load_build('2026-12-10')
+        out, man = run_main(b, [BY_SLUG[s] for s in slugs],
+                            StubTMDB(lambda p, q: [item(n, '2026-12-01', 'movie' if '/movie' in p else 'tv')
+                                                   for n in range(1, 31)]))
+        self.assertEqual([c['id'] for c in man['catalogs']], [f'sd-{s}' for s in slugs])
+        summary = json.loads((out / 'summary.json').read_text(encoding='utf-8'))
+        self.assertTrue(all(n > 0 for n in summary['catalogs'].values()), summary['catalogs'])
+        self.assertIn('season: Christmas', (out / 'report.csv').read_text(encoding='utf-8'))
+        # genre extra offered (>= 5 titles, not all of them): every stub title is Comedy + Horror -> none offered
+        self.assertTrue(all(c['extra'][-1] == {'name': 'skip'} for c in man['catalogs']))
 
 
 class SpecInvariants(unittest.TestCase):

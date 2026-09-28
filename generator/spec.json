@@ -725,6 +725,38 @@
    }
   },
   {
+   "slug": "trending-movies",
+   "library": "Trending · Movies",
+   "title": "Trending · Movies",
+   "eyebrow": "Trending",
+   "folders": [
+    "streaming-popular"
+   ],
+   "kind": "trending",
+   "media": [
+    "movie"
+   ],
+   "order": "trending_week",
+   "window": "week",
+   "depth": 200
+  },
+  {
+   "slug": "trending-tv",
+   "library": "Trending · TV",
+   "title": "Trending · TV",
+   "eyebrow": "Trending",
+   "folders": [
+    "streaming-popular"
+   ],
+   "kind": "trending",
+   "media": [
+    "series"
+   ],
+   "order": "trending_week",
+   "window": "week",
+   "depth": 200
+  },
+  {
    "slug": "streaming-netflix-new",
    "library": "Netflix · New",
    "title": "Netflix",

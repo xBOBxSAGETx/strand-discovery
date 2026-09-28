@@ -212,6 +212,14 @@ def seasonal_now():
             'sort': 'votes', 'min_votes': 10, 'depth': 300, 'min_items': 20, 'seasons': seasons}
 
 
+def trending_cards():
+    """Issue #11: TMDB trending this week, movies and TV (the issue's slugs). In Streaming · Popular: "what everyone
+    is watching now" is that folder's question; no new shelf (owner rule)."""
+    return [{'slug': f'trending-{s}', 'library': f'Trending · {n}', 'title': f'Trending · {n}', 'eyebrow': 'Trending',
+             'folders': ['streaming-popular'], 'kind': 'trending', 'media': [m], 'order': 'trending_week',
+             'window': 'week', 'depth': 200} for s, n, m in (('movies', 'Movies', 'movie'), ('tv', 'TV', 'series'))]
+
+
 def main():
     cats = []
     for v, n in VARIANTS:                                    # streaming x3
@@ -228,6 +236,8 @@ def main():
                 # history is long enough; then build.py orders the whole card by date first seen on the service
                 cats[-1]['tv_air_window'] = 45
                 cats[-1]['provider'] = slugify(name)
+        if v == 'popular':
+            cats += trending_cards()                         # last cards of Streaming · Popular (issue #11)
         if v == 'new':
             cats.append(just_hit_digital())                  # last card of Streaming · New (issue #9a)
     for v, n in VARIANTS:                                    # genres x3
