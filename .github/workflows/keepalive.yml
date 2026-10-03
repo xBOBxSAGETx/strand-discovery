@@ -2,6 +2,9 @@ name: weekly-status
 
 # Public repos have scheduled workflows disabled after 60 days without repository activity.
 # This commits a counts-only status file once a week so the daily build keeps running.
+# The push uses a write deploy key (secret KEEPALIVE_DEPLOY_KEY), not GITHUB_TOKEN: main requires pull requests
+# (repository ruleset) and that deploy key is the ruleset's only bypass actor. Without the secret the job fails
+# loudly instead of silently skipping the weekly commit.
 on:
   schedule:
     - cron: '43 8 * * 1'
@@ -13,9 +16,18 @@ jobs:
   status:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read           # the push goes through the deploy key, not GITHUB_TOKEN
     steps:
+      - name: Deploy key present
+        env:
+          KEY: ${{ secrets.KEEPALIVE_DEPLOY_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error::secret KEEPALIVE_DEPLOY_KEY is missing: the weekly commit cannot reach main"; exit 1
+          fi
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ssh-key: ${{ secrets.KEEPALIVE_DEPLOY_KEY }}
       - name: Record counts from the deployed summary
         run: |
           mkdir -p status
