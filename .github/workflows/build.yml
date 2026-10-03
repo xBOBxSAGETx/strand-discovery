@@ -191,6 +191,7 @@ jobs:
     # AIOStreams re-reads the manifest within 6 h, so an unplanned deploy would add libraries outside the runbook.
     if: (github.event_name == 'schedule' && vars.SD_SCHEDULE_DEPLOY == 'on') || (github.event_name == 'workflow_dispatch' && inputs.deploy)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       pages: write
       id-token: write
