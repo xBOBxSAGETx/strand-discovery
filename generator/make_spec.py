@@ -159,6 +159,15 @@ AWARDS = [('Oscar Best Picture', {'list': 'apg2886/oscar-best-picture-winners', 
           ('Emmy · Best Series Winners', {'awards_key': 'emmy-best-series', 'library': 'Emmy Best Series Winners'}),
           ('Sundance · Grand Jury Prize', {'awards_key': 'sundance-gjp', 'library': 'Sundance Grand Jury Prize'})]
 
+# Hidden gems = well rated, few viewers have heard of it (issue #53). A low TMDB vote count alone is not that: long-running
+# network procedurals have few votes too. So: a stricter rating, a vote band (min via the card's min_votes), TV from 2000 on,
+# no soaps/crime/documentary/talk/news/reality/kids, movies at least two years old (this year's blockbusters drop out).
+# TMDB discover params: https://developer.themoviedb.org/reference/discover-tv and .../discover-movie
+# TV genre ids: 80 crime, 99 documentary, 10762 kids, 10763 news, 10764 reality, 10766 soap, 10767 talk.
+GEM_MIN_AGE_MOVIES = 730
+GEM_TV_FIRST_AIR = '2000-01-01'
+GEM_TV_NO_GENRES = '80|99|10762|10763|10764|10766|10767'
+
 VOTES = {'popular': 10, 'new': 5, 'top': {'movie': 300, 'series': 150}}
 TOP_MIN_AGE = 180            # days: early-rating inflation put this month's releases on top of every Top Rated card
 NO_TOP = {'MagellanTV', 'Netflix Kids', 'Discovery+', 'Acorn TV'}   # Top Rated had 1-15 items (run 1)
@@ -254,20 +263,21 @@ def main():
         cats.append(card)
     for name, media, avg, lo, hi in [('Acclaimed Movies', 'movie', 7.8, 2000, None),
                                      ('Acclaimed TV', 'series', 7.8, 800, None),
-                                     ('Hidden Gem Movies', 'movie', 7.3, 150, 1500),
-                                     ('Hidden Gem TV', 'series', 7.3, 80, 600)]:
+                                     ('Hidden Gem Movies', 'movie', 7.5, 150, 1500),
+                                     ('Hidden Gem TV', 'series', 7.5, 100, 600)]:
         p = {'vote_average.gte': avg}
         if hi:
             p['vote_count.lte'] = hi
         acclaimed = name.startswith('Acclaimed')
         if not acclaimed and media == 'series':
-            p['without_genres'] = '10767|10763|10764|10762'          # no talk/news/reality/kids in TV gems
+            p['without_genres'] = GEM_TV_NO_GENRES
+            p['first_air_date.gte'] = GEM_TV_FIRST_AIR
         # Acclaimed: rating order is safe behind high vote floors. Gems: rating order surfaced novelty entries and
         # popularity order surfaced this month's releases (smoke test), so popular + at least a year old.
         e = disc(f'acclaimed-{slugify(name)}', f'{name}', name, 'Acclaimed' if acclaimed else 'Hidden Gems',
                  'acclaimed', [media], 'top' if acclaimed else 'popular', min_votes=lo, **{media: p})
         if not acclaimed:
-            e['min_age_days'] = 365
+            e['min_age_days'] = GEM_MIN_AGE_MOVIES if media == 'movie' else 365
         cats.append(e)
     for v, n in VARIANTS:
         p = {'with_keywords': '9716'}
