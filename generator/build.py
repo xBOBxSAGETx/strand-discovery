@@ -201,6 +201,19 @@ def fill_reverse(path, params, raw, total, pages, pool=None):
     return used, len(raw) - n0
 
 
+MAIN_GENRE_PAGES = 200         # genre cards read up to this many pages per medium (a main-genre filter needs more pages)
+
+
+def main_genres(card, media):
+    """Issue #52: a genre card (folder genres-*) counts a title only when the card's genre is its MAIN one, i.e. the
+    first of TMDB's genre_ids. -> set of the card's genre ids for this medium (with_genres may list several, '|' or
+    ','; any of them is main), or None when the filter does not apply (not a genre card, or no with_genres: Anime)."""
+    if not any(f.startswith('genres-') for f in card.get('folders', [])):
+        return None
+    ids = re.split(r'[|,]', str(card.get(media, {}).get('with_genres', '')))
+    return {int(i) for i in ids if i.strip().isdigit()} or None
+
+
 def discover(card, media, depth, dflt):
     movie = media == 'movie'
     sort = SORTS[card['sort']][0 if movie else 1]
@@ -237,6 +250,9 @@ def discover(card, media, depth, dflt):
                 n = tmdb(f"/discover/{'movie' if movie else 'tv'}", page=1, **probe).get('total_results', 0)
             _excluded.setdefault(f"sd-{card['slug']}", {})[f'keywords:{media}'] = n
     path = f"/discover/{'movie' if movie else 'tv'}"
+    mains = main_genres(card, media)
+    ok = (lambda it: bool(it.get('genre_ids')) and it['genre_ids'][0] in mains) if mains else (lambda it: True)
+    last = MAIN_GENRE_PAGES if mains else 500
     out, seen, page, raw = [], set(), 1, {}
     while len(out) < depth:
         data = tmdb(path, page=page, **params)
@@ -244,8 +260,9 @@ def discover(card, media, depth, dflt):
             if item['id'] not in seen:
                 seen.add(item['id'])
                 raw[item['id']] = item
-                out.append(preview(item, media))
-        if page >= min(data.get('total_pages', 0), 500):
+                if ok(item):
+                    out.append(preview(item, media))
+        if page >= min(data.get('total_pages', 0), last):
             break
         page += 1
     # TMDB caches every /discover page separately (for hours), so the pages of one query can come from different
@@ -253,7 +270,7 @@ def discover(card, media, depth, dflt):
     # read but ids are missing, read it once more in the REVERSE order (different cache entries) and merge by the
     # sort key. Bounded by total_pages; only runs on a short card with holes.
     total, pages = data.get('total_results', 0), data.get('total_pages', 0)
-    if len(out) < depth and len(seen) < total and 0 < pages <= 500:
+    if len(out) < depth and len(seen) < total and 0 < pages <= last:
         sort_by = params['sort_by']
         field, _, way = sort_by.rpartition('.')
         field = {'primary_release_date': 'release_date'}.get(field, field)
@@ -268,7 +285,7 @@ def discover(card, media, depth, dflt):
         have.sort(key=lambda i: (raw[i][field], -order[i]) if way == 'desc' else (raw[i][field], order[i]),
                   reverse=way == 'desc')
         rest = [i for i in raw if raw[i].get(field) in (None, '')]
-        out = [preview(raw[i], media) for i in have + rest]
+        out = [preview(raw[i], media) for i in have + rest if ok(raw[i])]
     return out[:depth]
 
 
