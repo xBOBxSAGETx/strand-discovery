@@ -2,3 +2,5 @@
 # Pillow: used by generator/art.py, art_logo.py, contact_sheet.py, logo_samples.py and their tests.
 # Pinned to the version the art is rendered and tested with locally (2026-09-28).
 Pillow==12.3.0
+# PyYAML: tests/test_practice_skip_logger.py parses .github/workflows/build.yml.
+PyYAML==6.0.2
