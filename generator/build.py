@@ -496,7 +496,7 @@ MIN_SIGNALS = 5                # a New card switches to arrival order with at le
 def first_seen_mode(card):
     prov = card.get('provider')
     info = (FS_SUMMARY or {}).get('providers', {}).get(prov) if prov else None
-    return bool(info and info.get('mode') == 'first_seen' and prov in FS_CANDIDATES)
+    return bool(info and info.get('mode') == 'first_seen' and bool(FS_CANDIDATES.get(prov)))
 
 
 def first_seen_card(card, depth):
