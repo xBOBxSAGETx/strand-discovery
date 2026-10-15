@@ -174,8 +174,9 @@ def recall(pages, summary, official_rows, today, baseline):
 def report(problems, lines, run_url):
     import health                                # reuse the gh helpers + dry-run / mock mode of the health issue
     health.ensure_label('accuracy', '1d76db', 'Weekly accuracy check (opened/closed automatically)')
-    existing = json.loads(health.gh('issue', 'list', '--label', 'accuracy', '--state', 'open', '--json', 'number',
-                                    '--limit', '5') or '[]')
+    existing = json.loads(health.gh('issue', 'list', '--label', 'accuracy', '--state', 'open', '--json',
+                                    'number,title', '--limit', '30') or '[]')
+    existing = [i for i in existing if i.get('title') == TITLE]    # other issues carry the label too: only our own
     if problems:
         body = (f'Latest run: {run_url}\n\n' + '\n'.join(f'- {p}' for p in problems) + '\n\n' + '\n'.join(lines) +
                 '\n\nThis issue closes itself after the next clean weekly check. What it means: README → Operations.')
