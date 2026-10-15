@@ -238,15 +238,25 @@ MAIN_GENRE_PAGES = 200         # genre cards read up to this many pages per medi
 # genre 2nd or 3rd (Schindler's List is [Drama, History, War]; Lord of the Rings [Adventure, Fantasy, Action]).
 GENRE_K_DEFAULT = 3
 GENRE_K = {16: 99,             # Animation: any position (Coco, KPop Demon Hunters list it 2nd/4th; it is a format, not a topic)
-           27: 1,              # Horror: first only (Come and See [Drama, War, Horror], Ghosts [Music, Horror] are not horror)
+           27: 2,              # Horror: first two (Come and See [Drama, War, Horror] is not horror), see GENRE_NOT_AFTER
            28: 2, 10759: 2}    # Action (and TV Action & Adventure): first two (Regular Show lists it 3rd)
+
+
+# A genre that does not count when it is not the first tag and the first tag is one of these (Ghosts [Music, Horror]
+# is a music video; Coraline-style Animation and Documentary are formats). Used only by Horror.
+GENRE_NOT_AFTER = {27: {10402, 99, 16}}
 
 
 def genre_fits(genre_ids, card_ids):
     """True when one of the card's genre ids is within the first K tags of the title (K by genre, see GENRE_K);
-    a card with several ids uses the largest K."""
+    a card with several ids uses the largest K. A hit past the first tag is ignored when the first tag is in
+    GENRE_NOT_AFTER for that genre."""
     k = max(GENRE_K.get(i, GENRE_K_DEFAULT) for i in card_ids)
-    return bool(set((genre_ids or [])[:k]) & card_ids)
+    tags = list(genre_ids or [])
+    for pos, t in enumerate(tags[:k]):
+        if t in card_ids and (pos == 0 or tags[0] not in GENRE_NOT_AFTER.get(t, ())):
+            return True
+    return False
 
 
 def main_genres(card, media):
