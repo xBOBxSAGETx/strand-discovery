@@ -212,5 +212,34 @@ class Partial(unittest.TestCase):
         self.assertEqual(len(summary['catalogs']), len(SLUGS))
 
 
+class SiteCacheWiring(unittest.TestCase):
+    """build.yml: the site cache a deploying build saves must be the one a partial build restores. actions/cache puts the
+    `path` into the cache version, so a different path string never matches; the archive also unpacks to that path."""
+
+    @classmethod
+    def setUpClass(cls):
+        import yaml
+        wf = yaml.safe_load((Path(__file__).resolve().parents[1] / '.github' / 'workflows' / 'build.yml').read_text(encoding='utf-8'))
+        cls.steps = wf['jobs']['build']['steps']
+
+    def step(self, prefix):
+        return next(s for s in self.steps if s.get('uses', '').startswith(prefix) and 'sd-site-' in str(s.get('with')))
+
+    def test_save_and_restore_use_the_same_path_and_key_prefix(self):
+        save, restore = self.step('actions/cache/save@'), self.step('actions/cache/restore@')
+        self.assertEqual(save['with']['path'], restore['with']['path'])
+        self.assertTrue(save['with']['key'].startswith(restore['with']['restore-keys']))
+        self.assertIn('github.run_attempt', save['with']['key'])
+
+    def test_restored_site_is_moved_to_site_base_before_the_build(self):
+        names = [s.get('name') for s in self.steps]
+        move = next(s for s in self.steps if 'mv out site-base' in s.get('run', ''))
+        gen = next(s for s in self.steps if s.get('name') == 'Generate catalogs')
+        self.assertLess(self.steps.index(self.step('actions/cache/restore@')), self.steps.index(move))
+        self.assertLess(self.steps.index(move), self.steps.index(gen))
+        self.assertEqual(gen['env']['SD_BASE_DIR'], 'site-base')
+        self.assertIn('Generate catalogs', names)
+
+
 if __name__ == '__main__':
     unittest.main()

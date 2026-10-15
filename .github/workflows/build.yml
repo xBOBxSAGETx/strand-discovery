@@ -221,9 +221,14 @@ jobs:
         if: env.SD_CARDS != ''
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: site-base
-          key: sd-site-${{ github.run_id }}-restore
+          path: out                  # the SAME path string as the save (it is part of the cache version) and the archive unpacks to out/
+          key: sd-site-${{ github.run_id }}-${{ github.run_attempt }}-restore
           restore-keys: sd-site-
+      # Move the restored site aside so the build's own out/ starts empty. No cache = no site-base = build.py stops.
+      - name: Set the restored site aside (partial rebuild)
+        if: env.SD_CARDS != ''
+        run: |
+          if [ -d out ]; then mv out site-base; fi
       - name: Generate catalogs
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
@@ -246,7 +251,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: out
-          key: sd-site-${{ github.run_id }}
+          key: sd-site-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Run report (always, also on guard failure)
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
