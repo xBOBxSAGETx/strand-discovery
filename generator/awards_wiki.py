@@ -320,17 +320,43 @@ def _hinted(title, first_win, media, hint_year):
     return fallback
 
 
+REMAKE_GAP = 20          # a series win this many years after the matched show's premiere is checked for a remake
+
+
+def resolve_recent(title, win, target=None):
+    """A same-name series that premiered in [win - 2, win] (exact title, most votes): the work a LATE win belongs to
+    when the first win's show is far older (Shogun: 1980 miniseries won 1981, the 2024 series won 2024)."""
+    exact, _ = _search(title, 'series', win - 2, win)
+    if not exact:
+        return None
+    best = exact[0]
+    return 'series', best['id'], best.get('title') or best.get('name'), _year(best), 'exact title + recent window (remake)'
+
+
 def build_list(entries, media):
     wins = {}
     for year, title, src, target in entries:                # all wins per title: earliest anchors, latest orders
         k = norm(title)
-        w = wins.setdefault(k, {'title': title, 'src': src, 'target': target, 'first': year, 'last': year})
-        w['first'], w['last'] = min(w['first'], year), max(w['last'], year)
-        if year >= w['last']:
+        w = wins.setdefault(k, {'title': title, 'src': src, 'target': target, 'years': set()})
+        w['years'].add(year)
+        if year >= max(w['years']):
             w['title'], w['src'], w['target'] = title, src, target or w['target']
+    recs = []                                               # one record per (title, work), each ordered by its latest win
+    for w in wins.values():
+        first = min(w['years'])
+        base = {**w, 'first': first, 'last': first, 'hit': resolve(w['title'], first, media, w['target'])}
+        recs.append(base)
+        for y in sorted(w['years'] - {first}):
+            remake = None
+            if media == 'series' and base['hit'] and base['hit'][3] and y - base['hit'][3] > REMAKE_GAP:
+                remake = resolve_recent(w['title'], y, w['target'])
+            if remake and remake[:2] != base['hit'][:2]:
+                recs.append({**w, 'first': y, 'last': y, 'hit': remake})
+            else:
+                base['last'] = y
     ids, rows, unresolved = [], [], []
-    for w in sorted(wins.values(), key=lambda w: -w['last']):
-        hit = resolve(w['title'], w['first'], media, w['target'])
+    for w in sorted(recs, key=lambda w: -w['last']):
+        hit = w['hit']
         if hit:
             if [hit[0], hit[1]] not in ids:
                 ids.append([hit[0], hit[1]])

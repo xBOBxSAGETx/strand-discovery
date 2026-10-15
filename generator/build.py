@@ -289,6 +289,32 @@ def discover(card, media, depth, dflt):
     return out[:depth]
 
 
+def must_haves(card, media):
+    """Hand-picked must-have titles of a theme card (generator/theme_must_haves.json, issue #64): [tmdb id, ...]."""
+    path = HERE / 'theme_must_haves.json'
+    try:
+        lists = json.loads(path.read_text(encoding='utf-8'))
+    except OSError:
+        return []
+    return [int(e['tmdb']) for e in lists.get(card.get('slug'), []) if e['type'] == media]
+
+
+def add_must_haves(card, media, metas):
+    """Issue #64: a theme card always holds its hand-picked titles. Each is taken from the discover list when it is
+    already there, else fetched with details_preview (one cached request each; None = not released / unknown, skipped).
+    Previews carry no popularity, so the must-haves go FIRST, in list order, then the discover order. Never cut by depth."""
+    ids = must_haves(card, media)
+    if not ids:
+        return metas
+    have = {m['id']: m for m in metas}
+    first = []
+    for tid in ids:
+        m = have.get(f'tmdb:{tid}') or details_preview(media, tid)
+        if m and m not in first:
+            first.append(m)
+    return first + [m for m in metas if m not in first]
+
+
 def franchise(card):
     """Collections (+ explicit TMDB ids for titles TMDB doesn't group), each medium in release order."""
     movies = []
@@ -510,16 +536,29 @@ MIN_SIGNALS = 5                # a New card switches to arrival order with at le
 #                                5 evaluated 2026-09-28: Apple TV and Shudder switch, precision gate 13/13 on service)
 
 
+RECENT_DAYS = 30               # on a New card, arrivals this recent are ordered by popularity (well-known first); older ones stay by date
+
+
+def recent_first_key(date, popularity, rank=0):
+    """Sort key (use with reverse=True): arrivals dated within RECENT_DAYS first, most popular first; then the older
+    ones newest first (rank, then popularity, break date ties). Issue #49."""
+    if date >= (dt.date.fromisoformat(TODAY) - dt.timedelta(days=RECENT_DAYS)).isoformat():
+        return (1, '', popularity, date, rank)
+    return (0, date, rank, popularity, '')
+
+
 def first_seen_mode(card):
     prov = card.get('provider')
     info = (FS_SUMMARY or {}).get('providers', {}).get(prov) if prov else None
-    return bool(info and info.get('mode') == 'first_seen' and bool(FS_CANDIDATES.get(prov)))
+    # sliced providers (catalogue > 10,000, read by date slices) drift: library titles log as "first seen" and crowd out
+    # the real dated arrivals (Prime New, 2026-10-15: 2 arrivals + 998 drift). They use dated signals, then release date.
+    return bool(info and info.get('mode') == 'first_seen' and not info.get('sliced') and bool(FS_CANDIDATES.get(prov)))
 
 
 def first_seen_card(card, depth):
-    """New on X = titles first seen on the service within the window, newest first, popularity tiebreak,
-    no vote floor (arrivals are often obscure); movies and TV interleaved."""
-    c = sorted(FS_CANDIDATES[card['provider']], key=lambda m: (m['first_seen'], m['popularity']), reverse=True)
+    """New on X = titles first seen on the service within the window: the last RECENT_DAYS most popular first, then
+    older ones newest first; no vote floor (arrivals are often obscure); movies and TV interleaved."""
+    c = sorted(FS_CANDIDATES[card['provider']], key=lambda m: recent_first_key(m['first_seen'], m['popularity']), reverse=True)
     strip = lambda m: {k: v for k, v in m.items() if k not in ('first_seen', 'popularity')}
     return interleave([[strip(m) for m in c if m['type'] == t][:depth] for t in ('movie', 'series')])
 
@@ -542,8 +581,8 @@ def both_kinds_early(metas, n=20):
 
 def arrival_card(card, depth, dflt):
     """New on X by ARRIVAL date: dated arrivals from published schedules (arrivals.py; confirmed or announced, last
-    45 days) merged with the titles our own daily snapshots first saw (when that history is on), newest first,
-    popularity tiebreak; then filled up with the release-date card. Returns (metas, counts)."""
+    45 days) merged with the titles our own daily snapshots first saw (when that history is on): the last RECENT_DAYS
+    most popular first, then older ones newest first; then filled up with the release-date card. Returns (metas, counts)."""
     prov = card['provider']
     timeline, keys = [], set()
     for c in SIGNALS.get(prov, []):
@@ -556,7 +595,7 @@ def arrival_card(card, depth, dflt):
                 meta = {kk: v for kk, v in m.items() if kk not in ('first_seen', 'popularity')}
                 timeline.append((m['first_seen'], 0, m['popularity'], k, meta))
                 keys.add(k)
-    timeline.sort(key=lambda t: (t[0], t[1], t[2]), reverse=True)
+    timeline.sort(key=lambda t: recent_first_key(t[0], t[2], t[1]), reverse=True)
     cap = depth * len(card['media'])
     out, seen, n_sig = [], set(), 0
     for date, _, _, k, meta in timeline:
@@ -585,7 +624,8 @@ def build_one(card, dflt):
     if kind == 'discover' and first_seen_mode(card):
         return first_seen_card(card, depth_of(card, dflt)), 'ordered by date first seen on the service'
     if kind == 'discover':
-        return interleave([discover(card, m, depth_of(card, dflt), dflt) for m in card['media']]), notes
+        return interleave([add_must_haves(card, m, discover(card, m, depth_of(card, dflt), dflt))
+                           for m in card['media']]), notes
     if kind == 'franchise':
         return interleave(franchise(card)), notes
     if kind == 'director':
