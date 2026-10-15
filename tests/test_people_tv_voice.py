@@ -80,6 +80,34 @@ class Actors(unittest.TestCase):
         self.assertNotIn('Duck Duck Goose', names)
         self.assertEqual(sorted(names), ['Dune', 'Euphoria', 'Spider-Man'])
 
+    def test_lead_voice_in_famous_film_kept(self):
+        live = [cast(1, 'Live A', 'A'), cast(2, 'Live B', 'B'), cast(3, 'Live C', 'C')]
+        hanks = run(build.actor, {'cast': live + [cast(9, 'Toy Story', 'Woody (voice)', votes=18000, order=0)]},
+                    self.CARD)
+        myers = run(build.actor, {'cast': live + [cast(8, 'Shrek', 'Shrek (voice)', votes=16000, order=0)]},
+                    self.CARD)
+        self.assertIn('Toy Story', hanks)
+        self.assertIn('Shrek', myers)
+
+    def test_low_vote_or_low_billed_voice_still_dropped(self):
+        live = [cast(1, 'Live A', 'A'), cast(2, 'Live B', 'B'), cast(3, 'Live C', 'C')]
+        names = run(build.actor, {'cast': live + [
+            cast(4, 'Duck Duck Goose', 'Chi (voice)', votes=300, order=1),
+            cast(5, 'Big Toon', 'Extra (voice)', votes=18000, order=5)]}, self.CARD)
+        self.assertEqual(sorted(names), ['Live A', 'Live B', 'Live C'])
+
+    def test_voice_credit_cannot_block_live_credit_of_same_title(self):
+        for order in ([(7, 'Show', 'Cat (voice)'), (7, 'Show', 'Cat Owner')],
+                      [(7, 'Show', 'Cat Owner'), (7, 'Show', 'Cat (voice)')]):
+            cast_list = [cast(1, 'Live A', 'A'), cast(2, 'Live B', 'B')] + [
+                cast(i, t, ch, 'tv') for i, t, ch in order]
+            self.assertEqual(sorted(run(build.actor, {'cast': cast_list}, self.CARD)), ['Live A', 'Live B', 'Show'])
+
+    def test_archive_is_a_whole_word(self):
+        names = run(build.actor, {'cast': [cast(1, 'Film', 'Archiver'), cast(2, 'Clips', 'archive footage')]},
+                    self.CARD)
+        self.assertEqual(names, ['Film'])
+
     def test_voice_actor_keeps_voice_roles(self):
         names = run(build.actor, {'cast': [
             cast(1, 'Toon A', 'Bob (voice)'), cast(2, 'Toon B', 'Bob (voice)', 'tv'),
