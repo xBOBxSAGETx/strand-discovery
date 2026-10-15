@@ -31,8 +31,10 @@ on:
 
 permissions: {}
 
+# #62: one build at a time PER BRANCH, so practice builds of different changes run side by side; only the deploy job
+# writes to Pages, so it alone waits in the shared `pages` line (see the deploy job).
 concurrency:
-  group: pages
+  group: build-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -192,6 +194,9 @@ jobs:
     if: (github.event_name == 'schedule' && vars.SD_SCHEDULE_DEPLOY == 'on') || (github.event_name == 'workflow_dispatch' && inputs.deploy)
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     permissions:
       pages: write
       id-token: write
