@@ -320,7 +320,11 @@ KNOWN_VOTES = 500
 
 
 def director(card, dropped):
-    crew = tmdb(f"/person/{card['person_id']}/movie_credits").get('crew', [])
+    """Movies they directed (shorts dropped, best-known first), then the TV series they directed episodes of
+    (TMDB tv_credits, crew job Director; one episode counts; talk/news/reality shows and TV movies already listed
+    as movies are left out), best-known first."""
+    pid = card['person_id']
+    crew = tmdb(f"/person/{pid}/movie_credits").get('crew', [])
     films = {c['id']: c for c in crew if c.get('job') in ('Director', 'Co-Director') and released(c, 'movie')}
     kept = []
     # best-known first (vote count): release order put restorations/compilations on top (Wyler, Leone - report.csv)
@@ -330,21 +334,38 @@ def director(card, dropped):
             kept.append(preview(c, 'movie'))
         else:
             dropped.append(f"{c.get('title')} ({c['release_date'][:4]}, {runtime or 'no'} min)")
+    # TV movies come back from tv_credits under a different (tv) id: match them to the movie list by title + year
+    film_keys = {((c.get('title') or '').casefold(), c['release_date'][:4]) for c in films.values()}
+    shows = {}
+    for c in tmdb(f"/person/{pid}/tv_credits").get('crew', []):
+        if (c.get('job') != 'Director' or not released(c, 'series') or c['id'] in shows
+                or set(c.get('genre_ids') or []) & NOT_ACTING
+                or ((c.get('name') or '').casefold(), c['first_air_date'][:4]) in film_keys):
+            continue
+        shows[c['id']] = c
+    kept += [preview(c, 'series')
+             for c in sorted(shows.values(), key=lambda c: (-(c.get('vote_count') or 0), c['first_air_date']))]
     return kept
 
 
-SELF = re.compile(r'\b(self|himself|herself|themselves|themself)\b|\(uncredited\)', re.I)
+SELF = re.compile(r'\b(self|himself|herself|themselves|themself|cameo)\b|\(uncredited\)|\barchive\b', re.I)
+VOICE = re.compile(r'\(voice\)', re.I)
+LEAD_ORDER, LEAD_VOTES = 2, 1000       # a voice role this high up in a well-known film is a lead, not a bit
 NOT_ACTING = {10767, 10763, 10764}     # Talk, News, Reality
 MIN_EPISODES = 5                       # TV: a real role, not a guest arc
 MAX_BILLING = 15                       # movies: cast order (0 = top billed)
 
 
 def actor(card, dropped):
-    """Acting credits, movies + TV, best-known first (vote count). Drops talk/news/reality, self/uncredited
-    appearances, TV roles under 5 episodes, movie roles billed below #15, unreleased titles, and near-unknown titles
-    older than a year (< 10 votes). Popularity order put small recurring TV roles first (report.csv spot check)."""
+    """Acting credits, movies + TV, best-known first (vote count). Drops talk/news/reality, self/cameo/archive/
+    uncredited appearances, TV roles under 5 episodes, movie roles billed below #15, unreleased titles, and
+    near-unknown titles older than a year (< 10 votes). Voice roles ('(voice)') are dropped too, unless the film is
+    well known (>= 1000 votes) and the role is a lead (cast order <= 2), or more than half of the credits left are
+    voice roles (a voice actor's card keeps them all). Live credits are deduped first, so a dropped voice credit
+    never blocks a live-action credit of the same title. Popularity order put small recurring
+    TV roles first (report.csv spot check)."""
     cast = tmdb(f"/person/{card['person_id']}/combined_credits").get('cast', [])
-    ranked, seen = [], set()
+    ranked, voices, seen = [], [], set()
     for c in cast:
         media = {'movie': 'movie', 'tv': 'series'}.get(c.get('media_type'))
         if not media or not released(c, media):
@@ -358,9 +379,20 @@ def actor(card, dropped):
         if why:
             dropped[why] = dropped.get(why, 0) + 1
             continue
-        if (media, c['id']) not in seen:
+        votes = c.get('vote_count') or 0
+        if VOICE.search(c.get('character') or ''):
+            lead = c.get('order') is not None and c['order'] <= LEAD_ORDER and votes >= LEAD_VOTES
+            voices.append((votes, preview(c, media), (media, c['id']), lead))
+        elif (media, c['id']) not in seen:
             seen.add((media, c['id']))
-            ranked.append((c.get('vote_count') or 0, preview(c, media)))
+            ranked.append((votes, preview(c, media)))
+    voice_actor = len(voices) * 2 > len(ranked) + len(voices)
+    for votes, p, key, lead in voices:         # after the live credits, so a live role of the same title wins
+        if (voice_actor or lead) and key not in seen:
+            seen.add(key)
+            ranked.append((votes, p))
+        elif not (voice_actor or lead):
+            dropped['voice'] = dropped.get('voice', 0) + 1
     return [p for _, p in sorted(ranked, key=lambda x: -x[0])]
 
 
