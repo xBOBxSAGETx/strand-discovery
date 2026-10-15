@@ -31,6 +31,15 @@ Plex cards also include titles Plex rents (the owner's choice: playback is via d
 Scheduled deploys stay off unless the repo variable `SD_SCHEDULE_DEPLOY` is `on` (the build still runs and alerts).
 Manual runs: *Actions → build-and-deploy → Run workflow* (`deploy` off = dry run). A dry run on a branch other than `main` skips the ~12 min first_seen logger and reuses main's saved state, unless that branch changes `generator/first_seen.py`, `generator/arrivals.py` or `build.yml`, or the run sets `full_logger` (#73).
 
+### Rebuild only some shelves (`cards`, #77)
+
+*Run workflow* with `cards` = comma-separated shelf slugs (`studio-a24,genre-horror`; the `sd-` prefix is optional). `build.py` (env `SD_CARDS`) builds only those, copies every other page byte-for-byte from the site the last **deploying** build saved in the Actions cache (`sd-site-<run_id>`, newest wins; a deploying build is a nightly or a manual run with `deploy` on, full or partial). It first reads the live `summary.json` (one request) and stops unless its `generated_at` and counts equal the cached copy's, so the cache must be what is live; no cache (never deployed, or evicted after 7 days unused) = it stops (run a full build). It rewrites `manifest.json`, `summary.json` (counts, total, genre-page totals; `partial` names the shelves) and `report.csv`. With `deploy` on, the merged site is deployed. Differences from the full build:
+
+- the ~12 min logger and the arrival-signal fetch are skipped; New cards read the saved first_seen state restored from the cache (as of the last full run). No saved state = the run stops;
+- guards on the listed shelves: an empty shelf, a shelf that lost more than 70%, or (only when 10 or more shelves are listed) the listed shelves' total falling more than 30% against the same shelves live all **block** (the full build only warns on a single shelf). If the live site was deployed while it ran, it stops;
+- a clean partial run does not touch the "health" issue; a failed one does;
+- the card list of the live site must match the spec apart from the listed shelves (an added or removed shelf needs a full build). Empty `cards` = the normal full build.
+
 ### The "health" issue
 One open issue labelled `health` collects problems; GitHub emails the owner on each new issue or comment, and the
 issue closes itself after the next clean run. **A failed build never replaces the live catalogs** - the last good

@@ -50,7 +50,10 @@ class BuildYmlSkipCondition(unittest.TestCase):
         return [s.get('id') for s in self.steps]
 
     def test_logger_step_has_the_skip_condition(self):
-        self.assertEqual(self.step('logger')['if'], "steps.practice.outputs.skip != 'true'")
+        # #77: a partial rebuild (non-empty `cards` -> SD_CARDS) never runs the logger either
+        self.assertEqual(self.step('logger')['if'], "steps.practice.outputs.skip != 'true' && env.SD_CARDS == ''")
+        self.assertEqual(self.step('arrivals')['if'], "env.SD_CARDS == ''")
+        self.assertEqual(self.wf['jobs']['build']['env']['SD_CARDS'], '${{ inputs.cards }}')
 
     def test_decision_steps_run_in_order_before_the_logger(self):
         i = self.ids()
