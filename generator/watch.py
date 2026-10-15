@@ -1,29 +1,36 @@
-"""Watcher (issue #78): a cheap "anything new?" check against every source; the output is the list of cards to rebuild.
+"""Watcher (issues #78, #79): a cheap "anything new?" check against every source; the output is the list of cards to rebuild.
 
-  python watch.py [--out changes.json] [--cache DIR] [--no-tmdb] [--dry]
+  python watch.py [--out changes.json] [--cache DIR] [--no-tmdb] [--dry] [--dispatch]
 
 Sources and what a change maps to:
   news feeds (5)        conditional GET (ETag / Last-Modified); 304 = nothing. 200 with a new body = the arrival
                         ("New") cards of the services that feed covers (arrivals.py's own service tables).
   MDBList exports (3)   same conditional GET; 200 with a new body = the card(s) built from that list.
   streaming catalogs    per provider x medium ONE discover call (page 1, newest first, the New card's filters): the
-                        fingerprint is total_results + the first page's ids. A change = every card whose spec uses
-                        that provider (New, Popular, Top, ...).
-  TMDB /movie/changes   page 1 only while total_results is unchanged (TMDB refreshes the list ~8x a day); when it moves,
-  and /tv/changes       all pages are read and the NEW ids map to the cards that contain them (id -> cards index).
-The id -> cards index is built from the live site's catalog files (manifest + pages) and rebuilt only when the
-deployed summary.json has a new generated_at (so once per deploy, ~2000 requests, kept in the cache).
+                        fingerprint is total_results + the SORTED ids of page 1. A change = every card whose spec uses
+                        that provider (New, Popular, Top, ...). A changed reading counts only when the NEXT run reads the
+                        same thing (two in a row): TMDB's cached discover pages can show an old and a new page by turns.
+NOT a source: TMDB /movie/changes and /tv/changes. Measured (issue #79): one TMDB refresh (about 8 a day) lists ~1,600
+changed titles, which sit in ~320 of the 606 cards (always over the 150 limit, so every refresh would be a full build),
+and almost all are edits (a poster, a translation) that do not move a title on or off a shelf. The nightly build picks
+those edits up. Dropping it also drops the id -> cards index (~1,800 Pages requests after every deploy).
+
 More than MAX_CARDS (150) cards = "full": true and no card list (the caller does a full rebuild).
 
-State (cache/watch_state.json, persisted by the workflow in the Actions cache) holds validators, body hashes, provider
-fingerprints and the change ids already handled. The FIRST run of any source is a baseline: it records and reports
-nothing. The state is written at the end of the run (use --dry to skip), so the workflow should save it only after it
-has dispatched the rebuild; a failed dispatch would otherwise lose that change.
+State (cache/watch_state.json, kept by the workflow in the Actions cache) holds validators, body hashes and provider
+fingerprints. The FIRST run of any source is a baseline: it records and reports nothing.
+
+--dispatch (the workflow): when there is something to rebuild, start build.yml on main with `gh workflow run`
+(deploy=true, cards=<list> or no cards for a full build). Only ONE build of main at a time: while a build of main is
+queued or running, nothing is dispatched (GitHub keeps one pending run per concurrency group and cancels an older
+pending one, which would lose its cards), the state is NOT saved, and the next run sees the same change again. The state
+is saved only when nothing needed dispatching or the dispatch succeeded; a failed dispatch exits 1 and saves nothing.
+--dry reads and reports but writes no state and dispatches nothing.
 
 Env: TMDB_API_KEY (never printed; without it the TMDB parts are skipped, see --no-tmdb), SD_CACHE (default cache),
-SD_WATCH_SITE (default the published Pages site), SD_WATCH_MAX_CARDS, SD_WATCH_MAX_CHANGE_PAGES.
+SD_WATCH_MAX_CARDS, SD_GH (the gh command, default "gh"), GITHUB_OUTPUT (when set: dispatch=, dirty=).
 """
-import datetime as dt, gzip, hashlib, json, os, sys, time, urllib.error, urllib.request
+import datetime as dt, hashlib, json, os, shlex, subprocess, sys, threading, time, urllib.error, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -33,11 +40,7 @@ import arrivals  # noqa: E402  (service tables + the polite User-Agent)
 import build  # noqa: E402  (throttled, key-safe tmdb())
 
 UA = arrivals.UA
-SITE = os.environ.get('SD_WATCH_SITE', 'https://xbobxsagetx.github.io/strand-discovery').rstrip('/')
 MAX_CARDS = int(os.environ.get('SD_WATCH_MAX_CARDS') or 150)
-MAX_CHANGE_PAGES = int(os.environ.get('SD_WATCH_MAX_CHANGE_PAGES') or 100)   # per medium and run (100 ids a page)
-SEEN_KEEP_DAYS = 2            # a change id is remembered this long (TMDB's list covers the last 24 h)
-PAGE_SIZE = 100               # spec.json defaults.page_size (catalog pages)
 
 # The URLs arrivals.py and build.py fetch (tests/test_watch.py checks each one is still in their source).
 FEED_URLS = {
@@ -113,17 +116,16 @@ def fp_params(card, media, dflt, today):
 
 
 class Watch:
-    def __init__(self, spec, state, http=http_get, tmdb=None, site=SITE, today=None, max_cards=MAX_CARDS,
-                 index=None, max_change_pages=MAX_CHANGE_PAGES, workers=6):
-        self.spec, self.state, self.http, self.tmdb, self.site = spec, state, http, tmdb, site
+    def __init__(self, spec, state, http=http_get, tmdb=None, today=None, max_cards=MAX_CARDS, workers=6):
+        self.spec, self.state, self.http, self.tmdb = spec, state, http, tmdb
         self.today = today or dt.date.today().isoformat()
-        self.max_cards, self.max_change_pages, self.workers = max_cards, max_change_pages, workers
-        self.index = index                       # {"generated_at", "cards": [slug], "ids": {"m1": [i, ...]}}
+        self.max_cards, self.workers = max_cards, workers
         self.cards = spec['catalogs']
         self.by_slug = {c['slug']: c for c in self.cards}
-        self.reasons, self.errors, self.requests, self.index_requests = {}, [], 0, 0
+        self.reasons, self.errors, self.requests = {}, [], 0
+        self._lock = threading.Lock()            # the discover calls run on worker threads: `+= 1` alone can lose counts
         self.log = {}
-        for k in ('http', 'fp', 'changes'):
+        for k in ('http', 'fp'):
             state.setdefault(k, {})
 
     # ---- bookkeeping
@@ -134,14 +136,16 @@ class Watch:
                 if text not in self.reasons[s]:
                     self.reasons[s].append(text)
 
-    def get(self, url, headers=None, index=False):
-        self.requests += 1
-        if index:
-            self.index_requests += 1
+    def count(self):
+        with self._lock:
+            self.requests += 1
+
+    def get(self, url, headers=None):
+        self.count()
         return self.http(url, headers or {})
 
     def call_tmdb(self, path, **params):
-        self.requests += 1
+        self.count()
         return self.tmdb(path, **params)
 
     # ---- source -> cards
@@ -193,6 +197,24 @@ class Watch:
         self.log['mdblist'] = out
 
     # ---- 2. streaming catalogs: one discover call per provider x medium
+    def judge(self, key, fp):
+        """'baseline' | 'same' | 'pending' | ('changed', old total). Two readings in a row that differ from the confirmed
+        one and agree with each other = a change; one odd reading (cache noise) is held as `pend` and forgotten when the
+        next reading goes back."""
+        old = self.state['fp'].get(key)
+        if old is None or old.get('day') != self.today:        # the query itself moves with the date: re-baseline
+            self.state['fp'][key] = fp
+            return 'baseline'
+        if (old['t'], sorted(old['ids'])) == (fp['t'], fp['ids']):
+            old.pop('pend', None)
+            return 'same'
+        pend = old.get('pend')
+        if pend and (pend['t'], pend['ids']) == (fp['t'], fp['ids']):
+            self.state['fp'][key] = fp
+            return 'changed', old['t']
+        old['pend'] = {'t': fp['t'], 'ids': fp['ids']}
+        return 'pending'
+
     def check_providers(self):
         dflt = self.spec['defaults']
         jobs = []
@@ -211,133 +233,31 @@ class Watch:
                 d = self.call_tmdb(path, page=1, **fp_params(new, media, dflt, self.today))
             except (RuntimeError, SystemExit) as e:
                 return job, None, str(e)
-            return job, {'t': d.get('total_results', 0), 'ids': [r['id'] for r in d.get('results', [])], 'day': self.today}, None
+            return job, {'t': d.get('total_results', 0), 'ids': sorted(r['id'] for r in d.get('results', [])),
+                         'day': self.today}, None
 
         with ThreadPoolExecutor(self.workers) as pool:
             results = list(pool.map(one, jobs))
-        changed, base, same = [], 0, 0
+        n = {'baseline': 0, 'same': 0, 'pending': 0}
+        changed = []
         for (slug, media, pop, _), fp, err in results:
             key = f'{slug}:{media}'
             if err:
                 self.errors.append(f'discover {key}: {err}')
                 continue
-            old = self.state['fp'].get(key)
-            self.state['fp'][key] = fp
-            if old is None or old.get('day') != self.today:    # the query itself moves with the date: re-baseline
-                base += 1
-            elif (old['t'], old['ids']) != (fp['t'], fp['ids']):
+            r = self.judge(key, fp)
+            if isinstance(r, tuple):
                 changed.append(key)
-                self.why(self.provider_cards(prov_ids(pop)), f'catalog {key} changed ({old["t"]} -> {fp["t"]} titles)')
+                self.why(self.provider_cards(prov_ids(pop)), f'catalog {key} changed ({r[1]} -> {fp["t"]} titles)')
             else:
-                same += 1
-        self.log['providers'] = {'checked': len(jobs), 'changed': changed, 'baseline': base, 'same': same}
-
-    # ---- 3. TMDB changes -> the cards that contain the ids
-    def fetch_changes(self, kind):
-        """-> 'error', or (ids or None when the list is unchanged, total_results). Page 1 first; the rest only when
-        total_results moved."""
-        path = f'/{kind}/changes'
-        st = self.state['changes'].setdefault(kind, {})
-        try:
-            first = self.call_tmdb(path, page=1)
-            total, pages = first.get('total_results', 0), first.get('total_pages', 1) or 1
-            if st.get('total') == total and 'seen' in st:
-                return None, total
-            ids, limit = [r['id'] for r in first.get('results', [])], min(pages, self.max_change_pages)
-            for pg in range(2, limit + 1):
-                ids += [r['id'] for r in self.call_tmdb(path, page=pg).get('results', [])]
-        except (RuntimeError, SystemExit) as e:
-            self.errors.append(f'{path}: {e}')
-            return 'error'
-        if pages > limit:
-            self.errors.append(f'{path}: {pages} pages, read {limit} (cap)')
-        return ids, total
-
-    def check_changes(self):
-        out = {}
-        cutoff = (dt.date.fromisoformat(self.today) - dt.timedelta(days=SEEN_KEEP_DAYS)).isoformat()
-        hit = set()
-        for kind, letter in (('movie', 'm'), ('tv', 't')):
-            st = self.state['changes'].setdefault(kind, {})
-            res = self.fetch_changes(kind)
-            if res == 'error':
-                out[kind] = 'error'
-                continue
-            ids, total = res
-            if ids is None:
-                out[kind] = 'same'
-                continue
-            seen = {k: v for k, v in st.get('seen', {}).items() if v >= cutoff}
-            fresh = [f'{letter}{i}' for i in ids if f'{letter}{i}' not in seen]
-            baseline = 'seen' not in st
-            for k in fresh:
-                seen[k] = self.today
-            st.update(total=total, seen=seen)
-            out[kind] = 'baseline' if baseline else f'{len(fresh)} new ids'
-            if not baseline and fresh and self.index:
-                for k in fresh:
-                    hit.update(self.index['ids'].get(k, ()))
-            elif not baseline and fresh:
-                self.errors.append('changes: no id index, ids not mapped')
-        if hit:
-            self.why([self.index['cards'][i] for i in hit], 'TMDB changed one of its titles')
-        self.log['changes'] = out
-
-    # ---- the id -> cards index (live site)
-    def site_json(self, path, index=True):
-        st, _, body = self.get(f'{self.site}/{path}', index=index)
-        if st != 200:
-            return None
-        try:
-            return json.loads(body.decode('utf-8'))
-        except ValueError:
-            return None
-
-    def refresh_index(self):
-        """Rebuild the index when the deployed summary.json has a new generated_at (1 request while nothing deployed)."""
-        summ = self.site_json('summary.json', index=False)
-        if not summ:
-            self.errors.append('index: summary.json unavailable')
-            return
-        gen = summ.get('generated_at')
-        if self.index and self.index.get('generated_at') == gen:
-            self.log['index'] = 'current'
-            return
-        man = self.site_json('manifest.json')
-        if not man:
-            self.errors.append('index: manifest.json unavailable')
-            return
-        slugs = [c['id'][3:] for c in man['catalogs'] if c['id'].startswith('sd-')]
-        ids = {}
-
-        def walk(n_slug):
-            n, slug = n_slug
-            found, skip = [], 0
-            while True:
-                d = self.site_json(f'catalog/movie/sd-{slug}.json' if skip == 0 else
-                                   f'catalog/movie/sd-{slug}/skip={skip}.json')
-                metas = (d or {}).get('metas') or []
-                found += [('m' if m['type'] == 'movie' else 't') + m['id'].split(':', 1)[1] for m in metas]
-                if len(metas) < PAGE_SIZE:
-                    return n, found, d is not None or skip > 0
-                skip += PAGE_SIZE
-
-        with ThreadPoolExecutor(8) as pool:
-            for n, found, ok in pool.map(walk, list(enumerate(slugs))):
-                if not ok:
-                    self.errors.append(f'index: catalog {slugs[n]} unreadable')
-                for k in found:
-                    ids.setdefault(k, []).append(n)
-        self.index = {'generated_at': gen, 'cards': slugs, 'ids': ids}
-        self.log['index'] = f'rebuilt ({len(slugs)} cards, {len(ids)} ids, {self.index_requests} requests)'
+                n[r] += 1
+        self.log['providers'] = {'checked': len(jobs), 'changed': changed, **n}
 
     # ---- run
     def run(self, tmdb_on=True):
         self.check_feeds()
-        self.refresh_index()
         if tmdb_on and self.tmdb:
             self.check_providers()
-            self.check_changes()
         else:
             self.log['tmdb'] = 'skipped'
         cards = sorted(self.reasons)
@@ -346,9 +266,50 @@ class Watch:
         if full:
             reasons = {'*': [f'{len(cards)} cards would rebuild (limit {self.max_cards})']}
             cards = []
-        self.state['checked'] = dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')
-        return {'cards': cards, 'reasons': reasons, 'full': full, 'requests': self.requests,
-                'quiet_requests': self.requests - self.index_requests, 'errors': self.errors, 'sources': self.log}
+        return {'cards': cards, 'reasons': reasons, 'full': full, 'requests': self.requests, 'errors': self.errors,
+                'sources': self.log}
+
+
+# ---- dispatch: start build.yml on main (gh workflow run; the workflow's GITHUB_TOKEN needs `actions: write`)
+def gh_cmd():
+    return shlex.split(os.environ.get('SD_GH') or 'gh')
+
+
+def dispatch_cmd(res):
+    """The gh command for this result, or None when nothing needs rebuilding."""
+    base = gh_cmd() + ['workflow', 'run', 'build.yml', '--ref', 'main', '-f', 'deploy=true']
+    if res['full']:
+        return base
+    if res['cards']:
+        return base + ['-f', 'cards=' + ','.join(res['cards'])]
+    return None
+
+
+def build_busy(run=subprocess.run):
+    """True while a build of main is queued or running (raises on a gh failure)."""
+    r = run(gh_cmd() + ['run', 'list', '--workflow', 'build.yml', '--branch', 'main', '--limit', '30', '--json', 'status'],
+            capture_output=True, text=True, timeout=120)
+    if r.returncode:
+        raise RuntimeError(f'gh run list failed (exit {r.returncode}): {r.stderr.strip()[:300]}')
+    return any(x.get('status') != 'completed' for x in json.loads(r.stdout or '[]'))
+
+
+def dispatch(res, run=subprocess.run):
+    """'none' (nothing to rebuild) | 'sent' | 'held' (a build of main is already queued / running) | 'failed'."""
+    cmd = dispatch_cmd(res)
+    if cmd is None:
+        return 'none'
+    try:
+        if build_busy(run):
+            return 'held'
+        r = run(cmd, capture_output=True, text=True, timeout=120)
+    except (RuntimeError, OSError, ValueError, subprocess.SubprocessError) as e:
+        print(f'watch: dispatch failed: {e}')
+        return 'failed'
+    if r.returncode:
+        print(f'watch: dispatch failed (exit {r.returncode}): {r.stderr.strip()[:300]}')
+        return 'failed'
+    return 'sent'
 
 
 def load_json(path, default):
@@ -358,41 +319,47 @@ def load_json(path, default):
         return default
 
 
-def load_index(cache):
-    try:
-        with gzip.open(cache / 'watch_index.json.gz', 'rt', encoding='utf-8') as fh:
-            return json.load(fh)
-    except (OSError, ValueError):
-        return None
-
-
-def save_atomic(path, text_or_writer):
+def save_atomic(path, text):
     tmp = path.with_name(path.name + '.tmp')
-    text_or_writer(tmp)
+    tmp.write_text(text, encoding='utf-8')
     tmp.replace(path)
 
 
-def main(argv=None):
+def main(argv=None, run=subprocess.run):
     a = sys.argv[1:] if argv is None else argv
     arg = lambda f, d: a[a.index(f) + 1] if f in a else d
     out = Path(arg('--out', 'changes.json'))
     cache = Path(arg('--cache', os.environ.get('SD_CACHE', 'cache')))
     cache.mkdir(parents=True, exist_ok=True)
-    state = load_json(cache / 'watch_state.json', {})
+    state_file = cache / 'watch_state.json'
+    state = load_json(state_file, {})
+    before = json.dumps(state, sort_keys=True, separators=(',', ':'))
     tmdb_on = '--no-tmdb' not in a and bool(os.environ.get('TMDB_API_KEY'))
     t0 = time.monotonic()
-    w = Watch(load_spec(), state, tmdb=build.tmdb if tmdb_on else None, today=build.TODAY, index=load_index(cache))
+    w = Watch(load_spec(), state, http=http_get, tmdb=build.tmdb if tmdb_on else None, today=build.TODAY,
+              max_cards=MAX_CARDS)
     res = w.run(tmdb_on)
-    if '--dry' not in a:
-        save_atomic(cache / 'watch_state.json', lambda p: p.write_text(json.dumps(state, separators=(',', ':')), encoding='utf-8'))
-        if w.index is not None:
-            def wr(p):
-                with gzip.open(p, 'wt', encoding='utf-8') as fh:
-                    json.dump(w.index, fh, separators=(',', ':'))
-            save_atomic(cache / 'watch_index.json.gz', wr)
+    dry = '--dry' in a
+    res['dispatch'] = dispatch(res, run) if '--dispatch' in a and not dry else 'none'
     out.write_text(json.dumps(res, indent=1), encoding='utf-8')
-    print(f"watch: {'FULL' if res['full'] else len(res['cards'])} cards to rebuild, {res['requests']} requests "
-          f"({res['quiet_requests']} excluding the index), {len(res['errors'])} errors, {time.monotonic() - t0:.0f}s")
+    dirty = False
+    if not dry and res['dispatch'] in ('none', 'sent'):          # never after a held or failed dispatch: that change must come back
+        after = json.dumps(state, sort_keys=True, separators=(',', ':'))
+        dirty = after != before
+        if dirty:
+            save_atomic(state_file, json.dumps(state, separators=(',', ':')))
+    print(f"watch: {'FULL' if res['full'] else len(res['cards'])} cards to rebuild, {res['requests']} requests, "
+          f"{len(res['errors'])} errors, dispatch {res['dispatch']}, state {'saved' if dirty else 'unchanged'}, "
+          f"{time.monotonic() - t0:.0f}s")
+    for text in sorted({t for ts in res['reasons'].values() for t in ts}):
+        print(f"  why: {text} ({sum(text in ts for ts in res['reasons'].values())} cards)")
+    for e in res['errors']:
+        print(f'  error: {e}')
+    if os.environ.get('GITHUB_OUTPUT'):
+        with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as fh:
+            fh.write(f"dispatch={res['dispatch']}\ndirty={'true' if dirty else 'false'}\n")
+    if res['dispatch'] == 'failed':
+        sys.exit(1)
     return res
 
 

@@ -181,16 +181,19 @@ jobs:
           SD_ARRIVALS_SINGLE_SOURCE_DROP: ${{ vars.SD_ARRIVALS_SINGLE_SOURCE_DROP }}   # the logger rebuilds the fallback
         run: python generator/first_seen.py state
       # Arrival signals (published schedules) merged into the first_seen state before it is saved; a failure leaves
-      # the logger's fallback (the stored signals) in place for the build
+      # the logger's fallback (the stored signals) in place for the build. #79: a PARTIAL rebuild that includes New cards
+      # (a slug ending -new) reads the feeds again first, with the feed listings revalidated now (not reused for 20 h), so a
+      # post that just appeared is in the New cards; the result is used by this build only (a partial never saves state).
       - name: Arrival signals
         id: arrivals
-        if: env.SD_CARDS == ''
+        if: env.SD_CARDS == '' || contains(env.SD_CARDS, '-new')
         continue-on-error: true
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           SD_CACHE: cache
           SD_HTTP_CACHE: cache/http
           SD_STATE: state
+          SD_ARRIVALS_LISTING_MAX_AGE: ${{ env.SD_CARDS != '' && '0' || '' }}
           SD_ARRIVALS_SINGLE_SOURCE_DROP: ${{ vars.SD_ARRIVALS_SINGLE_SOURCE_DROP }}
         run: python generator/arrivals.py arrivals ${{ inputs.arrivals_backfill && '--backfill' || '' }}
       - name: Save first_seen state (cache)

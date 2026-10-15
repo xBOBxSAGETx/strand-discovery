@@ -35,10 +35,19 @@ Manual runs: *Actions → build-and-deploy → Run workflow* (`deploy` off = dry
 
 *Run workflow* with `cards` = comma-separated shelf slugs (`studio-a24,genre-horror`; the `sd-` prefix is optional). `build.py` (env `SD_CARDS`) builds only those, copies every other page byte-for-byte from the site the last **deploying** build saved in the Actions cache (`sd-site-<run_id>`, newest wins; a deploying build is a nightly or a manual run with `deploy` on, full or partial). It first reads the live `summary.json` (one request) and stops unless its `generated_at` and counts equal the cached copy's, so the cache must be what is live; no cache (never deployed, or evicted after 7 days unused) = it stops (run a full build). It rewrites `manifest.json`, `summary.json` (counts, total, genre-page totals; `partial` names the shelves) and `report.csv`. With `deploy` on, the merged site is deployed. Differences from the full build:
 
-- the ~12 min logger and the arrival-signal fetch are skipped; New cards read the saved first_seen state restored from the cache (as of the last full run). No saved state = the run stops;
+- the ~12 min logger is skipped, and the arrival-signal fetch runs only when a listed shelf is a `-new` card (feeds revalidated, so a fresh post is seen); New cards read the saved first_seen state restored from the cache (as of the last full run). No saved state = the run stops;
 - guards on the listed shelves: an empty shelf, a shelf that lost more than 70%, or (only when 10 or more shelves are listed) the listed shelves' total falling more than 30% against the same shelves live all **block** (the full build only warns on a single shelf). If the live site was deployed while it ran, it stops;
 - a clean partial run does not touch the "health" issue; a failed one does;
 - the card list of the live site must match the spec apart from the listed shelves (an added or removed shelf needs a full build). Empty `cards` = the normal full build.
+
+### The watcher (`watch.yml`, #79)
+
+Every 5 minutes `generator/watch.py` asks the sources "anything new?": 5 news feeds and 3 MDBList exports (conditional GET + body hash) and 42 TMDB discover page-1 fingerprints (one per provider and kind; sorted ids + total). About 50 requests when nothing moved. A feed or export change rebuilds the New cards it feeds; a provider change must be seen on **two readings in a row** before it counts. It then starts `build.yml` on main (`deploy=true`, `cards=<list>`), or a full deploying build when more than 150 shelves would rebuild. TMDB `/changes` is not followed (one refresh maps to ~300 shelves = a full build every time); title edits wait for the nightly full build, which stays.
+
+- Off until the repository variable `SD_WATCH` is `on`. *Run workflow* by hand works any time and defaults to `dry` (read and report, dispatch nothing, save nothing).
+- While a build of main is queued or running nothing is dispatched ("held"): GitHub keeps one pending run per concurrency group and cancels an older pending one. The change is found again on the next tick.
+- State (validators, hashes, fingerprints) is in the Actions cache (`sd-watch-<run_id>-<attempt>`, newest wins) and is saved only after the dispatch succeeded; a failed dispatch fails the run and saves nothing. No cache = a baseline run that reports nothing.
+- Needs `actions: write` on the job token (set in the file) to run `gh workflow run`.
 
 ### The "health" issue
 One open issue labelled `health` collects problems; GitHub emails the owner on each new issue or comment, and the
