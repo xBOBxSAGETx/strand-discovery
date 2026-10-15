@@ -115,6 +115,19 @@ class DataFile(unittest.TestCase):
         self.assertTrue({LADY_BIRD, HEREDITARY} <= {r['tmdb'] for r in data['studio-a24']})
         self.assertIn(496243, {r['tmdb'] for r in data['studio-neon']})         # Parasite
 
+    def test_hand_excluded_titles_gone_real_ones_kept(self):
+        data = json.loads((GEN / 'studio_distributed.json').read_text(encoding='utf-8'))
+        titles = {r['title'] for rows in data.values() for r in rows}
+        for gone in ('Shivers', 'Absolutely Anything'):          # another company released them in the US
+            self.assertNotIn(gone, titles)
+        for kept in ('Lady Bird', 'Parasite', 'Darkest Hour', 'Belfast', 'Lost in Translation'):
+            self.assertIn(kept, titles)
+        for slug, entries in studio_distributed.EXCLUDE.items():                     # every entry is sourced and applied
+            ids = {r['tmdb'] for r in data[slug]}
+            for e in entries:
+                self.assertTrue(e['why'].startswith(('Box Office Mojo', 'Wikipedia')) and 'http' in e['why'], e)
+                self.assertNotIn(e['tmdb'], ids, e['title'])
+
 
 if __name__ == '__main__':
     unittest.main()
