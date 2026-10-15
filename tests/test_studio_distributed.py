@@ -115,6 +115,14 @@ class DataFile(unittest.TestCase):
         self.assertTrue({LADY_BIRD, HEREDITARY} <= {r['tmdb'] for r in data['studio-a24']})
         self.assertIn(496243, {r['tmdb'] for r in data['studio-neon']})         # Parasite
 
+    def test_territory_only_releases_out_real_ones_in(self):
+        data = json.loads((GEN / 'studio_distributed.json').read_text(encoding='utf-8'))
+        titles = {r['title'] for rows in data.values() for r in rows}
+        for gone in ('Absolutely Anything', 'Shivers'):                          # UK-only / old Canadian (Lionsgate)
+            self.assertNotIn(gone, titles)
+        for kept in ('Lady Bird', 'Parasite'):
+            self.assertIn(kept, titles)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -26,6 +26,9 @@ STUDIO_ITEMS = {
     'studio-focus-features': [('Q649649', 'Focus Features')],
     'studio-searchlight': [('Q953040', 'Searchlight Pictures'), ('Q123459512', 'Fox Searchlight Pictures')],
 }
+# Distributor-only films of a known non-US origin (UK-only or old Canadian releases) are dropped for these studios only:
+# on A24 / NEON / Searchlight the same rule also drops real US releases (Parasite, Ex Machina, 28 Days Later).
+US_ONLY_FILTER = {'studio-lionsgate', 'studio-focus-features'}
 # Only studios whose identity IS distribution. Production studios (Pixar, Disney Animation, DreamWorks, Ghibli,
 # Illumination, LAIKA, Aardman, Blumhouse, Legendary, Amblin) and the majors (Warner, Universal, New Line) are left out:
 # their TMDB production lists are right, and P750 on a major pulls in territory-only international distribution.
@@ -57,12 +60,16 @@ def check_labels():
 def films(qids, today):
     values = ' '.join('wd:' + q for q in qids)
     rows = sparql("""
-SELECT ?f (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (MIN(?tmdb) AS ?tmdbid) (MAX(?links) AS ?sitelinks) WHERE {
+SELECT ?f (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (MIN(?tmdb) AS ?tmdbid) (MAX(?links) AS ?sitelinks)
+       (MAX(IF(?prod, 1, 0)) AS ?produced) (MAX(IF(?us, 1, 0)) AS ?inus) (MAX(IF(?anyc, 1, 0)) AS ?hascountry) WHERE {
   VALUES ?co { %s }
   { ?f wdt:P750 ?co } UNION { ?f wdt:P272 ?co }
   ?f wdt:P4947 ?tmdb ; wdt:P577 ?date ; wikibase:sitelinks ?links ; rdfs:label ?label .
   FILTER(lang(?label) = "en" && ?date <= "%sT23:59:59Z"^^xsd:dateTime)
   FILTER NOT EXISTS { ?f wdt:P31 wd:Q24862 }
+  BIND(EXISTS { ?f wdt:P272 ?co } AS ?prod)
+  BIND(EXISTS { ?f wdt:P495 wd:Q30 } AS ?us)
+  BIND(EXISTS { ?f wdt:P495 ?c } AS ?anyc)
 } GROUP BY ?f""" % (values, today))
     out = []
     for r in rows:
@@ -70,7 +77,9 @@ SELECT ?f (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (MIN(?tmdb) AS ?t
         if not tid.isdigit():
             continue
         out.append({'tmdb': int(tid), 'title': r['title']['value'], 'year': int(r['released']['value'][:4]),
-                    'qid': r['f']['value'].rsplit('/', 1)[-1], '_links': int(r['sitelinks']['value'])})
+                    'qid': r['f']['value'].rsplit('/', 1)[-1], '_links': int(r['sitelinks']['value']),
+                    # distributor-only (no P272) AND a known country of origin without the US = a territory release
+                    '_foreign': r['produced']['value'] == '0' and r['hascountry']['value'] == '1' and r['inus']['value'] == '0'})
     return out
 
 
@@ -85,8 +94,13 @@ def main():
                 seen.add(r['tmdb'])
                 rows.append(r)
         total = len(rows)
-        result[slug] = [{k: v for k, v in r.items() if k != '_links'} for r in rows[:CAP]]
-        print(f'{slug}: {total} films' + (f' (capped to {CAP})' if total > CAP else ''))
+        kept = [r for r in rows if not (r['_foreign'] and slug in US_ONLY_FILTER)]
+        result[slug] = [{k: v for k, v in r.items() if not k.startswith('_')} for r in kept[:CAP]]
+        print(f'{slug}: {total} films, {total - len(kept)} dropped as distributor-only non-US' + ('' if slug in US_ONLY_FILTER else ' (rule off)') + f'' +
+              (f' (capped to {CAP})' if len(kept) > CAP else ''))
+        for r in rows:
+            if r['_foreign']:
+                print('   dropped:', r['title'], r['year'], r['qid'], r['tmdb'])
         time.sleep(1)
     OUT.write_text(json.dumps(result, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
 
