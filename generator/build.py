@@ -627,9 +627,11 @@ def site_url():
     return u if u.endswith('/') else u + '/'
 
 
-def fetch_bytes(url, attempts=4):
-    """GET `url` -> bytes. 404 -> FileNotFoundError; other failures retry, then RuntimeError (class/status only)."""
+def fetch_bytes(url, attempts=8):
+    """GET `url` -> bytes. 404 -> FileNotFoundError. 429 (GitHub Pages rate limit, seen at ~150 requests/s) and other
+    failures back off (Retry-After when sent), then RuntimeError (class/status only)."""
     for a in range(attempts):
+        wait = min(2 ** a, 30)
         try:
             req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0', 'Cache-Control': 'no-cache'})
             with urllib.request.urlopen(req, timeout=30) as r:
@@ -638,11 +640,13 @@ def fetch_bytes(url, attempts=4):
             if e.code == 404:
                 raise FileNotFoundError(url) from None
             err = f'HTTP {e.code}'
+            if e.code == 429 and (e.headers.get('Retry-After') or '').isdigit():
+                wait = min(int(e.headers['Retry-After']), 60)
         except Exception as e:
             err = type(e).__name__
         if a == attempts - 1:
             raise RuntimeError(f'{err} on {url}') from None
-        time.sleep(2 ** a)
+        time.sleep(wait)
 
 
 # ---- partial rebuild (issue #77) --------------------------------------------------------------------------------
@@ -696,7 +700,7 @@ def load_base(base_url):
         sys.exit(f'GUARD: cannot read the live site ({e.__class__.__name__}); run a full build instead')
 
 
-def restore_site(root, base_url, manifest, counts, skip, workers=48):
+def restore_site(root, base_url, manifest, counts, skip, workers=16):
     """Copy every page of every live catalog NOT in `skip` into root, byte for byte, by walking each catalog's pages
     (first page, skip=N pages, empty terminal page; plus the same walk per genre option). Why a crawl and not the Pages
     artifact: the artifact of a deploy expires (1 day by default) and may not exist, the live URL always does and is
