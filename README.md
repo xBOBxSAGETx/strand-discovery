@@ -29,7 +29,7 @@ Plex cards also include titles Plex rents (the owner's choice: playback is via d
 | `yearly-refresh` | October 1, 09:23 | re-reads the Wikipedia award lists, pushes `awards-refresh-<year>` if they changed, and opens a review issue with the double-source cross-check; opens the people-list review issue. |
 
 Scheduled deploys stay off unless the repo variable `SD_SCHEDULE_DEPLOY` is `on` (the build still runs and alerts).
-Manual runs: *Actions → build-and-deploy → Run workflow* (`deploy` off = dry run).
+Manual runs: *Actions → build-and-deploy → Run workflow* (`deploy` off = dry run). A dry run on a branch other than `main` skips the ~12 min first_seen logger and reuses main's saved state, unless that branch changes `generator/first_seen.py`, `arrivals.py`, `build.py`, `spec.json`, `awards.json` or `build.yml` (#73).
 
 ### The "health" issue
 One open issue labelled `health` collects problems; GitHub emails the owner on each new issue or comment, and the

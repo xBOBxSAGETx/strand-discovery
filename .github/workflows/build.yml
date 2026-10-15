@@ -47,6 +47,7 @@ jobs:
     outputs:
       logger: ${{ steps.logger.outcome }}
       arrivals: ${{ steps.arrivals.outcome }}
+      practice: ${{ steps.practice.outputs.skip }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
@@ -90,8 +91,38 @@ jobs:
             echo "::warning::first_seen artifact $run_id could not be decrypted; starting a fresh baseline"
             echo "SD_STATE_SOURCE=none (artifact $run_id undecryptable, fresh baseline)" >> "$GITHUB_ENV"
           fi
+      # #73: a practice build (manual run, deploy off, not main) of a change that leaves the logger code alone skips the
+      # ~12 min logger and reuses main's saved state (a branch run restores main's newest sd-state-* cache). Everything
+      # else (daily, main, deploy=true, a cache miss, a changed logger file, any doubt) runs the logger as before.
+      # Files the logger runs on: first_seen.py, arrivals.py (imported by first_seen), build.py (both import it) and the
+      # data files they read (spec.json, awards.json). build.yml itself changing also means "do not skip".
+      - name: Practice build? (decide whether to skip the logger)
+        id: practice
+        env:
+          EVENT: ${{ github.event_name }}
+          DEPLOY: ${{ inputs.deploy }}
+          REF: ${{ github.ref }}
+          CACHE_HIT: ${{ steps.state_cache.outputs.cache-matched-key }}
+        run: |
+          skip=false
+          if [ "$EVENT" = workflow_dispatch ] && [ "$DEPLOY" = false ] && [ "$REF" != refs/heads/main ] && [ -n "$CACHE_HIT" ] && [ -f state/first_seen.json.gz ]; then
+            if git fetch --no-tags --depth=200 origin +refs/heads/main:refs/remotes/origin/main "$GITHUB_SHA" && changed=$(git diff --name-only "origin/main...$GITHUB_SHA"); then
+              if echo "$changed" | grep -qxE 'generator/(first_seen\.py|arrivals\.py|build\.py|spec\.json|awards\.json)|\.github/workflows/build\.yml'; then
+                echo "practice build: logger code changed, the logger runs"
+              else
+                skip=true
+                msg="practice build: logger skipped, using main's saved state $CACHE_HIT"
+                echo "$msg"
+                echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+              fi
+            else
+              echo "practice build: could not compare with main, the logger runs"
+            fi
+          fi
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
       - name: first_seen logger
         id: logger
+        if: steps.practice.outputs.skip != 'true'
         continue-on-error: true    # a logger failure must not stop the daily build; New cards fall back
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
@@ -185,7 +216,7 @@ jobs:
       - name: Update the health issue
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python generator/health.py report "${{ needs.build.result }}" "${{ needs.build.outputs.logger || 'unknown' }}" "${{ needs.build.outputs.arrivals || 'unknown' }}"
+        run: python generator/health.py report "${{ needs.build.result }}" "${{ needs.build.outputs.logger || 'unknown' }}" "${{ needs.build.outputs.arrivals || 'unknown' }}" "${{ needs.build.outputs.practice || 'false' }}"
 
   deploy:
     needs: build
