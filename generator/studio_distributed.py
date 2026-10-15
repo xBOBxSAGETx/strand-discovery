@@ -30,6 +30,31 @@ STUDIO_ITEMS = {
 # Illumination, LAIKA, Aardman, Blumhouse, Legendary, Amblin) and the majors (Warner, Universal, New Line) are left out:
 # their TMDB production lists are right, and P750 on a major pulls in territory-only international distribution.
 
+# Hand exclude list: films another company released in the US, so they do not belong on the studio card (the studio only
+# had a territory release, e.g. Lionsgate UK). A title is listed only with a source that names the US distributor.
+# `why` = the quote + URL (Box Office Mojo "Domestic Distributor" unless it says Wikipedia).
+EXCLUDE = {
+    'studio-lionsgate': [
+        {'tmdb': 366668, 'title': "Playmobil: The Movie", 'why': "Box Office Mojo \"Domestic Distributor: STX Entertainment\" (https://www.boxofficemojo.com/title/tt4199898/)"},
+        {'tmdb': 86828, 'title': "Absolutely Anything", 'why': "Box Office Mojo \"Domestic Distributor: Atlas Distribution Company\" (https://www.boxofficemojo.com/title/tt1727770/)"},
+        {'tmdb': 283227, 'title': "A Little Chaos", 'why': "Box Office Mojo \"Domestic Distributor: Focus World\" (https://www.boxofficemojo.com/title/tt2639254/)"},
+        {'tmdb': 27429, 'title': "Shivers", 'why': "Wikipedia (https://en.wikipedia.org/wiki/Shivers_(1975_film)): \"Cronenberg blaming American International Pictures's poor distribution\" (US release as They Came from Within); Box Office Mojo has no distributor"},
+        {'tmdb': 11838, 'title': "Ju-On: The Grudge", 'why': "Box Office Mojo \"Domestic Distributor: Vitagraph Films\" (https://www.boxofficemojo.com/title/tt0364385/)"},
+        {'tmdb': 300155, 'title': "A Royal Night Out", 'why': "Box Office Mojo \"Domestic Distributor: Atlas Distribution Company\" (https://www.boxofficemojo.com/title/tt1837562/)"},
+        {'tmdb': 205588, 'title': "Our Kind of Traitor", 'why': "Box Office Mojo \"Domestic Distributor: Roadside Attractions\" (https://www.boxofficemojo.com/title/tt1995390/)"},
+        {'tmdb': 391714, 'title': "On Chesil Beach", 'why': "Box Office Mojo \"Domestic Distributor: Bleecker Street Media\" (https://www.boxofficemojo.com/title/tt1667321/)"},
+        {'tmdb': 438259, 'title': "Journey's End", 'why': "Box Office Mojo \"Domestic Distributor: Good Deed Entertainment\" (https://www.boxofficemojo.com/title/tt3780500/)"},
+        {'tmdb': 429417, 'title': "Ghost Stories", 'why': "Box Office Mojo \"Domestic Distributor: IFC Films\" (https://www.boxofficemojo.com/title/tt5516328/)"},
+        {'tmdb': 200727, 'title': "Love, Rosie", 'why': "Box Office Mojo \"Domestic Distributor: The Film Arcade\" (https://www.boxofficemojo.com/title/tt1638002/)"},
+    ],
+    'studio-focus-features': [
+        {'tmdb': 26428, 'title': "Agora", 'why': "Box Office Mojo \"Domestic Distributor: Newmarket Films\" (https://www.boxofficemojo.com/title/tt1186830/)"},
+        {'tmdb': 8338, 'title': "Blindness", 'why': "Box Office Mojo \"Domestic Distributor: Miramax\" (https://www.boxofficemojo.com/title/tt0861689/)"},
+        {'tmdb': 43079, 'title': "Mad About Mambo", 'why': "Box Office Mojo \"Domestic Distributor: USA Films\" (https://www.boxofficemojo.com/title/tt0156757/)"},
+        {'tmdb': 121830, 'title': "Mr. Pip", 'why': "Box Office Mojo \"Domestic Distributor: Freestyle Releasing\" (https://www.boxofficemojo.com/title/tt1485749/)"},
+    ],
+}
+
 
 def sparql(query):
     req = urllib.request.Request(SPARQL + '?format=json&query=' + urllib.parse.quote(query), headers={'User-Agent': UA})
@@ -84,6 +109,8 @@ def main():
             if r['tmdb'] not in seen:
                 seen.add(r['tmdb'])
                 rows.append(r)
+        gone = {e['tmdb'] for e in EXCLUDE.get(slug, [])}
+        rows = [r for r in rows if r['tmdb'] not in gone]
         total = len(rows)
         result[slug] = [{k: v for k, v in r.items() if k != '_links'} for r in rows[:CAP]]
         print(f'{slug}: {total} films' + (f' (capped to {CAP})' if total > CAP else ''))
