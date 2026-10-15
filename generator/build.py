@@ -631,7 +631,7 @@ def fetch_bytes(url, attempts=8):
     """GET `url` -> bytes. 404 -> FileNotFoundError. 429 (GitHub Pages rate limit, seen at ~150 requests/s) and other
     failures back off (Retry-After when sent), then RuntimeError (class/status only)."""
     for a in range(attempts):
-        wait = min(2 ** a, 30)
+        wait = min(2 ** (a + 1), 30)
         try:
             req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0', 'Cache-Control': 'no-cache'})
             with urllib.request.urlopen(req, timeout=30) as r:
@@ -641,7 +641,7 @@ def fetch_bytes(url, attempts=8):
                 raise FileNotFoundError(url) from None
             err = f'HTTP {e.code}'
             if e.code == 429 and (e.headers.get('Retry-After') or '').isdigit():
-                wait = min(int(e.headers['Retry-After']), 60)
+                wait = max(wait, min(int(e.headers['Retry-After']), 60))
         except Exception as e:
             err = type(e).__name__
         if a == attempts - 1:
