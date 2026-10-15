@@ -96,33 +96,69 @@ jobs:
             echo "SD_STATE_SOURCE=none (artifact $run_id undecryptable, fresh baseline)" >> "$GITHUB_ENV"
           fi
       # #73: a practice build (manual run, deploy off, not main) of a change that leaves the logger code alone skips the
-      # ~12 min logger and reuses main's saved state (a branch run restores main's newest sd-state-* cache). Everything
-      # else (daily, main, deploy=true, a cache miss, a changed logger file, any doubt) runs the logger as before.
+      # ~12 min logger and reuses main's saved state. Everything else (daily, main, deploy=true, a changed logger file,
+      # any doubt) runs the logger as before. Three steps: practice_candidate (the conditions + main's newest state key,
+      # looked up through the caches API), a restore of that EXACT key (an exact key only exists in main's scope, so it
+      # cannot match a branch's own older sd-state-* cache, which the first restore may have preferred), and practice
+      # (skip only when that exact restore hit).
       # Logger code = first_seen.py and arrivals.py (imported by first_seen); build.yml itself changing also means "do not
       # skip". Shared build.py / spec.json changes still show in "Generate catalogs"; full_logger=true never skips.
-      - name: Practice build? (decide whether to skip the logger)
-        id: practice
+      - name: Practice build? (candidate + main's newest state key)
+        id: practice_candidate
         env:
+          GH_TOKEN: ${{ github.token }}
           EVENT: ${{ github.event_name }}
           DEPLOY: ${{ inputs.deploy }}
           REF: ${{ github.ref }}
           FULL_LOGGER: ${{ inputs.full_logger }}
-          CACHE_HIT: ${{ steps.state_cache.outputs.cache-matched-key }}
         run: |
-          skip=false
-          if [ "$EVENT" = workflow_dispatch ] && [ "$DEPLOY" = false ] && [ "$FULL_LOGGER" != true ] && [ "$REF" != refs/heads/main ] && [ -n "$CACHE_HIT" ] && [ -f state/first_seen.json.gz ]; then
+          candidate=false
+          main_key=
+          if [ "$EVENT" = workflow_dispatch ] && [ "$DEPLOY" = false ] && [ "$FULL_LOGGER" != true ] && [ "$REF" != refs/heads/main ]; then
             if git fetch --no-tags --depth=200 origin +refs/heads/main:refs/remotes/origin/main "$GITHUB_SHA" && changed=$(git diff --name-only "origin/main...$GITHUB_SHA"); then
               if echo "$changed" | grep -qxE 'generator/(first_seen|arrivals)\.py|\.github/workflows/build\.yml'; then
                 echo "practice build: logger code changed, the logger runs"
+              elif main_key=$(gh api "repos/$GITHUB_REPOSITORY/actions/caches?ref=refs/heads/main&key=sd-state-&sort=created_at&direction=desc&per_page=1" --jq '.actions_caches[0].key // empty') && [ -n "$main_key" ]; then
+                candidate=true
+                # set the first restore's state aside; the exact-key restore below replaces it (put back if that misses)
+                if [ -d state ]; then mv state state-branch; fi
               else
-                skip=true
-                msg="practice build: logger skipped, using main's saved state $CACHE_HIT"
-                echo "$msg"
-                echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+                main_key=
+                echo "practice build: no saved state on main found, the logger runs"
               fi
             else
               echo "practice build: could not compare with main, the logger runs"
             fi
+          fi
+          echo "candidate=$candidate" >> "$GITHUB_OUTPUT"
+          echo "main_key=$main_key" >> "$GITHUB_OUTPUT"
+      # Exact key, no restore-keys: only main's cache can match. Restores into state/ (set aside above).
+      - name: Restore main's newest first_seen state (practice build, exact key)
+        id: main_state
+        if: steps.practice_candidate.outputs.candidate == 'true'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: state
+          key: ${{ steps.practice_candidate.outputs.main_key }}
+      - name: Practice build? (skip the logger only if main's state was restored)
+        id: practice
+        if: always()
+        env:
+          CANDIDATE: ${{ steps.practice_candidate.outputs.candidate }}
+          MAIN_KEY: ${{ steps.practice_candidate.outputs.main_key }}
+          MAIN_HIT: ${{ steps.main_state.outputs.cache-hit }}
+        run: |
+          skip=false
+          if [ "$CANDIDATE" = true ] && [ "$MAIN_HIT" = true ] && [ -f state/first_seen.json.gz ]; then
+            skip=true
+            rm -rf state-branch
+            msg="practice build: logger skipped, using main's saved state $MAIN_KEY"
+            echo "$msg"
+            echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$CANDIDATE" = true ]; then
+            echo "practice build: main's state $MAIN_KEY could not be restored, the logger runs on the earlier state"
+            rm -rf state
+            if [ -d state-branch ]; then mv state-branch state; fi
           fi
           echo "skip=$skip" >> "$GITHUB_OUTPUT"
       - name: first_seen logger
@@ -147,21 +183,21 @@ jobs:
           SD_ARRIVALS_SINGLE_SOURCE_DROP: ${{ vars.SD_ARRIVALS_SINGLE_SOURCE_DROP }}
         run: python generator/arrivals.py arrivals ${{ inputs.arrivals_backfill && '--backfill' || '' }}
       - name: Save first_seen state (cache)
-        if: steps.logger.outcome == 'success'
+        if: github.ref == 'refs/heads/main' && steps.logger.outcome == 'success'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: state
           key: sd-state-${{ github.run_id }}
       - name: Encrypt first_seen state for the artifact backup
         id: encrypt
-        if: steps.logger.outcome == 'success'
+        if: github.ref == 'refs/heads/main' && steps.logger.outcome == 'success'
         env:
           SD_STATE_KEY: ${{ secrets.SD_STATE_KEY }}
         run: |
           mkdir -p state-backup
           openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:SD_STATE_KEY             -in state/first_seen.json.gz -out state-backup/first_seen.json.gz.enc
       - name: Save first_seen state (artifact backup)
-        if: steps.logger.outcome == 'success' && steps.encrypt.outcome == 'success'
+        if: github.ref == 'refs/heads/main' && steps.logger.outcome == 'success' && steps.encrypt.outcome == 'success'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: first-seen-state
