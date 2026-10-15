@@ -1,6 +1,9 @@
 """Health alerts for the daily workflow: keeps ONE open GitHub issue labelled "health" in sync with the latest run.
 
-  python health.py <report dir> <build result> <logger outcome> [<arrivals outcome>]
+  python health.py <report dir> <build result> <logger outcome> [<arrivals outcome> [<practice>]]
+
+<practice> = "true" when the build skipped the logger on purpose (a practice build reusing main's saved state, #73):
+only then is a "skipped" logger fine; in every other run it is still reported.
 
 Test mode (no GitHub calls): HEALTH_DRY_RUN=1 prints every write it would make; HEALTH_MOCK_ISSUES=<json file>
 ({"health": [{"number": 1}], "reminder": [...]}, per label) stands in for `gh issue list`.
@@ -49,7 +52,7 @@ def read(p):
         return None
 
 
-def problems(report, build_result, logger_outcome, arrivals_outcome='skipped'):
+def problems(report, build_result, logger_outcome, arrivals_outcome='skipped', practice=False):
     out = []
     summary = read(report / 'out' / 'summary.json') or read(report / 'summary.json')
     fs = read(report / 'state' / 'fs_summary.json') or read(report / 'fs_summary.json')
@@ -62,7 +65,7 @@ def problems(report, build_result, logger_outcome, arrivals_outcome='skipped'):
         why = (f" Guard: `{guard[-1][:300]}`" if guard else f" Last log line: `{lines[-1][:300]}`" if lines
                else ' No build log (the job died before the generator ran).')
         out.append(f"Build job ended **{build_result}**.{why} The last good deploy stays served.")
-    if logger_outcome != 'success':
+    if logger_outcome != 'success' and not (practice and logger_outcome == 'skipped'):
         out.append(f"first_seen logger ended **{logger_outcome}** - New cards fall back to release-date order today.")
     if arrivals_outcome not in ('success', 'skipped'):
         out.append(f"Arrival signals step ended **{arrivals_outcome}** - New cards use the stored arrival dates "
@@ -87,7 +90,8 @@ def problems(report, build_result, logger_outcome, arrivals_outcome='skipped'):
 def main():
     report, build_result, logger_outcome = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
     arrivals_outcome = sys.argv[4] if len(sys.argv) > 4 else 'skipped'
-    found, summary, fs = problems(report, build_result, logger_outcome, arrivals_outcome)
+    practice = len(sys.argv) > 5 and sys.argv[5] == 'true'
+    found, summary, fs = problems(report, build_result, logger_outcome, arrivals_outcome, practice)
     # arrivals catch-up progress (information, never a problem by itself): run page summary + log, and the issue body
     progress = (read(report / 'arrivals' / 'arrivals_summary.json') or {}).get('catchup_lines') or []
     for line in progress:

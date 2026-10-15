@@ -86,7 +86,7 @@ THEMES = [('Superheroes', '9715'), ('Zombies', '12377'), ('Space Epics', '161176
 # Movie Series, A–Z. collection ids / keyword / explicit TMDB ids (for franchises TMDB doesn't group).
 SERIES = {
     '007': {'collections': [645]},
-    'Alien': {'collections': [8091]},
+    'Alien': {'collections': [8091], 'ids': [['movie', 70981], ['movie', 126889], ['movie', 945961]]},   # spin-offs TMDB doesn't group: Prometheus, Covenant, Romulus
     'Avatar': {'collections': [87096]},
     'Back to the Future': {'collections': [264]},
     'Bad Boys': {'collections': [14890]},
@@ -98,8 +98,8 @@ SERIES = {
     'Dune': {'collections': [726871]},
     'Fast & Furious': {'collections': [9485]},
     'Frozen': {'collections': [386382]},
-    'Ghostbusters': {'collections': [2980]},
-    'Halloween': {'collections': [91361]},
+    'Ghostbusters': {'collections': [2980], 'ids': [['movie', 43074]]},   # spin-offs TMDB doesn't group: 2016
+    'Halloween': {'collections': [91361], 'ids': [['movie', 2082], ['movie', 24150]]},   # spin-offs TMDB doesn't group: Rob Zombie 2007, Halloween II 2009
     'Harry Potter': {'collections': [1241, 435259]},
     'How to Train Your Dragon': {'collections': [89137, 1458864]},
     'Ice Age': {'collections': [8354]},
@@ -111,24 +111,24 @@ SERIES = {
     'Knives Out': {'collections': [722971]},
     'Kung Fu Panda': {'collections': [77816]},
     'Lethal Weapon': {'collections': [945]},
-    'Lord of the Rings': {'collections': [119, 121938]},
+    'Lord of the Rings': {'collections': [119, 121938], 'ids': [['movie', 839033]]},   # spin-offs TMDB doesn't group: The War of the Rohirrim
     'Mad Max': {'collections': [8945]},
-    'Madagascar': {'collections': [14740]},
+    'Madagascar': {'collections': [14740], 'ids': [['movie', 270946]]},   # spin-offs TMDB doesn't group: Penguins of Madagascar
     'Marvel Cinematic Universe': {'keywords': '180547'},
     'Maze Runner': {'collections': [295130]},
-    'Men in Black': {'collections': [86055]},
+    'Men in Black': {'collections': [86055], 'ids': [['movie', 479455]]},   # spin-offs TMDB doesn't group: International
     'Mission: Impossible': {'collections': [87359]},
     'MonsterVerse': {'keywords': '380322'},
-    "Ocean's": {'collections': [304]},
+    "Ocean's": {'collections': [304], 'ids': [['movie', 402900]]},   # spin-offs TMDB doesn't group: Ocean's 8
     'Pirates of the Caribbean': {'collections': [295]},
-    'Planet of the Apes': {'collections': [1709, 173710]},
-    'Predator': {'collections': [399]},
+    'Planet of the Apes': {'collections': [1709, 173710], 'ids': [['movie', 869]]},   # spin-offs TMDB doesn't group: 2001
+    'Predator': {'collections': [399], 'ids': [['movie', 1376434]]},   # spin-offs TMDB doesn't group: Killer of Killers
     'Rocky': {'collections': [1575]},
     'Rush Hour': {'collections': [90863]},
     'Saw': {'collections': [656]},
     'Scary Movie': {'collections': [4246]},
     'Scream': {'collections': [2602]},
-    'Shrek': {'collections': [2150]},
+    'Shrek': {'collections': [2150], 'ids': [['movie', 417859], ['movie', 315162]]},   # spin-offs TMDB doesn't group: Puss in Boots 2011, The Last Wish
     'Spider-Man': {'collections': [556, 125574, 531241, 573436]},
     'Star Wars': {'collections': [10], 'ids': [
         ['movie', 330459], ['movie', 348350],                                    # Rogue One, Solo
@@ -141,10 +141,10 @@ SERIES = {
     'The Hangover': {'collections': [86119]},
     'The Hunger Games': {'collections': [131635, 1701563]},
     'The Matrix': {'collections': [2344]},
-    'Toy Story': {'collections': [10194]},
-    'Transformers': {'collections': [8650]},
+    'Toy Story': {'collections': [10194], 'ids': [['movie', 718789]]},   # spin-offs TMDB doesn't group: Lightyear
+    'Transformers': {'collections': [8650], 'ids': [['movie', 424783], ['movie', 667538], ['movie', 698687]]},   # spin-offs TMDB doesn't group: Bumblebee, Rise of the Beasts, Transformers One
     'Twilight': {'collections': [33514]},
-    'X-Men': {'collections': [748]},
+    'X-Men': {'collections': [748], 'ids': [['movie', 76170], ['movie', 2080], ['movie', 263115], ['movie', 293660], ['movie', 383498], ['movie', 533535], ['movie', 340102]]},   # spin-offs TMDB doesn't group: The Wolverine, Origins, Logan, Deadpool 1-3, The New Mutants
 }
 # (card name, source) in folder order. Source = an MDBList list, or an awards.json key (built from the Wikipedia winner
 # tables by awards_wiki.py; build.py reads the ids at build time, so the yearly refresh only has to update awards.json).
@@ -226,7 +226,7 @@ def main():
             e.update(kind='discover', media=['movie', 'series'], sort='release_asc', min_votes=0,
                      movie={'with_keywords': spec['keywords']}, series={'with_keywords': spec['keywords']})
         else:
-            e.update(kind='franchise', media=['movie', 'series'] if spec.get('ids') else ['movie'],
+            e.update(kind='franchise', media=['movie', 'series'] if any(m == 'series' for m, _ in spec.get('ids', [])) else ['movie'],
                      collection_ids=spec['collections'], ids=spec.get('ids', []))
         cats.append(e)
     for name, kw in THEMES:
