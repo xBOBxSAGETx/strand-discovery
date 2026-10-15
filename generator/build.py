@@ -496,7 +496,9 @@ MIN_SIGNALS = 5                # a New card switches to arrival order with at le
 def first_seen_mode(card):
     prov = card.get('provider')
     info = (FS_SUMMARY or {}).get('providers', {}).get(prov) if prov else None
-    return bool(info and info.get('mode') == 'first_seen' and bool(FS_CANDIDATES.get(prov)))
+    # sliced providers (catalogue > 10,000, read by date slices) drift: library titles log as "first seen" and crowd out
+    # the real dated arrivals (Prime New, 2026-10-15: 2 arrivals + 998 drift). They use dated signals, then release date.
+    return bool(info and info.get('mode') == 'first_seen' and not info.get('sliced') and bool(FS_CANDIDATES.get(prov)))
 
 
 def first_seen_card(card, depth):
