@@ -16,29 +16,19 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE / 'studio_distributed.json'
 SPARQL = 'https://query.wikidata.org/sparql'
 UA = 'strand-discovery-studio-distributed/1.0 (https://github.com/xBOBxSAGETx/strand-discovery)'
-CAP = 400      # per studio; only Universal and Warner Bros. (thousands of distributed titles) reach it
+CAP = 400      # per studio; a safety limit; none of the five studios reaches it today
 
 # studio card slug -> [(Wikidata QID, its English label: checked against Wikidata on every run)]
 STUDIO_ITEMS = {
-    'studio-pixar': [('Q127552', 'Pixar')],
-    'studio-walt-disney-animation': [('Q1047410', 'Walt Disney Animation Studios')],
-    'studio-dreamworks-animation': [('Q500088', 'DreamWorks Animation')],
     'studio-a24': [('Q16248298', 'A24')],
-    'studio-blumhouse': [('Q16984664', 'Blumhouse Productions')],
-    'studio-studio-ghibli': [('Q182950', 'Studio Ghibli')],
-    'studio-illumination': [('Q1189512', 'Illumination')],
-    'studio-warner-bros-pictures': [('Q8016302', 'Warner Bros. Pictures')],
-    'studio-universal': [('Q168383', 'Universal Pictures')],
     'studio-neon': [('Q30603559', 'Neon')],
-    'studio-legendary': [('Q621364', 'Legendary Pictures')],
     'studio-lionsgate': [('Q17076072', 'Lionsgate Films')],
     'studio-focus-features': [('Q649649', 'Focus Features')],
     'studio-searchlight': [('Q953040', 'Searchlight Pictures'), ('Q123459512', 'Fox Searchlight Pictures')],
-    'studio-laika': [('Q1314323', 'Laika')],
-    'studio-aardman': [('Q301092', 'Aardman Animations')],
-    'studio-new-line': [('Q79202', 'New Line Cinema')],
-    'studio-amblin': [('Q457893', 'Amblin Entertainment')],
 }
+# Only studios whose identity IS distribution. Production studios (Pixar, Disney Animation, DreamWorks, Ghibli,
+# Illumination, LAIKA, Aardman, Blumhouse, Legendary, Amblin) and the majors (Warner, Universal, New Line) are left out:
+# their TMDB production lists are right, and P750 on a major pulls in territory-only international distribution.
 
 
 def sparql(query):

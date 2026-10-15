@@ -179,20 +179,20 @@ def studio_distributed(card):
 
 
 def add_studio_distributed(card, metas):
-    """A studio card also holds the films its studio distributed. Titles already in the discover list stay where they
-    are; the missing ones are fetched with details_preview (cached; None = not released / unknown, skipped) and
-    appended after it in the data file's order (most-linked on Wikidata first), because previews carry no popularity.
-    Not cut by depth: the file caps each studio."""
-    have = {m['id'] for m in metas}
-    extra = []
-    for tid in studio_distributed(card):
-        if f'tmdb:{tid}' in have:
-            continue
-        m = details_preview('movie', tid)
-        if m and m['id'] not in have:
-            have.add(m['id'])
-            extra.append(m)
-    return metas + extra
+    """A studio card also holds the films its studio distributed. The data file's list (most-linked on Wikidata first)
+    is merged 1:1 with the popularity-ordered discover list by interleave(), which drops repeats, so well-known
+    distributed films sit near the top. A distributed film already in the discover list is taken from it; the rest are
+    fetched with details_preview (cached; None = not released / unknown, skipped). Not cut by depth: the file caps it."""
+    ids = studio_distributed(card)
+    if not ids:
+        return metas
+    have = {m['id']: m for m in metas}
+    dist = []
+    for tid in ids:
+        m = have.get(f'tmdb:{tid}') or details_preview('movie', tid)
+        if m:
+            dist.append(m)
+    return interleave([metas, dist])
 
 
 SORTS = {
