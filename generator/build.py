@@ -40,6 +40,7 @@ TODAY = dt.date.today().isoformat()
 YEAR_AGO = (dt.date.today() - dt.timedelta(days=365)).isoformat()
 MIN_INTERVAL = 1 / 20          # self-throttle: 20 requests/s (TMDB publishes ~40/s)
 DROP_LIMIT = 0.30              # abort if total items fall by more than 30%
+PARTIAL_TOTAL_MIN_CARDS = 10   # partial rebuild: the total check needs at least this many listed cards (fewer = per-card guards only)
 CARD_DROP = 0.70               # a catalog "dropped" if it lost more than 70% of its items (and had >= 20)
 CARD_DROP_MAX = 10             # more than this many dropped catalogs = systemic -> abort
 REQUEST_CAP = 40000            # runaway guard: abort before deploying anything
@@ -678,8 +679,9 @@ def parse_cards(raw, catalogs):
 def partial_guards(prev_counts, new_counts):
     """The safety checks of a partial rebuild, on the LISTED cards only (prev_counts = their counts on the live site;
     a card absent there is new and has nothing to compare). Unlike the full build, a card that lost >70% BLOCKS.
-    The total check compares the listed cards with the same cards live (like with like): the unlisted ones are
-    byte-identical by construction, so comparing whole-site totals would hide a real drop."""
+    The total check runs only with PARTIAL_TOTAL_MIN_CARDS (10) or more listed cards; fewer rely on the per-card
+    checks, so one shelf may legitimately shrink 30-70%. It compares the listed cards with the same cards live (like
+    with like): the unlisted ones are byte-identical by construction, so comparing whole-site totals would hide a real drop."""
     empty = sorted(c for c, n in new_counts.items() if n == 0)
     if empty:
         sys.exit(f'GUARD: empty catalogs: {empty}')
@@ -689,7 +691,7 @@ def partial_guards(prev_counts, new_counts):
         sys.exit(f'GUARD: listed catalogs lost >70% of their items: {dropped}')
     old_total = sum(prev_counts[c] for c in new_counts if c in prev_counts)
     new_total = sum(n for c, n in new_counts.items() if c in prev_counts)
-    if old_total and new_total < old_total * (1 - DROP_LIMIT):
+    if len(new_counts) >= PARTIAL_TOTAL_MIN_CARDS and old_total and new_total < old_total * (1 - DROP_LIMIT):
         sys.exit(f'GUARD: total items of the listed catalogs dropped {old_total} -> {new_total} (>30%)')
 
 

@@ -17,7 +17,7 @@ import build  # noqa: E402
 
 LIVE_URL = 'http://live.test/'
 REAL = json.loads((Path(build.__file__).resolve().parent / 'spec.json').read_text(encoding='utf-8'))
-SLUGS = ['studio-a24', 'genre-horror', 'genre-horror-new', REAL['catalogs'][0]['slug'], REAL['catalogs'][1]['slug']]
+SLUGS = list(dict.fromkeys(['studio-a24', 'genre-horror', 'genre-horror-new'] + [c['slug'] for c in REAL['catalogs'][:12]]))[:12]
 SIZES = {'studio-a24': 250, 'genre-horror': 130, 'genre-horror-new': 40}      # others: 60
 
 
@@ -125,11 +125,23 @@ class Partial(unittest.TestCase):
             self.run_build(self.out, 'new', allowed={'genre-horror'}, cards='genre-horror', sizes={'genre-horror': 20})
         self.assertIn('lost >70%', str(e.exception.code))
 
-    def test_total_compares_listed_cards_only(self):
-        with self.assertRaises(SystemExit) as e:                    # 250 -> 150 (-40%): under 70% per card, over 30% total
-            self.run_build(self.out, 'new', allowed={'studio-a24'}, cards='studio-a24', sizes={'studio-a24': 150})
-        self.assertIn('listed catalogs dropped 250 -> 150', str(e.exception.code))
-        self.run_build(self.out.parent / 'out2', 'new', allowed={'studio-a24'}, cards='studio-a24', sizes={'studio-a24': 200})  # -20%: fine
+    def test_small_partial_may_shrink_one_card_40_percent(self):
+        # 2 listed cards: no total check, only the per-card ones. a24 250 -> 150 (-40%) is a legitimate shrink.
+        self.run_build(self.out, 'new', allowed={'studio-a24', 'genre-horror-new'}, cards='studio-a24,genre-horror-new',
+                       sizes={'studio-a24': 150, 'genre-horror-new': 40})      # listed total 290 -> 190 (-34%)
+        summary = json.loads((self.out / 'summary.json').read_text(encoding='utf-8'))
+        self.assertEqual(summary['catalogs']['sd-studio-a24'], 150)
+
+    def test_twelve_card_partial_total_down_35_percent_blocks(self):
+        self.assertEqual(len(SLUGS), 12)
+        sizes = {s: 39 for s in SLUGS}                              # every card 60 -> 39 (-35%): under 70% per card
+        sizes['studio-a24'], sizes['genre-horror'], sizes['genre-horror-new'] = 163, 85, 26   # 250/130/40 -35% too
+        with self.assertRaises(SystemExit) as e:
+            self.run_build(self.out, 'new', allowed=set(SLUGS), cards=','.join(SLUGS), sizes=sizes)
+        self.assertIn('total items of the listed catalogs dropped', str(e.exception.code))
+        sizes = {s: 48 for s in SLUGS}                              # -20%: fine
+        sizes['studio-a24'], sizes['genre-horror'], sizes['genre-horror-new'] = 200, 104, 32
+        self.run_build(self.out.parent / 'out2', 'new', allowed=set(SLUGS), cards=','.join(SLUGS), sizes=sizes)
 
     def test_unknown_card_fails(self):
         with self.assertRaises(SystemExit) as e:
