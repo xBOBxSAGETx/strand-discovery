@@ -179,6 +179,7 @@ def depth_of(card, dflt):
     return card.get('depth') or dflt['depth'][card['sort']]
 
 
+_pool_log = []                 # TEMP-INSTRUMENT
 _excluded = {}                 # catalog id -> {rule: count}, filled when SD_MEASURE_EXCLUSIONS=1 (report only)
 
 
@@ -286,6 +287,12 @@ def discover(card, media, depth, dflt):
                   reverse=way == 'desc')
         rest = [i for i in raw if raw[i].get(field) in (None, '')]
         out = [preview(raw[i], media) for i in have + rest if ok(raw[i])]
+    if any(f.startswith('genres-') for f in card.get('folders', [])):   # TEMP-INSTRUMENT
+        for it in raw.values():
+            _pool_log.append({'slug': card['slug'], 'media': media, 'id': it['id'], 'title': it.get('title') or it.get('name'),
+                              'year': (it.get('release_date') or it.get('first_air_date') or '')[:4],
+                              'genre_ids': it.get('genre_ids'), 'popularity': it.get('popularity'),
+                              'vote_count': it.get('vote_count')})
     return out[:depth]
 
 
@@ -723,6 +730,16 @@ def main():
                                              else 'release_date')
                                  for c in spec['catalogs'] if c.get('provider')}
     (root / 'summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
+    for tid in (424, 857, 546554, 244786, 424694, 862, 25237, 14836, 37793):   # TEMP-INSTRUMENT
+        try:
+            d = tmdb(f'/movie/{tid}')
+            _pool_log.append({'slug': 'MUSTKEEP', 'media': 'movie', 'id': tid, 'title': d.get('title'),
+                              'year': (d.get('release_date') or '')[:4],
+                              'genre_ids': [g['id'] for g in d.get('genres', [])], 'popularity': d.get('popularity'),
+                              'vote_count': d.get('vote_count')})
+        except Exception as e:
+            print('mustkeep fail', tid, e)
+    (root / 'genre_pools.json').write_text(json.dumps(_pool_log, separators=(',', ':')), encoding='utf-8')   # TEMP-INSTRUMENT
     if _excluded:
         (root / 'exclusions.json').write_text(json.dumps(_excluded, indent=1), encoding='utf-8')
     with open(root / 'report.csv', 'w', newline='', encoding='utf-8') as f:
