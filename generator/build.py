@@ -493,6 +493,17 @@ MIN_SIGNALS = 5                # a New card switches to arrival order with at le
 #                                5 evaluated 2026-09-28: Apple TV and Shudder switch, precision gate 13/13 on service)
 
 
+RECENT_DAYS = 30               # on a New card, arrivals this recent are ordered by popularity (well-known first); older ones stay by date
+
+
+def recent_first_key(date, popularity, rank=0):
+    """Sort key (use with reverse=True): arrivals dated within RECENT_DAYS first, most popular first; then the older
+    ones newest first (rank, then popularity, break date ties). Issue #49."""
+    if date >= (dt.date.fromisoformat(TODAY) - dt.timedelta(days=RECENT_DAYS)).isoformat():
+        return (1, '', popularity, date, rank)
+    return (0, date, rank, popularity, '')
+
+
 def first_seen_mode(card):
     prov = card.get('provider')
     info = (FS_SUMMARY or {}).get('providers', {}).get(prov) if prov else None
@@ -500,9 +511,9 @@ def first_seen_mode(card):
 
 
 def first_seen_card(card, depth):
-    """New on X = titles first seen on the service within the window, newest first, popularity tiebreak,
-    no vote floor (arrivals are often obscure); movies and TV interleaved."""
-    c = sorted(FS_CANDIDATES[card['provider']], key=lambda m: (m['first_seen'], m['popularity']), reverse=True)
+    """New on X = titles first seen on the service within the window: the last RECENT_DAYS most popular first, then
+    older ones newest first; no vote floor (arrivals are often obscure); movies and TV interleaved."""
+    c = sorted(FS_CANDIDATES[card['provider']], key=lambda m: recent_first_key(m['first_seen'], m['popularity']), reverse=True)
     strip = lambda m: {k: v for k, v in m.items() if k not in ('first_seen', 'popularity')}
     return interleave([[strip(m) for m in c if m['type'] == t][:depth] for t in ('movie', 'series')])
 
@@ -525,8 +536,8 @@ def both_kinds_early(metas, n=20):
 
 def arrival_card(card, depth, dflt):
     """New on X by ARRIVAL date: dated arrivals from published schedules (arrivals.py; confirmed or announced, last
-    45 days) merged with the titles our own daily snapshots first saw (when that history is on), newest first,
-    popularity tiebreak; then filled up with the release-date card. Returns (metas, counts)."""
+    45 days) merged with the titles our own daily snapshots first saw (when that history is on): the last RECENT_DAYS
+    most popular first, then older ones newest first; then filled up with the release-date card. Returns (metas, counts)."""
     prov = card['provider']
     timeline, keys = [], set()
     for c in SIGNALS.get(prov, []):
@@ -539,7 +550,7 @@ def arrival_card(card, depth, dflt):
                 meta = {kk: v for kk, v in m.items() if kk not in ('first_seen', 'popularity')}
                 timeline.append((m['first_seen'], 0, m['popularity'], k, meta))
                 keys.add(k)
-    timeline.sort(key=lambda t: (t[0], t[1], t[2]), reverse=True)
+    timeline.sort(key=lambda t: recent_first_key(t[0], t[2], t[1]), reverse=True)
     cap = depth * len(card['media'])
     out, seen, n_sig = [], set(), 0
     for date, _, _, k, meta in timeline:
