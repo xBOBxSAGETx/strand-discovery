@@ -71,9 +71,28 @@ class BuildYmlSkipCondition(unittest.TestCase):
     def test_logger_code_changes_and_build_yml_changes_do_not_skip(self):
         run = self.step('practice')['run']
         pattern = run.split('grep -qxE', 1)[1].split('\n', 1)[0]
-        for f in ('first_seen', 'arrivals', 'build', 'spec', 'awards'):
+        for f in ('first_seen', 'arrivals'):
             self.assertIn(f, pattern)
         self.assertIn('build\\.yml', pattern)
+        # shared build.py / spec.json / awards.json changes must NOT block the skip (they show in Generate catalogs)
+        for f in ('build\\.py', 'spec', 'awards'):
+            self.assertNotIn(f, pattern.replace('build\\.yml', ''))
+
+    def test_full_logger_input_never_skips(self):
+        inp = self.wf[True]['workflow_dispatch']['inputs']['full_logger']      # PyYAML reads `on:` as True
+        self.assertEqual((inp['type'], inp['default']), ('boolean', False))
+        run = self.step('practice')['run']
+        self.assertIn('"$FULL_LOGGER" != true', run.split('then', 1)[0])
+        self.assertEqual(self.step('practice')['env']['FULL_LOGGER'], '${{ inputs.full_logger }}')
+
+    def test_pattern_matches_like_the_script(self):
+        import re
+        pattern = self.step('practice')['run'].split('grep -qxE', 1)[1].split('\n', 1)[0].split("'")[1]
+        hit = lambda f: bool(re.fullmatch(pattern, f))
+        for f in ('generator/first_seen.py', 'generator/arrivals.py', '.github/workflows/build.yml'):
+            self.assertTrue(hit(f), f)
+        for f in ('generator/build.py', 'generator/spec.json', 'generator/awards.json', 'README.md'):
+            self.assertFalse(hit(f), f)
 
     def test_save_steps_still_need_logger_success(self):
         for name in ('Save first_seen state (cache)', 'Encrypt first_seen state for the artifact backup'):

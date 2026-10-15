@@ -25,6 +25,10 @@ on:
         description: 'Arrival signals: read the last 3 months of schedule posts once (sitemaps; ~30k TMDB requests the first time)'
         type: boolean
         default: false
+      full_logger:
+        description: 'Practice build: run the arrivals logger anyway (e.g. a change to what it reads from spec.json)'
+        type: boolean
+        default: false
 
 # Staged rollout: repo variables SD_KINDS_OFF / SD_KEEP (Settings > Variables) apply to the daily run too.
 # Stage A: SD_KINDS_OFF=director,actor  SD_KEEP=dir-denis-villeneuve  ->  Stage B: both empty.
@@ -94,20 +98,21 @@ jobs:
       # #73: a practice build (manual run, deploy off, not main) of a change that leaves the logger code alone skips the
       # ~12 min logger and reuses main's saved state (a branch run restores main's newest sd-state-* cache). Everything
       # else (daily, main, deploy=true, a cache miss, a changed logger file, any doubt) runs the logger as before.
-      # Files the logger runs on: first_seen.py, arrivals.py (imported by first_seen), build.py (both import it) and the
-      # data files they read (spec.json, awards.json). build.yml itself changing also means "do not skip".
+      # Logger code = first_seen.py and arrivals.py (imported by first_seen); build.yml itself changing also means "do not
+      # skip". Shared build.py / spec.json changes still show in "Generate catalogs"; full_logger=true never skips.
       - name: Practice build? (decide whether to skip the logger)
         id: practice
         env:
           EVENT: ${{ github.event_name }}
           DEPLOY: ${{ inputs.deploy }}
           REF: ${{ github.ref }}
+          FULL_LOGGER: ${{ inputs.full_logger }}
           CACHE_HIT: ${{ steps.state_cache.outputs.cache-matched-key }}
         run: |
           skip=false
-          if [ "$EVENT" = workflow_dispatch ] && [ "$DEPLOY" = false ] && [ "$REF" != refs/heads/main ] && [ -n "$CACHE_HIT" ] && [ -f state/first_seen.json.gz ]; then
+          if [ "$EVENT" = workflow_dispatch ] && [ "$DEPLOY" = false ] && [ "$FULL_LOGGER" != true ] && [ "$REF" != refs/heads/main ] && [ -n "$CACHE_HIT" ] && [ -f state/first_seen.json.gz ]; then
             if git fetch --no-tags --depth=200 origin +refs/heads/main:refs/remotes/origin/main "$GITHUB_SHA" && changed=$(git diff --name-only "origin/main...$GITHUB_SHA"); then
-              if echo "$changed" | grep -qxE 'generator/(first_seen\.py|arrivals\.py|build\.py|spec\.json|awards\.json)|\.github/workflows/build\.yml'; then
+              if echo "$changed" | grep -qxE 'generator/(first_seen|arrivals)\.py|\.github/workflows/build\.yml'; then
                 echo "practice build: logger code changed, the logger runs"
               else
                 skip=true
