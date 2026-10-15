@@ -2,7 +2,7 @@ name: build-and-deploy
 
 on:
   schedule:
-    - cron: '17 7 * * *'        # daily, off the top of the hour
+    - cron: '17 * * * *'        # hourly, off the top of the hour (#76)
   workflow_dispatch:
     inputs:
       force_fail:
@@ -164,7 +164,7 @@ jobs:
       - name: first_seen logger
         id: logger
         if: steps.practice.outputs.skip != 'true'
-        continue-on-error: true    # a logger failure must not stop the daily build; New cards fall back
+        continue-on-error: true    # a logger failure must not stop the scheduled build; New cards fall back
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           SD_CACHE: cache
@@ -196,8 +196,28 @@ jobs:
         run: |
           mkdir -p state-backup
           openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:SD_STATE_KEY             -in state/first_seen.json.gz -out state-backup/first_seen.json.gz.enc
-      - name: Save first_seen state (artifact backup)
+      # #76: the build runs hourly, but the artifact backup (90-day retention) is only the fallback for a lost Actions
+      # cache, so it is uploaded at most once a day: a manual run always uploads; a scheduled run uploads only when
+      # the newest first-seen-state artifact is 20+ hours old, none exists, or the lookup fails. The cache save above
+      # stays hourly. (Age-based, not "the 07 UTC run": a delayed schedule must not skip the day's upload.)
+      - name: Backup due? (once a day)
+        id: backup_due
         if: github.ref == 'refs/heads/main' && steps.logger.outcome == 'success' && steps.encrypt.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          due=true
+          if [ "$EVENT" = schedule ]; then
+            newest=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=first-seen-state&per_page=1" --jq '.artifacts[0].created_at // empty' 2>/dev/null) || newest=
+            if [ -n "$newest" ] && newest_s=$(date -u -d "$newest" +%s 2>/dev/null) && [ $(( $(date -u +%s) - newest_s )) -lt 72000 ]; then
+              due=false
+              echo "artifact backup skipped: newest first-seen-state artifact is from $newest (under 20 h old)"
+            fi
+          fi
+          echo "due=$due" >> "$GITHUB_OUTPUT"
+      - name: Save first_seen state (artifact backup)
+        if: github.ref == 'refs/heads/main' && steps.logger.outcome == 'success' && steps.encrypt.outcome == 'success' && steps.backup_due.outputs.due == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: first-seen-state

@@ -1,4 +1,4 @@
-"""Health alerts for the daily workflow: keeps ONE open GitHub issue labelled "health" in sync with the latest run.
+"""Health alerts for the scheduled (hourly) workflow: keeps ONE open GitHub issue labelled "health" in sync with the latest run.
 
   python health.py <report dir> <build result> <logger outcome> [<arrivals outcome> [<practice>]]
 
@@ -9,12 +9,14 @@ Test mode (no GitHub calls): HEALTH_DRY_RUN=1 prints every write it would make; 
 ({"health": [{"number": 1}], "reminder": [...]}, per label) stands in for `gh issue list`.
 
 <report dir> = the downloaded run-report artifact (out/summary.json, state/fs_summary.json; either may be missing).
+One alert per problem streak (#76): the build runs hourly, so a run whose problems are the same as the last report
+on the open issue (numbers ignored) adds no comment (GitHub emails every comment); a changed set does.
 Opens (or updates) the issue when the build failed, the first_seen logger failed, a guard tripped, TMDB rejected the
 key (401), or the logger reported warnings/skips; closes it with a comment when a later run is clean. GitHub emails
 the repo owner on new issues and comments. Also opens the one-off "re-score New" reminder on day 15 of first_seen
 history. Uses the gh CLI with the job's GITHUB_TOKEN (issues: write only).
 """
-import json, os, subprocess, sys
+import hashlib, json, os, re, subprocess, sys
 from pathlib import Path
 
 REPO = os.environ['GITHUB_REPOSITORY']
@@ -87,6 +89,23 @@ def problems(report, build_result, logger_outcome, arrivals_outcome='skipped', p
     return out, summary, fs
 
 
+SIG_RX = re.compile(r'<!-- health-sig:([0-9a-f]{12}) -->')
+
+
+def signature(found):
+    """Fingerprint of the problem list, digits ignored (sizes and counts move every hour, the problem is the same)."""
+    return hashlib.sha1('\n'.join(re.sub(r'\d+', '#', p) for p in found).encode()).hexdigest()[:12]
+
+
+def last_signature(issue):
+    """The signature in the newest comment of an open health issue, else in its body, else None."""
+    for text in [c.get('body') or '' for c in reversed(issue.get('comments') or [])] + [issue.get('body') or '']:
+        m = SIG_RX.search(text)
+        if m:
+            return m.group(1)
+    return None
+
+
 def main():
     report, build_result, logger_outcome = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
     arrivals_outcome = sys.argv[4] if len(sys.argv) > 4 else 'skipped'
@@ -100,13 +119,17 @@ def main():
         with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as f:
             f.write('### Arrivals catch-up\n' + ''.join(f'- {line}\n' for line in progress))
     ensure_label('health', 'd73a4a', 'Daily build health (opened/closed automatically)')
-    existing = json.loads(gh('issue', 'list', '--label', 'health', '--state', 'open', '--json', 'number', '--limit', '5') or '[]')
+    existing = json.loads(gh('issue', 'list', '--label', 'health', '--state', 'open', '--json', 'number,body,comments', '--limit', '5') or '[]')
+    sig = signature(found)
     if found:
         body = (f"Latest run: {RUN_URL}\n\n" + '\n'.join(f'- {p}' for p in found) +
                 ("\n\nArrivals catch-up (information):\n" + '\n'.join(f'- {line}' for line in progress)
                  if progress else '') +
-                "\n\nThis issue closes itself after the next clean run. What each alert means: README → Operations.")
-        if existing:
+                "\n\nThis issue closes itself after the next clean run. What each alert means: README → Operations."
+                f"\n\n<!-- health-sig:{sig} -->")
+        if existing and last_signature(existing[0]) == sig:
+            print(f"health: same {len(found)} problems as the last report on issue #{existing[0]['number']}; no new comment")
+        elif existing:
             gh('issue', 'comment', str(existing[0]['number']), '--body', body)
             print(f"health: updated issue #{existing[0]['number']} ({len(found)} problems)")
         else:

@@ -1,11 +1,11 @@
 # Strand Discovery
 
-Discovery catalogs (streaming services, genres, franchises, directors, actors…) generated daily from TMDB and
+Discovery catalogs (streaming services, genres, franchises, directors, actors…) generated hourly from TMDB and
 served as a static Stremio catalog addon via GitHub Pages, plus uniform card artwork for the Strand media app.
 
 - `generator/` — builds the catalogs (`spec.json` describes every card).
 - `art/` — generated card artwork, fonts and their licenses.
-- `.github/workflows/` — daily build and deploy, weekly status.
+- `.github/workflows/` — hourly build and deploy, weekly status.
 
 Personal, non-commercial use only.
 
@@ -23,7 +23,7 @@ Plex cards also include titles Plex rents (the owner's choice: playback is via d
 ### What runs when (UTC)
 | Workflow | When | What it does |
 |---|---|---|
-| `build-and-deploy` | daily 07:17 | first_seen logger (date each title was first seen on each service), then the generator, the guards, the run report, and a Pages deploy. An `alert` job keeps the "health" issue in sync. |
+| `build-and-deploy` | hourly at :17 | first_seen logger (date each title was first seen on each service), then the generator, the guards, the run report, and a Pages deploy. An `alert` job keeps the "health" issue in sync. |
 | `weekly-status` | Mondays 08:43 | commits a counts-only `status/last-build.txt` so GitHub keeps the scheduled workflows enabled (they are disabled after 60 days without repository activity). |
 | `weekly-accuracy` | Mondays 09:37 | read-only accuracy check of the arrival-ordered New cards (`generator/accuracy_check.py`) on the latest build's output: precision (a weekly random 20 of each card's dated titles checked on TMDB/JustWatch; misses that are schedule lag, on the service's official list, or in `precision_unknowns.json` are not errors) and recall on the latest month of the committed official arrival lists (`official_arrivals.csv`, an optional manual refresh - the precision gate is the weekly guard; older lists show a "stale" note, never an issue). One `accuracy` issue: opened on an undocumented precision error or a recall drop of more than 3 points below `accuracy_baseline.json`, closed after a clean week. |
 | `yearly-refresh` | October 1, 09:23 | re-reads the Wikipedia award lists, pushes `awards-refresh-<year>` if they changed, and opens a review issue with the double-source cross-check; opens the people-list review issue. |
@@ -32,14 +32,14 @@ Scheduled deploys stay off unless the repo variable `SD_SCHEDULE_DEPLOY` is `on`
 Manual runs: *Actions → build-and-deploy → Run workflow* (`deploy` off = dry run). A dry run on a branch other than `main` skips the ~12 min first_seen logger and reuses main's saved state, unless that branch changes `generator/first_seen.py`, `generator/arrivals.py` or `build.yml`, or the run sets `full_logger` (#73).
 
 ### The "health" issue
-One open issue labelled `health` collects problems; GitHub emails the owner on each new issue or comment, and the
+One open issue labelled `health` collects problems; GitHub emails the owner on each new issue or comment. The build runs hourly, so a run with the same problems as the last report on the open issue (numbers ignored) adds no comment: one alert per streak. The
 issue closes itself after the next clean run. **A failed build never replaces the live catalogs** - the last good
 deploy stays served.
 
 | Alert | Meaning | What to do |
 |---|---|---|
 | TMDB rejected the API key (HTTP 401) | the TMDB key was revoked or rotated | create a new key on themoviedb.org (Settings → API), save it in the owner's secrets folder, then `gh secret set TMDB_API_KEY -R xBOBxSAGETx/strand-discovery < <that file>`, and re-run the workflow |
-| Build job ended failure · Guard: … | a safety check stopped the deploy: more than 40,000 TMDB requests in one run, empty catalogs, the manifest count differs from the spec, total items fell > 30%, or > 10 catalogs lost > 70% | read the run report artifact (`report.csv`, `summary.json`). A TMDB outage clears on the next day's run. If catalogs were removed on purpose, re-run with `allow_catalog_removal` |
+| Build job ended failure · Guard: … | a safety check stopped the deploy: more than 40,000 TMDB requests in one run, empty catalogs, the manifest count differs from the spec, total items fell > 30%, or > 10 catalogs lost > 70% | read the run report artifact (`report.csv`, `summary.json`). A TMDB outage clears on the next hourly run. If catalogs were removed on purpose, re-run with `allow_catalog_removal` |
 | Build job ended failure · Last log line: … | the generator crashed or was cancelled | open the run log; re-run once; if it repeats, fix the code |
 | first_seen logger ended failure | New cards fall back to release-date order for that day | nothing, if the next run is clean; if it repeats, check the logger step's log |
 | first_seen warning / skipped / dropped | a service's catalogue shrank > 20%, churned > 15%, had no arrivals for 7+ days, or was skipped for time/request budget; "dropped" = a service removed from the spec left the state (expected once; more than 5 at once are kept and warned instead) | usually a TMDB/JustWatch data hiccup; check the service's New card if it persists |
@@ -102,7 +102,7 @@ not read yet under the current parser version, newest month first. Progress is k
 change re-opens it by itself, and once caught up the sitemaps are re-checked only every 3 days. Once a week the
 already-read posts of the current and next month are revalidated (titles added mid-month), within the same cap. A 429
 in the regular feed fetch is one health warning per site, as before. A 429 during the
-catch-up stops that site for the run and it resumes the next day; only 3 runs in a row without progress raise a health
+catch-up stops that site for the run and it resumes on the next run; only 3 days in a row without progress raise a health
 warning. Progress ("vt catch-up: 20/38 posts, 18 left, ETA 1 run") is on each run's summary page and in the health
 issue. The manual `arrivals_backfill` input (the last 3 months at once, capped the same way) is no longer needed.
 
@@ -115,7 +115,7 @@ issue. The manual `arrivals_backfill` input (the last 3 months at once, capped t
 
 ### first_seen state
 Lives in the Actions cache, with an encrypted 90-day artifact backup (`first-seen-state`, AES-256, key in
-`SD_STATE_KEY`). The job restores from the cache, else from the newest backup, else starts a fresh baseline. If the key
+`SD_STATE_KEY`; uploaded at most once a day, the hourly cache save is unaffected). The job restores from the cache, else from the newest backup, else starts a fresh baseline. If the key
 is lost, only the backup becomes unreadable; the cache keeps working, and a new key can be set at any time.
 
 When a service's query changes (provider ids added, e.g. Amazon / Apple / Roku channels, or its monetization), titles

@@ -1,6 +1,6 @@
 """Arrival signals for the "New on X" cards: when titles arrive on each service, from published schedules.
 
-  python arrivals.py <out dir> [--backfill] [--today YYYY-MM-DD]     (daily, after the first_seen logger)
+  python arrivals.py <out dir> [--backfill] [--today YYYY-MM-DD]     (each scheduled run, after the first_seen logger)
 
 TMDB's watch-provider data says what is on a service, not when it arrived; the first_seen logger (our own daily
 snapshots) needs 14 days of history. These sources publish the dates directly:
@@ -762,7 +762,7 @@ def src_wodp(months, backfill, stats):
 # together with the signals those posts produced; a new PARSER_VERSION re-opens the catch-up by itself. Once every
 # in-window post is read, the listing is checked again only every CATCHUP_RESCAN_DAYS (0 requests in between).
 # A 429/503 in the catch-up stops that host (circuit breaker) and is a note, not a health warning; the catch-up
-# resumes next run. CATCHUP_STALL_RUNS runs in a row without progress while posts are pending = one warning.
+# resumes next run. CATCHUP_STALL_RUNS days in a row without progress (hourly runs of one day count once) while posts are pending = one warning.
 # (A 429 in the regular feed path stays ONE health warning per stopped host, as before.) Weekly, reread() also
 # revalidates the done posts of the current and next month, within the same per-run cap.
 CATCHUP_MAX = {'vt': VT_BACKFILL_MAX, 'wodp': 20}
@@ -773,6 +773,13 @@ CATCHUP_SOURCES = {'vt': ('https://www.vitalthrills.com', 'sitemap_index.xml', v
                    'wodp': ('https://whatsondisneyplus.com', 'sitemap.xml', wodp_match, wodp_post, 'wodp-post')}
 PARSED_OK = {'vt': set(), 'wodp': set()}      # posts read (HTTP 200) by this run's feed / backfill path
 GONE = (404, 410)                             # a post that no longer exists is not waited for
+
+
+def _stall(st, today):
+    """One stalled DAY (#76: the build runs hourly; CATCHUP_STALL_RUNS counts days with no progress, not runs)."""
+    if st.get('stalled_on') != today:
+        st['stalled'] = st.get('stalled', 0) + 1
+        st['stalled_on'] = today
 
 
 def catchup(state, months, today_d, backfill):
@@ -805,13 +812,13 @@ def catchup(state, months, today_d, backfill):
                             f"done (listing re-checked on {dt.date.fromisoformat(st['scanned']) + dt.timedelta(days=CATCHUP_RESCAN_DAYS)})")
         elif host in _stopped:
             rep['state'] = f'skipped: {host} stopped earlier in this run ({_stopped[host]})'
-            st['stalled'] = st.get('stalled', 0) + 1
+            _stall(st, today)
         else:
             urls = sitemap_posts(site, index)
             inwin = {u: info for u in dict.fromkeys(urls) if (info := match(u, months))}
             if not inwin:
                 rep['state'] = 'skipped: the post sitemaps listed no post in the window (unavailable?)'
-                st['stalled'] = st.get('stalled', 0) + 1
+                _stall(st, today)
             else:
                 # newest month first: this and next month's posts date the New cards; older months only history
                 todo = sorted((u for u in inwin if u not in done), key=lambda u: inwin[u][-2:], reverse=True)
@@ -839,14 +846,17 @@ def catchup(state, months, today_d, backfill):
                         notes.append(f'{u}: HTTP {s} (retried next run)')
                 pending = sum(1 for u in inwin if u not in done)
                 st.update(scanned=today, listed=len(inwin), pending=pending)
-                st['stalled'] = 0 if read or not pending else st.get('stalled', 0) + 1
+                if read or not pending:
+                    st['stalled'] = 0
+                else:
+                    _stall(st, today)
                 rep.update(listed=len(inwin), done=len(inwin) - pending, pending=pending, fetched=fetched, read=read,
                            eta_runs=-(-pending // cap),
                            state=('done' if not pending else f'stopped: {stop}' if stop else 'catching up'))
         if not backfill:
             fetched = reread(name, st, done, match, fetch, host, cap, fetched, months, today_d, rows, rep)
         if st.get('pending') and st['stalled'] >= CATCHUP_STALL_RUNS:
-            warns.append(f"{name} catch-up: no progress for {st['stalled']} runs in a row with {st['pending']} posts "
+            warns.append(f"{name} catch-up: no progress for {st['stalled']} days in a row with {st['pending']} posts "
                          f"pending ({rep['state']})")
     return rows, report, warns, led
 
