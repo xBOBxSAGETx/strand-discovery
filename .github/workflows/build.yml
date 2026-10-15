@@ -227,7 +227,6 @@ jobs:
             out/report.csv
             out/summary.json
             out/exclusions.json
-            out/genre_pools.json
             state/fs_summary.json
             build.log
             arrivals/arrivals_summary.json

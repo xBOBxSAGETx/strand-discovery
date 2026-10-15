@@ -208,7 +208,6 @@ def depth_of(card, dflt):
     return card.get('depth') or dflt['depth'][card['sort']]
 
 
-_pool_log = []                 # TEMP-INSTRUMENT
 _excluded = {}                 # catalog id -> {rule: count}, filled when SD_MEASURE_EXCLUSIONS=1 (report only)
 
 
@@ -234,10 +233,26 @@ def fill_reverse(path, params, raw, total, pages, pool=None):
 MAIN_GENRE_PAGES = 200         # genre cards read up to this many pages per medium (a main-genre filter needs more pages)
 
 
+# Genres a title is often tagged with in 2nd/3rd place while still really being one (Schindler's List is
+# [Drama, History, War]; Knives Out [Comedy, Crime, Mystery]): their cards accept the card's genre in the first 3.
+NICHE_GENRES = {36, 10752, 10768, 10402, 9648, 37, 99, 10751, 10762}   # History War(+TV) Music Mystery Western Doc Family Kids
+GENERIC_FIRST = {18, 35}       # Drama and Comedy are listed first for most films: on other cards look past them once
+
+
+def genre_fits(genre_ids, card_ids):
+    """Issue #52 rule (chosen from TMDB's real genre order in the build's pools): a card of a niche genre keeps a title
+    that has the genre in its first 3 tags; any other genre card keeps it when the genre is the first tag, or the
+    second after a leading Drama or Comedy. """
+    g = genre_ids or []
+    if card_ids <= NICHE_GENRES:
+        return bool(set(g[:3]) & card_ids)
+    return bool(g) and (g[0] in card_ids or (g[0] in GENERIC_FIRST and len(g) > 1 and g[1] in card_ids))
+
+
 def main_genres(card, media):
-    """Issue #52: a genre card (folder genres-*) counts a title only when the card's genre is its MAIN one, i.e. the
-    first of TMDB's genre_ids. -> set of the card's genre ids for this medium (with_genres may list several, '|' or
-    ','; any of them is main), or None when the filter does not apply (not a genre card, or no with_genres: Anime)."""
+    """Issue #52: a genre card (folder genres-*) counts a title only when the card's genre is a main one (genre_fits).
+    -> set of the card's genre ids for this medium (with_genres may list several, '|' or ','), or None when the
+    filter does not apply (not a genre card, or no with_genres: Anime)."""
     if not any(f.startswith('genres-') for f in card.get('folders', [])):
         return None
     ids = re.split(r'[|,]', str(card.get(media, {}).get('with_genres', '')))
@@ -281,7 +296,7 @@ def discover(card, media, depth, dflt):
             _excluded.setdefault(f"sd-{card['slug']}", {})[f'keywords:{media}'] = n
     path = f"/discover/{'movie' if movie else 'tv'}"
     mains = main_genres(card, media)
-    ok = (lambda it: bool(it.get('genre_ids')) and it['genre_ids'][0] in mains) if mains else (lambda it: True)
+    ok = (lambda it: genre_fits(it.get('genre_ids'), mains)) if mains else (lambda it: True)
     last = MAIN_GENRE_PAGES if mains else 500
     out, seen, page, raw = [], set(), 1, {}
     while len(out) < depth:
@@ -316,12 +331,6 @@ def discover(card, media, depth, dflt):
                   reverse=way == 'desc')
         rest = [i for i in raw if raw[i].get(field) in (None, '')]
         out = [preview(raw[i], media) for i in have + rest if ok(raw[i])]
-    if any(f.startswith('genres-') for f in card.get('folders', [])):   # TEMP-INSTRUMENT
-        for it in raw.values():
-            _pool_log.append({'slug': card['slug'], 'media': media, 'id': it['id'], 'title': it.get('title') or it.get('name'),
-                              'year': (it.get('release_date') or it.get('first_air_date') or '')[:4],
-                              'genre_ids': it.get('genre_ids'), 'popularity': it.get('popularity'),
-                              'vote_count': it.get('vote_count')})
     return out[:depth]
 
 
@@ -797,16 +806,6 @@ def main():
                                              else 'release_date')
                                  for c in spec['catalogs'] if c.get('provider')}
     (root / 'summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
-    for tid in (424, 857, 546554, 244786, 424694, 862, 25237, 14836, 37793):   # TEMP-INSTRUMENT
-        try:
-            d = tmdb(f'/movie/{tid}')
-            _pool_log.append({'slug': 'MUSTKEEP', 'media': 'movie', 'id': tid, 'title': d.get('title'),
-                              'year': (d.get('release_date') or '')[:4],
-                              'genre_ids': [g['id'] for g in d.get('genres', [])], 'popularity': d.get('popularity'),
-                              'vote_count': d.get('vote_count')})
-        except Exception as e:
-            print('mustkeep fail', tid, e)
-    (root / 'genre_pools.json').write_text(json.dumps(_pool_log, separators=(',', ':')), encoding='utf-8')   # TEMP-INSTRUMENT
     if _excluded:
         (root / 'exclusions.json').write_text(json.dumps(_excluded, indent=1), encoding='utf-8')
     with open(root / 'report.csv', 'w', newline='', encoding='utf-8') as f:
