@@ -166,6 +166,35 @@ def details_preview(media, tid):
     return hit['p'] if hit and hit['d'] and hit['d'] <= TODAY else None
 
 
+def studio_distributed(card):
+    """Issue #66: TMDB ids of the films a studio card's company distributed (generator/studio_distributed.json, made by
+    studio_distributed.py from Wikidata P750/P4947; never fetched at build time). [] for any non-studio card."""
+    if 'studios' not in card.get('folders', []):
+        return []
+    try:
+        lists = json.loads((HERE / 'studio_distributed.json').read_text(encoding='utf-8'))
+    except OSError:
+        return []
+    return [int(e['tmdb']) for e in lists.get(card.get('slug'), [])]
+
+
+def add_studio_distributed(card, metas):
+    """A studio card also holds the films its studio distributed. Titles already in the discover list stay where they
+    are; the missing ones are fetched with details_preview (cached; None = not released / unknown, skipped) and
+    appended after it in the data file's order (most-linked on Wikidata first), because previews carry no popularity.
+    Not cut by depth: the file caps each studio."""
+    have = {m['id'] for m in metas}
+    extra = []
+    for tid in studio_distributed(card):
+        if f'tmdb:{tid}' in have:
+            continue
+        m = details_preview('movie', tid)
+        if m and m['id'] not in have:
+            have.add(m['id'])
+            extra.append(m)
+    return metas + extra
+
+
 SORTS = {
     'popular': ('popularity.desc', 'popularity.desc'),
     'new': ('primary_release_date.desc', 'first_air_date.desc'),
@@ -574,6 +603,9 @@ def arrival_card(card, depth, dflt):
 def build_one(card, dflt):
     """Returns (metas, notes)."""
     kind, notes = card['kind'], ''
+    if kind == 'discover' and 'studios' in card.get('folders', []):      # issue #66: + the films the studio distributed
+        return interleave([add_studio_distributed(card, discover(card, m, depth_of(card, dflt), dflt))
+                           for m in card['media']]), notes
     if kind == 'discover' and arrival_mode(card):
         metas, n = arrival_card(card, depth_of(card, dflt), dflt)
         return metas, (f"ordered by arrival date: {n['signals']} dated arrivals + {n['arrivals'] - n['signals']} "
