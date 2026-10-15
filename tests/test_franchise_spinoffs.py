@@ -55,8 +55,10 @@ class FranchiseSpinoffs(unittest.TestCase):
         self.assertEqual(cards['Star Wars']['media'], ['movie', 'series'])
 
     def test_franchise_merges_in_release_order_and_dedupes(self):
-        # stub: collection 1 = films A (1990) and C (2010); explicit ids = B (2000, spin-off), C again, and one unreleased
-        rows = {1: ('A', '1990-01-01'), 2: ('B', '2000-01-01'), 3: ('C', '2010-01-01'), 4: ('F', '2999-01-01')}
+        # stub: collection 1 = films A (1990), C (2010), D (2016-05-18); explicit ids = B (2000), C again, unreleased F, and E (2016-02-09,
+        # same year as D: the full date decides, not the year)
+        rows = {1: ('A', '1990-01-01'), 2: ('B', '2000-01-01'), 3: ('C', '2010-01-01'), 4: ('F', '2999-01-01'),
+                5: ('D', '2016-05-18'), 6: ('E', '2016-02-09')}   # D collection, E added id, same year
 
         def row(i):
             t, d = rows[i]
@@ -64,20 +66,20 @@ class FranchiseSpinoffs(unittest.TestCase):
 
         def stub(path, *a, **k):
             if path == '/collection/1':
-                return {'name': 'X', 'parts': [row(3), row(1)]}
+                return {'name': 'X', 'parts': [row(3), row(1), row(5)]}
             return row(int(path.rsplit('/', 1)[1]))
 
         real, build.tmdb = build.tmdb, stub
         old_stable = dict(build._stable)
         build._stable.clear()
         try:
-            card = {'collection_ids': [1], 'ids': [['movie', 2], ['movie', 3], ['movie', 4]]}
+            card = {'collection_ids': [1], 'ids': [['movie', 2], ['movie', 3], ['movie', 4], ['movie', 6]]}
             movies, series = build.franchise(card)
         finally:
             build.tmdb = real
             build._stable.clear()
             build._stable.update(old_stable)
-        self.assertEqual([m['name'] for m in movies], ['A', 'B', 'C'])     # release order, C once, unreleased F dropped
+        self.assertEqual([m['name'] for m in movies], ['A', 'B', 'C', 'E', 'D'])   # release order, C once, F dropped, Feb 2016 E before May 2016 D
         self.assertEqual(series, [])
 
 
