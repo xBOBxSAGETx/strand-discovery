@@ -1,0 +1,1844 @@
+{
+ "theme-superheroes": [
+  {
+   "type": "movie",
+   "tmdb": 1924,
+   "title": "Superman",
+   "year": 1978,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q213053"
+  },
+  {
+   "type": "movie",
+   "tmdb": 268,
+   "title": "Batman",
+   "year": 1989,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q116852"
+  },
+  {
+   "type": "movie",
+   "tmdb": 155,
+   "title": "The Dark Knight",
+   "year": 2008,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q163872"
+  },
+  {
+   "type": "movie",
+   "tmdb": 557,
+   "title": "Spider-Man",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q484442"
+  },
+  {
+   "type": "movie",
+   "tmdb": 324857,
+   "title": "Spider-Man: Into the Spider-Verse",
+   "year": 2018,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q29588607"
+  },
+  {
+   "type": "movie",
+   "tmdb": 24428,
+   "title": "The Avengers",
+   "year": 2012,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q182218"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1726,
+   "title": "Iron Man",
+   "year": 2008,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q192724"
+  },
+  {
+   "type": "movie",
+   "tmdb": 284054,
+   "title": "Black Panther",
+   "year": 2018,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q23780734"
+  },
+  {
+   "type": "movie",
+   "tmdb": 118340,
+   "title": "Guardians of the Galaxy",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q5887360"
+  },
+  {
+   "type": "movie",
+   "tmdb": 297762,
+   "title": "Wonder Woman",
+   "year": 2017,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q20502242"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9806,
+   "title": "The Incredibles",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q213326"
+  },
+  {
+   "type": "movie",
+   "tmdb": 36657,
+   "title": "X-Men",
+   "year": 2000,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q106182"
+  },
+  {
+   "type": "movie",
+   "tmdb": 263115,
+   "title": "Logan",
+   "year": 2017,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q24053263"
+  },
+  {
+   "type": "movie",
+   "tmdb": 293660,
+   "title": "Deadpool",
+   "year": 2016,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q19347291"
+  },
+  {
+   "type": "movie",
+   "tmdb": 13183,
+   "title": "Watchmen",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q162182"
+  },
+  {
+   "type": "series",
+   "tmdb": 76479,
+   "title": "The Boys",
+   "year": 2019,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q48796994"
+  },
+  {
+   "type": "series",
+   "tmdb": 61889,
+   "title": "Daredevil",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q16977365"
+  },
+  {
+   "type": "series",
+   "tmdb": 85271,
+   "title": "WandaVision",
+   "year": 2021,
+   "source": "https://en.wikipedia.org/wiki/List_of_superhero_films",
+   "wikidata": "Q65980217"
+  }
+ ],
+ "theme-zombies": [
+  {
+   "type": "movie",
+   "tmdb": 10331,
+   "title": "Night of the Living Dead",
+   "year": 1968,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q623051"
+  },
+  {
+   "type": "movie",
+   "tmdb": 923,
+   "title": "Dawn of the Dead",
+   "year": 1978,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q219155"
+  },
+  {
+   "type": "movie",
+   "tmdb": 924,
+   "title": "Dawn of the Dead",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q749011"
+  },
+  {
+   "type": "movie",
+   "tmdb": 747,
+   "title": "Shaun of the Dead",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q858724"
+  },
+  {
+   "type": "movie",
+   "tmdb": 19908,
+   "title": "Zombieland",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q219810"
+  },
+  {
+   "type": "movie",
+   "tmdb": 170,
+   "title": "28 Days Later",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q221075"
+  },
+  {
+   "type": "movie",
+   "tmdb": 72190,
+   "title": "World War Z",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q28196"
+  },
+  {
+   "type": "movie",
+   "tmdb": 396535,
+   "title": "Train to Busan",
+   "year": 2016,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q20948236"
+  },
+  {
+   "type": "movie",
+   "tmdb": 8408,
+   "title": "Day of the Dead",
+   "year": 1985,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q219170"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10925,
+   "title": "The Return of the Living Dead",
+   "year": 1985,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q1475119"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1576,
+   "title": "Resident Evil",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q153484"
+  },
+  {
+   "type": "movie",
+   "tmdb": 6479,
+   "title": "I Am Legend",
+   "year": 2007,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q212689"
+  },
+  {
+   "type": "movie",
+   "tmdb": 82654,
+   "title": "Warm Bodies",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q27343"
+  },
+  {
+   "type": "series",
+   "tmdb": 1402,
+   "title": "The Walking Dead",
+   "year": 2010,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q232737"
+  },
+  {
+   "type": "series",
+   "tmdb": 70593,
+   "title": "Kingdom",
+   "year": 2019,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q30947892"
+  },
+  {
+   "type": "series",
+   "tmdb": 100088,
+   "title": "The Last of Us",
+   "year": 2023,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q87131973"
+  },
+  {
+   "type": "series",
+   "tmdb": 60866,
+   "title": "iZombie",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/List_of_zombie_films",
+   "wikidata": "Q16911674"
+  }
+ ],
+ "theme-space-epics": [
+  {
+   "type": "movie",
+   "tmdb": 11,
+   "title": "Star Wars",
+   "year": 1977,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q17738"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1891,
+   "title": "The Empire Strikes Back",
+   "year": 1980,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q181795"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1892,
+   "title": "Return of the Jedi",
+   "year": 1983,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q181803"
+  },
+  {
+   "type": "movie",
+   "tmdb": 62,
+   "title": "2001: A Space Odyssey",
+   "year": 1968,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q103474"
+  },
+  {
+   "type": "movie",
+   "tmdb": 157336,
+   "title": "Interstellar",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q13417189"
+  },
+  {
+   "type": "movie",
+   "tmdb": 49047,
+   "title": "Gravity",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q2579784"
+  },
+  {
+   "type": "movie",
+   "tmdb": 118340,
+   "title": "Guardians of the Galaxy",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q5887360"
+  },
+  {
+   "type": "movie",
+   "tmdb": 19995,
+   "title": "Avatar",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q24871"
+  },
+  {
+   "type": "movie",
+   "tmdb": 438631,
+   "title": "Dune",
+   "year": 2021,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q60834962"
+  },
+  {
+   "type": "movie",
+   "tmdb": 693134,
+   "title": "Dune: Part Two",
+   "year": 2024,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q109228991"
+  },
+  {
+   "type": "movie",
+   "tmdb": 13475,
+   "title": "Star Trek",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q213081"
+  },
+  {
+   "type": "movie",
+   "tmdb": 286217,
+   "title": "The Martian",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q18547944"
+  },
+  {
+   "type": "movie",
+   "tmdb": 16320,
+   "title": "Serenity",
+   "year": 2005,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q691611"
+  },
+  {
+   "type": "series",
+   "tmdb": 1972,
+   "title": "Battlestar Galactica",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q237072"
+  },
+  {
+   "type": "series",
+   "tmdb": 63639,
+   "title": "The Expanse",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q18389644"
+  },
+  {
+   "type": "series",
+   "tmdb": 655,
+   "title": "Star Trek: The Next Generation",
+   "year": 1987,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q16290"
+  },
+  {
+   "type": "series",
+   "tmdb": 1437,
+   "title": "Firefly",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q11622"
+  },
+  {
+   "type": "series",
+   "tmdb": 83867,
+   "title": "Andor",
+   "year": 2022,
+   "source": "https://en.wikipedia.org/wiki/Space_opera",
+   "wikidata": "Q60462338"
+  }
+ ],
+ "theme-spies": [
+  {
+   "type": "movie",
+   "tmdb": 646,
+   "title": "Dr. No",
+   "year": 1962,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q102754"
+  },
+  {
+   "type": "movie",
+   "tmdb": 657,
+   "title": "From Russia with Love",
+   "year": 1963,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q106571"
+  },
+  {
+   "type": "movie",
+   "tmdb": 658,
+   "title": "Goldfinger",
+   "year": 1964,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q106440"
+  },
+  {
+   "type": "movie",
+   "tmdb": 36557,
+   "title": "Casino Royale",
+   "year": 2006,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q151904"
+  },
+  {
+   "type": "movie",
+   "tmdb": 37724,
+   "title": "Skyfall",
+   "year": 2012,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q4941"
+  },
+  {
+   "type": "movie",
+   "tmdb": 2501,
+   "title": "The Bourne Identity",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q105624"
+  },
+  {
+   "type": "movie",
+   "tmdb": 2503,
+   "title": "The Bourne Ultimatum",
+   "year": 2007,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q107226"
+  },
+  {
+   "type": "movie",
+   "tmdb": 954,
+   "title": "Mission: Impossible",
+   "year": 1996,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q1741232"
+  },
+  {
+   "type": "movie",
+   "tmdb": 213,
+   "title": "North by Northwest",
+   "year": 1959,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q223139"
+  },
+  {
+   "type": "movie",
+   "tmdb": 49517,
+   "title": "Tinker Tailor Soldier Spy",
+   "year": 2011,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q681962"
+  },
+  {
+   "type": "movie",
+   "tmdb": 13580,
+   "title": "The Spy Who Came in from the Cold",
+   "year": 1965,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q1197022"
+  },
+  {
+   "type": "movie",
+   "tmdb": 238713,
+   "title": "Spy",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q16389838"
+  },
+  {
+   "type": "movie",
+   "tmdb": 207703,
+   "title": "Kingsman: The Secret Service",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q15068238"
+  },
+  {
+   "type": "movie",
+   "tmdb": 68734,
+   "title": "Argo",
+   "year": 2012,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q59653"
+  },
+  {
+   "type": "series",
+   "tmdb": 46533,
+   "title": "The Americans",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q498438"
+  },
+  {
+   "type": "series",
+   "tmdb": 2046,
+   "title": "Alias",
+   "year": 2001,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q212807"
+  },
+  {
+   "type": "series",
+   "tmdb": 1407,
+   "title": "Homeland",
+   "year": 2011,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q23594"
+  },
+  {
+   "type": "series",
+   "tmdb": 72750,
+   "title": "Killing Eve",
+   "year": 2018,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q39049904"
+  },
+  {
+   "type": "series",
+   "tmdb": 95480,
+   "title": "Slow Horses",
+   "year": 2022,
+   "source": "https://en.wikipedia.org/wiki/List_of_spy_films",
+   "wikidata": "Q104880809"
+  }
+ ],
+ "theme-aliens": [
+  {
+   "type": "movie",
+   "tmdb": 348,
+   "title": "Alien",
+   "year": 1979,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q103569"
+  },
+  {
+   "type": "movie",
+   "tmdb": 679,
+   "title": "Aliens",
+   "year": 1986,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q104814"
+  },
+  {
+   "type": "movie",
+   "tmdb": 601,
+   "title": "E.T. the Extra-Terrestrial",
+   "year": 1982,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q11621"
+  },
+  {
+   "type": "movie",
+   "tmdb": 840,
+   "title": "Close Encounters of the Third Kind",
+   "year": 1977,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q320588"
+  },
+  {
+   "type": "movie",
+   "tmdb": 828,
+   "title": "The Day the Earth Stood Still",
+   "year": 1951,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q425992"
+  },
+  {
+   "type": "movie",
+   "tmdb": 563,
+   "title": "Starship Troopers",
+   "year": 1997,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q478626"
+  },
+  {
+   "type": "movie",
+   "tmdb": 106,
+   "title": "Predator",
+   "year": 1987,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q200804"
+  },
+  {
+   "type": "movie",
+   "tmdb": 329865,
+   "title": "Arrival",
+   "year": 2016,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q20382729"
+  },
+  {
+   "type": "movie",
+   "tmdb": 602,
+   "title": "Independence Day",
+   "year": 1996,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q105387"
+  },
+  {
+   "type": "movie",
+   "tmdb": 17654,
+   "title": "District 9",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q201819"
+  },
+  {
+   "type": "movie",
+   "tmdb": 607,
+   "title": "Men in Black",
+   "year": 1997,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q51416"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11549,
+   "title": "Invasion of the Body Snatchers",
+   "year": 1956,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q45386"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1091,
+   "title": "The Thing",
+   "year": 1982,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q210756"
+  },
+  {
+   "type": "movie",
+   "tmdb": 74,
+   "title": "War of the Worlds",
+   "year": 2005,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q202028"
+  },
+  {
+   "type": "movie",
+   "tmdb": 2675,
+   "title": "Signs",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q22432"
+  },
+  {
+   "type": "series",
+   "tmdb": 4087,
+   "title": "The X-Files",
+   "year": 1993,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q2744"
+  },
+  {
+   "type": "series",
+   "tmdb": 155,
+   "title": "3rd Rock from the Sun",
+   "year": 1996,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_extraterrestrials",
+   "wikidata": "Q870490"
+  }
+ ],
+ "theme-robots-and-ai": [
+  {
+   "type": "movie",
+   "tmdb": 19,
+   "title": "Metropolis",
+   "year": 1927,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q151599"
+  },
+  {
+   "type": "movie",
+   "tmdb": 78,
+   "title": "Blade Runner",
+   "year": 1982,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q184843"
+  },
+  {
+   "type": "movie",
+   "tmdb": 218,
+   "title": "The Terminator",
+   "year": 1984,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q162255"
+  },
+  {
+   "type": "movie",
+   "tmdb": 280,
+   "title": "Terminator 2: Judgment Day",
+   "year": 1991,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q170564"
+  },
+  {
+   "type": "movie",
+   "tmdb": 5548,
+   "title": "RoboCop",
+   "year": 1987,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q372514"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10681,
+   "title": "WALL-E",
+   "year": 2008,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q104905"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10386,
+   "title": "The Iron Giant",
+   "year": 1999,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q867283"
+  },
+  {
+   "type": "movie",
+   "tmdb": 264660,
+   "title": "Ex Machina",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q16635326"
+  },
+  {
+   "type": "movie",
+   "tmdb": 644,
+   "title": "A.I. Artificial Intelligence",
+   "year": 2001,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q221113"
+  },
+  {
+   "type": "movie",
+   "tmdb": 2048,
+   "title": "I, Robot",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q200572"
+  },
+  {
+   "type": "movie",
+   "tmdb": 152601,
+   "title": "Her",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q788822"
+  },
+  {
+   "type": "movie",
+   "tmdb": 2605,
+   "title": "Short Circuit",
+   "year": 1986,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q540125"
+  },
+  {
+   "type": "movie",
+   "tmdb": 177572,
+   "title": "Big Hero 6",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q13091172"
+  },
+  {
+   "type": "movie",
+   "tmdb": 2277,
+   "title": "Bicentennial Man",
+   "year": 1999,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q170250"
+  },
+  {
+   "type": "series",
+   "tmdb": 63247,
+   "title": "Westworld",
+   "year": 2016,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q17572811"
+  },
+  {
+   "type": "series",
+   "tmdb": 655,
+   "title": "Star Trek: The Next Generation",
+   "year": 1987,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q16290"
+  },
+  {
+   "type": "series",
+   "tmdb": 62822,
+   "title": "Humans",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/List_of_artificial_intelligence_films",
+   "wikidata": "Q19572149"
+  }
+ ],
+ "theme-dystopian": [
+  {
+   "type": "movie",
+   "tmdb": 78,
+   "title": "Blade Runner",
+   "year": 1982,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q184843"
+  },
+  {
+   "type": "movie",
+   "tmdb": 68,
+   "title": "Brazil",
+   "year": 1985,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q25057"
+  },
+  {
+   "type": "movie",
+   "tmdb": 185,
+   "title": "A Clockwork Orange",
+   "year": 1971,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q181086"
+  },
+  {
+   "type": "movie",
+   "tmdb": 76341,
+   "title": "Mad Max: Fury Road",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q1757288"
+  },
+  {
+   "type": "movie",
+   "tmdb": 70160,
+   "title": "The Hunger Games",
+   "year": 2012,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q212965"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9693,
+   "title": "Children of Men",
+   "year": 2006,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q221090"
+  },
+  {
+   "type": "movie",
+   "tmdb": 752,
+   "title": "V for Vendetta",
+   "year": 2005,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q5890"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10803,
+   "title": "Logan's Run",
+   "year": 1976,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q503018"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1714,
+   "title": "Fahrenheit 451",
+   "year": 1966,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q261546"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9314,
+   "title": "Nineteen Eighty-Four",
+   "year": 1984,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q208424"
+  },
+  {
+   "type": "movie",
+   "tmdb": 180,
+   "title": "Minority Report",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q244604"
+  },
+  {
+   "type": "movie",
+   "tmdb": 7299,
+   "title": "Equilibrium",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q507461"
+  },
+  {
+   "type": "movie",
+   "tmdb": 110415,
+   "title": "Snowpiercer",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q492908"
+  },
+  {
+   "type": "movie",
+   "tmdb": 871,
+   "title": "Planet of the Apes",
+   "year": 1968,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q59534"
+  },
+  {
+   "type": "series",
+   "tmdb": 69478,
+   "title": "The Handmaid's Tale",
+   "year": 2017,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q25207350"
+  },
+  {
+   "type": "series",
+   "tmdb": 42009,
+   "title": "Black Mirror",
+   "year": 2011,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q558112"
+  },
+  {
+   "type": "series",
+   "tmdb": 93405,
+   "title": "Squid Game",
+   "year": 2021,
+   "source": "https://en.wikipedia.org/wiki/List_of_dystopian_films",
+   "wikidata": "Q106582931"
+  }
+ ],
+ "theme-disaster": [
+  {
+   "type": "movie",
+   "tmdb": 597,
+   "title": "Titanic",
+   "year": 1997,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q44578"
+  },
+  {
+   "type": "movie",
+   "tmdb": 664,
+   "title": "Twister",
+   "year": 1996,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q683663"
+  },
+  {
+   "type": "movie",
+   "tmdb": 8656,
+   "title": "Deep Impact",
+   "year": 1998,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q49498"
+  },
+  {
+   "type": "movie",
+   "tmdb": 95,
+   "title": "Armageddon",
+   "year": 1998,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q208344"
+  },
+  {
+   "type": "movie",
+   "tmdb": 435,
+   "title": "The Day After Tomorrow",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q14320"
+  },
+  {
+   "type": "movie",
+   "tmdb": 5919,
+   "title": "The Towering Inferno",
+   "year": 1974,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q372959"
+  },
+  {
+   "type": "movie",
+   "tmdb": 551,
+   "title": "The Poseidon Adventure",
+   "year": 1972,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q874496"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11123,
+   "title": "Earthquake",
+   "year": 1974,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q500280"
+  },
+  {
+   "type": "movie",
+   "tmdb": 39538,
+   "title": "Contagion",
+   "year": 2011,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q730888"
+  },
+  {
+   "type": "movie",
+   "tmdb": 6950,
+   "title": "Outbreak",
+   "year": 1995,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q495513"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9619,
+   "title": "Dante's Peak",
+   "year": 1997,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q914247"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10357,
+   "title": "Volcano",
+   "year": 1997,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q1059532"
+  },
+  {
+   "type": "movie",
+   "tmdb": 14161,
+   "title": "2012",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q184605"
+  },
+  {
+   "type": "movie",
+   "tmdb": 254128,
+   "title": "San Andreas",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q15973073"
+  },
+  {
+   "type": "movie",
+   "tmdb": 80278,
+   "title": "The Impossible",
+   "year": 2012,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q277038"
+  },
+  {
+   "type": "movie",
+   "tmdb": 2133,
+   "title": "The Perfect Storm",
+   "year": 2000,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q508349"
+  },
+  {
+   "type": "series",
+   "tmdb": 87108,
+   "title": "Chernobyl",
+   "year": 2019,
+   "source": "https://en.wikipedia.org/wiki/List_of_disaster_films",
+   "wikidata": "Q48741246"
+  }
+ ],
+ "theme-creature-features": [
+  {
+   "type": "movie",
+   "tmdb": 1091,
+   "title": "The Thing",
+   "year": 1982,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q210756"
+  },
+  {
+   "type": "movie",
+   "tmdb": 329,
+   "title": "Jurassic Park",
+   "year": 1993,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q167726"
+  },
+  {
+   "type": "movie",
+   "tmdb": 578,
+   "title": "Jaws",
+   "year": 1975,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q189505"
+  },
+  {
+   "type": "movie",
+   "tmdb": 348,
+   "title": "Alien",
+   "year": 1979,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q103569"
+  },
+  {
+   "type": "movie",
+   "tmdb": 244,
+   "title": "King Kong",
+   "year": 1933,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q309048"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1678,
+   "title": "Godzilla",
+   "year": 1954,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q860461"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9362,
+   "title": "Tremors",
+   "year": 1990,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q835650"
+  },
+  {
+   "type": "movie",
+   "tmdb": 927,
+   "title": "Gremlins",
+   "year": 1984,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q241958"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9360,
+   "title": "Anaconda",
+   "year": 1997,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q464042"
+  },
+  {
+   "type": "movie",
+   "tmdb": 24831,
+   "title": "Piranha",
+   "year": 1978,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q1140216"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1255,
+   "title": "The Host",
+   "year": 2006,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q488222"
+  },
+  {
+   "type": "movie",
+   "tmdb": 7191,
+   "title": "Cloverfield",
+   "year": 2008,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q123742"
+  },
+  {
+   "type": "movie",
+   "tmdb": 106,
+   "title": "Predator",
+   "year": 1987,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q200804"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10973,
+   "title": "Creature from the Black Lagoon",
+   "year": 1954,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q124612"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9426,
+   "title": "The Fly",
+   "year": 1986,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q468700"
+  },
+  {
+   "type": "movie",
+   "tmdb": 447332,
+   "title": "A Quiet Place",
+   "year": 2018,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q39070473"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11071,
+   "title": "Them!",
+   "year": 1954,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q578809"
+  },
+  {
+   "type": "movie",
+   "tmdb": 135397,
+   "title": "Jurassic World",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/List_of_monster_movies",
+   "wikidata": "Q3512046"
+  }
+ ],
+ "theme-psychological": [
+  {
+   "type": "movie",
+   "tmdb": 1018,
+   "title": "Mulholland Drive",
+   "year": 2001,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q272608"
+  },
+  {
+   "type": "movie",
+   "tmdb": 345,
+   "title": "Eyes Wide Shut",
+   "year": 1999,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q209481"
+  },
+  {
+   "type": "movie",
+   "tmdb": 641,
+   "title": "Requiem for a Dream",
+   "year": 2000,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q487181"
+  },
+  {
+   "type": "movie",
+   "tmdb": 550,
+   "title": "Fight Club",
+   "year": 1999,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q190050"
+  },
+  {
+   "type": "movie",
+   "tmdb": 44214,
+   "title": "Black Swan",
+   "year": 2010,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q180214"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11324,
+   "title": "Shutter Island",
+   "year": 2010,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q210364"
+  },
+  {
+   "type": "movie",
+   "tmdb": 539,
+   "title": "Psycho",
+   "year": 1960,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q163038"
+  },
+  {
+   "type": "movie",
+   "tmdb": 274,
+   "title": "The Silence of the Lambs",
+   "year": 1991,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q133654"
+  },
+  {
+   "type": "movie",
+   "tmdb": 103,
+   "title": "Taxi Driver",
+   "year": 1976,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q47221"
+  },
+  {
+   "type": "movie",
+   "tmdb": 4553,
+   "title": "The Machinist",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q845252"
+  },
+  {
+   "type": "movie",
+   "tmdb": 77,
+   "title": "Memento",
+   "year": 2000,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q190525"
+  },
+  {
+   "type": "movie",
+   "tmdb": 426,
+   "title": "Vertigo",
+   "year": 1958,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q202548"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10494,
+   "title": "Perfect Blue",
+   "year": 1997,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q1205051"
+  },
+  {
+   "type": "movie",
+   "tmdb": 141,
+   "title": "Donnie Darko",
+   "year": 2001,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q426828"
+  },
+  {
+   "type": "series",
+   "tmdb": 42009,
+   "title": "Black Mirror",
+   "year": 2011,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q558112"
+  },
+  {
+   "type": "series",
+   "tmdb": 62560,
+   "title": "Mr. Robot",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/Psychological_thriller",
+   "wikidata": "Q18844729"
+  }
+ ],
+ "theme-myths-and-legends": [
+  {
+   "type": "movie",
+   "tmdb": 11533,
+   "title": "Jason and the Argonauts",
+   "year": 1963,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q785555"
+  },
+  {
+   "type": "movie",
+   "tmdb": 2310,
+   "title": "Beowulf",
+   "year": 2007,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q644933"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11970,
+   "title": "Hercules",
+   "year": 1997,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q271189"
+  },
+  {
+   "type": "movie",
+   "tmdb": 564,
+   "title": "The Mummy",
+   "year": 1999,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q202508"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10195,
+   "title": "Thor",
+   "year": 2011,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q217020"
+  },
+  {
+   "type": "movie",
+   "tmdb": 86834,
+   "title": "Noah",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q286868"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10323,
+   "title": "Clash of the Titans",
+   "year": 1981,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q1049545"
+  },
+  {
+   "type": "movie",
+   "tmdb": 652,
+   "title": "Troy",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q186587"
+  },
+  {
+   "type": "movie",
+   "tmdb": 277834,
+   "title": "Moana",
+   "year": 2016,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q18647981"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11527,
+   "title": "Excalibur",
+   "year": 1981,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q206461"
+  },
+  {
+   "type": "movie",
+   "tmdb": 762,
+   "title": "Monty Python and the Holy Grail",
+   "year": 1975,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q25043"
+  },
+  {
+   "type": "movie",
+   "tmdb": 37958,
+   "title": "Immortals",
+   "year": 2011,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q1050528"
+  },
+  {
+   "type": "movie",
+   "tmdb": 32657,
+   "title": "Percy Jackson & the Olympians: The Lightning Thief",
+   "year": 2010,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q244333"
+  },
+  {
+   "type": "series",
+   "tmdb": 103540,
+   "title": "Percy Jackson and the Olympians",
+   "year": 2023,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q96749211"
+  },
+  {
+   "type": "series",
+   "tmdb": 4615,
+   "title": "Hercules: The Legendary Journeys",
+   "year": 1995,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q828520"
+  },
+  {
+   "type": "series",
+   "tmdb": 7225,
+   "title": "Merlin",
+   "year": 2008,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q1176076"
+  },
+  {
+   "type": "series",
+   "tmdb": 44217,
+   "title": "Vikings",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_based_on_mythology",
+   "wikidata": "Q2579463"
+  }
+ ],
+ "theme-heist": [
+  {
+   "type": "movie",
+   "tmdb": 949,
+   "title": "Heat",
+   "year": 1995,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q42198"
+  },
+  {
+   "type": "movie",
+   "tmdb": 161,
+   "title": "Ocean's Eleven",
+   "year": 2001,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q205447"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10536,
+   "title": "The Italian Job",
+   "year": 1969,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q1051032"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9654,
+   "title": "The Italian Job",
+   "year": 2003,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q648312"
+  },
+  {
+   "type": "movie",
+   "tmdb": 388,
+   "title": "Inside Man",
+   "year": 2006,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q81224"
+  },
+  {
+   "type": "movie",
+   "tmdb": 500,
+   "title": "Reservoir Dogs",
+   "year": 1992,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q72962"
+  },
+  {
+   "type": "movie",
+   "tmdb": 968,
+   "title": "Dog Day Afternoon",
+   "year": 1975,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q458656"
+  },
+  {
+   "type": "movie",
+   "tmdb": 23168,
+   "title": "The Town",
+   "year": 2010,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q725539"
+  },
+  {
+   "type": "movie",
+   "tmdb": 339403,
+   "title": "Baby Driver",
+   "year": 2017,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q23016644"
+  },
+  {
+   "type": "movie",
+   "tmdb": 27205,
+   "title": "Inception",
+   "year": 2010,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q25188"
+  },
+  {
+   "type": "movie",
+   "tmdb": 934,
+   "title": "Rififi",
+   "year": 1955,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q1856418"
+  },
+  {
+   "type": "movie",
+   "tmdb": 247,
+   "title": "The Killing",
+   "year": 1956,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q592072"
+  },
+  {
+   "type": "movie",
+   "tmdb": 75656,
+   "title": "Now You See Me",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q499851"
+  },
+  {
+   "type": "movie",
+   "tmdb": 399170,
+   "title": "Logan Lucky",
+   "year": 2017,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q24576050"
+  },
+  {
+   "type": "movie",
+   "tmdb": 402900,
+   "title": "Ocean's 8",
+   "year": 2018,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q25627545"
+  },
+  {
+   "type": "series",
+   "tmdb": 71446,
+   "title": "Money Heist",
+   "year": 2017,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q29647346"
+  },
+  {
+   "type": "series",
+   "tmdb": 96677,
+   "title": "Lupin",
+   "year": 2021,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q104082429"
+  },
+  {
+   "type": "series",
+   "tmdb": 7482,
+   "title": "Leverage",
+   "year": 2008,
+   "source": "https://en.wikipedia.org/wiki/List_of_heist_films",
+   "wikidata": "Q868835"
+  }
+ ],
+ "theme-time-travel": [
+  {
+   "type": "movie",
+   "tmdb": 105,
+   "title": "Back to the Future",
+   "year": 1985,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q91540"
+  },
+  {
+   "type": "movie",
+   "tmdb": 165,
+   "title": "Back to the Future Part II",
+   "year": 1989,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q109331"
+  },
+  {
+   "type": "movie",
+   "tmdb": 137,
+   "title": "Groundhog Day",
+   "year": 1993,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q488655"
+  },
+  {
+   "type": "movie",
+   "tmdb": 63,
+   "title": "12 Monkeys",
+   "year": 1995,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q175038"
+  },
+  {
+   "type": "movie",
+   "tmdb": 218,
+   "title": "The Terminator",
+   "year": 1984,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q162255"
+  },
+  {
+   "type": "movie",
+   "tmdb": 59967,
+   "title": "Looper",
+   "year": 2012,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q53719"
+  },
+  {
+   "type": "movie",
+   "tmdb": 14337,
+   "title": "Primer",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q1434995"
+  },
+  {
+   "type": "movie",
+   "tmdb": 137113,
+   "title": "Edge of Tomorrow",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q1187607"
+  },
+  {
+   "type": "movie",
+   "tmdb": 206487,
+   "title": "Predestination",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q17014394"
+  },
+  {
+   "type": "movie",
+   "tmdb": 122906,
+   "title": "About Time",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q4668586"
+  },
+  {
+   "type": "movie",
+   "tmdb": 2134,
+   "title": "The Time Machine",
+   "year": 1960,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q1217787"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1648,
+   "title": "Bill & Ted's Excellent Adventure",
+   "year": 1989,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q795042"
+  },
+  {
+   "type": "movie",
+   "tmdb": 14139,
+   "title": "Timecrimes",
+   "year": 2007,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q510864"
+  },
+  {
+   "type": "movie",
+   "tmdb": 45612,
+   "title": "Source Code",
+   "year": 2011,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q266209"
+  },
+  {
+   "type": "series",
+   "tmdb": 121,
+   "title": "Doctor Who",
+   "year": 1963,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q34316"
+  },
+  {
+   "type": "series",
+   "tmdb": 70523,
+   "title": "Dark",
+   "year": 2017,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q28443710"
+  },
+  {
+   "type": "series",
+   "tmdb": 56570,
+   "title": "Outlander",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q15072906"
+  },
+  {
+   "type": "series",
+   "tmdb": 4018,
+   "title": "Quantum Leap",
+   "year": 1989,
+   "source": "https://en.wikipedia.org/wiki/List_of_films_about_time_travel",
+   "wikidata": "Q230506"
+  }
+ ]
+}

@@ -272,6 +272,32 @@ def discover(card, media, depth, dflt):
     return out[:depth]
 
 
+def must_haves(card, media):
+    """Hand-picked must-have titles of a theme card (generator/theme_must_haves.json, issue #64): [tmdb id, ...]."""
+    path = HERE / 'theme_must_haves.json'
+    try:
+        lists = json.loads(path.read_text(encoding='utf-8'))
+    except OSError:
+        return []
+    return [int(e['tmdb']) for e in lists.get(card.get('slug'), []) if e['type'] == media]
+
+
+def add_must_haves(card, media, metas):
+    """Issue #64: a theme card always holds its hand-picked titles. Each is taken from the discover list when it is
+    already there, else fetched with details_preview (one cached request each; None = not released / unknown, skipped).
+    Previews carry no popularity, so the must-haves go FIRST, in list order, then the discover order. Never cut by depth."""
+    ids = must_haves(card, media)
+    if not ids:
+        return metas
+    have = {m['id']: m for m in metas}
+    first = []
+    for tid in ids:
+        m = have.get(f'tmdb:{tid}') or details_preview(media, tid)
+        if m and m not in first:
+            first.append(m)
+    return first + [m for m in metas if m not in first]
+
+
 def franchise(card):
     """Collections (+ explicit TMDB ids for titles TMDB doesn't group), each medium in release order."""
     movies = []
@@ -581,7 +607,8 @@ def build_one(card, dflt):
     if kind == 'discover' and first_seen_mode(card):
         return first_seen_card(card, depth_of(card, dflt)), 'ordered by date first seen on the service'
     if kind == 'discover':
-        return interleave([discover(card, m, depth_of(card, dflt), dflt) for m in card['media']]), notes
+        return interleave([add_must_haves(card, m, discover(card, m, depth_of(card, dflt), dflt))
+                           for m in card['media']]), notes
     if kind == 'franchise':
         return interleave(franchise(card)), notes
     if kind == 'director':
