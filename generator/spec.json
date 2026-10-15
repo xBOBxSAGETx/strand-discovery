@@ -4078,7 +4078,20 @@
    "collection_ids": [
     8091
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     70981
+    ],
+    [
+     "movie",
+     126889
+    ],
+    [
+     "movie",
+     945961
+    ]
+   ]
   },
   {
    "slug": "series-avatar",
@@ -4321,7 +4334,12 @@
    "collection_ids": [
     2980
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     43074
+    ]
+   ]
   },
   {
    "slug": "series-the-godfather",
@@ -4355,7 +4373,16 @@
    "collection_ids": [
     91361
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     2082
+    ],
+    [
+     "movie",
+     24150
+    ]
+   ]
   },
   {
    "slug": "series-the-hangover",
@@ -4597,7 +4624,12 @@
     119,
     121938
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     839033
+    ]
+   ]
   },
   {
    "slug": "series-mad-max",
@@ -4631,7 +4663,12 @@
    "collection_ids": [
     14740
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     270946
+    ]
+   ]
   },
   {
    "slug": "series-marvel-cinematic-universe",
@@ -4704,7 +4741,12 @@
    "collection_ids": [
     86055
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     479455
+    ]
+   ]
   },
   {
    "slug": "series-mission-impossible",
@@ -4760,7 +4802,12 @@
    "collection_ids": [
     304
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     402900
+    ]
+   ]
   },
   {
    "slug": "series-pirates-of-the-caribbean",
@@ -4795,7 +4842,12 @@
     1709,
     173710
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     869
+    ]
+   ]
   },
   {
    "slug": "series-predator",
@@ -4812,7 +4864,12 @@
    "collection_ids": [
     399
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     1376434
+    ]
+   ]
   },
   {
    "slug": "series-rocky",
@@ -4914,7 +4971,16 @@
    "collection_ids": [
     2150
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     417859
+    ],
+    [
+     "movie",
+     315162
+    ]
+   ]
   },
   {
    "slug": "series-spider-man",
@@ -5035,7 +5101,12 @@
    "collection_ids": [
     10194
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     718789
+    ]
+   ]
   },
   {
    "slug": "series-transformers",
@@ -5052,7 +5123,20 @@
    "collection_ids": [
     8650
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     424783
+    ],
+    [
+     "movie",
+     667538
+    ],
+    [
+     "movie",
+     698687
+    ]
+   ]
   },
   {
    "slug": "series-twilight",
@@ -5086,7 +5170,36 @@
    "collection_ids": [
     748
    ],
-   "ids": []
+   "ids": [
+    [
+     "movie",
+     76170
+    ],
+    [
+     "movie",
+     2080
+    ],
+    [
+     "movie",
+     263115
+    ],
+    [
+     "movie",
+     293660
+    ],
+    [
+     "movie",
+     383498
+    ],
+    [
+     "movie",
+     533535
+    ],
+    [
+     "movie",
+     340102
+    ]
+   ]
   },
   {
    "slug": "theme-superheroes",

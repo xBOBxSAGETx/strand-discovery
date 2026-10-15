@@ -329,19 +329,22 @@ def add_must_haves(card, media, metas):
 
 def franchise(card):
     """Collections (+ explicit TMDB ids for titles TMDB doesn't group), each medium in release order."""
-    movies = []
+    parts, dates = [], {}                       # dates: preview id -> full release date, for same-year ties
     for cid in card['collection_ids']:
-        movies += [p for p in named(f'/collection/{cid}', None).get('parts', []) if released(p, 'movie')]
-    movies = [preview(p, 'movie') for p in sorted(movies, key=lambda p: p['release_date'])]
+        parts += [p for p in named(f'/collection/{cid}', None).get('parts', []) if released(p, 'movie')]
+    movies = [preview(p, 'movie') for p in sorted(parts, key=lambda p: p['release_date'])]
+    dates.update({f"tmdb:{p['id']}": p['release_date'] for p in parts})
     extra = {'movie': [], 'series': []}
     for media, tid in card.get('ids', []):
         p = details_preview(media, tid)
         if p:
             extra[media].append(p)
+            dates.setdefault(p['id'], (_stable.get(f'{media}:{tid}') or {}).get('d') or '')
     seen = {m['id'] for m in movies}
     movies += [p for p in extra['movie'] if p['id'] not in seen]
-    by_year = lambda p: p.get('releaseInfo', '9999')
-    return [sorted(movies, key=by_year), sorted(extra['series'], key=by_year)]
+    # full date first (a spin-off released in February comes before a May film of the same year), then year, then last
+    by_date = lambda p: dates.get(p['id']) or p.get('releaseInfo', '9999')
+    return [sorted(movies, key=by_date), sorted(extra['series'], key=by_date)]
 
 
 MIN_RUNTIME = 40      # director cards: drop shorts; unknown runtime kept only for well-known titles
