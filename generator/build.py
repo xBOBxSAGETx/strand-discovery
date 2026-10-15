@@ -233,24 +233,24 @@ def fill_reverse(path, params, raw, total, pages, pool=None):
 MAIN_GENRE_PAGES = 200         # genre cards read up to this many pages per medium (a main-genre filter needs more pages)
 
 
-# Genres a title is often tagged with in 2nd/3rd place while still really being one (Schindler's List is
-# [Drama, History, War]; Knives Out [Comedy, Crime, Mystery]): their cards accept the card's genre in the first 3.
-NICHE_GENRES = {36, 10752, 10768, 10402, 9648, 37, 99, 10751, 10762}   # History War(+TV) Music Mystery Western Doc Family Kids
-GENERIC_FIRST = {18, 35}       # Drama and Comedy are listed first for most films: on other cards look past them once
+# Issue #52: a genre card keeps a title when the card's genre is among its first K tags (TMDB lists a title's main
+# genre first). K was picked per genre from TMDB's real tag order in the build's pools: most films carry their real
+# genre 2nd or 3rd (Schindler's List is [Drama, History, War]; Lord of the Rings [Adventure, Fantasy, Action]).
+GENRE_K_DEFAULT = 3
+GENRE_K = {16: 99,             # Animation: any position (Coco, KPop Demon Hunters list it 2nd/4th; it is a format, not a topic)
+           27: 1,              # Horror: first only (Come and See [Drama, War, Horror], Ghosts [Music, Horror] are not horror)
+           28: 2, 10759: 2}    # Action (and TV Action & Adventure): first two (Regular Show lists it 3rd)
 
 
 def genre_fits(genre_ids, card_ids):
-    """Issue #52 rule (chosen from TMDB's real genre order in the build's pools): a card of a niche genre keeps a title
-    that has the genre in its first 3 tags; any other genre card keeps it when the genre is the first tag, or the
-    second after a leading Drama or Comedy. """
-    g = genre_ids or []
-    if card_ids <= NICHE_GENRES:
-        return bool(set(g[:3]) & card_ids)
-    return bool(g) and (g[0] in card_ids or (g[0] in GENERIC_FIRST and len(g) > 1 and g[1] in card_ids))
+    """True when one of the card's genre ids is within the first K tags of the title (K by genre, see GENRE_K);
+    a card with several ids uses the largest K."""
+    k = max(GENRE_K.get(i, GENRE_K_DEFAULT) for i in card_ids)
+    return bool(set((genre_ids or [])[:k]) & card_ids)
 
 
 def main_genres(card, media):
-    """Issue #52: a genre card (folder genres-*) counts a title only when the card's genre is a main one (genre_fits).
+    """Issue #52: a genre card (folder genres-*) counts a title only when the card's genre is among its first tags (genre_fits).
     -> set of the card's genre ids for this medium (with_genres may list several, '|' or ','), or None when the
     filter does not apply (not a genre card, or no with_genres: Anime)."""
     if not any(f.startswith('genres-') for f in card.get('folders', [])):

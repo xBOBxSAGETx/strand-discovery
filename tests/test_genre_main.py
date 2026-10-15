@@ -1,4 +1,5 @@
-"""Issue #52: a genre card counts a title only when the card's genre is a main one of the title (build.genre_fits).
+"""Issue #52: a genre card counts a title only when the card's genre is among its first K tags (build.genre_fits;
+K is 3, Animation any, Horror 1, Action 2).
 Stubbed TMDB (no network); the genre_ids are TMDB's real order, taken from the build's pool dump (run 38807142043).
 Replays the live break (Horror Top Rated held Come and See, Coraline and Ghosts) and the recall the first
 "first tag only" version lost (Schindler's List is [Drama, History, War] and was dropped from History and War).
@@ -23,7 +24,15 @@ ROWS = [(7340, 'Carrie', [27, 53]),
         (424, "Schindler's List", [18, 36, 10752]),
         (857, 'Saving Private Ryan', [10752, 18, 36]),
         (546554, 'Knives Out', [35, 80, 9648]),
-        (1084242, 'Zootopia 2', [16, 12, 35, 9648, 10751])]
+        (1084242, 'Zootopia 2', [16, 12, 35, 9648, 10751]),
+        (354912, 'Coco', [10751, 16, 10402, 12]),
+        (803796, 'KPop Demon Hunters', [14, 10402, 35, 16]),
+        (129, 'Spirited Away', [16, 10751, 14]),
+        (120, 'The Lord of the Rings: The Fellowship of the Ring', [12, 14, 28]),
+        (671, "Harry Potter and the Philosopher's Stone", [12, 14]),
+        (19404, 'Dilwale Dulhania Le Jayenge', [35, 18, 10749]),
+        (372058, 'Your Name.', [16, 10749, 18]),
+        (31132, 'Regular Show', [16, 35, 10759, 10765])]
 
 
 def item(i, title, genres, n):
@@ -52,7 +61,7 @@ def genre_card(genre, slug='genre-x'):
 
 class MainGenre(unittest.TestCase):
     def test_horror_drops_the_bad_examples(self):
-        # Come and See (Horror 3rd), Coraline (4th) and Ghosts (a music video, Horror 2nd after Music) are gone
+        # Come and See (Horror 3rd), Coraline (4th) and Ghosts (a music video, Horror 2nd) are gone
         self.assertEqual(names(genre_card('27')), ['Carrie'])
 
     def test_history_keeps_schindlers_list_and_drops_a_far_tag(self):
@@ -66,9 +75,25 @@ class MainGenre(unittest.TestCase):
     def test_mystery_keeps_knives_out_and_drops_zootopia(self):
         self.assertEqual(names(genre_card('9648')), ['Knives Out'])
 
-    def test_drama_first_title_counts_on_a_broad_genre_card_once(self):
-        # Crime card: Knives Out is [Comedy, Crime, ..] so Crime is its 2nd tag after Comedy: kept
-        self.assertEqual(names(genre_card('80')), ['Knives Out'])
+    def test_animation_counts_at_any_position(self):
+        got = names(genre_card('16'))
+        for t in ('Coco', 'KPop Demon Hunters', 'Spirited Away', 'Coraline', 'Your Name.', 'Zootopia 2'):
+            self.assertIn(t, got)
+
+    def test_fantasy_keeps_lord_of_the_rings_harry_potter_and_spirited_away(self):
+        got = names(genre_card('14'))
+        for t in ('The Lord of the Rings: The Fellowship of the Ring', "Harry Potter and the Philosopher's Stone",
+                  'Spirited Away', 'KPop Demon Hunters', 'Coraline'):
+            self.assertIn(t, got)
+        self.assertNotIn('Carrie', got)
+
+    def test_romance_keeps_comedy_drama_romance_films(self):
+        self.assertEqual(names(genre_card('10749')), ['Dilwale Dulhania Le Jayenge', 'Your Name.'])
+
+    def test_action_keeps_first_two_tags_only(self):
+        # Regular Show lists Action & Adventure 3rd; The Lord of the Rings has Action 3rd too
+        self.assertEqual(names(genre_card('10759')), [])
+        self.assertEqual(names(genre_card('28')), [])
 
     def test_non_genre_card_is_unaffected(self):
         card = {**genre_card('27'), 'slug': 'studio-x', 'folders': ['studios']}
