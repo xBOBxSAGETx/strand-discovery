@@ -230,6 +230,45 @@ def fill_reverse(path, params, raw, total, pages, pool=None):
     return used, len(raw) - n0
 
 
+MAIN_GENRE_PAGES = 200         # genre cards read up to this many pages per medium (a main-genre filter needs more pages)
+
+
+# Issue #52: a genre card keeps a title when the card's genre is among its first K tags (TMDB lists a title's main
+# genre first). K was picked per genre from TMDB's real tag order in the build's pools: most films carry their real
+# genre 2nd or 3rd (Schindler's List is [Drama, History, War]; Lord of the Rings [Adventure, Fantasy, Action]).
+GENRE_K_DEFAULT = 3
+GENRE_K = {16: 99,             # Animation: any position (Coco, KPop Demon Hunters list it 2nd/4th; it is a format, not a topic)
+           27: 2,              # Horror: first two (Come and See [Drama, War, Horror] is not horror), see GENRE_NOT_AFTER
+           28: 2, 10759: 2}    # Action (and TV Action & Adventure): first two (Regular Show lists it 3rd)
+
+
+# A genre that does not count when it is not the first tag and the first tag is one of these (Ghosts [Music, Horror]
+# is a music video; Coraline-style Animation and Documentary are formats). Used only by Horror.
+GENRE_NOT_AFTER = {27: {10402, 99, 16}}
+
+
+def genre_fits(genre_ids, card_ids):
+    """True when one of the card's genre ids is within the first K tags of the title (K by genre, see GENRE_K);
+    a card with several ids uses the largest K. A hit past the first tag is ignored when the first tag is in
+    GENRE_NOT_AFTER for that genre."""
+    k = max(GENRE_K.get(i, GENRE_K_DEFAULT) for i in card_ids)
+    tags = list(genre_ids or [])
+    for pos, t in enumerate(tags[:k]):
+        if t in card_ids and (pos == 0 or tags[0] not in GENRE_NOT_AFTER.get(t, ())):
+            return True
+    return False
+
+
+def main_genres(card, media):
+    """Issue #52: a genre card (folder genres-*) counts a title only when the card's genre is among its first tags (genre_fits).
+    -> set of the card's genre ids for this medium (with_genres may list several, '|' or ','), or None when the
+    filter does not apply (not a genre card, or no with_genres: Anime)."""
+    if not any(f.startswith('genres-') for f in card.get('folders', [])):
+        return None
+    ids = re.split(r'[|,]', str(card.get(media, {}).get('with_genres', '')))
+    return {int(i) for i in ids if i.strip().isdigit()} or None
+
+
 def discover(card, media, depth, dflt):
     movie = media == 'movie'
     sort = SORTS[card['sort']][0 if movie else 1]
@@ -266,6 +305,9 @@ def discover(card, media, depth, dflt):
                 n = tmdb(f"/discover/{'movie' if movie else 'tv'}", page=1, **probe).get('total_results', 0)
             _excluded.setdefault(f"sd-{card['slug']}", {})[f'keywords:{media}'] = n
     path = f"/discover/{'movie' if movie else 'tv'}"
+    mains = main_genres(card, media)
+    ok = (lambda it: genre_fits(it.get('genre_ids'), mains)) if mains else (lambda it: True)
+    last = MAIN_GENRE_PAGES if mains else 500
     out, seen, page, raw = [], set(), 1, {}
     while len(out) < depth:
         data = tmdb(path, page=page, **params)
@@ -273,8 +315,9 @@ def discover(card, media, depth, dflt):
             if item['id'] not in seen:
                 seen.add(item['id'])
                 raw[item['id']] = item
-                out.append(preview(item, media))
-        if page >= min(data.get('total_pages', 0), 500):
+                if ok(item):
+                    out.append(preview(item, media))
+        if page >= min(data.get('total_pages', 0), last):
             break
         page += 1
     # TMDB caches every /discover page separately (for hours), so the pages of one query can come from different
@@ -282,7 +325,7 @@ def discover(card, media, depth, dflt):
     # read but ids are missing, read it once more in the REVERSE order (different cache entries) and merge by the
     # sort key. Bounded by total_pages; only runs on a short card with holes.
     total, pages = data.get('total_results', 0), data.get('total_pages', 0)
-    if len(out) < depth and len(seen) < total and 0 < pages <= 500:
+    if len(out) < depth and len(seen) < total and 0 < pages <= last:
         sort_by = params['sort_by']
         field, _, way = sort_by.rpartition('.')
         field = {'primary_release_date': 'release_date'}.get(field, field)
@@ -297,7 +340,7 @@ def discover(card, media, depth, dflt):
         have.sort(key=lambda i: (raw[i][field], -order[i]) if way == 'desc' else (raw[i][field], order[i]),
                   reverse=way == 'desc')
         rest = [i for i in raw if raw[i].get(field) in (None, '')]
-        out = [preview(raw[i], media) for i in have + rest]
+        out = [preview(raw[i], media) for i in have + rest if ok(raw[i])]
     return out[:depth]
 
 
