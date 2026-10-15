@@ -40,7 +40,7 @@ class Partial(unittest.TestCase):
                         mock.patch.object(build, 'source_of', lambda card: ('x', 'x')),
                         mock.patch.object(build, 'fetch_bytes', self.fetch),
                         mock.patch.object(build, 'FS_SUMMARY', {'providers': {}}),
-                        mock.patch.dict(os.environ, {'SD_SITE_URL': LIVE_URL, 'SD_CARDS': ''})]
+                        mock.patch.dict(os.environ, {'SD_SITE_URL': LIVE_URL, 'SD_CARDS': '', 'SD_BASE_DIR': str(t / 'live')})]
         for p in self.patches:
             p.start()
         self.run_build(self.live, tag='live', allowed=None)                    # the "live site": a normal full build
@@ -129,7 +129,7 @@ class Partial(unittest.TestCase):
         with self.assertRaises(SystemExit) as e:                    # 250 -> 150 (-40%): under 70% per card, over 30% total
             self.run_build(self.out, 'new', allowed={'studio-a24'}, cards='studio-a24', sizes={'studio-a24': 150})
         self.assertIn('listed catalogs dropped 250 -> 150', str(e.exception.code))
-        self.run_build(self.out, 'new', allowed={'studio-a24'}, cards='studio-a24', sizes={'studio-a24': 200})  # -20%: fine
+        self.run_build(self.out.parent / 'out2', 'new', allowed={'studio-a24'}, cards='studio-a24', sizes={'studio-a24': 200})  # -20%: fine
 
     def test_unknown_card_fails(self):
         with self.assertRaises(SystemExit) as e:
@@ -146,13 +146,29 @@ class Partial(unittest.TestCase):
         f.write_text('sd-studio-a24\ngenre-horror,', encoding='utf-8')
         self.assertEqual(build.parse_cards(str(f), cats), {'studio-a24', 'genre-horror'})
 
-    def test_damaged_live_copy_blocks(self):
-        page = self.live / 'catalog' / 'movie' / 'sd-genre-horror.json'     # a page missing items: count != summary
-        metas = json.loads(page.read_text(encoding='utf-8'))['metas']
-        page.write_text(json.dumps({'metas': metas[:-3]}), encoding='utf-8')
+    def test_damaged_cache_blocks(self):
+        genre = next(p for p in (self.live / 'catalog').rglob('*.json') if 'genre=' in p.name)
+        genre.unlink()                                     # a half-restored cache: genre pages differ from its summary
         with self.assertRaises(SystemExit) as e:
             self.run_build(self.out, 'new', allowed={'studio-a24'}, cards='studio-a24', sizes={'studio-a24': 250})
-        self.assertIn('cannot copy the live site', str(e.exception.code))
+        self.assertIn('cached site is damaged', str(e.exception.code))
+
+    def test_stale_cache_blocks(self):
+        real = self.fetch
+
+        def fetch(url):                                    # live was deployed after the cache was saved
+            if url.endswith('summary.json'):
+                return json.dumps({**json.loads(real(url)), 'generated_at': 'newer-deploy'}).encode()
+            return real(url)
+        with mock.patch.object(build, 'fetch_bytes', fetch), self.assertRaises(SystemExit) as e:
+            self.run_build(self.out, 'new', allowed={'studio-a24'}, cards='studio-a24', sizes={'studio-a24': 250})
+        self.assertIn('is not the live one', str(e.exception.code))
+
+    def test_no_cache_blocks(self):
+        with mock.patch.dict(os.environ, {'SD_BASE_DIR': str(Path(self.tmp.name) / 'missing')}), \
+                self.assertRaises(SystemExit) as e:
+            self.run_build(self.out, 'new', allowed={'studio-a24'}, cards='studio-a24')
+        self.assertIn('no cached copy', str(e.exception.code))
 
     def test_live_deploy_during_build_blocks(self):
         real, calls = self.fetch, []

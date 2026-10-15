@@ -20,12 +20,14 @@ Env:
   SD_CARDS           optional: PARTIAL REBUILD (issue #77). Comma-separated card slugs, with or without the "sd-"
                      prefix (studio-a24 or sd-studio-a24), or the path of a file holding them (commas/newlines).
                      Only these cards are built (the rest of the run is skipped); every other file is restored
-                     byte-for-byte from the live site (SD_SITE_URL, default the Pages URL of PREV_SUMMARY_URL), so
-                     out/ is again a complete site. The guards run on the listed cards only (see partial_guards).
+                     byte-for-byte from the cached copy of the last deployed site (SD_BASE_DIR, restored by the
+                     workflow from the Actions cache sd-site-*), after one live summary.json read proves the copy is
+                     what is live. out/ is again a complete site. The guards run on the listed cards only (see partial_guards).
                      Unset/empty = the normal full build.
-  SD_SITE_URL        optional: base URL of the live site a partial rebuild starts from.
+  SD_BASE_DIR        the cached site a partial rebuild starts from.
+  SD_SITE_URL        optional: base URL of the live site (its summary.json is read twice: start check, end race check).
 """
-import csv, datetime as dt, json, os, re, sys, threading, time, urllib.parse, urllib.request
+import csv, datetime as dt, json, os, re, shutil, sys, threading, time, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -691,55 +693,45 @@ def partial_guards(prev_counts, new_counts):
         sys.exit(f'GUARD: total items of the listed catalogs dropped {old_total} -> {new_total} (>30%)')
 
 
-def load_base(base_url):
-    """The live site's manifest.json and summary.json (the start of a partial rebuild). Any failure stops the run: a
-    partial build without a base would deploy a site with missing shelves."""
+def load_base(base_dir, base_url):
+    """The cached copy of the last deployed site (SD_BASE_DIR: restored from the Actions cache `sd-site-*` by the
+    workflow) - its manifest.json and summary.json. It is the start of a partial rebuild only if the live site's
+    summary.json (ONE request) says the same: same generated_at and same counts, i.e. the cache is what is live now.
+    Anything else stops the run: a partial build on a stale base would deploy old shelves over new ones."""
+    if not base_dir or not (Path(base_dir) / 'summary.json').is_file():
+        sys.exit('GUARD: no cached copy of the live site (SD_BASE_DIR); run a full build instead')
+    d = Path(base_dir)
     try:
-        return (json.loads(fetch_bytes(base_url + 'manifest.json')), json.loads(fetch_bytes(base_url + 'summary.json')))
+        manifest, summary = (json.loads((d / n).read_text(encoding='utf-8')) for n in ('manifest.json', 'summary.json'))
+        live = json.loads(fetch_bytes(base_url + 'summary.json'))
     except (OSError, RuntimeError, ValueError) as e:
-        sys.exit(f'GUARD: cannot read the live site ({e.__class__.__name__}); run a full build instead')
+        sys.exit(f'GUARD: cannot read the cached or live site summary ({e.__class__.__name__}); run a full build instead')
+    if live.get('generated_at') != summary.get('generated_at') or live.get('catalogs') != summary.get('catalogs'):
+        sys.exit(f"GUARD: the cached site ({summary.get('generated_at')}) is not the live one "
+                 f"({live.get('generated_at')}); run a full build instead")
+    gp = summary.get('genre_pages') or {}
+    if (gp.get('files'), gp.get('bytes')) != tree_genre_stats(d):
+        sys.exit('GUARD: the cached site is damaged (genre pages differ from its summary); run a full build instead')
+    return manifest, summary
 
 
-def restore_site(root, base_url, manifest, counts, skip, workers=16):
-    """Copy every page of every live catalog NOT in `skip` into root, byte for byte, by walking each catalog's pages
-    (first page, skip=N pages, empty terminal page; plus the same walk per genre option). Why a crawl and not the Pages
-    artifact: the artifact of a deploy expires (1 day by default) and may not exist, the live URL always does and is
-    exactly what the guards compare against. Each catalog's page count is checked against the live summary, so a
-    half-updated CDN copy fails the run instead of shipping. -> number of files written."""
-    jobs = []
-    for e in manifest['catalogs']:
-        if e['id'] in skip:
-            continue
-        jobs.append((e['type'], e['id'], None))
-        jobs += [(e['type'], e['id'], g) for x in e.get('extra', []) if x['name'] == 'genre' for g in x['options']]
-
-    def chain(job):
-        media, cid, genre = job
-        tag = f'&genre={genre}' if genre else ''
-        rel = f'catalog/{media}/{cid}/genre={genre}.json' if genre else f'catalog/{media}/{cid}.json'
-        total = files = 0
-        for _ in range(100000):
-            data = fetch_bytes(base_url + rel)
-            dest = root / rel
+def restore_site(root, base_dir, skip):
+    """Copy every catalog file of the cached site NOT belonging to a card in `skip` into root, byte for byte
+    (<cid>.json and the <cid>/ folder, per-genre pages included). -> number of files written."""
+    n = 0
+    for media in (Path(base_dir) / 'catalog').iterdir():
+        for e in media.iterdir():
+            if (e.stem if e.is_file() else e.name) in skip:
+                continue
+            dest = root / 'catalog' / media.name / e.name
             dest.parent.mkdir(parents=True, exist_ok=True)
-            dest.write_bytes(data)
-            files += 1
-            metas = json.loads(data)['metas']
-            if not metas:                                  # the terminal page
-                break
-            total += len(metas)
-            rel = f'catalog/{media}/{cid}/skip={total}{tag}.json'
-        else:
-            raise RuntimeError(f'{cid}: no terminal page')
-        if not genre and total != counts.get(cid):
-            raise RuntimeError(f'{cid}: live pages hold {total} items, live summary says {counts.get(cid)}')
-        return files
-
-    try:
-        with ThreadPoolExecutor(workers) as pool:
-            return sum(pool.map(chain, jobs))
-    except (OSError, RuntimeError, ValueError) as e:
-        sys.exit(f'GUARD: cannot copy the live site ({e}); run a full build instead')
+            if e.is_dir():
+                shutil.copytree(e, dest)
+                n += sum(1 for f in e.rglob('*') if f.is_file())
+            else:
+                shutil.copy2(e, dest)
+                n += 1
+    return n
 
 
 def fetch_summary_stamp(base_url):
@@ -751,15 +743,15 @@ def fetch_summary_stamp(base_url):
         return None
 
 
-def merge_report(base_url, rows, cids):
-    """report.csv of a partial rebuild: the live rows of the unlisted cards + the new rows of the listed ones, in spec
-    order (cids). Live report missing/unreadable -> only the listed cards' rows (the file is informational)."""
+def merge_report(base_dir, rows, cids):
+    """report.csv of a partial rebuild: the cached rows of the unlisted cards + the new rows of the listed ones, in spec
+    order (cids). Cached report missing/unreadable -> only the listed cards' rows (the file is informational)."""
     live = {}
     try:
-        lines = list(csv.reader(fetch_bytes(base_url + 'report.csv').decode('utf-8').splitlines(True)))
+        lines = list(csv.reader((Path(base_dir) / 'report.csv').read_text(encoding='utf-8').splitlines(True)))
         live = {r[7]: r for r in lines[1:] if len(r) > 7}
-    except (OSError, RuntimeError, ValueError):
-        print('WARNING: live report.csv unreadable; the report holds only the rebuilt cards')
+    except (OSError, ValueError):
+        print('WARNING: cached report.csv unreadable; the report holds only the rebuilt cards')
     new = {r[7]: r for r in rows}
     return [new.get(c) or live[c] for c in cids if c in new or c in live]
 
@@ -927,7 +919,8 @@ def main():
         if FS_SUMMARY is None and any(c.get('provider') for c in todo):
             sys.exit('GUARD: first_seen state is missing; New cards need it - run a full build')
         base_url = site_url()
-        base_manifest, base_summary = load_base(base_url)
+        base_dir = os.environ.get('SD_BASE_DIR') or ''
+        base_manifest, base_summary = load_base(base_dir, base_url)
         live_ids = [e['id'] for e in base_manifest.get('catalogs', [])]
         want_ids = {f"sd-{c['slug']}" for c in spec['catalogs']}
         changed_ids = {f"sd-{c['slug']}" for c in todo}
@@ -937,9 +930,8 @@ def main():
                      'run a full build')
         entries = {e['id']: e for e in base_manifest['catalogs'] if e['id'] not in changed_ids}
         print(f'partial rebuild of {len(todo)} cards: {sorted(selected)}', flush=True)
-        # the copy of the live site runs alongside the TMDB work (different hosts, so no shared throttle)
-        restore_pool = ThreadPoolExecutor(1)
-        restore = restore_pool.submit(restore_site, root, base_url, base_manifest, base_summary.get('catalogs', {}), changed_ids)
+        restore = restore_site(root, base_dir, changed_ids)
+        print(f'cached site copied: {restore} files', flush=True)
 
     def work(card):
         metas, notes = build_one(card, dflt)
@@ -983,8 +975,6 @@ def main():
                          isinstance(src_id, str) else src_id, src_name, cid,
                          f"movie={kinds['movie']} series={kinds['series']}", len(metas),
                          ' | '.join(f"{m['name']} ({m.get('releaseInfo', '?')})" for m in metas[:5]), notes])
-        if restore:
-            print(f'live site copied: {restore.result()} files', flush=True)     # re-raises a failed copy here
     finally:
         save_cache()
     new_counts = dict(counts)
@@ -993,7 +983,7 @@ def main():
             sys.exit('GUARD: the live site was deployed while this partial build ran; run it again')
         counts = {f"sd-{c['slug']}": counts.get(f"sd-{c['slug']}", base_summary['catalogs'].get(f"sd-{c['slug']}"))
                   for c in spec['catalogs']}
-        rows = merge_report(site_url(), rows, [f"sd-{c['slug']}" for c in spec['catalogs']])
+        rows = merge_report(base_dir, rows, [f"sd-{c['slug']}" for c in spec['catalogs']])
     manifest['catalogs'] = [entries[f"sd-{c['slug']}"] for c in spec['catalogs']]
     ids = [c['id'] for c in manifest['catalogs']]
     if len(ids) != len(spec['catalogs']) or len(set(ids)) != len(ids):
@@ -1037,8 +1027,8 @@ def main():
     (root / 'summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
     if selected is not None and base_summary is not None:
         try:                                               # keep the live exclusions report, update the listed cards
-            live_ex = json.loads(fetch_bytes(site_url() + 'exclusions.json'))
-        except (OSError, RuntimeError, ValueError):
+            live_ex = json.loads((Path(base_dir) / 'exclusions.json').read_text(encoding='utf-8'))
+        except (OSError, ValueError):
             live_ex = {}
         merged_ex = {**{k: v for k, v in live_ex.items() if k not in new_counts}, **_excluded}
         if merged_ex:

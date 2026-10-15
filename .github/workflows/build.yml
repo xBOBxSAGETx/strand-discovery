@@ -214,6 +214,16 @@ jobs:
           name: first-seen-state
           path: state-backup/first_seen.json.gz.enc
           retention-days: 90
+      # #77: a partial rebuild starts from the site the last DEPLOYING build saved (cache sd-site-<run_id>, newest wins),
+      # not from a crawl of the live URL (Pages answers a 13k-request crawl with HTTP 429). build.py then reads the
+      # live summary.json once and refuses a copy that is not what is live. No cache = it stops: run a full build.
+      - name: Restore the last deployed site (partial rebuild)
+        if: env.SD_CARDS != ''
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: site-base
+          key: sd-site-${{ github.run_id }}-restore
+          restore-keys: sd-site-
       - name: Generate catalogs
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
@@ -225,10 +235,18 @@ jobs:
           SD_CACHE: cache
           SD_MEASURE_EXCLUSIONS: ${{ inputs.measure_exclusions && '1' || '0' }}
           SD_STATE: state
+          SD_BASE_DIR: site-base
         # the log is kept for the health alert (guard / 401 detection); the key is never printed
         run: |
           set -o pipefail
           python generator/build.py out 2>&1 | tee build.log
+      # The site this build deploys (full or partial) is the next partial rebuild's start. Same condition as the deploy job.
+      - name: Save the site for the next partial rebuild
+        if: success() && ((github.event_name == 'schedule' && vars.SD_SCHEDULE_DEPLOY == 'on') || (github.event_name == 'workflow_dispatch' && inputs.deploy))
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: out
+          key: sd-site-${{ github.run_id }}
       - name: Run report (always, also on guard failure)
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
