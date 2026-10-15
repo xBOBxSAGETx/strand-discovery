@@ -29,6 +29,10 @@ on:
         description: 'Practice build: run the arrivals logger anyway (e.g. a change to what it reads from spec.json)'
         type: boolean
         default: false
+      cards:
+        description: 'Rebuild ONLY these shelves (comma-separated slugs, with or without the sd- prefix, e.g. studio-a24,genre-horror); the rest of the site is copied from the live one. Empty = full build'
+        type: string
+        default: ''
 
 # Staged rollout: repo variables SD_KINDS_OFF / SD_KEEP (Settings > Variables) apply to the daily run too.
 # Stage A: SD_KINDS_OFF=director,actor  SD_KEEP=dir-denis-villeneuve  ->  Stage B: both empty.
@@ -48,10 +52,16 @@ jobs:
     permissions:
       contents: read
       actions: read          # restore the first_seen state from the previous run's artifact if the cache is gone
+    # #77: a non-empty `cards` is a PARTIAL rebuild (build.py SD_CARDS): only those shelves are built, the rest of the
+    # site is copied from the live one. The logger and the arrival-signal fetch are skipped (New cards read the saved
+    # state restored below); nothing partial ever saves state. Empty (nightly, default) = the full build.
+    env:
+      SD_CARDS: ${{ inputs.cards }}
     outputs:
       logger: ${{ steps.logger.outcome }}
       arrivals: ${{ steps.arrivals.outcome }}
-      practice: ${{ steps.practice.outputs.skip }}
+      practice: ${{ inputs.cards != '' && 'true' || steps.practice.outputs.skip }}
+      partial: ${{ inputs.cards != '' && 'true' || 'false' }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
@@ -163,7 +173,7 @@ jobs:
           echo "skip=$skip" >> "$GITHUB_OUTPUT"
       - name: first_seen logger
         id: logger
-        if: steps.practice.outputs.skip != 'true'
+        if: steps.practice.outputs.skip != 'true' && env.SD_CARDS == ''
         continue-on-error: true    # a logger failure must not stop the daily build; New cards fall back
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
@@ -174,6 +184,7 @@ jobs:
       # the logger's fallback (the stored signals) in place for the build
       - name: Arrival signals
         id: arrivals
+        if: env.SD_CARDS == ''
         continue-on-error: true
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
@@ -241,7 +252,9 @@ jobs:
   # One "health" issue, opened/updated on problems and closed after a clean run (GitHub emails the owner).
   alert:
     needs: build
-    if: always()
+    # a clean partial rebuild says nothing about the nightly's health (it did not run the logger): it must not close the
+    # nightly's open issue. A failed partial rebuild is still reported.
+    if: always() && !(needs.build.result == 'success' && needs.build.outputs.partial == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
