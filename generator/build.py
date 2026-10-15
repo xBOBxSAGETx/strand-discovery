@@ -214,7 +214,7 @@ def discover(card, media, depth, dflt):
     if not movie and card.get('tv_air_window'):   # any episode aired recently (new seasons of old shows count)
         params.pop('first_air_date.lte', None)
         params.update({'air_date.gte': (dt.date.today() - dt.timedelta(days=card['tv_air_window'])).isoformat(),
-                       'air_date.lte': TODAY, 'sort_by': 'popularity.desc'})
+                       'air_date.lte': TODAY})      # the window picks the pool; the card's own sort orders it (issue #45)
     if movie:
         params.update({'with_release_type': '4|5|6', 'release_date.lte': cutoff})
         if card['sort'] in ('top', 'votes'):  # shorts/music videos rise to the top of rating order (smoke test)
