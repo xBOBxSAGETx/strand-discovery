@@ -45,9 +45,18 @@ def filled(slug, truth_keys, have, entries=None):
     return sum(1 for k in truth_keys if k in have and entries.get((slug, k), {}).get('side') == 'add')
 
 
+SIDE_AS = {'recall': 'recall', 'precision': 'precision', 'outside_recall': 'recall', 'truth_precision': 'precision'}
+# a second-source flag is settled exactly like the TMDB-claim flag of the same direction; must_have / unmapped are not source flags
+
+
 def _bump(row, side, label, d):
-    """Move one gap in/out of a summary row's counters (same fields af.summarize writes)."""
-    by = row.get(f'{side}_gaps')
+    """Move one gap in/out of a summary row's counters (same fields af.summarize and accuracy_rules write)."""
+    if side == 'outside_recall':
+        by = (row.get('outside') or {}).get('gaps')
+    elif side == 'truth_precision':
+        by = (row.get('truth_precision') or {}).get('gaps')
+    else:
+        by = row.get(f'{side}_gaps')
     if by is not None and label in by:
         by[label] += d
     if label == 'code bug' and side in ('recall', 'precision') and 'code_bugs' in row:
@@ -73,20 +82,21 @@ def settle(frame_sum, frame_gaps, entries, audited, order_of, reason_of, built=N
         if not e:
             continue
         side, row = e['side'], rows.get(g['kind'])
-        if g['side'] not in ('recall', 'precision'):
+        kin = SIDE_AS.get(g['side'])
+        if not kin:
             continue
         resolved = None
         if side == 'keep':
             resolved = kept
-        elif side == 'remove' or (side == 'add' and g['side'] == 'precision'):
+        elif side == 'remove' or (side == 'add' and kin == 'precision'):
             resolved = fixed          # a removed title is not a precision gap, and not a recall gap either: we took it off on purpose
         elif unbuilt(e):              # add + a recall gap, but the live build is older than the entry: not deployed yet
             resolved = pending
         else:                         # add + a recall gap: the title should be on the card
             lab, why = relabel_add(g['card'], g['key'], reason_of)
             if row:
-                _bump(row, 'recall', g['label'], -1)
-                _bump(row, 'recall', lab, 1)
+                _bump(row, g['side'], g['label'], -1)
+                _bump(row, g['side'], lab, 1)
             g['label'], g['reason'] = lab, why
             continue
         frame_gaps.remove(g)
@@ -116,7 +126,7 @@ def settle(frame_sum, frame_gaps, entries, audited, order_of, reason_of, built=N
             rows['corrections']['code_bugs'] += 1
             problems.append(f"corrections: {slug} still holds {key} ({e.get('title', '')}), which our list removes")
     for r in frame_sum:
-        mine = [g for g in frame_gaps if g['kind'] == r['kind'] and g['side'] in ('recall', 'precision')]
+        mine = [g for g in frame_gaps if g['kind'] == r['kind'] and g['side'] in SIDE_AS]
         r['open'] = len(mine)
         r['fixed_by_list'] = r.get('filled', 0) + sum(1 for g in fixed if g['kind'] == r['kind'])
         r['kept'] = [g for g in kept if g['kind'] == r['kind']]
