@@ -46,8 +46,8 @@ def measure(order, truth, details):
     return af.measure('popular', [CARD], SPEC, lambda slug: order, tmdb_stub(truth, details), TODAY, 50, 'seed', truth_k=20)
 
 
-def settle(row, gaps, entries, order=(), audited=('streaming-x',), reason=None):
-    return ac.settle([row], gaps, entries, set(audited), lambda slug: list(order), reason or (lambda slug, key: None))
+def settle(row, gaps, entries, order=(), audited=('streaming-x',), reason=None, built=None):
+    return ac.settle([row], gaps, entries, set(audited), lambda slug: list(order), reason or (lambda slug, key: None), built=built)
 
 
 class Base(unittest.TestCase):
@@ -217,6 +217,63 @@ class Loader(unittest.TestCase):
     def test_filled_counts_only_adds_on_the_card(self):
         ents = {('c', 'movie:1'): entry(1, 'add'), ('c', 'movie:2'): entry(2, 'keep'), ('c', 'movie:3'): entry(3, 'add')}
         self.assertEqual(ac.filled('c', ['movie:1', 'movie:2', 'movie:3'], {'movie:1', 'movie:2'}, ents), 1)
+
+
+class SourceSides(Base):
+    """The stand-up / network check flags titles on two more sides: 'outside_recall' (a second source lists it, TMDB does not
+    tag it) and 'truth_precision' (Wikidata disagrees with the card). They settle like recall / precision."""
+    LABS = {l: 0 for l in af.LABELS}
+
+    def row(self, side, lab='source limit'):
+        key = {'outside_recall': 'outside', 'truth_precision': 'truth_precision'}[side]
+        gaps = {**self.LABS, lab: 1}
+        r = {'kind': 'standup', 'filled': 0, 'recall_gaps': dict(self.LABS), 'precision_gaps': dict(self.LABS), 'code_bugs': 0,
+             key: {'gaps': gaps}}
+        g = [{'kind': 'standup', 'card': 'streaming-x', 'side': side, 'key': 'movie:9', 'name': 'M9', 'label': lab, 'reason': 'r'}]
+        return r, g
+
+    def test_outside_recall_keep_is_kept(self):
+        row, gaps = self.row('outside_recall')
+        out = settle(row, gaps, {('streaming-x', 'movie:9'): entry(9, 'keep', 'TMDB does not tag it')})
+        self.assertEqual((gaps, row['open'], len(row['kept']), row['outside']['gaps']['source limit']), ([], 0, 1, 0))
+        self.assertEqual(out['kept'][0]['side'], 'outside_recall')
+
+    def test_outside_recall_without_an_entry_stays_open(self):                          # CONTROL
+        row, gaps = self.row('outside_recall')
+        settle(row, gaps, {})
+        self.assertEqual((len(gaps), row['open'], row['outside']['gaps']['source limit']), (1, 1, 1))
+
+    def test_outside_recall_add_is_relabelled_and_bumps_the_outside_counter(self):
+        row, gaps = self.row('outside_recall')
+        settle(row, gaps, {('streaming-x', 'movie:9'): entry(9, 'add', added='2026-01-01')}, built='2026-10-01')
+        self.assertEqual(gaps[0]['label'], 'code bug')
+        self.assertEqual((row['outside']['gaps']['source limit'], row['outside']['gaps']['code bug']), (0, 1))
+        self.assertEqual(row['recall_gaps']['code bug'], 0)
+
+    def test_outside_recall_add_newer_than_the_build_is_pending(self):
+        row, gaps = self.row('outside_recall')
+        out = settle(row, gaps, {('streaming-x', 'movie:9'): entry(9, 'add')}, built='2026-10-16')
+        self.assertEqual((gaps, row['open']), ([], 0))
+        self.assertEqual(out['pending'], [{'card': 'streaming-x', 'key': 'movie:9'}])
+
+    def test_truth_precision_remove_is_fixed(self):
+        row, gaps = self.row('truth_precision')
+        settle(row, gaps, {('streaming-x', 'movie:9'): entry(9, 'remove')})
+        self.assertEqual((gaps, row['open'], row['fixed_by_list'], row['truth_precision']['gaps']['source limit']), ([], 0, 1, 0))
+
+    def test_truth_precision_add_is_fixed_and_keep_is_kept(self):
+        row, gaps = self.row('truth_precision')
+        settle(row, gaps, {('streaming-x', 'movie:9'): entry(9, 'add')})
+        self.assertEqual((gaps, row['fixed_by_list']), ([], 1))
+        row, gaps = self.row('truth_precision')
+        settle(row, gaps, {('streaming-x', 'movie:9'): entry(9, 'keep', 'w')})
+        self.assertEqual((gaps, len(row['kept'])), ([], 1))
+
+    def test_other_sides_are_left_alone(self):
+        row, gaps = self.row('truth_precision')
+        gaps[0]['side'] = 'must_have'
+        settle(row, gaps, {('streaming-x', 'movie:9'): entry(9, 'keep')})
+        self.assertEqual(len(gaps), 1)
 
 
 if __name__ == '__main__':
