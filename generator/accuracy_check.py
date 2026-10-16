@@ -323,10 +323,15 @@ def main():
                                            a.frame_sample, a.frame_seed)
         frame_sum.append(row)
         frame_gaps += gaps
+    people_notes = []
     for kind, pool in people_pool.items():        # Director / Actor: against Wikidata (accuracy_people.py)
-        row, gaps = accuracy_people.measure_people(kind, pool, spec, lambda slug: card_order(pages, slug), tmdb,
-                                                   accuracy_people.wikidata, dt.date.today().isoformat(), a.people_cards,
-                                                   a.frame_sample, a.people_seed)
+        try:
+            row, gaps = accuracy_people.measure_people(kind, pool, spec, lambda slug: card_order(pages, slug), tmdb,
+                                                       accuracy_people.wikidata, dt.date.today().isoformat(), a.people_cards,
+                                                       a.frame_sample, a.people_seed)
+        except RuntimeError as e:                 # Wikidata / TMDB down: a note, never a reason to open the issue
+            people_notes.append(f'{kind} cards not measured this week: {e}')
+            continue
         frame_sum.append(row)
         frame_gaps += gaps
     if frame_gaps:
@@ -367,7 +372,7 @@ def main():
             problems.append(f"{r['kind']}: {r['code_bugs']} code-bug gaps (baseline {b.get('code_bugs', 0)}); see frame_gaps.csv")
     # NOTES are shown, never problems: stale official lists (a manual refresh; the precision gate is the weekly guard)
     # and services with too few official arrivals in the window to measure
-    notes = []
+    notes = list(people_notes)
     stale = sorted({r['month'] for r in rec if r.get('stale')})
     if stale:
         notes.append(f"stale: official lists are for {', '.join(stale)} (run {today[:7]}); recall is measured on "
