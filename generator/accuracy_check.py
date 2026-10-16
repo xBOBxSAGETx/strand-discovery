@@ -29,6 +29,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import build                    # the one loader of the hand lists (build.load_hand_list); no network at import
 import accuracy_frame           # the shared frame for the Popular / Top cards (issue #92)
+import accuracy_works           # Studios + Movie series, truth = Wikidata (issue #94)
 
 SCHEDULES = {'vt', 'fb', 'wodp'}
 ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}      # the sets arrivals.py uses (F2 / F3)
@@ -286,8 +287,12 @@ def main():
     out.mkdir(parents=True, exist_ok=True)
     spec = json.loads(Path(a.spec).read_text(encoding='utf-8'))
     frame_cards = {k: accuracy_frame.pick_cards(spec, k, a.cards, a.frame_seed) for k in accuracy_frame.KINDS} if a.cards else {}
+    works_cards = {}                              # Studios + Movie series (accuracy_works.py): the cards the pick names
+    if a.cards:
+        ind, listed = accuracy_works.pick_studio_cards(spec)
+        works_cards = {'studio': ind, 'studio_listed': listed, 'series': accuracy_works.pick_series_cards(spec)}
     if a.fetch_site:
-        fetch_site(a.fetch_site, pages, [c['slug'] for cs in frame_cards.values() for c in cs])
+        fetch_site(a.fetch_site, pages, [c['slug'] for cs in list(frame_cards.values()) + list(works_cards.values()) for c in cs])
     summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     cands = load_candidates(state_dir, summary['generated_at'][:10])
     if a.today:                                  # tests only: judge the recall window / list month as of this date
@@ -313,6 +318,16 @@ def main():
     for kind, cs in frame_cards.items():          # Popular / Top: recall + precision + labelled gaps (accuracy_frame.py)
         row, gaps = accuracy_frame.measure(kind, cs, spec, lambda slug: card_order(pages, slug), tmdb, dt.date.today().isoformat(),
                                            a.frame_sample, a.frame_seed)
+        frame_sum.append(row)
+        frame_gaps += gaps
+    works_errors = []
+    for kind, cs in works_cards.items():          # Studios / Movie series: Wikidata is the truth; a Wikidata outage is a note
+        try:
+            row, gaps = accuracy_works.measure(kind, cs, spec, lambda slug: card_order(pages, slug), tmdb,
+                                               dt.date.today().isoformat(), a.frame_sample, a.frame_seed)
+        except Exception as e:
+            works_errors.append(f'{kind}: not measured ({type(e).__name__}: {str(e)[:120]})')
+            continue
         frame_sum.append(row)
         frame_gaps += gaps
     if frame_gaps:
@@ -358,6 +373,7 @@ def main():
     if stale:
         notes.append(f"stale: official lists are for {', '.join(stale)} (run {today[:7]}); recall is measured on "
                      "that month - refresh generator/official_arrivals.csv + accuracy_baseline.json when convenient")
+    notes += works_errors
     notes += [f"recall not measured for {r['service']}: {r['note']}" for r in rec if r['status'] == 'skipped']
     cmp = None
     if a.snapshot:                               # DuckDB reads all shelves; then the week-over-week compare (notes only)
