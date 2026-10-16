@@ -56,6 +56,21 @@ jobs:
           else
             echo "::warning::no build output and no state: nothing to check"; echo "SKIP=1" >> "$GITHUB_ENV"
           fi
+      # DuckDB (pinned in requirements-dev.txt, the one place) is installed ONLY here; the daily build stays stdlib-only.
+      - name: Install DuckDB (pinned)
+        if: env.SKIP != '1'
+        run: python -m pip install --disable-pip-version-check "$(grep -i '^duckdb==' requirements-dev.txt)"
+      # Last week's shelf snapshot = the previous successful run of this workflow on this branch (kept 14 days).
+      - name: Fetch last week's shelf snapshot
+        if: env.SKIP != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prev_id=$(gh run list -R "$GITHUB_REPOSITORY" --workflow accuracy.yml --branch "$GITHUB_REF_NAME" \
+                    --status success -L 1 --json databaseId --jq '.[0].databaseId // empty')
+          echo "previous successful weekly run: ${prev_id:-none}"
+          mkdir -p prev-snapshot
+          [ -n "$prev_id" ] && gh run download "$prev_id" -R "$GITHUB_REPOSITORY" -n shelf-snapshot -D prev-snapshot || true
       - name: Accuracy check + issue
         if: env.SKIP != '1'
         env:
@@ -64,7 +79,15 @@ jobs:
         run: |
           echo "source: $SOURCE"
           python generator/accuracy_check.py --pages pages --state state --out accuracy --report \
-            ${FETCH_SITE:+--fetch-site "$FETCH_SITE"}
+            --snapshot snapshot --prev prev-snapshot ${FETCH_SITE:+--fetch-site "$FETCH_SITE"}
+      - name: Shelf snapshot (for next week's compare)
+        if: always() && env.SKIP != '1'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: shelf-snapshot
+          path: snapshot/
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Accuracy report
         if: always() && env.SKIP != '1'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

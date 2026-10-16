@@ -52,7 +52,8 @@ def tmdb(path):
 
 
 def fetch_site(site, pages):
-    """The live site's summary.json + the New cards' pages (terminal page included), politely."""
+    """The live site's summary.json + every shelf's first page + the New cards' further pages (terminal page included),
+    politely: one request a second, one at a time."""
     site = site.rstrip('/')
 
     def get(rel):
@@ -63,11 +64,12 @@ def fetch_site(site, pages):
     (pages / 'summary.json').write_bytes(get('summary.json'))
     summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     d = pages / 'catalog' / 'movie'
-    for slug in summary.get('new_card_modes', {}):
+    for cid in summary.get('catalogs', {}):          # every shelf's first page (the weekly DuckDB read + week compare)
+        (d / f'{cid}.json').write_bytes(get(f'catalog/movie/{cid}.json'))
+    for slug in summary.get('new_card_modes', {}):   # the New cards also page through (the precision / recall checks)
         cid = f'sd-{slug}'
         (d / cid).mkdir(parents=True, exist_ok=True)
-        first = get(f'catalog/movie/{cid}.json')
-        (d / f'{cid}.json').write_bytes(first)
+        first = (d / f'{cid}.json').read_bytes()
         n, skip = len(json.loads(first)['metas']), len(json.loads(first)['metas'])
         while n:
             body = get(f'catalog/movie/{cid}/skip={skip}.json')
@@ -171,6 +173,66 @@ def recall(pages, summary, official_rows, today, baseline):
     return out
 
 
+SHELF_COLS = "{'metas': 'STRUCT(id VARCHAR, type VARCHAR, name VARCHAR)[]'}"
+
+
+def snapshot(pages, snap_dir, ok_keys):
+    """DuckDB reads EVERY shelf file (catalog/*/sd-*.json) of the site copy and saves a compact table
+    (card, position, key, name) as shelves.parquet, plus ok.csv = the titles the precision audit marked correct this
+    week (class 'ok'). Returns (files read, titles). The weekly artifact is just this folder; no database file is kept."""
+    import duckdb
+    snap_dir.mkdir(parents=True, exist_ok=True)
+    con = duckdb.connect()
+    src = f"read_json('{(pages / 'catalog').as_posix()}/*/sd-*.json', columns={SHELF_COLS}, filename=true)"
+    files = con.execute(f'select count(*) from {src}').fetchone()[0]
+    con.execute(f"create table shelf as select parse_filename(filename, true) as card, "
+                f"generate_subscripts(metas, 1) as position, unnest(metas) as m from {src}")
+    out = (snap_dir / 'shelves.parquet').as_posix()
+    con.execute("copy (select card, position, m.type || ':' || split_part(m.id, ':', 2) as key, m.name as name "
+                f"from shelf order by card, position) to '{out}' (format parquet)")
+    titles = con.execute('select count(*) from shelf').fetchone()[0]
+    with open(snap_dir / 'ok.csv', 'w', newline='', encoding='utf-8') as f:
+        w = csv.writer(f)
+        w.writerow(['card', 'key'])
+        w.writerows(sorted(ok_keys))
+    return files, titles
+
+
+def compare_weeks(prev_dir, cur_dir):
+    """Last week's snapshot vs this week's: every title that left a card, and those of them the audit marked correct
+    last week (ok.csv). None when there is no last week. DuckDB does the joins."""
+    import duckdb
+    prev, cur = Path(prev_dir) / 'shelves.parquet', Path(cur_dir) / 'shelves.parquet'
+    if not prev.exists():
+        return None
+    con = duckdb.connect()
+    con.execute(f"create table prev as select * from read_parquet('{prev.as_posix()}')")
+    con.execute(f"create table cur as select * from read_parquet('{cur.as_posix()}')")
+    ok = Path(prev_dir) / 'ok.csv'
+    con.execute(f"create table okp as select * from read_csv('{ok.as_posix()}', header=true, all_varchar=true)"
+                if ok.exists() else 'create table okp(card varchar, key varchar)')
+    con.execute("create table lost as select p.card, p.key, p.name, p.position, "
+                "exists(select 1 from okp o where o.card = p.card and o.key = p.key) as was_ok "
+                "from prev p where not exists (select 1 from cur c where c.card = p.card and c.key = p.key)")
+    per_card = con.execute('select card, count(*) n from lost group by card order by n desc, card').fetchall()
+    lost_ok = con.execute('select card, key, name from lost where was_ok order by card, position').fetchall()
+    return {'prev_titles': con.execute('select count(*) from prev').fetchone()[0],
+            'lost_titles': sum(n for _, n in per_card), 'cards_with_losses': len(per_card),
+            'top_cards': per_card[:10], 'lost_audited_ok': lost_ok}
+
+
+def week_notes(cmp):
+    if cmp is None:
+        return ['weekly compare: no last week yet']
+    notes = [f"weekly compare: {cmp['lost_titles']} of last week's {cmp['prev_titles']} shelf titles left their card "
+             f"({cmp['cards_with_losses']} cards)"]
+    if cmp['top_cards']:
+        notes.append('weekly compare: most losses: ' + ', '.join(f'{c} {n}' for c, n in cmp['top_cards']))
+    notes += [f'weekly compare: {k} "{name}" was marked correct by last week\'s audit and is gone from {card}'
+              for card, k, name in cmp['lost_audited_ok']]
+    return notes
+
+
 def report(problems, lines, run_url):
     import health                                # reuse the gh helpers + dry-run / mock mode of the health issue
     health.ensure_label('accuracy', '1d76db', 'Weekly accuracy check (opened/closed automatically)')
@@ -200,6 +262,8 @@ def main():
     ap.add_argument('--out', default='accuracy')
     ap.add_argument('--fetch-site')
     ap.add_argument('--report', action='store_true')
+    ap.add_argument('--snapshot', help="dir to write this week's shelf snapshot (shelves.parquet + ok.csv)")
+    ap.add_argument('--prev', help="dir holding last week's snapshot (missing / empty: 'no last week yet')")
     ap.add_argument('--n', type=int, default=20)
     ap.add_argument('--seed', default=None)
     ap.add_argument('--official', default=str(HERE / 'official_arrivals.csv'))
@@ -252,13 +316,20 @@ def main():
         notes.append(f"stale: official lists are for {', '.join(stale)} (run {today[:7]}); recall is measured on "
                      "that month - refresh generator/official_arrivals.csv + accuracy_baseline.json when convenient")
     notes += [f"recall not measured for {r['service']}: {r['note']}" for r in rec if r['status'] == 'skipped']
+    cmp = None
+    if a.snapshot:                               # DuckDB reads all shelves; then the week-over-week compare (notes only)
+        ok_keys = {(f"sd-streaming-{r['provider']}-new", r['key']) for r in rows if r['class'] == 'ok'}
+        files, titles = snapshot(pages, Path(a.snapshot), ok_keys)
+        print(f'DuckDB read {files} shelf files, {titles} titles')
+        cmp = compare_weeks(a.prev, a.snapshot) if a.prev else None
+        notes += week_notes(cmp)
     print('RESULT:', 'CLEAN' if not problems else f'{len(problems)} problem(s)')
     for p in problems:
         print(' -', p)
     for n in notes:
         print(' NOTE:', n)
     (out / 'accuracy.json').write_text(json.dumps({'date': today, 'seed': seed, 'precision': table, 'recall': rec,
-                                                   'errors': errors, 'notes': notes}, indent=1), encoding='utf-8')
+                                                   'errors': errors, 'notes': notes, 'week_compare': cmp}, indent=1), encoding='utf-8')
     if a.report:
         run_url = (f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{os.environ.get('GITHUB_REPOSITORY', '')}"
                    f"/actions/runs/{os.environ.get('GITHUB_RUN_ID', '')}")
