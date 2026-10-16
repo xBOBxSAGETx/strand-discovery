@@ -80,7 +80,21 @@ class TruthMapping(unittest.TestCase):
     def test_unconfirmed_titles_are_unjudged_not_wrong(self):
         truth = aw.parse_truth([row(1, 'A')], TODAY)
         r, gaps = run(['movie:1', 'movie:10'], truth, {10: det(10)})     # 10: on the card, Wikidata has no item for it
-        self.assertEqual((r['sample'], r['ok'], r['unjudged'], r['precision'], gaps), (2, 1, 1, 100.0, []))
+        self.assertEqual((r['sample'], r['ok'], r['unjudged'], r['precision'], gaps), (1, 1, 1, 100.0, []))
+
+    def test_distributor_without_production_is_unjudged_for_independent_cards(self):   # critic break: Five Nights at Freddy's
+        wd = {'qid': 'Q9', 'statements': 'Universal Pictures', 'by': {'P272': ('', set()), 'P750': ('Universal Pictures', {'Q5'})}}
+        f = aw.detail_facts(lambda *a, **k: det(9), 'movie', 9)
+        r = aw.af.card_rules('popular', STUDIO, 'movie', SPEC)
+        lab, why = aw.classify_studio_extra(f, r, TODAY, wd, ('Q7',))
+        self.assertTrue(why.startswith('unconfirmed'), why)
+        self.assertTrue(aw.classify_studio_extra(f, r, TODAY, wd, ('Q7',), listed=True)[1].startswith('disagrees'))   # listed cards use P750 too
+
+    def test_lookup_item_ids_sit_outside_the_label_filter(self):
+        q = aw.lookup_query('movie', [1], ('P272',))
+        self.assertIn('OPTIONAL { ?f wdt:P272 ?o0 . OPTIONAL {', q)       # a company with only a "mul" label is still a statement
+        got = aw.parse_lookup([{'id': {'value': '1'}, 'f': {'value': 'http://x/Q1'}, 'i0': {'value': 'http://x/Q55'}}], ('P272',))
+        self.assertEqual((got[1]['statements'], got[1]['by']['P272'][1]), ('Q55', {'Q55'}))
 
     def test_every_card_has_a_wikidata_item(self):
         spec = json.loads((Path(aw.HERE) / 'spec.json').read_text(encoding='utf-8'))

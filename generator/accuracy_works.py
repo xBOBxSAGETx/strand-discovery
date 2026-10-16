@@ -182,28 +182,30 @@ def top_k(truth, k):
 
 
 def lookup_query(media, ids, props):
-    """The Wikidata item (if any) of each TMDB id: the labels (?v) and the item ids (?i) of its `props` statements."""
+    """The Wikidata item (if any) of each TMDB id: for each of `props`, the company/series item ids (?i, taken OUTSIDE the
+    label filter, so an item with only a "mul" label still counts as a statement) and their English labels (?v)."""
     idp = 'P4947' if media == 'movie' else 'P4983'
     sel = ' '.join(f'(GROUP_CONCAT(DISTINCT ?l{i}; separator="; ") AS ?v{i}) (GROUP_CONCAT(DISTINCT STR(?o{i}); separator=" ") AS ?i{i})'
                    for i in range(len(props)))
-    opt = ' '.join('OPTIONAL { ?f wdt:%s ?o%d . ?o%d rdfs:label ?l%d . FILTER(lang(?l%d) = "en") }' % (p, i, i, i, i)
-                   for i, p in enumerate(props))
+    opt = ' '.join('OPTIONAL { ?f wdt:%s ?o%d . OPTIONAL { ?o%d rdfs:label ?l%d . FILTER(lang(?l%d) IN ("en", "mul")) } }'
+                   % (p, i, i, i, i) for i, p in enumerate(props))
     return 'SELECT ?id ?f %s WHERE { VALUES ?id { %s } ?f wdt:%s ?id . %s } GROUP BY ?id ?f' % (
         sel, ' '.join('"%d"' % i for i in ids), idp, opt)
 
 
 def parse_lookup(rows, props):
-    """-> {tmdb id (int): {'qid', 'statements': 'label; label' over all props, 'by': {prop: (labels, {item qids})}}};
-    an id absent from the result has no Wikidata item."""
+    """-> {tmdb id (int): {'qid', 'statements': 'label; label' over all props (an unlabelled item shows as its Q-id),
+    'by': {prop: (labels, {item qids})}}}; an id absent from the result has no Wikidata item."""
     out = {}
     for r in rows:
-        by = {p: (val(r, f'v{i}', ''), {u.rsplit('/', 1)[-1] for u in val(r, f'i{i}', '').split()}) for i, p in enumerate(props)}
+        by = {}
+        for i, p in enumerate(props):
+            items = {u.rsplit('/', 1)[-1] for u in val(r, f'i{i}', '').split()}
+            by[p] = (val(r, f'v{i}', '') or '; '.join(sorted(items)), items)
         txt = '; '.join(x for x in (b[0] for b in by.values()) if x)
         out[int(val(r, 'id'))] = {'qid': val(r, 'f', '').rsplit('/', 1)[-1], 'statements': txt, 'by': by}
     return out
 
-
-# ----- labels (pure) ----------------------------------------------------------------------------------------------
 
 def company_ids(card):
     return {int(x) for x in str(card['movie']['with_companies']).split('|') if x}
@@ -230,9 +232,10 @@ def classify_studio_missing(f, r, card, listed, hand_ids, excluded, today, mcoun
     return 'source limit', 'passes every rule and the card is under its cap: TMDB discover paging snapshot (issue #25)'
 
 
-def classify_studio_extra(f, r, today, wd, studio_qids=()):
+def classify_studio_extra(f, r, today, wd, studio_qids=(), listed=False):
     """ONE sampled studio-card title Wikidata does not list as the studio's production. wd = parse_lookup entry or None.
-    -> (label, reason). Never None: the caller only asks for titles not in the Wikidata set."""
+    -> (label, reason). Never None: the caller only asks for titles not in the Wikidata set. An independent card's truth is
+    P272 (production company) only, so a title with no P272 statement cannot be judged (a distributor is no evidence)."""
     breaks = af.rule_breaks(f, 'movie', r, today)
     if breaks:
         return 'code bug', 'on the card but breaks its own rule: ' + '; '.join(breaks)
@@ -241,6 +244,8 @@ def classify_studio_extra(f, r, today, wd, studio_qids=()):
     if not wd['statements']:
         return 'source limit', f"unconfirmed: Wikidata item {wd['qid']} has no production company / distributor statement"
     prod, dist = wd['by'].get('P272', ('', set())), wd['by'].get('P750', ('', set()))
+    if not listed and not prod[1]:
+        return 'source limit', f"unconfirmed: Wikidata item {wd['qid']} has no production company statement (distributor: {dist[0] or 'none'})"
     if set(studio_qids) & dist[1]:
         return 'source limit', f"disagrees: Wikidata {wd['qid']} lists the studio as distributor only (production: {prod[0] or 'none'})"
     return 'source limit', f"disagrees: Wikidata {wd['qid']} names {wd['statements']}, not the studio"
@@ -384,7 +389,7 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
             if f is None:
                 lab, why = 'source limit', 'TMDB returned no such title'
             else:
-                lab, why = (classify_studio_extra(f, r['movie'], today, w, (LISTED if listed else STUDIOS).get(slug, ())) if studio
+                lab, why = (classify_studio_extra(f, r['movie'], today, w, (LISTED if listed else STUDIOS).get(slug, ()), listed) if studio
                             else classify_series_extra(f, media, card, r.get(media) or r[medias[0]], today, w))
             for tag in prec:
                 if why.startswith(tag):
@@ -395,7 +400,8 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
             gaps.append({'kind': kind, 'card': slug, 'side': 'precision', 'key': k, 'name': f['name'] if f else k, 'label': lab, 'reason': why})
     row = af.summarize(kind, cards, rf, rt, samp, ok, gaps)
     row['unjudged'] = unj
-    row['precision'] = af.pct(ok, samp - unj)            # only titles Wikidata can judge count
+    row['sample'] = samp - unj                           # only titles Wikidata can judge count (as accuracy_people)
+    row['precision'] = af.pct(ok, samp - unj)
     row['at_cap'] = at_cap
     row['precision_disagrees'] = prec['disagrees']
     return row, gaps
