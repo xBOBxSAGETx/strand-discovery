@@ -506,8 +506,10 @@ def correction_rule(card, dflt, media, d):
         return None
     own = card.get(media, {})
     movie = media == 'movie'
-    if 'watch/providers' in d and own.get('with_watch_providers'):     # a streaming card: on the card's service, in its region
-        res = (d['watch/providers'] or {}).get('results', {}).get(own.get('watch_region') or 'US', {})
+    if own.get('with_watch_providers'):     # a streaming card: on the card's service, in its region; no provider data = skip (fail closed)
+        if not d.get('watch/providers'):
+            return 'no watch/providers data'
+        res = d['watch/providers'].get('results', {}).get(own.get('watch_region') or 'US', {})
         kinds = _split(own.get('with_watch_monetization_types')) or ['flatrate', 'free', 'ads', 'rent', 'buy']
         if not {int(x['provider_id']) for k in kinds for x in res.get(k, [])} & {int(x) for x in _split(own['with_watch_providers'])}:
             return 'not on the card\'s service'

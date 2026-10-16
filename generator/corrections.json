@@ -1509,7 +1509,7 @@
    "wikidata": "Q36479",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|adventure film|musical film|family film); TMDB lacks the tag"
+   "why": "Wikidata Q36479 files it under the card genre; IMDb tt0110357 lists Adventure; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -1520,7 +1520,7 @@
    "wikidata": "Q104905",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: comedy film|adventure film|science fiction film|science fiction comedy|romance film|post-apocalyptic film|children's film|adventure science fiction|flashback film|dystopian film|romantic comedy film); TMDB lacks the tag"
+   "why": "Wikidata Q104905 files it under the card genre; IMDb tt0910970 lists Adventure; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -1531,7 +1531,7 @@
    "wikidata": "Q25188",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|action film|adventure film|science fiction film|heist film|mystery film|thriller film|science fiction action film); TMDB lacks the tag"
+   "why": "Wikidata Q25188 files it under the card genre; IMDb tt1375666 lists Adventure; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -1542,7 +1542,7 @@
    "wikidata": "Q41483",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|Western film|action film|Spaghetti Western|war film|epic film|treasure hunt film); TMDB lacks the tag"
+   "why": "Wikidata Q41483 files it under the card genre; IMDb tt0060196 lists Adventure; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -1553,7 +1553,7 @@
    "wikidata": "Q170564",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|cyberpunk|comedy film|action film|adventure film|science fiction film|techno-thriller|post-apocalyptic film|girls with guns|thriller film|black comedy film|science fiction action film|dystopian film|suspense film|chase film|time-travel film); TMDB lacks the tag"
+   "why": "Wikidata Q170564 files it under the card genre; IMDb tt0103064 lists Adventure; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -1647,7 +1647,7 @@
    "wikidata": "Q126709560",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: fantasy film|comedy film|adventure film|family film); TMDB lacks the tag"
+   "why": "Wikidata Q126709560 files it under the card genre; IMDb tt29552248 lists Comedy; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -1760,7 +1760,7 @@
    "wikidata": "Q125076",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|crime film|romance film|coming-of-age film); TMDB lacks the tag"
+   "why": "Wikidata Q125076 files it under the card genre; IMDb tt1010048 lists Crime; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -1801,7 +1801,7 @@
    "wikidata": "Q106582931",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: thriller television series|mystery television series|action television series|drama television series|survival film); TMDB lacks the tag"
+   "why": "Wikidata Q106582931 files it under the card genre; IMDb tt10919420 lists Crime; TMDB lacks the tag"
   },
   {
    "type": "series",
@@ -1812,7 +1812,7 @@
    "wikidata": "Q2085",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama television series|crime television series|thriller television series|mystery television series|horror television series|surrealist television series); TMDB lacks the tag"
+   "why": "Wikidata Q2085 files it under the card genre; IMDb tt0098936 lists Crime; TMDB lacks the tag"
   },
   {
    "type": "series",
@@ -1823,7 +1823,7 @@
    "wikidata": "Q85987403",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: comedy drama|crime television series|family drama|thriller television series|revenge series); TMDB lacks the tag"
+   "why": "Wikidata Q85987403 files it under the card genre; IMDb tt13067118 lists Crime; TMDB lacks the tag"
   },
   {
    "type": "series",
@@ -1993,11 +1993,10 @@
    "tmdb": 111119,
    "title": "Súbete a mi moto",
    "year": 2020,
-   "source": "https://www.imdb.com/title/tt12248706/ (IMDb genres: Biography,Drama,Music)",
-   "wikidata": "Q100351075",
+   "source": "https://www.themoviedb.org/tv/111119",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [biography] and IMDb genres [Biography,Drama,Music] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "series",
@@ -2101,7 +2100,7 @@
    "wikidata": "Q134434223",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|horror film|comedy horror|slasher film|romance film|satirical film); TMDB lacks the tag"
+   "why": "Wikidata Q134434223 files it under the card genre; IMDb tt35298123 lists Drama; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -2112,7 +2111,7 @@
    "wikidata": "Q127698549",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|war film); TMDB lacks the tag"
+   "why": "Wikidata Q127698549 files it under the card genre; IMDb tt32547691 lists Drama; TMDB lacks the tag"
   },
   {
    "type": "series",
@@ -2159,11 +2158,10 @@
    "tmdb": 316973,
    "title": "Dandelion",
    "year": 2026,
-   "source": "https://www.imdb.com/title/tt40356933/ (IMDb genres: Animation,Comedy,Fantasy)",
-   "wikidata": "Q138498505",
+   "source": "https://www.themoviedb.org/tv/316973",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [comedy anime and manga] and IMDb genres [Animation,Comedy,Fantasy] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "movie",
@@ -2222,11 +2220,10 @@
    "tmdb": 1109207,
    "title": "Taz: Quest for Burger",
    "year": 2023,
-   "source": "https://www.imdb.com/title/tt27469256/ (IMDb genres: Adventure,Animation,Comedy)",
-   "wikidata": "Q121094685",
+   "source": "https://www.themoviedb.org/movie/1109207",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [comedy film|animated film] and IMDb genres [Adventure,Animation,Comedy] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "series",
@@ -2244,11 +2241,10 @@
    "tmdb": 85801,
    "title": "High School Musical: The Musical: The Series",
    "year": 2019,
-   "source": "https://www.imdb.com/title/tt8510382/ (IMDb genres: Comedy,Drama,Musical)",
-   "wikidata": "Q61816815",
+   "source": "https://www.themoviedb.org/tv/85801",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [mockumentary|teen drama television|LGBT-related television series] and IMDb genres [Comedy,Drama,Musical] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "series",
@@ -2265,11 +2261,10 @@
    "tmdb": 96228,
    "title": "Around the World in 80 Days",
    "year": 2021,
-   "source": "https://www.imdb.com/title/tt9174578/ (IMDb genres: Adventure,Comedy,History)",
-   "wikidata": "Q87192600",
+   "source": "https://www.themoviedb.org/tv/96228",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [adventure television series] and IMDb genres [Adventure,Comedy,History] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "series",
@@ -2294,13 +2289,12 @@
   {
    "type": "movie",
    "tmdb": 1030587,
-   "title": "Doraemon: Nobita's Sky Utopia",
+   "title": "Doraemon the Movie: Nobita's Sky Utopia",
    "year": 2023,
-   "source": "https://www.imdb.com/title/tt21223380/ (IMDb genres: Adventure,Animation,Comedy)",
-   "wikidata": "Q112933606",
+   "source": "https://www.themoviedb.org/movie/1030587",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [adventure film|science fiction film|anime film] and IMDb genres [Adventure,Animation,Comedy] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   }
  ],
  "genre-family-top": [
@@ -2313,7 +2307,7 @@
    "wikidata": "Q102448",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: fantasy film|adventure film|children's film|werewolf film|time-travel film); TMDB lacks the tag"
+   "why": "Wikidata Q102448 files it under the card genre; IMDb tt0304141 lists Family; TMDB lacks the tag"
   },
   {
    "type": "series",
@@ -2324,7 +2318,7 @@
    "wikidata": "Q104750296",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: children's television series|educational television|comedy television series|adventure television series); TMDB lacks the tag"
+   "why": "Wikidata Q104750296 files it under the card genre; IMDb tt10687202 lists Family; TMDB lacks the tag"
   },
   {
    "type": "series",
@@ -2335,7 +2329,7 @@
    "wikidata": "Q484020",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: sitcom|comedy film|family film|physical comedy); TMDB lacks the tag"
+   "why": "Wikidata Q484020 files it under the card genre; IMDb tt0096657 lists Family; TMDB lacks the tag"
   },
   {
    "type": "series",
@@ -2402,11 +2396,10 @@
    "tmdb": 13691,
    "title": "Piglet's Big Movie",
    "year": 2003,
-   "source": "https://www.imdb.com/title/tt0323642/ (IMDb genres: Adventure,Animation,Comedy)",
-   "wikidata": "Q1406374",
+   "source": "https://www.themoviedb.org/movie/13691",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [comedy drama|musical film] and IMDb genres [Adventure,Animation,Comedy] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "series",
@@ -2432,24 +2425,22 @@
   {
    "type": "movie",
    "tmdb": 24615,
-   "title": "Aloha, Scooby-Doo!",
+   "title": "Aloha Scooby-Doo!",
    "year": 2005,
-   "source": "https://www.imdb.com/title/tt0433771/ (IMDb genres: Adventure,Animation,Comedy)",
-   "wikidata": "Q969781",
+   "source": "https://www.themoviedb.org/movie/24615",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [comedy film|comedy horror|adventure film|mystery film|detective film] and IMDb genres [Adventure,Animation,Comedy] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "series",
    "tmdb": 61915,
    "title": "K.C. Undercover",
    "year": 2015,
-   "source": "https://www.imdb.com/title/tt3598030/ (IMDb genres: Action,Comedy,Drama)",
-   "wikidata": "Q17635847",
+   "source": "https://www.themoviedb.org/tv/61915",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [sitcom|teen sitcom] and IMDb genres [Action,Comedy,Drama] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "movie",
@@ -2466,11 +2457,10 @@
    "tmdb": 228203,
    "title": "McFarland, USA",
    "year": 2015,
-   "source": "https://www.imdb.com/title/tt2097298/ (IMDb genres: Biography,Drama,Sport)",
-   "wikidata": "Q16253025",
+   "source": "https://www.themoviedb.org/movie/228203",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [drama film|biographical film|sport film] and IMDb genres [Biography,Drama,Sport] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "movie",
@@ -2487,11 +2477,10 @@
    "tmdb": 9385,
    "title": "The Twelve Tasks of Asterix",
    "year": 1976,
-   "source": "https://www.imdb.com/title/tt0072901/ (IMDb genres: Adventure,Animation,Comedy)",
-   "wikidata": "Q748186",
+   "source": "https://www.themoviedb.org/movie/9385",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [comedy film|ghost film] and IMDb genres [Adventure,Animation,Comedy] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   }
  ],
  "genre-music-top": [
@@ -2514,7 +2503,7 @@
    "wikidata": "Q190086",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|screwball comedy film|musical film|crime film|LGBTQ-related film|romantic comedy film|gangster film); TMDB lacks the tag"
+   "why": "Wikidata Q190086 files it under the card genre; IMDb tt0053291 lists Music; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -2525,18 +2514,17 @@
    "wikidata": "Q150804",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|war film|musical film|biographical film|historical film); TMDB lacks the tag"
+   "why": "Wikidata Q150804 files it under the card genre; IMDb tt0253474 lists Music; TMDB lacks the tag"
   },
   {
    "type": "movie",
    "tmdb": 426249,
    "title": "Lords of Chaos",
    "year": 2018,
-   "source": "https://www.imdb.com/title/tt4669296/ (IMDb genres: Biography,Drama,Horror)",
-   "wikidata": "Q30765956",
+   "source": "https://www.themoviedb.org/movie/426249",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [drama film|horror film|biographical film|thriller film] and IMDb genres [Biography,Drama,Horror] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "movie",
@@ -2621,7 +2609,7 @@
    "wikidata": "Q216867",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: reality television|nature program); TMDB lacks the tag"
+   "why": "Wikidata Q216867 files it under the card genre; IMDb tt0883772 lists Reality-TV; TMDB lacks the tag"
   },
   {
    "type": "series",
@@ -2632,7 +2620,7 @@
    "wikidata": "Q465616",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: reality television|comedy television program); TMDB lacks the tag"
+   "why": "Wikidata Q465616 files it under the card genre; IMDb tt0264263 lists Reality-TV; TMDB lacks the tag"
   },
   {
    "type": "series",
@@ -2695,7 +2683,7 @@
    "wikidata": "Q132256832",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|science fiction film|post-apocalyptic film); TMDB lacks the tag"
+   "why": "Wikidata Q132256832 files it under the card genre; IMDb tt21285562 lists Sci-Fi; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -2706,7 +2694,7 @@
    "wikidata": "Q131451703",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: action film|horror film|science fiction film|thriller film); TMDB lacks the tag"
+   "why": "Wikidata Q131451703 files it under the card genre; IMDb tt32268691 lists Sci-Fi; TMDB lacks the tag"
   },
   {
    "type": "series",
@@ -2771,7 +2759,7 @@
    "wikidata": "Q132689",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata files it under the card genre (genres: drama film|film noir|war film|romance film|flashback film); TMDB lacks the tag"
+   "why": "Wikidata Q132689 files it under the card genre; IMDb tt0034583 lists War; TMDB lacks the tag"
   },
   {
    "type": "movie",
@@ -2926,13 +2914,12 @@
   {
    "type": "movie",
    "tmdb": 42536,
-   "title": "Napoléon",
+   "title": "Napoleon",
    "year": 1927,
-   "source": "https://www.imdb.com/title/tt0018192/ (IMDb genres: Biography,Drama,History)",
-   "wikidata": "Q1632158",
+   "source": "https://www.themoviedb.org/movie/42536",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [drama film|silent film|biographical film] and IMDb genres [Biography,Drama,History] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "movie",
@@ -2958,13 +2945,12 @@
   {
    "type": "movie",
    "tmdb": 567189,
-   "title": "Without Remorse",
+   "title": "Tom Clancy's Without Remorse",
    "year": 2021,
-   "source": "https://www.imdb.com/title/tt0499097/ (IMDb genres: Action,Drama,Thriller)",
-   "wikidata": "Q65156762",
+   "source": "https://www.themoviedb.org/movie/567189",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [action film|spy film|thriller film] and IMDb genres [Action,Drama,Thriller] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "movie",
@@ -2981,11 +2967,10 @@
    "tmdb": 3163,
    "title": "Foyle's War",
    "year": 2002,
-   "source": "https://www.imdb.com/title/tt0310455/ (IMDb genres: Crime,Drama,Mystery)",
-   "wikidata": "Q2377188",
+   "source": "https://www.themoviedb.org/tv/3163",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [drama television series|crime television series] and IMDb genres [Crime,Drama,Mystery] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "movie",
@@ -3000,13 +2985,12 @@
   {
    "type": "movie",
    "tmdb": 469470,
-   "title": "Zahradnictví: Rodinný prítel",
+   "title": "Garden Store - Part 1: Family Friend",
    "year": 2017,
-   "source": "https://www.imdb.com/title/tt6806524/ (IMDb genres: Drama,History,Romance)",
-   "wikidata": "Q104897470",
+   "source": "https://www.themoviedb.org/movie/469470",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [drama film] and IMDb genres [Drama,History,Romance] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   },
   {
    "type": "movie",
@@ -3155,11 +3139,10 @@
    "tmdb": 473165,
    "title": "Dead Again in Tombstone",
    "year": 2017,
-   "source": "https://www.imdb.com/title/tt5794440/ (IMDb genres: Action,Fantasy,Horror)",
-   "wikidata": "Q63119122",
+   "source": "https://www.themoviedb.org/movie/473165",
    "added": "2026-10-16",
-   "side": "remove",
-   "why": "Wikidata genres [action film] and IMDb genres [Action,Fantasy,Horror] both lack the card genre"
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3; cannot confirm absence"
   }
  ],
  "studio-aardman": [
@@ -3250,8 +3233,8 @@
    "source": "https://www.wikidata.org/wiki/Q15046569",
    "wikidata": "Q15046569",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "passes every card rule yet missed by TMDB discover paging; Wikidata Q15046569 lists the studio (P272); Wikipedia infobox has no production list"
+   "side": "keep",
+   "why": "Wikidata only"
   },
   {
    "type": "movie",
@@ -3371,8 +3354,8 @@
    "source": "https://www.wikidata.org/wiki/Q641324",
    "wikidata": "Q641324",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata Q641324 lists the studio as production company (P272); TMDB lacks the credit; Wikipedia infobox has no production list"
+   "side": "keep",
+   "why": "Wikidata only"
   },
   {
    "type": "movie",
@@ -4359,8 +4342,8 @@
    "source": "https://www.wikidata.org/wiki/Q15046569",
    "wikidata": "Q15046569",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata Q15046569 lists the studio as production company (P272); TMDB lacks the credit; Wikipedia infobox has no production list"
+   "side": "keep",
+   "why": "Wikidata only"
   },
   {
    "type": "movie",
@@ -5521,7 +5504,7 @@
    "wikidata": "Q4928988",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q4928988 puts it in the stand-up class; enwiki: 'a 2003 American stand-up comedy concert film'; IMDb tt0330069; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5532,7 +5515,7 @@
    "wikidata": "Q5319411",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q5319411 puts it in the stand-up class; enwiki: 'an American documentary and stand-up comedy concert film'; IMDb tt0337996; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5543,7 +5526,7 @@
    "wikidata": "Q6775975",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q6775975 puts it in the stand-up class; enwiki: 'a 2002 American stand-up comedy concert film'; IMDb tt0327036; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5554,7 +5537,7 @@
    "wikidata": "Q18150000",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q18150000 puts it in the stand-up class; enwiki: 'a 2014 American stand-up comedy film'; IMDb tt3532608; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5576,7 +5559,7 @@
    "wikidata": "Q48672679",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q48672679 puts it in the stand-up class; enwiki: 'a 2014 stand-up comedy concert film'; IMDb tt3383040; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5587,7 +5570,7 @@
    "wikidata": "Q5966849",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q5966849 puts it in the stand-up class; enwiki: 'a 1998 stand-up comedy special'; IMDb tt0500140; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5603,12 +5586,12 @@
    "type": "movie",
    "tmdb": 22427,
    "title": "Blue Collar Comedy Tour Rides Again",
-   "year": 2004,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q4928989",
    "wikidata": "Q4928989",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q4928989 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0423871 tvSpecial 2004 106 min 2005 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 10, runtime >= 20, a digital/physical/TV release type. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
@@ -5644,56 +5627,56 @@
    "type": "series",
    "tmdb": 46490,
    "title": "Chris Rock: Bigger and Blacker",
-   "year": 1999,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q4906881",
    "wikidata": "Q4906881",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q4906881 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0206636 tvSpecial 1999 65 min 7833 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 10, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 8639,
    "title": "Demetri Martin. Person.",
-   "year": 2007,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q5255214",
    "wikidata": "Q5255214",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q5255214 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0954327 tvSpecial 2007 42 min 1937 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 10, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 50602,
    "title": "Dress to Kill",
-   "year": 1998,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q5307057",
    "wikidata": "Q5307057",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q5307057 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0184424 video 1998 115 min 7780 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 10, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 50651,
    "title": "Epitome of Hyperbole",
-   "year": 2008,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q5383737",
    "wikidata": "Q5383737",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q5383737 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt1284973 tvSpecial 2008 60 min 897 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 10, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 16078,
    "title": "Jamie Foxx: I Might Need Security",
-   "year": 2002,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q6146906",
    "wikidata": "Q6146906",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q6146906 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0330472 tvSpecial 2002 65 min 465 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 10, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
@@ -5735,7 +5718,7 @@
    "wikidata": "Q7240459",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q7240459 puts it in the stand-up class; enwiki: 'was a stand-up comedy series'; IMDb tt0156228; the build checks the card rules"
   },
   {
    "type": "series",
@@ -5839,7 +5822,7 @@
    "wikidata": "Q4928988",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q4928988 puts it in the stand-up class; enwiki: 'a 2003 American stand-up comedy concert film'; IMDb tt0330069; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5850,7 +5833,7 @@
    "wikidata": "Q5319411",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q5319411 puts it in the stand-up class; enwiki: 'an American documentary and stand-up comedy concert film'; IMDb tt0337996; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5861,7 +5844,7 @@
    "wikidata": "Q6775975",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q6775975 puts it in the stand-up class; enwiki: 'a 2002 American stand-up comedy concert film'; IMDb tt0327036; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5872,7 +5855,7 @@
    "wikidata": "Q18150000",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q18150000 puts it in the stand-up class; enwiki: 'a 2014 American stand-up comedy film'; IMDb tt3532608; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5894,7 +5877,7 @@
    "wikidata": "Q48672679",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q48672679 puts it in the stand-up class; enwiki: 'a 2014 stand-up comedy concert film'; IMDb tt3383040; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5905,7 +5888,7 @@
    "wikidata": "Q5966849",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q5966849 puts it in the stand-up class; enwiki: 'a 1998 stand-up comedy special'; IMDb tt0500140; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -5921,12 +5904,12 @@
    "type": "movie",
    "tmdb": 22427,
    "title": "Blue Collar Comedy Tour Rides Again",
-   "year": 2004,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q4928989",
    "wikidata": "Q4928989",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q4928989 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0423871 tvSpecial 2004 106 min 2005 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 3, runtime >= 20, a digital/physical/TV release type. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
@@ -5993,56 +5976,56 @@
    "type": "series",
    "tmdb": 46490,
    "title": "Chris Rock: Bigger and Blacker",
-   "year": 1999,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q4906881",
    "wikidata": "Q4906881",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q4906881 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0206636 tvSpecial 1999 65 min 7833 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 3, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 8639,
    "title": "Demetri Martin. Person.",
-   "year": 2007,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q5255214",
    "wikidata": "Q5255214",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q5255214 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0954327 tvSpecial 2007 42 min 1937 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 3, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 50602,
    "title": "Dress to Kill",
-   "year": 1998,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q5307057",
    "wikidata": "Q5307057",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q5307057 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0184424 video 1998 115 min 7780 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 3, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 50651,
    "title": "Epitome of Hyperbole",
-   "year": 2008,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q5383737",
    "wikidata": "Q5383737",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q5383737 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt1284973 tvSpecial 2008 60 min 897 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 3, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 16078,
    "title": "Jamie Foxx: I Might Need Security",
-   "year": 2002,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q6146906",
    "wikidata": "Q6146906",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q6146906 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0330472 tvSpecial 2002 65 min 465 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 3, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
@@ -6053,7 +6036,7 @@
    "wikidata": "Q7240459",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q7240459 puts it in the stand-up class; enwiki: 'was a stand-up comedy series'; IMDb tt0156228; the build checks the card rules"
   },
   {
    "type": "series",
@@ -6074,7 +6057,7 @@
    "wikidata": "Q8056840",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q8056840 puts it in the stand-up class; enwiki: 'the 11th HBO stand up special'; IMDb tt0246645; the build checks the card rules"
   },
   {
    "type": "series",
@@ -6138,7 +6121,7 @@
    "wikidata": "Q4928988",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q4928988 puts it in the stand-up class; enwiki: 'a 2003 American stand-up comedy concert film'; IMDb tt0330069; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -6149,7 +6132,7 @@
    "wikidata": "Q5319411",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q5319411 puts it in the stand-up class; enwiki: 'an American documentary and stand-up comedy concert film'; IMDb tt0337996; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -6160,7 +6143,7 @@
    "wikidata": "Q6775975",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q6775975 puts it in the stand-up class; enwiki: 'a 2002 American stand-up comedy concert film'; IMDb tt0327036; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -6171,7 +6154,7 @@
    "wikidata": "Q18150000",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q18150000 puts it in the stand-up class; enwiki: 'a 2014 American stand-up comedy film'; IMDb tt3532608; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -6182,7 +6165,7 @@
    "wikidata": "Q41019687",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q41019687 puts it in the stand-up class; enwiki: 'a 2017 stand-up comedy film'; IMDb tt7310906; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -6193,7 +6176,7 @@
    "wikidata": "Q48672679",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q48672679 puts it in the stand-up class; enwiki: 'a 2014 stand-up comedy concert film'; IMDb tt3383040; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -6204,7 +6187,7 @@
    "wikidata": "Q5966849",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q5966849 puts it in the stand-up class; enwiki: 'a 1998 stand-up comedy special'; IMDb tt0500140; the build checks the card rules"
   },
   {
    "type": "movie",
@@ -6220,12 +6203,12 @@
    "type": "movie",
    "tmdb": 22427,
    "title": "Blue Collar Comedy Tour Rides Again",
-   "year": 2004,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q4928989",
    "wikidata": "Q4928989",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q4928989 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0423871 tvSpecial 2004 106 min 2005 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 50 (movie) / 20 (series), at least 180 days old, runtime >= 20, a digital/physical/TV release type. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
@@ -6271,56 +6254,56 @@
    "type": "series",
    "tmdb": 46490,
    "title": "Chris Rock: Bigger and Blacker",
-   "year": 1999,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q4906881",
    "wikidata": "Q4906881",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q4906881 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0206636 tvSpecial 1999 65 min 7833 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 50 (movie) / 20 (series), at least 180 days old, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 8639,
    "title": "Demetri Martin. Person.",
-   "year": 2007,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q5255214",
    "wikidata": "Q5255214",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q5255214 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0954327 tvSpecial 2007 42 min 1937 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 50 (movie) / 20 (series), at least 180 days old, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 50602,
    "title": "Dress to Kill",
-   "year": 1998,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q5307057",
    "wikidata": "Q5307057",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q5307057 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0184424 video 1998 115 min 7780 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 50 (movie) / 20 (series), at least 180 days old, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 50651,
    "title": "Epitome of Hyperbole",
-   "year": 2008,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q5383737",
    "wikidata": "Q5383737",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q5383737 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt1284973 tvSpecial 2008 60 min 897 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 50 (movie) / 20 (series), at least 180 days old, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
    "tmdb": 16078,
    "title": "Jamie Foxx: I Might Need Security",
-   "year": 2002,
+   "year": null,
    "source": "https://www.wikidata.org/wiki/Q6146906",
    "wikidata": "Q6146906",
    "added": "2026-10-16",
-   "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "side": "keep",
+   "why": "PENDING TMDB CHECK: Wikidata Q6146906 puts it in the stand-up class and enwiki/IMDb do not contradict it (IMDb tt0330472 tvSpecial 2002 65 min 465 votes), but the card's own rules cannot be read without TMDB details: needs votes >= 50 (movie) / 20 (series), at least 180 days old, status ok, no talk/news/reality genre. The weekly check hides these (tag break returns first)"
   },
   {
    "type": "series",
@@ -6352,7 +6335,7 @@
    "wikidata": "Q7240459",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q7240459 puts it in the stand-up class; enwiki: 'was a stand-up comedy series'; IMDb tt0156228; the build checks the card rules"
   },
   {
    "type": "series",
@@ -6373,7 +6356,7 @@
    "wikidata": "Q8056840",
    "added": "2026-10-16",
    "side": "add",
-   "why": "Wikidata puts it on the card; IMDb and Wikipedia do not contradict; the build checks the card rules"
+   "why": "Wikidata Q8056840 puts it in the stand-up class; enwiki: 'the 11th HBO stand up special'; IMDb tt0246645; the build checks the card rules"
   },
   {
    "type": "series",

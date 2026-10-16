@@ -336,6 +336,15 @@ class AddMustPassEveryDiscoverFilter(unittest.TestCase):
         self.assertIn("(not on the card's service)", self.skipped(card, on('GB', 'flatrate', 8))[0])          # other region
         self.assertIn("(not on the card's service)", self.skipped(card, on('US', 'rent', 8))[0])              # rent, card wants flatrate
 
+    def test_no_watch_provider_data_fails_closed(self):
+        card = self.own(with_watch_providers='8', watch_region='US')
+        notes, ids = self.skipped(card, mk(9))                                    # TMDB sent no watch/providers block
+        self.assertIn('correction skipped: T9 (no watch/providers data)', notes)  # old code: let it through
+        self.assertNotIn('tmdb:9', ids)
+        notes, ids = self.skipped(card, mk(9, **{'watch/providers': {'results': {'US': {'flatrate': [{'provider_id': 8}]}}}}))
+        self.assertEqual(notes, '')                                               # control: with the block it goes in
+        self.assertIn('tmdb:9', ids)
+
     def test_watch_provider_also_binds_a_new_card(self):
         card = {**self.own(with_watch_providers='8', watch_region='US'), 'provider': 'netflix'}
         off = mk(9, **{'watch/providers': {'results': {'US': {'flatrate': [{'provider_id': 15}]}}}})
