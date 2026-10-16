@@ -88,7 +88,7 @@ jobs:
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           GH_TOKEN: ${{ github.token }}
-          REPORT_FLAG: ${{ inputs.report == false && ' ' || '--report' }}
+          REPORT_FLAG: ${{ (github.event_name != 'workflow_dispatch' || inputs.report) && '--report' || '' }}
         run: |
           echo "source: $SOURCE"
           python generator/accuracy_check.py --pages pages --state state --out accuracy $REPORT_FLAG \
