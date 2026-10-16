@@ -121,9 +121,14 @@ class Rules(unittest.TestCase):
         for slug, nets in (('network-hbo-max', (8304, 6783)), ('network-pbs', (122,)), ('network-showtime', (6631,))):
             card, r = self.r(slug, 'series')
             f = ar.facts(det(9, movie=False, nets=nets), 'series')
-            lab, why = ar.classify_missing(f, 'series', card, r, TODAY, 10)
+            # the card as it was before #120 (first id only): the miss is a code bug
+            old = {**card, 'series': {**card['series'], 'with_networks': str(card['network_id'])}}
+            lab, why = ar.classify_missing(f, 'series', old, r, TODAY, 10)
             self.assertEqual(lab, 'code bug', slug)
             self.assertIn('second TMDB id', why)
+            # the card now (spec.json carries the second ids): no longer a code bug
+            lab, _ = ar.classify_missing(f, 'series', card, r, TODAY, 10)
+            self.assertNotEqual(lab, 'code bug', slug)
 
     def test_parent_organisation_only_truth_is_left_out_and_counted(self):
         rows = [{'id': '1', 'spec': '1'}, {'id': '2', 'spec': '0'}, {'id': '3'}]

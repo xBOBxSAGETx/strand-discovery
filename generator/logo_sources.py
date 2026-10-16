@@ -85,7 +85,7 @@ def main():
             out[f'streaming:{key}'] = src
             group = 'streaming'
         elif slug.startswith('network-'):
-            name, nid = c['title'], int(c['series']['with_networks'])
+            name, nid = c['title'], int(c['series']['with_networks'].split('|')[0])
             src = describe('network', nid) or {'kind': 'network', 'id': nid, 'desc': 'no logo', 'width': 0, 'height': 0,
                                                'transparent': False, 'boxy': False, 'max_width_available': 0}
             out[slug] = src

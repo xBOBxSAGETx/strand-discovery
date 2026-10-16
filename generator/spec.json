@@ -3380,7 +3380,7 @@
    "sort": "votes",
    "min_votes": 10,
    "series": {
-    "with_networks": "67"
+    "with_networks": "67|6631"
    },
    "network_id": 67
   },
@@ -3627,7 +3627,7 @@
    "sort": "votes",
    "min_votes": 10,
    "series": {
-    "with_networks": "3186"
+    "with_networks": "3186|8304|6783"
    },
    "network_id": 3186
   },
@@ -3665,7 +3665,7 @@
    "sort": "votes",
    "min_votes": 10,
    "series": {
-    "with_networks": "14"
+    "with_networks": "14|122"
    },
    "network_id": 14
   },

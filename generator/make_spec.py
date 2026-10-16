@@ -51,11 +51,13 @@ STREAMING = [('Netflix', '8'), ('Disney+', '337'), ('HBO Max', '1899'), ('Apple 
              ('Netflix Kids', '175'), ('MUBI', '11'), ('Criterion Channel', '258'), ('MagellanTV', '551'),
              ('Shudder', '99|204|2049'), ('AMC+', '526|635|1854'), ('BritBox', '151'), ('Tubi', '73'), ('Pluto TV', '300'), ('Plex', '538'),
              ('Acorn TV', '87|196|2034')]
+# A network id may be 'a|b|c': TMDB lists one network under several ids (HBO Max = 3186, 8304 and 6783 "Max"; PBS Kids 122 is
+# PBS's kids block; 6631 is Paramount+ with Showtime). The FIRST id is the card's network_id (art, logo, accuracy audit).
 NETWORKS = [('HBO', 49), ('AMC', 174), ('FX', 88), ('BBC One', 4), ('Apple TV', 2552), ('Netflix', 213),
-            ('Showtime', 67), ('Adult Swim', 80), ('Comedy Central', 47), ('Cartoon Network', 56), ('Nickelodeon', 13),
+            ('Showtime', '67|6631'), ('Adult Swim', 80), ('Comedy Central', 47), ('Cartoon Network', 56), ('Nickelodeon', 13),
             ('Disney Channel', 54), ('History', 65), ('Discovery', 64), ('National Geographic', 43), ('A&E', 129),
-            ('Hulu', 453), ('Prime Video', 1024), ('Peacock', 3353), ('HBO Max', 3186), ('Paramount+', 4330),
-            ('PBS', 14), ('MTV', 33), ('Starz', 318), ('The CW', 71)]
+            ('Hulu', 453), ('Prime Video', 1024), ('Peacock', 3353), ('HBO Max', '3186|8304|6783'), ('Paramount+', 4330),
+            ('PBS', '14|122'), ('MTV', 33), ('Starz', 318), ('The CW', 71)]
 STUDIOS = [('Pixar', '3'), ('Walt Disney Animation', '6125'), ('DreamWorks Animation', '521'), ('A24', '41077'),
            ('Blumhouse', '3172'), ('Studio Ghibli', '10342'), ('Illumination', '6704'), ('Warner Bros. Pictures', '174'),
            ('Universal', '33'), ('NEON', '90733'), ('Legendary', '923'), ('Lionsgate', '1632'), ('Focus Features', '10146'),
@@ -249,7 +251,7 @@ def main():
         # defining shows first: popularity put The Scandal / WWE Raw / Sesame Street on top of Network · Netflix
         cats.append(disc(f'network-{slugify(name)}', f'Network · {name}', name, 'Network', 'networks', ['series'],
                          'votes', series={'with_networks': str(nid)}, min_votes=10))
-        cats[-1]['network_id'] = nid
+        cats[-1]['network_id'] = int(str(nid).split('|')[0])
     for name, cid in STUDIOS:
         cats.append(disc(f'studio-{slugify(name)}', f'Studio · {name}', name, 'Studio', 'studios', ['movie'], 'popular',
                          movie={'with_companies': cid}))

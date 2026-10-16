@@ -163,7 +163,7 @@ def main():
             if 'with_watch_providers' in p:
                 card['logo'] = {'kind': 'provider', 'id': int(p['with_watch_providers'].split('|')[0])}
             elif 'with_networks' in q:
-                card['logo'] = {'kind': 'network', 'id': int(q['with_networks'])}
+                card['logo'] = {'kind': 'network', 'id': int(q['with_networks'].split('|')[0])}
             elif 'with_companies' in p:
                 card['logo'] = {'kind': 'company', 'id': int(p['with_companies'].split('|')[0])}
             base = re.sub(r'-(new|top)$', '', c['slug'])   # one override covers all three variants
