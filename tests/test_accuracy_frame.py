@@ -68,9 +68,12 @@ class Frame(unittest.TestCase):
         self.assertEqual((row['found'], row['truth'], row['recall']), (1, 4, 25.0))
 
     def test_cap_label(self):
-        stub = Stub([9], [], {('movie', 1): movie(1), ('movie', 2): movie(2), ('movie', 3): movie(3), ('movie', 9): movie(9)})
-        _, gaps = run(POP, ['movie:1', 'movie:2', 'movie:3'], stub)         # depth 3 reached
+        det = {('movie', i): movie(i) for i in (1, 2, 3, 4, 9)}
+        row, gaps = run(POP, ['movie:1', 'movie:2', 'movie:3'], Stub([1, 2, 3, 4], [], det))   # depth 3 reached, rank 4 is beyond it
         self.assertEqual([g['label'] for g in gaps if g['side'] == 'recall'], ['cap'])
+        self.assertEqual(row['at_cap'], ['streaming-x:movie'])
+        _, gaps = run(POP, ['movie:1', 'movie:2', 'movie:3'], Stub([9], [], det))             # rank 1 cannot be cut by a cap of 3
+        self.assertEqual([g['label'] for g in gaps if g['side'] == 'recall'], ['source limit'])
 
     def test_precision_breaks_are_labelled(self):
         stub = Stub([], [], {('movie', 1): movie(1),

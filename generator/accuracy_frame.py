@@ -137,12 +137,14 @@ def rule_breaks(f, media, r, today):
     return out
 
 
-def classify_missing(f, media, r, today, medium_count):
-    """Label ONE claim title the card lacks. -> (label, reason)."""
+def classify_missing(f, media, r, today, medium_count, rank):
+    """Label ONE claim title the card lacks (rank = its place, 1-based, in the claim list). -> (label, reason).
+    A cap can only cut a title whose claim rank is beyond the cap: with the top-20 claim list and caps of 500 / 1000
+    that never happens, so 'cap' is reported only when it is possible (the card-level cap exposure is `at_cap`)."""
     breaks = rule_breaks(f, media, r, today)
     if breaks:
         return 'deliberate rule', '; '.join(breaks)
-    if medium_count >= r['depth']:
+    if medium_count >= r['depth'] and rank > r['depth']:
         return 'cap', f"{media} part of the card is at its cap of {r['depth']}"
     return 'source limit', 'passes every rule and the card is under its cap: TMDB discover paging snapshot (issue #25)'
 
@@ -181,7 +183,7 @@ def summarize(kind, cards, recall_found, recall_total, sample, ok, gaps):
 def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_k=TRUTH_K):
     """Run the frame on the picked cards. order_of(slug) -> ordered keys 'movie:1' / 'series:2' of the whole card;
     tmdb(path, **params) -> json. Returns (summary row, gap rows)."""
-    gaps, rf, rt, samp, ok = [], 0, 0, 0, 0
+    gaps, rf, rt, samp, ok, at_cap = [], 0, 0, 0, 0, []
     cache = {}
 
     def detail(media, tid):
@@ -200,12 +202,15 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_k=TR
                 res = tmdb(f"/discover/{'movie' if media == 'movie' else 'tv'}", page=page, **truth_params(kind, card, media))
                 truth += [(f"{media}:{x['id']}", x.get('title') or x.get('name')) for x in res.get('results', [])]
             truth = truth[:truth_k]
-            found, total, missing = score([k for k, _ in truth], have)
+            truth_keys = [k for k, _ in truth]
+            if mcount >= r['depth']:
+                at_cap.append(f'{slug}:{media}')
+            found, total, missing = score(truth_keys, have)
             rf += found
             rt += total
             names = dict(truth)
             for k in missing:
-                lab, why = classify_missing(detail(media, int(k.split(':')[1])), media, r, today, mcount)
+                lab, why = classify_missing(detail(media, int(k.split(':')[1])), media, r, today, mcount, truth_keys.index(k) + 1)
                 gaps.append({'kind': kind, 'card': slug, 'side': 'recall', 'key': k, 'name': names[k], 'label': lab, 'reason': why})
         pool = [k for k in order]
         rng = random.Random(f'{seed}-{slug}')
@@ -219,4 +224,6 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_k=TR
                              'reason': bad[1]})
             else:
                 ok += 1
-    return summarize(kind, cards, rf, rt, samp, ok, gaps), gaps
+    row = summarize(kind, cards, rf, rt, samp, ok, gaps)
+    row['at_cap'] = at_cap                         # card parts that hold exactly their depth: titles beyond it are cut
+    return row, gaps
