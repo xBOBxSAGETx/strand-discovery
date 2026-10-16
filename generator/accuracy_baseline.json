@@ -10,7 +10,7 @@
  },
  "frame": {
   "measured": "2026-10-16",
-  "method": "accuracy_frame.py, 12 seeded cards per kind (seed audit-92), 20 titles per card, claim top 20 per medium; run 38844323755 on build run 38837399173",
+  "method": "accuracy_frame.py, 12 seeded cards per kind (seed audit-92), 20 titles per card, claim top 20 per medium; run 38844323755 on build run 38837399173; director + actor (accuracy_people.py, 12 cards each, seed audit-93, Wikidata truth, 2026-10-16): run 38846642330",
   "popular": {
    "recall": 87.1,
    "precision": 100.0,
@@ -19,6 +19,16 @@
   "top": {
    "recall": 84.5,
    "precision": 100.0,
+   "code_bugs": 0
+  },
+  "director": {
+   "recall": 87.2,
+   "precision": 97.6,
+   "code_bugs": 0
+  },
+  "actor": {
+   "recall": 78.0,
+   "precision": 95.0,
    "code_bugs": 0
   }
  }
