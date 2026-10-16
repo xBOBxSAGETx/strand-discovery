@@ -10,7 +10,7 @@
  },
  "frame": {
   "measured": "2026-10-16",
-  "method": "accuracy_frame.py, 12 seeded cards per kind (seed audit-92), 20 titles per card, claim top 20 per medium; run 38844323755 on build run 38837399173; director + actor (accuracy_people.py, 12 cards each, seed audit-93, Wikidata truth, 2026-10-16): run 38846642330; Studios + Movie series (accuracy_works.py, truth = Wikidata, seed audit-94): 13 independent studio cards, 5 circular listed studio cards, 10 seeded collection cards + 3 universe cards, 20 titles per card; check run 38855514451 (precision counts only titles Wikidata can judge; studio truth keeps shorts)",
+  "method": "accuracy_frame.py, 12 seeded cards per kind (seed audit-92), 20 titles per card, claim top 20 per medium; run 38844323755 on build run 38837399173; director + actor (accuracy_people.py, 12 cards each, seed audit-93, Wikidata truth, 2026-10-16): run 38846642330; Studios + Movie series (accuracy_works.py, truth = Wikidata, seed audit-94): 13 independent studio cards, 5 circular listed studio cards, 10 seeded collection cards + 3 universe cards, 20 titles per card; check run 38855514451 (precision counts only titles Wikidata can judge; studio truth keeps shorts); awards (accuracy_awards.py, 7 cards vs Wikidata P166 / the Wikipedia list) and Streaming New (accuracy_new.py, 21 cards vs the TMDB provider window, circular) from accuracy.yml run 38859523658 on branch accuracy-awards-new-97 (issue #97); new-* rows keep code_bugs only (circular truth, weekly sample: numbers are shown, never alarmed)",
   "popular": {
    "recall": 87.1,
    "precision": 100.0,
@@ -44,6 +44,119 @@
   "series": {
    "recall": 77.0,
    "precision": 98.0,
+   "code_bugs": 0
+  },
+  "awards-emmy-best-series": {
+   "recall": 100.0,
+   "precision": 100.0,
+   "code_bugs": 0
+  },
+  "awards-sundance-gjp": {
+   "recall": 95.3,
+   "precision": 100.0,
+   "code_bugs": 2
+  },
+  "awards-palme-dor": {
+   "recall": 100.0,
+   "precision": 100.0,
+   "code_bugs": 0
+  },
+  "awards-golden-globe-best-picture": {
+   "recall": 100.0,
+   "precision": 97.6,
+   "code_bugs": 0
+  },
+  "awards-oscar-best-picture": {
+   "recall": 100.0,
+   "precision": 100.0,
+   "code_bugs": 0
+  },
+  "awards-oscar-best-picture@wikipedia": {
+   "recall": 100.0,
+   "precision": 100.0,
+   "code_bugs": 0
+  },
+  "awards-oscar-best-picture-nominees": {
+   "recall": 100.0,
+   "precision": 100.0,
+   "code_bugs": 0
+  },
+  "awards-oscar-best-picture-nominees@wikipedia": {
+   "recall": 100.0,
+   "precision": 99.8,
+   "code_bugs": 0
+  },
+  "awards-bafta-best-film": {
+   "recall": 96.9,
+   "precision": 96.9,
+   "code_bugs": 0
+  },
+  "awards-bafta-best-film@wikipedia": {
+   "recall": 100.0,
+   "precision": 100.0,
+   "code_bugs": 0
+  },
+  "new-acorn-tv": {
+   "code_bugs": 0
+  },
+  "new-amcplus": {
+   "code_bugs": 0
+  },
+  "new-apple-tv": {
+   "code_bugs": 0
+  },
+  "new-britbox": {
+   "code_bugs": 0
+  },
+  "new-criterion-channel": {
+   "code_bugs": 0
+  },
+  "new-discoveryplus": {
+   "code_bugs": 0
+  },
+  "new-disneyplus": {
+   "code_bugs": 0
+  },
+  "new-hbo-max": {
+   "code_bugs": 0
+  },
+  "new-hulu": {
+   "code_bugs": 0
+  },
+  "new-magellantv": {
+   "code_bugs": 0
+  },
+  "new-mubi": {
+   "code_bugs": 0
+  },
+  "new-netflix-kids": {
+   "code_bugs": 0
+  },
+  "new-netflix": {
+   "code_bugs": 0
+  },
+  "new-paramountplus": {
+   "code_bugs": 0
+  },
+  "new-peacock": {
+   "code_bugs": 0
+  },
+  "new-plex": {
+   "code_bugs": 0
+  },
+  "new-pluto-tv": {
+   "code_bugs": 0
+  },
+  "new-prime-video": {
+   "code_bugs": 0
+  },
+  "new-shudder": {
+   "code_bugs": 0
+  },
+  "new-starz": {
+   "code_bugs": 0
+  },
+  "new-tubi": {
    "code_bugs": 0
   }
  }
