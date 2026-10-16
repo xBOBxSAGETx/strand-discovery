@@ -52,10 +52,10 @@ def ids_of(metas):
 
 class MustHaves(unittest.TestCase):
     def setUp(self):                      # these tests are about the must-have list alone; corrections (#117) have their own test
-        self._corr, build.corrections = build.corrections, lambda card, media: []
+        self._corr, build.corrections_of = build.corrections_of, lambda card: []
 
     def tearDown(self):
-        build.corrections = self._corr
+        build.corrections_of = self._corr
 
     def test_missing_must_have_is_added_once(self):
         stub = Stub([row(9001, 'Other A'), row(GRAVITY, 'Gravity'), row(9002, 'Other B')])    # no Interstellar
