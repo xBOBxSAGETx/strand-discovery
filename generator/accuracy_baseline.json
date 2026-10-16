@@ -54,7 +54,7 @@
   "awards-sundance-gjp": {
    "recall": 95.3,
    "precision": 100.0,
-   "code_bugs": 2
+   "code_bugs": 0
   },
   "awards-palme-dor": {
    "recall": 100.0,
