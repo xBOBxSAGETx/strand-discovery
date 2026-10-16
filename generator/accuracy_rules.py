@@ -413,7 +413,19 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
     of = ot = 0                                      # outside recall (IMDb / Wikidata stand-up)
     tj = tok = tun = 0                               # truth precision (Wikidata-judged)
     runj = 0                                         # recall truth titles left out as unjudged (parent-organisation-only)
-    no_truth, at_cap, per_card, cache, clo = [], [], [], {}, []
+    no_truth, at_cap, per_card, cache, clo, wd_failed = [], [], [], {}, [], []
+
+    def ask(slug, q):
+        """One Wikidata query for one card. WDQS can time out on a single heavy network (PBS); that card is listed as
+        unmeasured this week and the others still count."""
+        try:
+            return sparql(q)
+        except RuntimeError as e:
+            if 'Wikidata' not in str(e):
+                raise
+            if slug not in wd_failed:
+                wd_failed.append(slug)
+            return None
 
     def closure():
         if not clo:
@@ -454,7 +466,9 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                 if not qs:
                     no_truth.append(slug)
                     continue
-                rows = sparql(broadcaster_truth_query(qs))
+                rows = ask(slug, broadcaster_truth_query(qs))
+                if rows is None:
+                    continue
                 keep, wide = split_wide(rows)
                 wide_keys = {f"{media}:{r['id']}" for r in wide}
                 runj += sum(1 for k in parse_truth(rows, media, today)[:truth_k] if k in wide_keys)    # truth wider than the card
@@ -489,7 +503,8 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                 if kind == 'network':
                     qs = network_qs(card) + JUDGE_ALSO.get(card['network_id'], [])
                     if ids and qs:
-                        judge.update(parse_judge(sparql(judge_query(kind, media, ids, qs)), media))
+                        jr = ask(slug, judge_query(kind, media, ids, qs))
+                        judge.update(parse_judge(jr, media) if jr is not None else {})
                 elif ids:
                     judge.update(parse_judge_classes(sparql(judge_query(kind, media, ids, STANDUP_CLASSES)), media, closure()))
         for k in sample:
@@ -533,7 +548,7 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                           'found': of, 'truth': ot, 'recall': af.pct(of, ot), 'gaps': by('outside_recall')}
     if kind in ('network', 'standup'):
         row['truth_precision'] = {'ok': tok, 'judged': tj, 'unjudged': tun, 'precision': af.pct(tok, tj), 'gaps': by('truth_precision')}
-    row.update({'recall_unjudged': runj, 'no_truth': no_truth, 'at_cap': at_cap, 'per_card': per_card})
+    row.update({'recall_unjudged': runj, 'wd_failed': wd_failed, 'no_truth': no_truth, 'at_cap': at_cap, 'per_card': per_card})
     return row, gaps
 
 
@@ -564,6 +579,8 @@ def extra_lines(rows):
     out = []
     for r in rows:
         o, t = r.get('outside'), r.get('truth_precision')
+        if r.get('wd_failed'):
+            out.append(f"| {r['kind']} | cards Wikidata did not answer for this week (not scored) | - | {', '.join(r['wd_failed'])} |")
         if r.get('recall_unjudged'):
             out.append(f"| {r['kind']} | recall truth left out as unjudged (parent organisation only) | - | {r['recall_unjudged']} titles |")
         if o:

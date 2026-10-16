@@ -163,6 +163,11 @@ class Measure(unittest.TestCase):
         tp = row['truth_precision']
         self.assertEqual((tp['ok'], tp['judged'], tp['gaps']['deliberate rule']), (1, 2, 1))
         self.assertEqual(row['precision'], 100.0)                                     # both pass the card's own rules
+        # Wikidata timing out on one card (PBS, HTTP 500 in the 10/16 runs) must not lose the kind: the card is listed, not scored
+        def down(q):
+            raise RuntimeError('Wikidata HTTP 500')
+        row3, _ = ar.measure_rules('network', [card], SPEC, lambda s: ['series:1399'], tmdb, down, TODAY, 5, 'x')
+        self.assertEqual((row3['wd_failed'], row3['truth']), (['network-hbo'], 0))
         # seeded control: a network with no Wikidata item is listed and not scored
         row2, _ = ar.measure_rules('network', [CARDS['network-peacock']], SPEC, lambda s: ['series:1'], tmdb, sparql, TODAY, 0, 'x')
         self.assertEqual((row2['truth'], row2['no_truth']), (0, ['network-peacock']))
