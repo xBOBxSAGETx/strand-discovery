@@ -10,7 +10,7 @@
  },
  "frame": {
   "measured": "2026-10-16",
-  "method": "accuracy_frame.py, 12 seeded cards per kind (seed audit-92), 20 titles per card, claim top 20 per medium; run 38844323755 on build run 38837399173; director + actor (accuracy_people.py, 12 cards each, seed audit-93, Wikidata truth, 2026-10-16): run 38846642330; genre + theme (accuracy_genres.py, 12 genre cards seed audit-95, all 13 theme cards, Wikidata genre truth): run 38851201789",
+  "method": "accuracy_frame.py, 12 seeded cards per kind (seed audit-92), 20 titles per card, claim top 20 per medium; run 38844323755 on build run 38837399173; director + actor (accuracy_people.py, 12 cards each, seed audit-93, Wikidata truth, 2026-10-16): run 38846642330; genre + theme (accuracy_genres.py, 12 genre cards seed audit-95, all 13 theme cards, Wikidata genre truth): run 38858616280",
   "popular": {
    "recall": 87.1,
    "precision": 100.0,
@@ -32,12 +32,12 @@
    "code_bugs": 0
   },
   "genre": {
-   "recall": 58.4,
-   "precision": 56.5,
+   "recall": 57.1,
+   "precision": 64.5,
    "code_bugs": 1
   },
   "theme": {
-   "recall": 54.5,
+   "recall": 54.6,
    "precision": null,
    "code_bugs": 0
   }
