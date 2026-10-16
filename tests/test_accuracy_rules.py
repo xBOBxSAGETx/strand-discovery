@@ -1,0 +1,130 @@
+"""Issue #96: Network + rule-based card accuracy (generator/accuracy_rules.py). Stubbed TMDB, Wikidata and IMDb, no network.
+The truth mapping (card -> Wikidata broadcaster items, Wikidata / IMDb rows -> TMDB keys) is the unit under test; the card
+rules the labels use are checked against the real spec.json cards.
+
+    python -m unittest tests.test_accuracy_rules
+"""
+import json, os, re, sys, tempfile, unittest
+from pathlib import Path
+
+_tmp = tempfile.mkdtemp(prefix='sd-tests-')
+os.environ.setdefault('TMDB_API_KEY', 'unused-in-tests')
+os.environ['SD_CACHE'] = str(Path(_tmp) / 'sd_cache')
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'generator'))
+import accuracy_rules as ar  # noqa: E402
+
+TODAY = '2026-10-15'
+SPEC = json.loads((Path(__file__).resolve().parents[1] / 'generator' / 'spec.json').read_text(encoding='utf-8'))
+CARDS = {c['slug']: c for c in SPEC['catalogs']}
+
+
+def det(tid, date='1995-06-01', votes=500, rating=8.0, runtime=100, status='Ended', genres=(18,), kw=(), nets=(), movie=True):
+    d = {'id': tid, 'vote_count': votes, 'vote_average': rating, 'genres': [{'id': g} for g in genres],
+         'networks': [{'id': n} for n in nets]}
+    if movie:
+        d.update({'title': f'M{tid}', 'release_date': date, 'runtime': runtime,
+                  'release_dates': {'results': [{'release_dates': [{'type': 4}]}]}, 'keywords': {'keywords': [{'id': k} for k in kw]}})
+    else:
+        d.update({'name': f'S{tid}', 'first_air_date': date, 'status': status, 'keywords': {'results': [{'id': k} for k in kw]}})
+    return d
+
+
+class Mapping(unittest.TestCase):
+    def test_every_network_card_has_a_wikidata_entry(self):
+        nets = [c for c in SPEC['catalogs'] if 'networks' in c.get('folders', [])]
+        self.assertEqual(len(nets), 25)
+        for c in nets:
+            self.assertIn(c['network_id'], ar.NETWORKS, c['slug'])
+            for q in ar.NETWORKS[c['network_id']] or []:
+                self.assertRegex(q, r'^Q\d+$')
+        self.assertEqual(ar.network_qs(CARDS['network-hbo']), ['Q23633'])
+        self.assertEqual(ar.network_qs(CARDS['network-peacock']), [])              # no Wikidata item: no truth, listed
+
+    def test_pick_cards_kinds_and_counts(self):
+        got = {k: len(ar.pick_cards(SPEC, k, 99, 's')) for k in ar.KINDS}
+        self.assertEqual(got, {'network': 25, 'decade': 7, 'acclaimed': 2, 'hidden': 2, 'standup': 3})
+        self.assertEqual(sum(got.values()) - got['network'], 14)
+        a = ar.pick_cards(SPEC, 'network', 12, 'audit-96')
+        self.assertEqual(len(a), 12)
+        self.assertEqual(a, ar.pick_cards(SPEC, 'network', 12, 'audit-96'))         # stable
+
+    def test_broadcaster_rows_become_series_keys_and_drop_unreleased(self):
+        q = ar.broadcaster_truth_query(['Q23633'])
+        self.assertIn('wdt:P449', q)
+        self.assertIn('wdt:P4983', q)
+        rows = [{'id': '1399', 'sl': '90', 'd': '2011-04-17T00:00:00Z'}, {'id': '777', 'sl': '5', 'd': '2031-01-01T00:00:00Z'},
+                {'id': '55', 'sl': '3'}]
+        self.assertEqual(ar.parse_truth(rows, 'series', TODAY), ['series:1399', 'series:55'])
+
+    def test_imdb_weighted_top_and_mapping(self):
+        lines = ['tconst\taverageRating\tnumVotes', 'tt1\t9.0\t30000', 'tt2\t9.3\t26000', 'tt3\t9.9\t100', 'tt4\t8.0\t900000']
+        self.assertEqual(ar.imdb_top(lines, 'movie'), ['tt2', 'tt1', 'tt4'])        # 100 votes is under the 25,000 floor
+        rows = {'tt2': [{'i': 'tt2', 'm': '238'}], 'tt1': [{'i': 'tt1', 't': '5'}], 'tt4': []}
+        got = ar.imdb_truth(lines, lambda q: [r for k, v in rows.items() if f'"{k}"' in q for r in v])
+        self.assertEqual(got['movie'], ['movie:238'])                                # tt1 is a series: not a movie key
+        self.assertEqual(got['series'], ['series:5'])
+
+
+class Rules(unittest.TestCase):
+    def r(self, slug, media):
+        return CARDS[slug], ar.rules_of('x', CARDS[slug], media, SPEC)
+
+    def test_decade_window_and_vote_floor(self):
+        card, r = self.r('decade-1990s', 'movie')
+        good = ar.facts(det(1, date='1995-06-01'), 'movie')
+        old = ar.facts(det(2, date='1989-12-31'), 'movie')
+        self.assertIsNone(ar.classify_extra(good, 'movie', card, r, TODAY))
+        lab, why = ar.classify_extra(old, 'movie', card, r, TODAY)
+        self.assertEqual(lab, 'code bug')
+        self.assertIn('before the card', why)
+
+    def test_hidden_gem_ceiling_drift_is_not_a_code_bug(self):
+        card, r = self.r('acclaimed-hidden-gem-movies', 'movie')
+        near = ar.facts(det(3, date='2015-01-01', votes=1520, rating=7.6), 'movie')       # 1.3% over 1500
+        far = ar.facts(det(4, date='2015-01-01', votes=5000, rating=7.6), 'movie')
+        self.assertEqual(ar.classify_extra(near, 'movie', card, r, TODAY)[0], 'source limit')
+        self.assertEqual(ar.classify_extra(far, 'movie', card, r, TODAY)[0], 'code bug')
+
+    def test_standup_movie_floor_is_20_minutes_and_keyword_is_a_tag(self):
+        card, r = self.r('standup-top', 'movie')
+        self.assertEqual(r['min_runtime'], 20)
+        short = ar.facts(det(5, date='2015-01-01', votes=900, runtime=25, kw=(9716,)), 'movie')
+        self.assertIsNone(ar.classify_extra(short, 'movie', card, r, TODAY))
+        nokw = ar.facts(det(6, date='2015-01-01', votes=900, runtime=60), 'movie')
+        self.assertEqual(ar.classify_extra(nokw, 'movie', card, r, TODAY)[0], 'source limit')
+
+    def test_network_membership_is_a_tag_not_a_rule(self):
+        card, r = self.r('network-hbo', 'series')
+        other = ar.facts(det(7, movie=False, nets=(213,)), 'series')
+        self.assertEqual(ar.classify_missing(other, 'series', card, r, TODAY, 10)[0], 'source limit')
+
+
+class Measure(unittest.TestCase):
+    def test_network_card_end_to_end(self):
+        """Control: 1399 is on the card and Wikidata says HBO (ok); 22 is on the card but Wikidata says another broadcaster
+        while TMDB lists HBO (deliberate rule); 99 is Wikidata truth, missing from the card, TMDB lists no HBO (source limit)."""
+        card = CARDS['network-hbo']
+        dets = {1399: det(1399, movie=False, nets=(49,), votes=900), 22: det(22, movie=False, nets=(49, 4), votes=900),
+                99: det(99, movie=False, nets=(4,), votes=900)}
+
+        def tmdb(path, **p):
+            return dets[int(path.rsplit('/', 1)[1])]
+
+        def sparql(q):
+            if 'ORDER BY DESC(?sl)' in q:
+                return [{'id': '1399', 'sl': '9'}, {'id': '99', 'sl': '3'}]
+            return [{'id': '1399', 'n': '1', 'hit': '1'}, {'id': '22', 'n': '1', 'hit': '0'}]
+        row, gaps = ar.measure_rules('network', [card], SPEC, lambda s: ['series:1399', 'series:22'], tmdb, sparql, TODAY, 20, 'x')
+        self.assertEqual((row['found'], row['truth'], row['recall']), (1, 2, 50.0))
+        miss = [g for g in gaps if g['side'] == 'recall']
+        self.assertEqual([(g['key'], g['label']) for g in miss], [('series:99', 'source limit')])
+        tp = row['truth_precision']
+        self.assertEqual((tp['ok'], tp['judged'], tp['gaps']['deliberate rule']), (1, 2, 1))
+        self.assertEqual(row['precision'], 100.0)                                     # both pass the card's own rules
+        # seeded control: a network with no Wikidata item is listed and not scored
+        row2, _ = ar.measure_rules('network', [CARDS['network-peacock']], SPEC, lambda s: ['series:1'], tmdb, sparql, TODAY, 0, 'x')
+        self.assertEqual((row2['truth'], row2['no_truth']), (0, ['network-peacock']))
+
+
+if __name__ == '__main__':
+    unittest.main()

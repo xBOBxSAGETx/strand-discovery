@@ -30,6 +30,7 @@ sys.path.insert(0, str(HERE))
 import build                    # the one loader of the hand lists (build.load_hand_list); no network at import
 import accuracy_frame           # the shared frame for the Popular / Top cards (issue #92)
 import accuracy_people          # Director / Actor cards against Wikidata (issue #93)
+import accuracy_rules           # Network + rule-based cards: Decades, Acclaimed, Hidden Gems, Stand-up (issue #96)
 
 SCHEDULES = {'vt', 'fb', 'wodp'}
 ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}      # the sets arrivals.py uses (F2 / F3)
@@ -46,6 +47,8 @@ FRAME_MAX_DROP = 5.0            # points below accuracy_baseline.json "frame" th
 PEOPLE_CARDS = 12               # Director / Actor frame (accuracy_people.py): seeded cards per kind that Wikidata knows
 PEOPLE_SPARE = 3                # extra cards of the seeded order fetched from the live site, for cards Wikidata does not know
 PEOPLE_SEED = 'audit-93'
+RULES_CARDS = 12                # Network / rule-based frame (accuracy_rules.py): seeded cards per kind (a kind with fewer: all)
+RULES_SEED = 'audit-96'
 
 
 def tmdb(path, **params):
@@ -286,6 +289,8 @@ def main():
     ap.add_argument('--frame-seed', default=FRAME_SEED, help='fixed seed of the card + title sample (a stable baseline)')
     ap.add_argument('--people-cards', type=int, default=PEOPLE_CARDS, help='Director / Actor frame: seeded cards per kind (0 = off)')
     ap.add_argument('--people-seed', default=PEOPLE_SEED, help='fixed seed of the Director / Actor card + title sample')
+    ap.add_argument('--rules-cards', type=int, default=RULES_CARDS, help='Network / rule-based frame: seeded cards per kind (0 = off)')
+    ap.add_argument('--rules-seed', default=RULES_SEED, help='fixed seed of the Network / rule-based card + title sample')
     ap.add_argument('--today', help='tests only: the date to judge against (default: the build date)')
     a = ap.parse_args()
     pages, state_dir, out = Path(a.pages), Path(a.state), Path(a.out)
@@ -293,9 +298,11 @@ def main():
     spec = json.loads(Path(a.spec).read_text(encoding='utf-8'))
     frame_cards = {k: accuracy_frame.pick_cards(spec, k, a.cards, a.frame_seed) for k in accuracy_frame.KINDS} if a.cards else {}
     people_pool = {k: accuracy_people.pick_people(spec, k, a.people_seed) for k in accuracy_people.PROP} if a.people_cards else {}
+    rules_cards = {k: accuracy_rules.pick_cards(spec, k, a.rules_cards, a.rules_seed) for k in accuracy_rules.KINDS} if a.rules_cards else {}
     if a.fetch_site:
         fetch_site(a.fetch_site, pages, [c['slug'] for cs in frame_cards.values() for c in cs] +
-                   [c['slug'] for cs in people_pool.values() for c in cs[:a.people_cards + PEOPLE_SPARE]])
+                   [c['slug'] for cs in people_pool.values() for c in cs[:a.people_cards + PEOPLE_SPARE]] +
+                   [c['slug'] for cs in rules_cards.values() for c in cs])
     summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     cands = load_candidates(state_dir, summary['generated_at'][:10])
     if a.today:                                  # tests only: judge the recall window / list month as of this date
@@ -334,6 +341,16 @@ def main():
             continue
         frame_sum.append(row)
         frame_gaps += gaps
+    rules_rows = []
+    if rules_cards:                               # Network + rule-based cards (accuracy_rules.py)
+        t_rules = time.time()
+        rules_rows, g, rules_notes = accuracy_rules.run_all(rules_cards, spec, lambda slug: card_order(pages, slug), tmdb,
+                                                            accuracy_people.wikidata, dt.date.today().isoformat(), a.frame_sample,
+                                                            a.rules_seed)
+        frame_sum += rules_rows
+        frame_gaps += g
+        people_notes += rules_notes
+        print(f'accuracy_rules: {len(rules_rows)} kinds in {round(time.time() - t_rules)} s')
     if frame_gaps:
         with open(out / 'frame_gaps.csv', 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=list(frame_gaps[0]))
@@ -356,8 +373,9 @@ def main():
             lines.append(f"| {r['kind']} | {r['cards']} | {r['recall']} | {b.get('recall', '-')} | {r['found']}/{r['truth']} | "
                          f"{r['precision']} | {b.get('precision', '-')} | {r['ok']}/{r['sample']} | {g(r['recall_gaps'])} | "
                          f"{g(r['precision_gaps'])} |")
+    lines += accuracy_rules.extra_lines(rules_rows)
     print('\n'.join(lines))
-    problems = [f"precision: {e['provider']} {e['key']} not on the service ({e['precision']} precision, event "
+    problems =[f"precision: {e['provider']} {e['key']} not on the service ({e['precision']} precision, event "
                 f"{e['event_date']}, sources {e['sources']}, status {e['status']}) {e['urls'][:200]}" for e in errors]
     problems += [f"recall: {r['service']} {r['recall']}% is {r['drop']} points below the baseline {r['baseline']}%"
                  for r in rec if r.get('problem')]
@@ -370,6 +388,7 @@ def main():
                 problems.append(f"{r['kind']} {what}: {r[what]}% is {round(b[what] - r[what], 1)} points below the baseline {b[what]}%")
         if r['code_bugs'] > b.get('code_bugs', 0):
             problems.append(f"{r['kind']}: {r['code_bugs']} code-bug gaps (baseline {b.get('code_bugs', 0)}); see frame_gaps.csv")
+    problems += accuracy_rules.extra_problems(rules_rows, fbase, FRAME_MAX_DROP)
     # NOTES are shown, never problems: stale official lists (a manual refresh; the precision gate is the weekly guard)
     # and services with too few official arrivals in the window to measure
     notes = list(people_notes)
