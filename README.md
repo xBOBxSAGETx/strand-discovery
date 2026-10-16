@@ -49,6 +49,14 @@ Every 5 minutes `generator/watch.py` asks the sources "anything new?": 5 news fe
 - State (validators, hashes, fingerprints) is in the Actions cache (`sd-watch-<run_id>-<attempt>`, newest wins) and is saved only after the dispatch succeeded; a failed dispatch fails the run and saves nothing. No cache = a baseline run that reports nothing.
 - Needs `actions: write` on the job token (set in the file) to run `gh workflow run`.
 
+### The PC timer (`pc-timer/`, #79)
+
+GitHub's own `*/5` schedule ran `watch.yml` only every 4-5 hours, so the schedule is removed from the file and a Windows scheduled task **StrandWatch** on the owner's PC starts it instead, every 5 minutes (hidden, current user, only while logged on, no stored password). Each run of `pc-timer/watch-dispatch.ps1` reads `SD_WATCH` (not `on` = does nothing, so the off switch still works), skips if a `watch.yml` run is already queued or running, else runs `gh workflow run watch.yml --ref main -f dry=false` (a manual run defaults to dry, which would dispatch nothing). One line per run goes to `%LOCALAPPDATA%\strand-watch\watch.log` (rolls at 400 KB). While the PC is off or asleep nothing is watched; the nightly build is the safety net.
+
+- Install: `powershell -NoProfile -ExecutionPolicy Bypass -File pc-timer\install-task.ps1` (add `-WhatIf` to print the task without creating it).
+- **Undo:** `... install-task.ps1 -Uninstall` deletes the task; then put the `schedule: - cron: '*/5 * * * *'` lines back in `watch.yml` (or revert the PR #79 change).
+- Test: `python -m unittest tests.test_pc_timer` (stubbed `gh`, skipped without PowerShell).
+
 ### The "health" issue
 One open issue labelled `health` collects problems; GitHub emails the owner on each new issue or comment, and the
 issue closes itself after the next clean run. **A failed build never replaces the live catalogs** - the last good

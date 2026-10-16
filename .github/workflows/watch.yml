@@ -16,9 +16,14 @@ name: watch
 # `gh workflow run` with the job's GITHUB_TOKEN: GitHub's docs say events triggered by the GITHUB_TOKEN create no new
 # workflow runs "with the exception of workflow_dispatch and repository_dispatch", and the dispatch endpoint needs the
 # token's "Actions" repository permission = write (the `actions: write` below). Only a live run proves this repo's setup.
+#
+# The 5-minute timer is NOT GitHub's: its `schedule` ran only every 4-5 hours. A scheduled task on the owner's PC
+# (pc-timer/, README "The PC timer") runs `gh workflow run watch.yml` every 5 minutes, after checking SD_WATCH.
+# Undo: delete that task (pc-timer/install-task.ps1 -Uninstall) and put back the lines
+#   schedule:
+#     - cron: '*/5 * * * *'
+# under `on:`.
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       dry:
