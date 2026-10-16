@@ -57,6 +57,14 @@ GENRE_CARDS = 12                # Genre frame (accuracy_genres.py): seeded cards
 GENRE_SEED = 'audit-95'
 
 
+_T0 = time.time()
+
+
+def mark(label):
+    """One log line per block: the minutes since the run began (the weekly log shows which block is slow)."""
+    print(f'[{int(time.time() - _T0) // 60:02d}:{int(time.time() - _T0) % 60:02d}] {label}', flush=True)
+
+
 def tmdb(path, **params):
     key = os.environ.get('TMDB_API_KEY')
     if not key:
@@ -358,6 +366,7 @@ def main():
                 for prov, es in build.load_hand_list('precision_unknowns', path=a.unknowns).items() for e in es}
     baseline = json.loads(Path(a.baseline).read_text(encoding='utf-8')) if Path(a.baseline).exists() else {}
     seed = a.seed or dt.date.fromisoformat(today).strftime('%G-W%V')          # a new sample every week
+    mark('precision + recall')
     table, rows = precision(pages, state_dir, spec, summary, cands, a.n, seed, official, unknowns)
     rec = recall(pages, summary, official_rows, today, baseline)
     with open(out / 'precision.csv', 'w', newline='', encoding='utf-8') as f:
@@ -365,6 +374,7 @@ def main():
         w.writeheader()
         w.writerows(rows)
     errors = [r for r in rows if r['class'] == 'ERROR (ii)']
+    mark('popular / top frame')
     frame_sum, frame_gaps = [], []
     for kind, cs in frame_cards.items():          # Popular / Top: recall + precision + labelled gaps (accuracy_frame.py)
         row, gaps = accuracy_frame.measure(kind, cs, spec, lambda slug: card_order(pages, slug), tmdb, dt.date.today().isoformat(),
@@ -372,6 +382,7 @@ def main():
         frame_sum.append(row)
         frame_gaps += gaps
     people_notes = []
+    mark('people (Wikidata)')
     for kind, pool in people_pool.items():        # Director / Actor: against Wikidata (accuracy_people.py)
         try:
             row, gaps = accuracy_people.measure_people(kind, pool, spec, lambda slug: card_order(pages, slug), tmdb,
@@ -384,6 +395,7 @@ def main():
         frame_gaps += gaps
         for w in row.get('wd_failed', []):         # a Wikidata query that timed out: that card was not measured (a note, not a problem)
             people_notes.append(f'{kind} not measured: {w}')
+    mark('genres / themes (Wikidata)')
     for kind, cs in genre_cards.items():          # Genres / Themes: against Wikidata genre (accuracy_genres.py)
         try:
             row, gaps = accuracy_genres.measure_cards(kind, cs, spec, lambda slug: card_order(pages, slug), tmdb,
@@ -396,6 +408,7 @@ def main():
         frame_gaps += gaps
         for w in row.get('wd_failed', []):         # a Wikidata query that timed out: that card was not measured (a note, not a problem)
             people_notes.append(f'{kind} not measured: {w}')
+    mark('networks + rule cards (Wikidata)')
     rules_rows = []
     if rules_cards:                               # Network + rule-based cards (accuracy_rules.py)
         t_rules = time.time()
@@ -406,6 +419,7 @@ def main():
         frame_gaps += g
         people_notes += rules_notes
         print(f'accuracy_rules: {len(rules_rows)} kinds in {round(time.time() - t_rules)} s')
+    mark('studios / series (Wikidata)')
     works_errors = []
     for kind, cs in works_cards.items():          # Studios / Movie series: Wikidata is the truth; a Wikidata outage is a note
         try:
@@ -416,6 +430,7 @@ def main():
             continue
         frame_sum.append(row)
         frame_gaps += gaps
+    mark('awards (Wikidata)')
     award_notes = []
     for slug in accuracy_awards.CARDS:            # Awards: Wikidata P166 / the Wikipedia list is the truth; an outage is a note
         try:
@@ -425,6 +440,7 @@ def main():
                 frame_gaps += gaps
         except Exception as e:
             award_notes.append(f'{slug}: not measured ({type(e).__name__}: {str(e)[:120]})')
+    mark('new shelves')
     new_notes = []
     new_state = json.loads(gzip.decompress((state_dir / 'first_seen.json.gz').read_bytes()))
     for slug, mode in sorted(summary.get('new_card_modes', {}).items()):     # every New card: recall vs TMDB window, precision
@@ -438,6 +454,7 @@ def main():
             continue
         frame_sum.append(row)
         frame_gaps += gaps
+    mark('all measured; writing the report')
     if frame_gaps:
         with open(out / 'frame_gaps.csv', 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=list(frame_gaps[0]))
