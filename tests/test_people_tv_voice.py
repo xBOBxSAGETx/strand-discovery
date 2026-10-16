@@ -51,6 +51,27 @@ def run(fn, credits, card):
 class Directors(unittest.TestCase):
     CARD = {'person_id': 1, 'slug': 'dir-x'}
 
+    def test_shorts_under_40_min_are_on_the_card(self):
+        """Issue #30: a director card shows the whole portfolio, shorts included (The Big Shave, 6 min, was dropped)."""
+        runtimes = {10: 146, 11: 6, 12: 0}
+        crew = [movie_crew(10, 'Goodfellas'), movie_crew(11, 'The Big Shave', votes=300), movie_crew(12, 'Obscure short', votes=3)]
+
+        def stub(path, **params):
+            if path.endswith('/movie_credits'):
+                return {'crew': crew}
+            if path.endswith('/tv_credits'):
+                return {'crew': []}
+            return {'runtime': runtimes[int(path.rsplit('/', 1)[1])]}
+        real, build.tmdb = build.tmdb, stub
+        build._stable.clear()
+        try:
+            dropped = []
+            names = [m['name'] for m in build.director(self.CARD, dropped)]
+        finally:
+            build.tmdb = real
+        self.assertEqual(names, ['Goodfellas', 'The Big Shave', 'Obscure short'])
+        self.assertEqual(dropped, [])
+
     def test_scorsese_boardwalk_empire_once(self):
         names = run(build.director, {
             'movie_crew': [movie_crew(10, 'Goodfellas')],
