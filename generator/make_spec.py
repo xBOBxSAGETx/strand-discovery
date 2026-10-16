@@ -85,10 +85,21 @@ GENRES = [('Action', {'with_genres': '28'}, {'with_genres': '10759'}),
 THEMES = [('Superheroes', '9715'), ('Zombies', '12377'), ('Space Epics', '161176'), ('Spies', '470'), ('Aliens', '9951'),
           ('Robots & AI', '310'), ('Dystopian', '4565'), ('Disaster', '10617'), ('Creature Features', '158126|161791|11100|33696|158252|7035|321335|158108'),
           ('Psychological', '12565'), ('Myths & Legends', '2035'), ('Heist', '10051'), ('Time Travel', '4379')]
-# Movie Series, A–Z. collection ids / keyword / explicit TMDB ids (for franchises TMDB doesn't group).
+# Movie Series, A–Z. collection ids / keyword / explicit TMDB ids (for franchises TMDB doesn't group): spin(...).
+SPIN_SOURCE = "spin-off TMDB doesn't group into the collection"
+
+
+def spin(media, tmdb, title, year):
+    return build.hand_entry(media, tmdb, title, year, f'{SPIN_SOURCE} (https://www.themoviedb.org/'
+                            f"{'movie' if media == 'movie' else 'tv'}/{tmdb})")
+
+
 SERIES = {
     '007': {'collections': [645]},
-    'Alien': {'collections': [8091], 'ids': [['movie', 70981], ['movie', 126889], ['movie', 945961]]},   # spin-offs TMDB doesn't group: Prometheus, Covenant, Romulus
+    'Alien': {'collections': [8091], 'ids': [
+        spin('movie', 70981, 'Prometheus', 2012),
+        spin('movie', 126889, 'Alien: Covenant', 2017),
+        spin('movie', 945961, 'Alien: Romulus', 2024)]},   # spin-offs TMDB doesn't group: Prometheus, Covenant, Romulus
     'Avatar': {'collections': [87096]},
     'Back to the Future': {'collections': [264]},
     'Bad Boys': {'collections': [14890]},
@@ -100,8 +111,8 @@ SERIES = {
     'Dune': {'collections': [726871]},
     'Fast & Furious': {'collections': [9485]},
     'Frozen': {'collections': [386382]},
-    'Ghostbusters': {'collections': [2980], 'ids': [['movie', 43074]]},   # spin-offs TMDB doesn't group: 2016
-    'Halloween': {'collections': [91361], 'ids': [['movie', 2082], ['movie', 24150]]},   # spin-offs TMDB doesn't group: Rob Zombie 2007, Halloween II 2009
+    'Ghostbusters': {'collections': [2980], 'ids': [spin('movie', 43074, 'Ghostbusters', 2016)]},   # spin-offs TMDB doesn't group: 2016
+    'Halloween': {'collections': [91361], 'ids': [spin('movie', 2082, 'Halloween', 2007), spin('movie', 24150, 'Halloween II', 2009)]},   # spin-offs TMDB doesn't group: Rob Zombie 2007, Halloween II 2009
     'Harry Potter': {'collections': [1241, 435259]},
     'How to Train Your Dragon': {'collections': [89137, 1458864]},
     'Ice Age': {'collections': [8354]},
@@ -113,29 +124,38 @@ SERIES = {
     'Knives Out': {'collections': [722971]},
     'Kung Fu Panda': {'collections': [77816]},
     'Lethal Weapon': {'collections': [945]},
-    'Lord of the Rings': {'collections': [119, 121938], 'ids': [['movie', 839033]]},   # spin-offs TMDB doesn't group: The War of the Rohirrim
+    'Lord of the Rings': {'collections': [119, 121938], 'ids': [spin('movie', 839033, 'The Lord of the Rings: The War of the Rohirrim', 2024)]},   # spin-offs TMDB doesn't group: The War of the Rohirrim
     'Mad Max': {'collections': [8945]},
-    'Madagascar': {'collections': [14740], 'ids': [['movie', 270946]]},   # spin-offs TMDB doesn't group: Penguins of Madagascar
+    'Madagascar': {'collections': [14740], 'ids': [spin('movie', 270946, 'Penguins of Madagascar', 2014)]},   # spin-offs TMDB doesn't group: Penguins of Madagascar
     'Marvel Cinematic Universe': {'keywords': '180547'},
     'Maze Runner': {'collections': [295130]},
-    'Men in Black': {'collections': [86055], 'ids': [['movie', 479455]]},   # spin-offs TMDB doesn't group: International
+    'Men in Black': {'collections': [86055], 'ids': [spin('movie', 479455, 'Men in Black: International', 2019)]},   # spin-offs TMDB doesn't group: International
     'Mission: Impossible': {'collections': [87359]},
     'MonsterVerse': {'keywords': '380322'},
-    "Ocean's": {'collections': [304], 'ids': [['movie', 402900]]},   # spin-offs TMDB doesn't group: Ocean's 8
+    "Ocean's": {'collections': [304], 'ids': [spin('movie', 402900, "Ocean's Eight", 2018)]},   # spin-offs TMDB doesn't group: Ocean's 8
     'Pirates of the Caribbean': {'collections': [295]},
-    'Planet of the Apes': {'collections': [1709, 173710], 'ids': [['movie', 869]]},   # spin-offs TMDB doesn't group: 2001
-    'Predator': {'collections': [399], 'ids': [['movie', 1376434]]},   # spin-offs TMDB doesn't group: Killer of Killers
+    'Planet of the Apes': {'collections': [1709, 173710], 'ids': [spin('movie', 869, 'Planet of the Apes', 2001)]},   # spin-offs TMDB doesn't group: 2001
+    'Predator': {'collections': [399], 'ids': [spin('movie', 1376434, 'Predator: Killer of Killers', 2025)]},   # spin-offs TMDB doesn't group: Killer of Killers
     'Rocky': {'collections': [1575]},
     'Rush Hour': {'collections': [90863]},
     'Saw': {'collections': [656]},
     'Scary Movie': {'collections': [4246]},
     'Scream': {'collections': [2602]},
-    'Shrek': {'collections': [2150], 'ids': [['movie', 417859], ['movie', 315162]]},   # spin-offs TMDB doesn't group: Puss in Boots 2011, The Last Wish
+    'Shrek': {'collections': [2150], 'ids': [spin('movie', 417859, 'Puss in Boots', 2011), spin('movie', 315162, 'Puss in Boots: The Last Wish', 2022)]},   # spin-offs TMDB doesn't group: Puss in Boots 2011, The Last Wish
     'Spider-Man': {'collections': [556, 125574, 531241, 573436]},
     'Star Wars': {'collections': [10], 'ids': [
-        ['movie', 330459], ['movie', 348350],                                    # Rogue One, Solo
-        ['series', 82856], ['series', 83867], ['series', 114461], ['series', 4194], ['series', 115036],
-        ['series', 92830], ['series', 105971], ['series', 60554], ['series', 202879], ['series', 114479]]},
+        spin('movie', 330459, 'Rogue One: A Star Wars Story', 2016),
+        spin('movie', 348350, 'Solo: A Star Wars Story', 2018),
+        spin('series', 82856, 'The Mandalorian', 2019),
+        spin('series', 83867, 'Andor', 2022),
+        spin('series', 114461, 'Ahsoka', 2023),
+        spin('series', 4194, 'Star Wars: The Clone Wars', 2008),
+        spin('series', 115036, 'The Book of Boba Fett', 2021),
+        spin('series', 92830, 'Obi-Wan Kenobi', 2022),
+        spin('series', 105971, 'Star Wars: The Bad Batch', 2021),
+        spin('series', 60554, 'Star Wars Rebels', 2014),
+        spin('series', 202879, 'Star Wars: Skeleton Crew', 2024),
+        spin('series', 114479, 'The Acolyte', 2024)]},
     'Terminator': {'collections': [528]},
     'The Conjuring': {'collections': [313086]},
     'The Dark Knight': {'collections': [263]},
@@ -143,16 +163,28 @@ SERIES = {
     'The Hangover': {'collections': [86119]},
     'The Hunger Games': {'collections': [131635, 1701563]},
     'The Matrix': {'collections': [2344]},
-    'Toy Story': {'collections': [10194], 'ids': [['movie', 718789]]},   # spin-offs TMDB doesn't group: Lightyear
-    'Transformers': {'collections': [8650], 'ids': [['movie', 424783], ['movie', 667538], ['movie', 698687]]},   # spin-offs TMDB doesn't group: Bumblebee, Rise of the Beasts, Transformers One
+    'Toy Story': {'collections': [10194], 'ids': [spin('movie', 718789, 'Lightyear', 2022)]},   # spin-offs TMDB doesn't group: Lightyear
+    'Transformers': {'collections': [8650], 'ids': [
+        spin('movie', 424783, 'Bumblebee', 2018),
+        spin('movie', 667538, 'Transformers: Rise of the Beasts', 2023),
+        spin('movie', 698687, 'Transformers One', 2024)]},   # spin-offs TMDB doesn't group: Bumblebee, Rise of the Beasts, Transformers One
     'Twilight': {'collections': [33514]},
-    'X-Men': {'collections': [748], 'ids': [['movie', 76170], ['movie', 2080], ['movie', 263115], ['movie', 293660], ['movie', 383498], ['movie', 533535], ['movie', 340102]]},   # spin-offs TMDB doesn't group: The Wolverine, Origins, Logan, Deadpool 1-3, The New Mutants
+    'X-Men': {'collections': [748], 'ids': [
+        spin('movie', 76170, 'The Wolverine', 2013),
+        spin('movie', 2080, 'X-Men Origins: Wolverine', 2009),
+        spin('movie', 263115, 'Logan', 2017),
+        spin('movie', 293660, 'Deadpool', 2016),
+        spin('movie', 383498, 'Deadpool 2', 2018),
+        spin('movie', 533535, 'Deadpool & Wolverine', 2024),
+        spin('movie', 340102, 'The New Mutants', 2020)]},   # spin-offs TMDB doesn't group: The Wolverine, Origins, Logan, Deadpool 1-3, The New Mutants
 }
 # (card name, source) in folder order. Source = an MDBList list, or an awards.json key (built from the Wikipedia winner
 # tables by awards_wiki.py; build.py reads the ids at build time, so the yearly refresh only has to update awards.json).
 # Palme d'Or and Golden Globe moved from MDBList to Wikipedia 2026-09-28 (MDBList had a wrong film on each).
-OSCAR_NOT_BP = [['movie', 631], ['movie', 3061], ['movie', 44657]]   # 1927/28 "Unique and Artistic Production" (Sunrise,
-#                                    The Crowd, Chang): a separate award, not Best Picture - the Academy starts with Wings
+OSCAR_WHY = ('1927/28 "Unique and Artistic Production" (Sunrise, The Crowd, Chang): a separate award, not Best Picture; '
+             'the Academy starts with Wings')
+OSCAR_NOT_BP = [build.hand_entry('movie', i, t, y, f'{OSCAR_WHY} (https://www.themoviedb.org/movie/{i})')
+                for i, t, y in [(631, 'Sunrise', 1927), (3061, 'The Crowd', 1928), (44657, 'Chang', 1927)]]
 AWARDS = [('Oscar Best Picture', {'list': 'apg2886/oscar-best-picture-winners', 'exclude': OSCAR_NOT_BP}),
           ('Oscar Best Picture Nominees', {'list': 'gatornylon/oscar-best-picture-nominated', 'exclude': OSCAR_NOT_BP}),
           ("Palme d'Or", {'awards_key': 'palme-dor'}),
@@ -228,7 +260,7 @@ def main():
             e.update(kind='discover', media=['movie', 'series'], sort='release_asc', min_votes=0,
                      movie={'with_keywords': spec['keywords']}, series={'with_keywords': spec['keywords']})
         else:
-            e.update(kind='franchise', media=['movie', 'series'] if any(m == 'series' for m, _ in spec.get('ids', [])) else ['movie'],
+            e.update(kind='franchise', media=['movie', 'series'] if any(x['type'] == 'series' for x in spec.get('ids', [])) else ['movie'],
                      collection_ids=spec['collections'], ids=spec.get('ids', []))
         cats.append(e)
     for name, kw in THEMES:
@@ -328,11 +360,12 @@ def main():
                         # every discover card, movie + tv. TMDB /search/keyword ids (2026-09-27): ecchi, etchi, hentai,
                         # hentai adaptation, softcore, gay softcore, sexploitation, sexsploitation, pantsu, animated porn
                         'without_keywords': '195669|285672|198385|384581|155477|382870|10053|335048|281749|378816',
-                        # manual deny-list for leaks the keywords miss: [medium, tmdb id, why]
+                        # manual deny-list for leaks the keywords miss: hand entries, the source = why it is denied
                         # TV only: 'erotic' (256466). On movies it also removes Quills / Fair Play (run-1 measurement)
                         'without_keywords_tv': '256466',
-                        'deny': [['series', 95897, 'Overflow (2020): ecchi anime not flagged adult'],
-                                 ['series', 70998, 'Souryo to Majiwaru Shikiyoku no Yoru ni (2017): explicit']]}
+                        'deny': [build.hand_entry('series', 95897, 'Overflow', 2020, 'Overflow (2020): ecchi anime not flagged adult'),
+                                 build.hand_entry('series', 70998, 'Souryo to Majiwaru Shikiyoku no Yoru ni', 2017,
+                                                  'Souryo to Majiwaru Shikiyoku no Yoru ni (2017): explicit')]}
     spec['folders'] = FOLDERS
     spec.pop('cards', None)
     spec['catalogs'] = cats

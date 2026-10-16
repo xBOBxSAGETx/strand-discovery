@@ -55,7 +55,7 @@ def build_card(c, stub, data):
 
 
 def entry(tid, qid):
-    return {'tmdb': tid, 'title': f'T{tid}', 'year': 2017, 'qid': qid}
+    return {'type': 'movie', 'tmdb': tid, 'title': f'T{tid}', 'year': 2017, 'source': f'https://www.wikidata.org/wiki/{qid}', 'qid': qid}
 
 
 DATA = {'studio-a24': [entry(LADY_BIRD, 'Q27480769'), entry(HEREDITARY, 'Q47524071'), entry(UNRELEASED, 'Q1')]}
@@ -108,6 +108,7 @@ class DataFile(unittest.TestCase):
             self.assertLessEqual(len(ids), studio_distributed.CAP, slug)
             for r in rows:
                 self.assertRegex(r['qid'], r'^Q\d+$')
+                self.assertEqual((r['type'], r['source']), ('movie', 'https://www.wikidata.org/wiki/' + r['qid']))
                 self.assertTrue(r['title'] and type(r['year']) is int, r)
 
     def test_the_issue_examples_are_in(self):
@@ -127,6 +128,8 @@ class DataFile(unittest.TestCase):
             for e in entries:
                 self.assertTrue(e['why'].startswith(('Box Office Mojo', 'Wikipedia')) and 'http' in e['why'], e)
                 self.assertNotIn(e['tmdb'], ids, e['title'])
+                self.assertEqual(e['type'], 'movie')                 # the one hand-list shape (#83)
+                self.assertIn(e['source'], e['why'])                 # source = the URL the why quotes
 
 
 if __name__ == '__main__':

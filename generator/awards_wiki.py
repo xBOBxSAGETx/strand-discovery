@@ -18,7 +18,9 @@ bafta-best-film.
 Film lists are resolved ROW BY ROW (same-name films of different years stay distinct), newest first, one entry per id.
 Film candidates shorter than MIN_FILM_RUNTIME are never picked (a 13-min "Birdman" short once beat the 2014 winner);
 the same rule applies to the Emmy TV-movie fallback.
-Every title is resolved with TMDB search; the report lists each one with how it matched. Unresolved titles are
+Each id is written as a hand-list entry {"type","tmdb","title","year","source"} (title/year = the TMDB match, source =
+the Wikipedia list page the row came from; build.load_hand_list reads it). Every title is resolved with TMDB search; the
+report lists each one with how it matched. Unresolved titles are
 listed there and in awards.json["unresolved"], never silently dropped. Needs TMDB_API_KEY (never printed).
 """
 import csv, json, re, sys, unicodedata, urllib.parse, urllib.request
@@ -31,6 +33,7 @@ HERE = Path(__file__).resolve().parent
 WIKI = 'https://en.wikipedia.org/w/api.php?action=parse&prop=wikitext&format=json&redirects=1&page='
 UA = {'User-Agent': 'strand-discovery award lists (personal, non-commercial)'}
 LINK = r"\[\[([^\]|]+)(?:\|([^\]]+))?\]\]"
+WIKI_PAGE = 'https://en.wikipedia.org/wiki/'
 
 
 def wikitext(page):
@@ -181,15 +184,22 @@ def film_lists():
     return out
 
 
+def award_entry(hit, page):
+    """One resolved row -> the hand-list entry; `page` is the Wikipedia article the row was read from."""
+    return build.hand_entry(hit[0], hit[1], hit[2], hit[3], WIKI_PAGE + page)
+
+
 def film_list(key, entries):
     """Resolve row by row, newest first; one entry per TMDB id."""
     ids, rows, unresolved = [], [], []
+    seen = set()
     extra = [(y, t, g, f'EXTRA: {why}') for y, t, g, why in EXTRA_ROWS.get(key, [])]
     for year, title, target, page in sorted(entries + extra, key=lambda e: -e[0]):
         hit = resolve(title, year, 'movie', target)
         if hit:
-            if [hit[0], hit[1]] not in ids:
-                ids.append([hit[0], hit[1]])
+            if (hit[0], hit[1]) not in seen:
+                seen.add((hit[0], hit[1]))
+                ids.append(award_entry(hit, EXTRA_PAGE[key] if page.startswith('EXTRA:') else page))
             rows.append([year, year, title, page, f'{hit[0]}:{hit[1]}', hit[2], hit[3], hit[4]])
         else:
             unresolved.append(f'{title} ({year})')
@@ -214,6 +224,7 @@ OVERRIDES = {
 # rows a winner table leaves out, with why (copilot ruling 2026-09-28)
 EXTRA_ROWS = {'palme-dor': [(1939, 'Union Pacific', 'Union Pacific (film)',
                              "1939 Palme d'Or awarded retrospectively in 2002 (Wikipedia footnote only)")]}
+EXTRA_PAGE = {'palme-dor': "Palme_d'Or"}      # the article an EXTRA row comes from (its footnote)
 MIN_FILM_RUNTIME = 40
 REFERENCE_ONLY = {'oscar-winners', 'oscar-nominees', 'bafta-best-film'}   # cross-check only, not cards
 
@@ -355,11 +366,13 @@ def build_list(entries, media):
             else:
                 base['last'] = y
     ids, rows, unresolved = [], [], []
+    seen = set()
     for w in sorted(recs, key=lambda w: -w['last']):
         hit = w['hit']
         if hit:
-            if [hit[0], hit[1]] not in ids:
-                ids.append([hit[0], hit[1]])
+            if (hit[0], hit[1]) not in seen:
+                seen.add((hit[0], hit[1]))
+                ids.append(award_entry(hit, w['src']))
             rows.append([w['last'], w['first'], w['title'], w['src'], f'{hit[0]}:{hit[1]}', hit[2], hit[3], hit[4]])
         else:
             unresolved.append(f"{w['title']} ({w['first']})")

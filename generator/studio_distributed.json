@@ -1,5231 +1,6971 @@
 {
  "studio-a24": [
   {
+   "type": "movie",
    "tmdb": 545611,
    "title": "Everything Everywhere All at Once",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q83808444",
    "qid": "Q83808444"
   },
   {
+   "type": "movie",
    "tmdb": 376867,
    "title": "Moonlight",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q21527875",
    "qid": "Q21527875"
   },
   {
+   "type": "movie",
    "tmdb": 391713,
    "title": "Lady Bird",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q27480769",
    "qid": "Q27480769"
   },
   {
+   "type": "movie",
    "tmdb": 264660,
    "title": "Ex Machina",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q16635326",
    "qid": "Q16635326"
   },
   {
+   "type": "movie",
    "tmdb": 122081,
    "title": "Spring Breakers",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q1781285",
    "qid": "Q1781285"
   },
   {
+   "type": "movie",
    "tmdb": 467244,
    "title": "The Zone of Interest",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q115993222",
    "qid": "Q115993222"
   },
   {
+   "type": "movie",
    "tmdb": 549509,
    "title": "The Brutalist",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q101112656",
    "qid": "Q101112656"
   },
   {
+   "type": "movie",
    "tmdb": 1083381,
    "title": "Backrooms",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q125131076",
    "qid": "Q125131076"
   },
   {
+   "type": "movie",
    "tmdb": 785084,
    "title": "The Whale",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q105883400",
    "qid": "Q105883400"
   },
   {
+   "type": "movie",
    "tmdb": 530385,
    "title": "Midsommar",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q55907451",
    "qid": "Q55907451"
   },
   {
+   "type": "movie",
    "tmdb": 394117,
    "title": "The Florida Project",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q29514872",
    "qid": "Q29514872"
   },
   {
+   "type": "movie",
    "tmdb": 310131,
    "title": "The Witch",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q19057481",
    "qid": "Q19057481"
   },
   {
+   "type": "movie",
    "tmdb": 493922,
    "title": "Hereditary",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q47524071",
    "qid": "Q47524071"
   },
   {
+   "type": "movie",
    "tmdb": 666277,
    "title": "Past Lives",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q116025865",
    "qid": "Q116025865"
   },
   {
+   "type": "movie",
    "tmdb": 96936,
    "title": "The Bling Ring",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q3077738",
    "qid": "Q3077738"
   },
   {
+   "type": "movie",
    "tmdb": 615643,
    "title": "Minari",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q65679599",
    "qid": "Q65679599"
   },
   {
+   "type": "movie",
    "tmdb": 503919,
    "title": "The Lighthouse",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q55402791",
    "qid": "Q55402791"
   },
   {
+   "type": "movie",
    "tmdb": 929590,
    "title": "Civil War",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q111538862",
    "qid": "Q111538862"
   },
   {
+   "type": "movie",
    "tmdb": 1317288,
    "title": "Marty Supreme",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q130118681",
    "qid": "Q130118681"
   },
   {
+   "type": "movie",
    "tmdb": 473033,
    "title": "Uncut Gems",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q56312570",
    "qid": "Q56312570"
   },
   {
+   "type": "movie",
    "tmdb": 965150,
    "title": "Aftersun",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q111668106",
    "qid": "Q111668106"
   },
   {
+   "type": "movie",
    "tmdb": 1138194,
    "title": "Heretic",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q122933268",
    "qid": "Q122933268"
   },
   {
+   "type": "movie",
    "tmdb": 347031,
    "title": "Swiss Army Man",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q21528092",
    "qid": "Q21528092"
   },
   {
+   "type": "movie",
    "tmdb": 760104,
    "title": "X",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q105605250",
    "qid": "Q105605250"
   },
   {
+   "type": "movie",
    "tmdb": 1020006,
    "title": "Priscilla",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q115115152",
    "qid": "Q115115152"
   },
   {
+   "type": "movie",
    "tmdb": 1325734,
    "title": "The Drama",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q130590402",
    "qid": "Q130590402"
   },
   {
+   "type": "movie",
    "tmdb": 157386,
    "title": "The Spectacular Now",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q3522804",
    "qid": "Q3522804"
   },
   {
+   "type": "movie",
    "tmdb": 798286,
    "title": "Beau Is Afraid",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q106817801",
    "qid": "Q106817801"
   },
   {
+   "type": "movie",
    "tmdb": 1008042,
    "title": "Talk to Me",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q116193178",
    "qid": "Q116193178"
   },
   {
+   "type": "movie",
    "tmdb": 241239,
    "title": "A Most Violent Year",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q15915435",
    "qid": "Q15915435"
   },
   {
+   "type": "movie",
    "tmdb": 342737,
    "title": "20th Century Women",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q21010845",
    "qid": "Q21010845"
   },
   {
+   "type": "movie",
    "tmdb": 948549,
    "title": "Love Lies Bleeding",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q113488690",
    "qid": "Q113488690"
   },
   {
+   "type": "movie",
    "tmdb": 1136867,
    "title": "Materialists",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q125726790",
    "qid": "Q125726790"
   },
   {
+   "type": "movie",
    "tmdb": 458737,
    "title": "First Reformed",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q28956599",
    "qid": "Q28956599"
   },
   {
+   "type": "movie",
    "tmdb": 559907,
    "title": "The Green Knight",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q65091255",
    "qid": "Q65091255"
   },
   {
+   "type": "movie",
    "tmdb": 1097549,
    "title": "Babygirl",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123861757",
    "qid": "Q123861757"
   },
   {
+   "type": "movie",
    "tmdb": 396461,
    "title": "Under the Silver Lake",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q27703232",
    "qid": "Q27703232"
   },
   {
+   "type": "movie",
    "tmdb": 429200,
    "title": "Good Time",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q22350752",
    "qid": "Q22350752"
   },
   {
+   "type": "movie",
    "tmdb": 565310,
    "title": "The Farewell",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q60611804",
    "qid": "Q60611804"
   },
   {
+   "type": "movie",
    "tmdb": 950028,
    "title": "The Invite",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q134083296",
    "qid": "Q134083296"
   },
   {
+   "type": "movie",
    "tmdb": 1023922,
    "title": "MaXXXine",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q116032682",
    "qid": "Q116032682"
   },
   {
+   "type": "movie",
    "tmdb": 246403,
    "title": "Tusk",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q15139203",
    "qid": "Q15139203"
   },
   {
+   "type": "movie",
    "tmdb": 489925,
    "title": "Eighth Grade",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q47265121",
    "qid": "Q47265121"
   },
   {
+   "type": "movie",
    "tmdb": 648878,
    "title": "Eddington",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q121433282",
    "qid": "Q121433282"
   },
   {
+   "type": "movie",
    "tmdb": 1059128,
    "title": "Queer",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q116771681",
    "qid": "Q116771681"
   },
   {
+   "type": "movie",
    "tmdb": 313922,
    "title": "Green Room",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q18392433",
    "qid": "Q18392433"
   },
   {
+   "type": "movie",
    "tmdb": 520023,
    "title": "Bodies Bodies Bodies",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q107071554",
    "qid": "Q107071554"
   },
   {
+   "type": "movie",
    "tmdb": 591538,
    "title": "The Tragedy of Macbeth",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q84693711",
    "qid": "Q84693711"
   },
   {
+   "type": "movie",
    "tmdb": 823482,
    "title": "Dream Scenario",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q115804772",
    "qid": "Q115804772"
   },
   {
+   "type": "movie",
    "tmdb": 850165,
    "title": "The Iron Claw",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q114901506",
    "qid": "Q114901506"
   },
   {
+   "type": "movie",
    "tmdb": 340485,
    "title": "American Honey",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q20001112",
    "qid": "Q20001112"
   },
   {
+   "type": "movie",
    "tmdb": 428449,
    "title": "A Ghost Story",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q27964497",
    "qid": "Q27964497"
   },
   {
+   "type": "movie",
    "tmdb": 467905,
    "title": "How to Make a Killing",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q126488898",
    "qid": "Q126488898"
   },
   {
+   "type": "movie",
    "tmdb": 760329,
    "title": "The Smashing Machine",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q126012569",
    "qid": "Q126012569"
   },
   {
+   "type": "movie",
    "tmdb": 949423,
    "title": "Pearl",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q111669794",
    "qid": "Q111669794"
   },
   {
+   "type": "movie",
    "tmdb": 1160360,
    "title": "If I Had Legs I'd Kick You",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q124450734",
    "qid": "Q124450734"
   },
   {
+   "type": "movie",
    "tmdb": 376865,
    "title": "High Life",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q33129472",
    "qid": "Q33129472"
   },
   {
+   "type": "movie",
    "tmdb": 418078,
    "title": "It Comes at Night",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q27703192",
    "qid": "Q27703192"
   },
   {
+   "type": "movie",
    "tmdb": 1151031,
    "title": "Bring Her Back",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q127602379",
    "qid": "Q127602379"
   },
   {
+   "type": "movie",
    "tmdb": 1153714,
    "title": "Death of a Unicorn",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q120887939",
    "qid": "Q120887939"
   },
   {
+   "type": "movie",
    "tmdb": 1155828,
    "title": "Sing Sing",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q122335323",
    "qid": "Q122335323"
   },
   {
+   "type": "movie",
    "tmdb": 1241436,
    "title": "Warfare",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q125217247",
    "qid": "Q125217247"
   },
   {
+   "type": "movie",
    "tmdb": 1287141,
    "title": "Pillion",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q125975336",
    "qid": "Q125975336"
   },
   {
+   "type": "movie",
    "tmdb": 252512,
    "title": "While We're Young",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q17089779",
    "qid": "Q17089779"
   },
   {
+   "type": "movie",
    "tmdb": 347866,
    "title": "Hot Summer Nights",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q20875660",
    "qid": "Q20875660"
   },
   {
+   "type": "movie",
    "tmdb": 437586,
    "title": "Mid90s",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q33105131",
    "qid": "Q33105131"
   },
   {
+   "type": "movie",
    "tmdb": 858017,
    "title": "I Saw the TV Glow",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q113903713",
    "qid": "Q113903713"
   },
   {
+   "type": "movie",
    "tmdb": 989662,
    "title": "A Different Man",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q117272474",
    "qid": "Q117272474"
   },
   {
+   "type": "movie",
    "tmdb": 1100099,
    "title": "We Live in Time",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q117425181",
    "qid": "Q117425181"
   },
   {
+   "type": "movie",
    "tmdb": 291351,
    "title": "The Sea of Trees",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q17459558",
    "qid": "Q17459558"
   },
   {
+   "type": "movie",
    "tmdb": 780609,
    "title": "Men",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q106514711",
    "qid": "Q106514711"
   },
   {
+   "type": "movie",
    "tmdb": 595586,
    "title": "Causeway",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q64691760",
    "qid": "Q64691760"
   },
   {
+   "type": "movie",
    "tmdb": 1205515,
    "title": "Sorry, Baby",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q131450483",
    "qid": "Q131450483"
   },
   {
+   "type": "movie",
    "tmdb": 1375441,
    "title": "Primetime",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q133273688",
    "qid": "Q133273688"
   },
   {
+   "type": "movie",
    "tmdb": 533444,
    "title": "Waves",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q56205334",
    "qid": "Q56205334"
   },
   {
+   "type": "movie",
    "tmdb": 542417,
    "title": "Skin",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q55633312",
    "qid": "Q55633312"
   },
   {
+   "type": "movie",
    "tmdb": 1102883,
    "title": "Mother Mary",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q120735817",
    "qid": "Q120735817"
   },
   {
+   "type": "movie",
    "tmdb": 1242434,
    "title": "Highest 2 Lowest",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q124512337",
    "qid": "Q124512337"
   },
   {
+   "type": "movie",
    "tmdb": 491473,
    "title": "Gloria Bell",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q44727126",
    "qid": "Q44727126"
   },
   {
+   "type": "movie",
    "tmdb": 575417,
    "title": "On the Rocks",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q64787973",
    "qid": "Q64787973"
   },
   {
+   "type": "movie",
    "tmdb": 585378,
    "title": "After Yang",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q63398229",
    "qid": "Q63398229"
   },
   {
+   "type": "movie",
    "tmdb": 691422,
    "title": "When You Finish Saving the World",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q105438429",
    "qid": "Q105438429"
   },
   {
+   "type": "movie",
    "tmdb": 1284465,
    "title": "The Death of Robin Hood",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q125960231",
    "qid": "Q125960231"
   },
   {
+   "type": "movie",
    "tmdb": 244264,
    "title": "Laggies",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q16252315",
    "qid": "Q16252315"
   },
   {
+   "type": "movie",
    "tmdb": 244761,
    "title": "The Captive",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q13882900",
    "qid": "Q13882900"
   },
   {
+   "type": "movie",
    "tmdb": 249688,
    "title": "The End of the Tour",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q16250123",
    "qid": "Q16250123"
   },
   {
+   "type": "movie",
    "tmdb": 341689,
    "title": "How to Talk to Girls at Parties",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q21592501",
    "qid": "Q21592501"
   },
   {
+   "type": "movie",
    "tmdb": 407890,
    "title": "Lean on Pete",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q27703189",
    "qid": "Q27703189"
   },
   {
+   "type": "movie",
    "tmdb": 448776,
    "title": "A Prayer Before Dawn",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q29406165",
    "qid": "Q29406165"
   },
   {
+   "type": "movie",
    "tmdb": 896536,
    "title": "The Legend of Ochi",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q117336433",
    "qid": "Q117336433"
   },
   {
+   "type": "movie",
    "tmdb": 124461,
    "title": "A Glimpse Inside the Mind of Charles Swan III",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q2812249",
    "qid": "Q2812249"
   },
   {
+   "type": "movie",
    "tmdb": 294652,
    "title": "Son of a Gun",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q7560679",
    "qid": "Q7560679"
   },
   {
+   "type": "movie",
    "tmdb": 353066,
    "title": "The Vanishing of Sidney Hall",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q24958752",
    "qid": "Q24958752"
   },
   {
+   "type": "movie",
    "tmdb": 467936,
    "title": "The Children Act",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q28923729",
    "qid": "Q28923729"
   },
   {
+   "type": "movie",
    "tmdb": 603204,
    "title": "Stars at Noon",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q110982493",
    "qid": "Q110982493"
   },
   {
+   "type": "movie",
    "tmdb": 790416,
    "title": "Showing Up",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q107610545",
    "qid": "Q107610545"
   },
   {
+   "type": "movie",
    "tmdb": 1094274,
    "title": "Y2K",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q117481301",
    "qid": "Q117481301"
   },
   {
+   "type": "movie",
    "tmdb": 244566,
    "title": "Life After Beth",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q15046558",
    "qid": "Q15046558"
   },
   {
+   "type": "movie",
    "tmdb": 408873,
    "title": "Kings",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q28517709",
    "qid": "Q28517709"
   },
   {
+   "type": "movie",
    "tmdb": 522039,
    "title": "The Last Black Man in San Francisco",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q54868300",
    "qid": "Q54868300"
   },
   {
+   "type": "movie",
    "tmdb": 717980,
    "title": "Sharper",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q108551169",
    "qid": "Q108551169"
   },
   {
+   "type": "movie",
    "tmdb": 763329,
    "title": "Red Rocket",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q105657351",
    "qid": "Q105657351"
   },
   {
+   "type": "movie",
    "tmdb": 591634,
    "title": "False Positive",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q65087118",
    "qid": "Q65087118"
   },
   {
+   "type": "movie",
    "tmdb": 1329016,
    "title": "Tony",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q136311776",
    "qid": "Q136311776"
   },
   {
+   "type": "movie",
    "tmdb": 334538,
    "title": "Into the Forest",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q18208992",
    "qid": "Q18208992"
   },
   {
+   "type": "movie",
    "tmdb": 837938,
    "title": "The Inspection",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q112030155",
    "qid": "Q112030155"
   },
   {
+   "type": "movie",
    "tmdb": 473019,
    "title": "The Souvenir",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q59551553",
    "qid": "Q59551553"
   },
   {
+   "type": "movie",
    "tmdb": 510355,
    "title": "Share",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q54868314",
    "qid": "Q54868314"
   },
   {
+   "type": "movie",
    "tmdb": 512199,
    "title": "Native Son",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q55284752",
    "qid": "Q55284752"
   },
   {
+   "type": "movie",
    "tmdb": 539565,
    "title": "Zola",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q58815009",
    "qid": "Q58815009"
   },
   {
+   "type": "movie",
    "tmdb": 1202479,
    "title": "Opus",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q123754013",
    "qid": "Q123754013"
   },
   {
+   "type": "movie",
    "tmdb": 1284046,
    "title": "Onslaught",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q131451703",
    "qid": "Q131451703"
   },
   {
+   "type": "movie",
    "tmdb": 1422562,
    "title": "The Moment",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q133341560",
    "qid": "Q133341560"
   },
   {
+   "type": "movie",
    "tmdb": 276902,
    "title": "Cut Bank",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q16249654",
    "qid": "Q16249654"
   },
   {
+   "type": "movie",
    "tmdb": 309242,
    "title": "Mississippi Grind",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q16982089",
    "qid": "Q16982089"
   },
   {
+   "type": "movie",
    "tmdb": 340103,
    "title": "The Monster",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q27959592",
    "qid": "Q27959592"
   },
   {
+   "type": "movie",
    "tmdb": 274504,
    "title": "The Adderall Diaries",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q17097948",
    "qid": "Q17097948"
   },
   {
+   "type": "movie",
    "tmdb": 355254,
    "title": "De Palma",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q25136504",
    "qid": "Q25136504"
   },
   {
+   "type": "movie",
    "tmdb": 489245,
    "title": "The Kill Team",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q62082323",
    "qid": "Q62082323"
   },
   {
+   "type": "movie",
    "tmdb": 493066,
    "title": "Low Tide",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q62083690",
    "qid": "Q62083690"
   },
   {
+   "type": "movie",
    "tmdb": 852247,
    "title": "Problemista",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q116692764",
    "qid": "Q116692764"
   },
   {
+   "type": "movie",
    "tmdb": 890215,
    "title": "You Hurt My Feelings",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q111937315",
    "qid": "Q111937315"
   },
   {
+   "type": "movie",
    "tmdb": 1037035,
    "title": "Janet Planet",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q121334864",
    "qid": "Q121334864"
   },
   {
+   "type": "movie",
    "tmdb": 1585239,
    "title": "Club Kid",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q139042812",
    "qid": "Q139042812"
   },
   {
+   "type": "movie",
    "tmdb": 1765072,
    "title": "You Can See Everything",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q141336617",
    "qid": "Q141336617"
   },
   {
+   "type": "movie",
    "tmdb": 248774,
    "title": "Obvious Child",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q16253773",
    "qid": "Q16253773"
   },
   {
+   "type": "movie",
    "tmdb": 396777,
    "title": "Woodshock",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q20022692",
    "qid": "Q20022692"
   },
   {
+   "type": "movie",
    "tmdb": 428584,
    "title": "Menashe",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q29017579",
    "qid": "Q29017579"
   },
   {
+   "type": "movie",
    "tmdb": 433288,
    "title": "1%",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q39074570",
    "qid": "Q39074570"
   },
   {
+   "type": "movie",
    "tmdb": 438457,
    "title": "The Ballad of Lefty Brown",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q27703185",
    "qid": "Q27703185"
   },
   {
+   "type": "movie",
    "tmdb": 588367,
    "title": "The Humans",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q83948021",
    "qid": "Q83948021"
   },
   {
+   "type": "movie",
    "tmdb": 1239655,
    "title": "Friendship",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q127821688",
    "qid": "Q127821688"
   },
   {
+   "type": "movie",
    "tmdb": 237584,
    "title": "Mojave",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q16253304",
    "qid": "Q16253304"
   },
   {
+   "type": "movie",
    "tmdb": 1016848,
    "title": "The Front Room",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q117350302",
    "qid": "Q117350302"
   },
   {
+   "type": "movie",
    "tmdb": 1381221,
    "title": "Misty Green",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q135494084",
    "qid": "Q135494084"
   },
   {
+   "type": "movie",
    "tmdb": 323929,
    "title": "Krisha",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q19824747",
    "qid": "Q19824747"
   },
   {
+   "type": "movie",
    "tmdb": 490005,
    "title": "Never Goin’ Back",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q51756444",
    "qid": "Q51756444"
   },
   {
+   "type": "movie",
    "tmdb": 573952,
    "title": "Occupied City",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q117842597",
    "qid": "Q117842597"
   },
   {
+   "type": "movie",
    "tmdb": 1480387,
    "title": "Undertone",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q135668448",
    "qid": "Q135668448"
   },
   {
+   "type": "movie",
    "tmdb": 831395,
    "title": "Tuesday",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q107299023",
    "qid": "Q107299023"
   },
   {
+   "type": "movie",
    "tmdb": 451204,
    "title": "The Last Movie Star",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q30544642",
    "qid": "Q30544642"
   },
   {
+   "type": "movie",
    "tmdb": 939997,
    "title": "Dicks: The Musical",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q121133837",
    "qid": "Q121133837"
   },
   {
+   "type": "movie",
    "tmdb": 962537,
    "title": "Jerry Lee Lewis: Trouble in Mind",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q113952565",
    "qid": "Q113952565"
   },
   {
+   "type": "movie",
    "tmdb": 347392,
    "title": "Slice",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q56276632",
    "qid": "Q56276632"
   },
   {
+   "type": "movie",
    "tmdb": 1400731,
    "title": "André Is an Idiot",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q131893926",
    "qid": "Q131893926"
   },
   {
+   "type": "movie",
    "tmdb": 951029,
    "title": "Look Into My Eyes",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123738052",
    "qid": "Q123738052"
   },
   {
+   "type": "movie",
    "tmdb": 1284571,
    "title": "Let the Festivities Begin: Manifesting Midsommar",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q126942693",
    "qid": "Q126942693"
   }
  ],
  "studio-neon": [
   {
+   "type": "movie",
    "tmdb": 496243,
    "title": "Parasite",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q61448040",
    "qid": "Q61448040"
   },
   {
+   "type": "movie",
    "tmdb": 1064213,
    "title": "Anora",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123185887",
    "qid": "Q123185887"
   },
   {
+   "type": "movie",
    "tmdb": 497828,
    "title": "Triangle of Sadness",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q97304180",
    "qid": "Q97304180"
   },
   {
+   "type": "movie",
    "tmdb": 1456349,
    "title": "It Was Just an Accident",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q133866932",
    "qid": "Q133866932"
   },
   {
+   "type": "movie",
    "tmdb": 587792,
    "title": "Palm Springs",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q65084655",
    "qid": "Q65084655"
   },
   {
+   "type": "movie",
    "tmdb": 1226578,
    "title": "Longlegs",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q116470610",
    "qid": "Q116470610"
   },
   {
+   "type": "movie",
    "tmdb": 1041613,
    "title": "Immaculate",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q116980365",
    "qid": "Q116980365"
   },
   {
+   "type": "movie",
    "tmdb": 1124620,
    "title": "The Monkey",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q124841936",
    "qid": "Q124841936"
   },
   {
+   "type": "movie",
    "tmdb": 1401459,
    "title": "Fjord",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q137652478",
    "qid": "Q137652478"
   },
   {
+   "type": "movie",
    "tmdb": 680813,
    "title": "Flee",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q76450209",
    "qid": "Q76450209"
   },
   {
+   "type": "movie",
    "tmdb": 566213,
    "title": "Honeyland",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q61456310",
    "qid": "Q61456310"
   },
   {
+   "type": "movie",
    "tmdb": 842924,
    "title": "The Life of Chuck",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123169098",
    "qid": "Q123169098"
   },
   {
+   "type": "movie",
    "tmdb": 411741,
    "title": "Ingrid Goes West",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q26720603",
    "qid": "Q26720603"
   },
   {
+   "type": "movie",
    "tmdb": 1242011,
    "title": "Together",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q131870558",
    "qid": "Q131870558"
   },
   {
+   "type": "movie",
    "tmdb": 635731,
    "title": "Pig",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q86675328",
    "qid": "Q86675328"
   },
   {
+   "type": "movie",
    "tmdb": 1004663,
    "title": "All the Beauty and the Bloodshed",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q113445202",
    "qid": "Q113445202"
   },
   {
+   "type": "movie",
    "tmdb": 1140535,
    "title": "Presence",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123690382",
    "qid": "Q123690382"
   },
   {
+   "type": "movie",
    "tmdb": 446101,
    "title": "Assassination Nation",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q42049340",
    "qid": "Q42049340"
   },
   {
+   "type": "movie",
    "tmdb": 474764,
    "title": "The Lodge",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q48674680",
    "qid": "Q48674680"
   },
   {
+   "type": "movie",
    "tmdb": 429202,
    "title": "Vox Lux",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q48313895",
    "qid": "Q48313895"
   },
   {
+   "type": "movie",
    "tmdb": 441384,
    "title": "The Beach Bum",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q42947827",
    "qid": "Q42947827"
   },
   {
+   "type": "movie",
    "tmdb": 758679,
    "title": "Mothers’ Instinct",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q112182515",
    "qid": "Q112182515"
   },
   {
+   "type": "movie",
    "tmdb": 869291,
    "title": "Cuckoo",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q113012026",
    "qid": "Q113012026"
   },
   {
+   "type": "movie",
    "tmdb": 1381273,
    "title": "Paper Tiger",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q134708172",
    "qid": "Q134708172"
   },
   {
+   "type": "movie",
    "tmdb": 417466,
    "title": "Monos",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q63386137",
    "qid": "Q63386137"
   },
   {
+   "type": "movie",
    "tmdb": 426238,
    "title": "Beach Rats",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q28466244",
    "qid": "Q28466244"
   },
   {
+   "type": "movie",
    "tmdb": 489988,
    "title": "Three Identical Strangers",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q55635808",
    "qid": "Q55635808"
   },
   {
+   "type": "movie",
    "tmdb": 492616,
    "title": "Luce",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q60602393",
    "qid": "Q60602393"
   },
   {
+   "type": "movie",
    "tmdb": 503125,
    "title": "Little Monsters",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q64174928",
    "qid": "Q64174928"
   },
   {
+   "type": "movie",
    "tmdb": 547017,
    "title": "Shirley",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q56274109",
    "qid": "Q56274109"
   },
   {
+   "type": "movie",
    "tmdb": 316154,
    "title": "The Bad Batch",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q20814798",
    "qid": "Q20814798"
   },
   {
+   "type": "movie",
    "tmdb": 881366,
    "title": "The End",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q117287129",
    "qid": "Q117287129"
   },
   {
+   "type": "movie",
    "tmdb": 1430077,
    "title": "Hokum",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q133397105",
    "qid": "Q133397105"
   },
   {
+   "type": "movie",
    "tmdb": 1469342,
    "title": "Her Private Hell",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q134430061",
    "qid": "Q134430061"
   },
   {
+   "type": "movie",
    "tmdb": 654754,
    "title": "Billie Eilish: The World's a Little Blurry",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q99695342",
    "qid": "Q99695342"
   },
   {
+   "type": "movie",
    "tmdb": 549559,
    "title": "Apollo 11",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q61639822",
    "qid": "Q61639822"
   },
   {
+   "type": "movie",
    "tmdb": 937941,
    "title": "Shelby Oaks",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q112039665",
    "qid": "Q112039665"
   },
   {
+   "type": "movie",
    "tmdb": 664341,
    "title": "Eileen",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q113335768",
    "qid": "Q113335768"
   },
   {
+   "type": "movie",
    "tmdb": 723347,
    "title": "Robots",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q110263674",
    "qid": "Q110263674"
   },
   {
+   "type": "movie",
    "tmdb": 748853,
    "title": "In the Earth",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q104218175",
    "qid": "Q104218175"
   },
   {
+   "type": "movie",
    "tmdb": 1288072,
    "title": "Keeper",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q130753385",
    "qid": "Q130753385"
   },
   {
+   "type": "movie",
    "tmdb": 1337562,
    "title": "Splitsville",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q131004938",
    "qid": "Q131004938"
   },
   {
+   "type": "movie",
    "tmdb": 451918,
    "title": "Little Woods",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q55287246",
    "qid": "Q55287246"
   },
   {
+   "type": "movie",
    "tmdb": 530351,
    "title": "Bad Hair",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q83965675",
    "qid": "Q83965675"
   },
   {
+   "type": "movie",
    "tmdb": 565307,
    "title": "Clemency",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q60611826",
    "qid": "Q60611826"
   },
   {
+   "type": "movie",
    "tmdb": 1024773,
    "title": "It Lives Inside",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q118519174",
    "qid": "Q118519174"
   },
   {
+   "type": "movie",
    "tmdb": 1198984,
    "title": "We Bury the Dead",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q124615876",
    "qid": "Q124615876"
   },
   {
+   "type": "movie",
    "tmdb": 957457,
    "title": "Moonage Daydream",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q112454289",
    "qid": "Q112454289"
   },
   {
+   "type": "movie",
    "tmdb": 1072876,
    "title": "Self Reliance",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q116178605",
    "qid": "Q116178605"
   },
   {
+   "type": "movie",
    "tmdb": 1023915,
    "title": "2073",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q127785559",
    "qid": "Q127785559"
   },
   {
+   "type": "movie",
    "tmdb": 1227877,
    "title": "I Love Boosters",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q131109043",
    "qid": "Q131109043"
   },
   {
+   "type": "movie",
    "tmdb": 664297,
    "title": "She Dies Tomorrow",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q84009126",
    "qid": "Q84009126"
   },
   {
+   "type": "movie",
    "tmdb": 1630464,
    "title": "Clarissa",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q138029709",
    "qid": "Q138029709"
   },
   {
+   "type": "movie",
    "tmdb": 870518,
    "title": "Sanctuary",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q111211523",
    "qid": "Q111211523"
   },
   {
+   "type": "movie",
    "tmdb": 999582,
    "title": "Babes",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123144594",
    "qid": "Q123144594"
   },
   {
+   "type": "movie",
    "tmdb": 412302,
    "title": "Gemini",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q28970980",
    "qid": "Q28970980"
   },
   {
+   "type": "movie",
    "tmdb": 543084,
    "title": "The Biggest Little Farm",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q56651741",
    "qid": "Q56651741"
   },
   {
+   "type": "movie",
    "tmdb": 1008048,
    "title": "How to Blow Up a Pipeline",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q113757659",
    "qid": "Q113757659"
   },
   {
+   "type": "movie",
    "tmdb": 741528,
    "title": "Totally Under Control",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q100975860",
    "qid": "Q100975860"
   },
   {
+   "type": "movie",
    "tmdb": 800367,
    "title": "The Actor",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q116498761",
    "qid": "Q116498761"
   },
   {
+   "type": "movie",
    "tmdb": 999243,
    "title": "Hell of a Summer",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q119111677",
    "qid": "Q119111677"
   },
   {
+   "type": "movie",
    "tmdb": 1422011,
    "title": "It Ends",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q133546293",
    "qid": "Q133546293"
   },
   {
+   "type": "movie",
    "tmdb": 1098534,
    "title": "Orwell: 2+2=5",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q133852598",
    "qid": "Q133852598"
   },
   {
+   "type": "movie",
    "tmdb": 1214474,
    "title": "Stress Positions",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123762441",
    "qid": "Q123762441"
   },
   {
+   "type": "movie",
    "tmdb": 1226699,
    "title": "The Wrong Girls",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q132560837",
    "qid": "Q132560837"
   },
   {
+   "type": "movie",
    "tmdb": 431582,
    "title": "The Field",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q39071317",
    "qid": "Q39071317"
   },
   {
+   "type": "movie",
    "tmdb": 502134,
    "title": "This One's For The Ladies",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q58905735",
    "qid": "Q58905735"
   },
   {
+   "type": "movie",
    "tmdb": 534422,
    "title": "Sharp Edges",
    "year": 1986,
+   "source": "https://www.wikidata.org/wiki/Q55402869",
    "qid": "Q55402869"
   }
  ],
  "studio-lionsgate": [
   {
+   "type": "movie",
    "tmdb": 70160,
    "title": "The Hunger Games",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q212965",
    "qid": "Q212965"
   },
   {
+   "type": "movie",
    "tmdb": 176,
    "title": "Saw",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q486239",
    "qid": "Q486239"
   },
   {
+   "type": "movie",
    "tmdb": 1359,
    "title": "American Psycho",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q1405126",
    "qid": "Q1405126"
   },
   {
+   "type": "movie",
    "tmdb": 27578,
    "title": "The Expendables",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q206374",
    "qid": "Q206374"
   },
   {
+   "type": "movie",
    "tmdb": 215,
    "title": "Saw II",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q270410",
    "qid": "Q270410"
   },
   {
+   "type": "movie",
    "tmdb": 5176,
    "title": "3:10 to Yuma",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q746029",
    "qid": "Q746029"
   },
   {
+   "type": "movie",
    "tmdb": 1830,
    "title": "Lord of War",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q308681",
    "qid": "Q308681"
   },
   {
+   "type": "movie",
    "tmdb": 101299,
    "title": "The Hunger Games: Catching Fire",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q574583",
    "qid": "Q574583"
   },
   {
+   "type": "movie",
    "tmdb": 76163,
    "title": "The Expendables 2",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q210812",
    "qid": "Q210812"
   },
   {
+   "type": "movie",
    "tmdb": 157350,
    "title": "Divergent",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q8561227",
    "qid": "Q8561227"
   },
   {
+   "type": "movie",
    "tmdb": 273481,
    "title": "Sicario",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q17337292",
    "qid": "Q17337292"
   },
   {
+   "type": "movie",
    "tmdb": 50620,
    "title": "The Twilight Saga: Breaking Dawn – Part 2",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q60487",
    "qid": "Q60487"
   },
   {
+   "type": "movie",
    "tmdb": 131631,
    "title": "The Hunger Games: Mockingjay – Part 1",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q4142083",
    "qid": "Q4142083"
   },
   {
+   "type": "movie",
    "tmdb": 546554,
    "title": "Knives Out",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q57982486",
    "qid": "Q57982486"
   },
   {
+   "type": "movie",
    "tmdb": 603692,
    "title": "John Wick: Chapter 4",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q80322358",
    "qid": "Q80322358"
   },
   {
+   "type": "movie",
    "tmdb": 214,
    "title": "Saw III",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q276392",
    "qid": "Q276392"
   },
   {
+   "type": "movie",
    "tmdb": 1777,
    "title": "Fahrenheit 9/11",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q221852",
    "qid": "Q221852"
   },
   {
+   "type": "movie",
    "tmdb": 22970,
    "title": "The Cabin in the Woods",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q45394",
    "qid": "Q45394"
   },
   {
+   "type": "movie",
    "tmdb": 936075,
    "title": "Michael",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q116677364",
    "qid": "Q116677364"
   },
   {
+   "type": "movie",
    "tmdb": 11917,
    "title": "Saw V",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q326177",
    "qid": "Q326177"
   },
   {
+   "type": "movie",
    "tmdb": 138103,
    "title": "The Expendables 3",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q14370516",
    "qid": "Q14370516"
   },
   {
+   "type": "movie",
    "tmdb": 293863,
    "title": "The Age of Adaline",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q16242543",
    "qid": "Q16242543"
   },
   {
+   "type": "movie",
    "tmdb": 41439,
    "title": "Saw 3D",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q676284",
    "qid": "Q676284"
   },
   {
+   "type": "movie",
    "tmdb": 22804,
    "title": "Saw VI",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q834327",
    "qid": "Q834327"
   },
   {
+   "type": "movie",
    "tmdb": 541671,
    "title": "Ballerina",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q84713105",
    "qid": "Q84713105"
   },
   {
+   "type": "movie",
    "tmdb": 146216,
    "title": "RED 2",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q903930",
    "qid": "Q903930"
   },
   {
+   "type": "movie",
    "tmdb": 7220,
    "title": "The Punisher",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q909802",
    "qid": "Q909802"
   },
   {
+   "type": "movie",
    "tmdb": 76640,
    "title": "The Last Stand",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q45672",
    "qid": "Q45672"
   },
   {
+   "type": "movie",
    "tmdb": 695721,
    "title": "The Hunger Games: The Ballad of Songbirds and Snakes",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q96377121",
    "qid": "Q96377121"
   },
   {
+   "type": "movie",
    "tmdb": 1365,
    "title": "Monster's Ball",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q1124875",
    "qid": "Q1124875"
   },
   {
+   "type": "movie",
    "tmdb": 59965,
    "title": "Abduction",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q143716",
    "qid": "Q143716"
   },
   {
+   "type": "movie",
    "tmdb": 298250,
    "title": "Jigsaw",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q15712110",
    "qid": "Q15712110"
   },
   {
+   "type": "movie",
    "tmdb": 456740,
    "title": "Hellboy",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q30895665",
    "qid": "Q30895665"
   },
   {
+   "type": "movie",
    "tmdb": 525661,
    "title": "Bombshell",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q58814589",
    "qid": "Q58814589"
   },
   {
+   "type": "movie",
    "tmdb": 527641,
    "title": "Five Feet Apart",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q55080312",
    "qid": "Q55080312"
   },
   {
+   "type": "movie",
    "tmdb": 12819,
    "title": "Alpha and Omega",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q645405",
    "qid": "Q645405"
   },
   {
+   "type": "movie",
    "tmdb": 23056,
    "title": "Pinocchio 3000",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q967661",
    "qid": "Q967661"
   },
   {
+   "type": "movie",
    "tmdb": 258230,
    "title": "A Monster Calls",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q18200409",
    "qid": "Q18200409"
   },
   {
+   "type": "movie",
    "tmdb": 291870,
    "title": "Dirty Grandpa",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q18669866",
    "qid": "Q18669866"
   },
   {
+   "type": "movie",
    "tmdb": 985939,
    "title": "Fall",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q113470320",
    "qid": "Q113470320"
   },
   {
+   "type": "movie",
    "tmdb": 31662,
    "title": "Affliction",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q1193825",
    "qid": "Q1193825"
   },
   {
+   "type": "movie",
    "tmdb": 425274,
    "title": "Now You See Me: Now You Don't",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q65146722",
    "qid": "Q65146722"
   },
   {
+   "type": "movie",
    "tmdb": 1368166,
    "title": "The Housemaid",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q131630491",
    "qid": "Q131630491"
   },
   {
+   "type": "movie",
    "tmdb": 13056,
    "title": "Punisher: War Zone",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q1065829",
    "qid": "Q1065829"
   },
   {
+   "type": "movie",
    "tmdb": 274854,
    "title": "The Last Witch Hunter",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q17984058",
    "qid": "Q17984058"
   },
   {
+   "type": "movie",
    "tmdb": 299054,
    "title": "Expend4bles",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q108813842",
    "qid": "Q108813842"
   },
   {
+   "type": "movie",
    "tmdb": 16873,
    "title": "Battle for Terra",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q2298194",
    "qid": "Q2298194"
   },
   {
+   "type": "movie",
    "tmdb": 365177,
    "title": "Borderlands",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q106329715",
    "qid": "Q106329715"
   },
   {
+   "type": "movie",
    "tmdb": 423204,
    "title": "Angel Has Fallen",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q47484136",
    "qid": "Q47484136"
   },
   {
+   "type": "movie",
    "tmdb": 276905,
    "title": "Norm of the North",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q16253705",
    "qid": "Q16253705"
   },
   {
+   "type": "movie",
    "tmdb": 399402,
    "title": "Hunter Killer",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q27888483",
    "qid": "Q27888483"
   },
   {
+   "type": "movie",
    "tmdb": 412656,
    "title": "Chaos Walking",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q37447097",
    "qid": "Q37447097"
   },
   {
+   "type": "movie",
    "tmdb": 646389,
    "title": "Plane",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q108131599",
    "qid": "Q108131599"
   },
   {
+   "type": "movie",
    "tmdb": 648579,
    "title": "The Unbearable Weight of Massive Talent",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q87220566",
    "qid": "Q87220566"
   },
   {
+   "type": "movie",
    "tmdb": 11013,
    "title": "Secretary",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q742195",
    "qid": "Q742195"
   },
   {
+   "type": "movie",
    "tmdb": 604079,
    "title": "The Long Walk",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q126511469",
    "qid": "Q126511469"
   },
   {
+   "type": "movie",
    "tmdb": 80271,
    "title": "LOL",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q590444",
    "qid": "Q590444"
   },
   {
+   "type": "movie",
    "tmdb": 243683,
    "title": "Step Up: All In",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q15715663",
    "qid": "Q15715663"
   },
   {
+   "type": "movie",
    "tmdb": 351211,
    "title": "Blair Witch",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q24760080",
    "qid": "Q24760080"
   },
   {
+   "type": "movie",
    "tmdb": 604685,
    "title": "Den of Thieves 2: Pantera",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q121085761",
    "qid": "Q121085761"
   },
   {
+   "type": "movie",
    "tmdb": 318,
    "title": "The Million Dollar Hotel",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q542492",
    "qid": "Q542492"
   },
   {
+   "type": "movie",
    "tmdb": 454619,
    "title": "Overboard",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q48672812",
    "qid": "Q48672812"
   },
   {
+   "type": "movie",
    "tmdb": 1126166,
    "title": "Flight Risk",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q123353613",
    "qid": "Q123353613"
   },
   {
+   "type": "movie",
    "tmdb": 9464,
    "title": "Buffalo '66",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q1002142",
    "qid": "Q1002142"
   },
   {
+   "type": "movie",
    "tmdb": 26422,
    "title": "The Pillow Book",
    "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q1211345",
    "qid": "Q1211345"
   },
   {
+   "type": "movie",
    "tmdb": 245906,
    "title": "She's Funny That Way",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q14526650",
    "qid": "Q14526650"
   },
   {
+   "type": "movie",
    "tmdb": 546121,
    "title": "Run",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q60737911",
    "qid": "Q60737911"
   },
   {
+   "type": "movie",
    "tmdb": 18476,
    "title": "Horsemen",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q1578341",
    "qid": "Q1578341"
   },
   {
+   "type": "movie",
    "tmdb": 271714,
    "title": "Love and Mercy",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q14878580",
    "qid": "Q14878580"
   },
   {
+   "type": "movie",
    "tmdb": 1026436,
    "title": "Miller's Girl",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q116027468",
    "qid": "Q116027468"
   },
   {
+   "type": "movie",
    "tmdb": 501,
    "title": "Grizzly Man",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q1067409",
    "qid": "Q1067409"
   },
   {
+   "type": "movie",
    "tmdb": 10677,
    "title": "Dirty Dancing: Havana Nights",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q259807",
    "qid": "Q259807"
   },
   {
+   "type": "movie",
    "tmdb": 169209,
    "title": "Empire State",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q3053255",
    "qid": "Q3053255"
   },
   {
+   "type": "movie",
    "tmdb": 200505,
    "title": "Draft Day",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q15985322",
    "qid": "Q15985322"
   },
   {
+   "type": "movie",
    "tmdb": 291276,
    "title": "Unlocked",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q19363956",
    "qid": "Q19363956"
   },
   {
+   "type": "movie",
    "tmdb": 326285,
    "title": "American Pastoral",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q16526429",
    "qid": "Q16526429"
   },
   {
+   "type": "movie",
    "tmdb": 597890,
    "title": "Voyagers",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q65065450",
    "qid": "Q65065450"
   },
   {
+   "type": "movie",
    "tmdb": 330483,
    "title": "The Choice",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q18389443",
    "qid": "Q18389443"
   },
   {
+   "type": "movie",
    "tmdb": 454652,
    "title": "Colette",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q30608435",
    "qid": "Q30608435"
   },
   {
+   "type": "movie",
    "tmdb": 758009,
    "title": "Shotgun Wedding",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q105658294",
    "qid": "Q105658294"
   },
   {
+   "type": "movie",
    "tmdb": 840464,
    "title": "Greenland 2: Migration",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q124737605",
    "qid": "Q124737605"
   },
   {
+   "type": "movie",
    "tmdb": 2042,
    "title": "Savior",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q212493",
    "qid": "Q212493"
   },
   {
+   "type": "movie",
    "tmdb": 470878,
    "title": "I Can Only Imagine",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q48672822",
    "qid": "Q48672822"
   },
   {
+   "type": "movie",
    "tmdb": 882059,
    "title": "Boy Kills World",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q111170197",
    "qid": "Q111170197"
   },
   {
+   "type": "movie",
    "tmdb": 1010600,
    "title": "The Strangers: Chapter 1",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q114073140",
    "qid": "Q114073140"
   },
   {
+   "type": "movie",
    "tmdb": 29437,
    "title": "Rabid",
    "year": 1977,
+   "source": "https://www.wikidata.org/wiki/Q2061958",
    "qid": "Q2061958"
   },
   {
+   "type": "movie",
    "tmdb": 492565,
    "title": "The Kid",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q55635334",
    "qid": "Q55635334"
   },
   {
+   "type": "movie",
    "tmdb": 529983,
    "title": "The Poison Rose",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q55393988",
    "qid": "Q55393988"
   },
   {
+   "type": "movie",
    "tmdb": 585244,
    "title": "I Still Believe",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q66828805",
    "qid": "Q66828805"
   },
   {
+   "type": "movie",
    "tmdb": 779816,
    "title": "White Bird: A Wonder Story",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q105702073",
    "qid": "Q105702073"
   },
   {
+   "type": "movie",
    "tmdb": 1125311,
    "title": "Imaginary",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q120986976",
    "qid": "Q120986976"
   },
   {
+   "type": "movie",
    "tmdb": 11332,
    "title": "8½ Women",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q747685",
    "qid": "Q747685"
   },
   {
+   "type": "movie",
    "tmdb": 425505,
    "title": "Kin",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q54366261",
    "qid": "Q54366261"
   },
   {
+   "type": "movie",
    "tmdb": 485415,
    "title": "Day of the Dead: Bloodline",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q44491963",
    "qid": "Q44491963"
   },
   {
+   "type": "movie",
    "tmdb": 555285,
    "title": "Are You There God? It's Me, Margaret",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q106448550",
    "qid": "Q106448550"
   },
   {
+   "type": "movie",
    "tmdb": 1214684,
    "title": "Kiss of the Spider Woman",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q125078429",
    "qid": "Q125078429"
   },
   {
+   "type": "movie",
    "tmdb": 13360,
    "title": "Highlander: The Source",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q2029663",
    "qid": "Q2029663"
   },
   {
+   "type": "movie",
    "tmdb": 48464,
    "title": "All the Little Animals",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q611676",
    "qid": "Q611676"
   },
   {
+   "type": "movie",
    "tmdb": 112200,
    "title": "Thanks for Sharing",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q13557451",
    "qid": "Q13557451"
   },
   {
+   "type": "movie",
    "tmdb": 1093237,
    "title": "Hurry Up Tomorrow",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q122190665",
    "qid": "Q122190665"
   },
   {
+   "type": "movie",
    "tmdb": 1114967,
    "title": "Good Fortune",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q124364757",
    "qid": "Q124364757"
   },
   {
+   "type": "movie",
    "tmdb": 18882,
    "title": "Man-Thing",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q770701",
    "qid": "Q770701"
   },
   {
+   "type": "movie",
    "tmdb": 60309,
    "title": "The Conspirator",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q1214605",
    "qid": "Q1214605"
   },
   {
+   "type": "movie",
    "tmdb": 126172,
    "title": "Leprechaun: Origins",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q14948606",
    "qid": "Q14948606"
   },
   {
+   "type": "movie",
    "tmdb": 369883,
    "title": "Middle School: The Worst Years of My Life",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q21780586",
    "qid": "Q21780586"
   },
   {
+   "type": "movie",
    "tmdb": 458344,
    "title": "Juliet, Naked",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q47461719",
    "qid": "Q47461719"
   },
   {
+   "type": "movie",
    "tmdb": 709631,
    "title": "Cobweb",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q104876047",
    "qid": "Q104876047"
   },
   {
+   "type": "movie",
    "tmdb": 974036,
    "title": "Ordinary Angels",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q112124784",
    "qid": "Q112124784"
   },
   {
+   "type": "movie",
    "tmdb": 1101412,
    "title": "Fall 2: Deadpoint",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q136388712",
    "qid": "Q136388712"
   },
   {
+   "type": "movie",
    "tmdb": 7553,
    "title": "Waiting...",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q303862",
    "qid": "Q303862"
   },
   {
+   "type": "movie",
    "tmdb": 13751,
    "title": "Akeelah and the Bee",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q2529557",
    "qid": "Q2529557"
   },
   {
+   "type": "movie",
    "tmdb": 720395,
    "title": "Let It Snow",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q104412858",
    "qid": "Q104412858"
   },
   {
+   "type": "movie",
    "tmdb": 939979,
    "title": "Paradise Highway",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q113070883",
    "qid": "Q113070883"
   },
   {
+   "type": "movie",
    "tmdb": 1010756,
    "title": "The Strangers: Chapter 2",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q122396990",
    "qid": "Q122396990"
   },
   {
+   "type": "movie",
    "tmdb": 635891,
    "title": "Clerks III",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q107871488",
    "qid": "Q107871488"
   },
   {
+   "type": "movie",
    "tmdb": 829051,
    "title": "About My Father",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q108809561",
    "qid": "Q108809561"
   },
   {
+   "type": "movie",
    "tmdb": 864168,
    "title": "Joy Ride",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q108940271",
    "qid": "Q108940271"
   },
   {
+   "type": "movie",
    "tmdb": 1196573,
    "title": "She Rides Shotgun",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q124464617",
    "qid": "Q124464617"
   },
   {
+   "type": "movie",
    "tmdb": 1280738,
    "title": "The Furious",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q125948183",
    "qid": "Q125948183"
   },
   {
+   "type": "movie",
    "tmdb": 11065,
    "title": "O",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q1501773",
    "qid": "Q1501773"
   },
   {
+   "type": "movie",
    "tmdb": 11650,
    "title": "Five Fingers",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q1421537",
    "qid": "Q1421537"
   },
   {
+   "type": "movie",
    "tmdb": 16764,
    "title": "Toolbox Murders",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q2987914",
    "qid": "Q2987914"
   },
   {
+   "type": "movie",
    "tmdb": 351901,
    "title": "Lockdown",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q18388990",
    "qid": "Q18388990"
   },
   {
+   "type": "movie",
    "tmdb": 513584,
    "title": "Think Like a Dog",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q83950626",
    "qid": "Q83950626"
   },
   {
+   "type": "movie",
    "tmdb": 814889,
    "title": "Never Let Go",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q124619782",
    "qid": "Q124619782"
   },
   {
+   "type": "movie",
    "tmdb": 974250,
    "title": "Greedy People",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q114352426",
    "qid": "Q114352426"
   },
   {
+   "type": "movie",
    "tmdb": 1035806,
    "title": "Detective Knight: Independence",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q114850036",
    "qid": "Q114850036"
   },
   {
+   "type": "movie",
    "tmdb": 8991,
    "title": "Undead",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q1810314",
    "qid": "Q1810314"
   },
   {
+   "type": "movie",
    "tmdb": 50035,
    "title": "Lovely & Amazing",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q1872476",
    "qid": "Q1872476"
   },
   {
+   "type": "movie",
    "tmdb": 474335,
    "title": "Uncle Drew",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q48818131",
    "qid": "Q48818131"
   },
   {
+   "type": "movie",
    "tmdb": 572299,
    "title": "How to Build a Girl",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q55590067",
    "qid": "Q55590067"
   },
   {
+   "type": "movie",
    "tmdb": 1043905,
    "title": "Dirty Angels",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q116881172",
    "qid": "Q116881172"
   },
   {
+   "type": "movie",
    "tmdb": 1249289,
    "title": "Alarum",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q124979080",
    "qid": "Q124979080"
   },
   {
+   "type": "movie",
    "tmdb": 10856,
    "title": "Intacto",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q386611",
    "qid": "Q386611"
   },
   {
+   "type": "movie",
    "tmdb": 12587,
    "title": "Arachnid",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q624566",
    "qid": "Q624566"
   },
   {
+   "type": "movie",
    "tmdb": 17202,
    "title": "Why Did I Get Married?",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q3078109",
    "qid": "Q3078109"
   },
   {
+   "type": "movie",
    "tmdb": 25128,
    "title": "Love & Sex",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q1466520",
    "qid": "Q1466520"
   },
   {
+   "type": "movie",
    "tmdb": 30950,
    "title": "Metroland",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q130297",
    "qid": "Q130297"
   },
   {
+   "type": "movie",
    "tmdb": 85439,
    "title": "Snowflake, the White Gorilla",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q1764687",
    "qid": "Q1764687"
   },
   {
+   "type": "movie",
    "tmdb": 193612,
    "title": "The Quiet Ones",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q3522392",
    "qid": "Q3522392"
   },
   {
+   "type": "movie",
    "tmdb": 535265,
    "title": "Killers Anonymous",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q64516028",
    "qid": "Q64516028"
   },
   {
+   "type": "movie",
    "tmdb": 560204,
    "title": "Arkansas",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q75077484",
    "qid": "Q75077484"
   },
   {
+   "type": "movie",
    "tmdb": 673309,
    "title": "American Underdog",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q105226296",
    "qid": "Q105226296"
   },
   {
+   "type": "movie",
    "tmdb": 1010755,
    "title": "The Strangers – Chapter 3",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q122396992",
    "qid": "Q122396992"
   },
   {
+   "type": "movie",
    "tmdb": 1284016,
    "title": "Power Ballad",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q126285100",
    "qid": "Q126285100"
   },
   {
+   "type": "movie",
    "tmdb": 332177,
    "title": "Vendetta",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q18155487",
    "qid": "Q18155487"
   },
   {
+   "type": "movie",
    "tmdb": 434714,
    "title": "My Days of Mercy",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q27959538",
    "qid": "Q27959538"
   },
   {
+   "type": "movie",
    "tmdb": 926606,
    "title": "The Home",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q123050485",
    "qid": "Q123050485"
   },
   {
+   "type": "movie",
    "tmdb": 1035803,
    "title": "Detective Knight: Redemption",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q114850108",
    "qid": "Q114850108"
   },
   {
+   "type": "movie",
    "tmdb": 3178,
    "title": "Beat",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q4394835",
    "qid": "Q4394835"
   },
   {
+   "type": "movie",
    "tmdb": 27374,
    "title": "Lake Mungo",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q6477009",
    "qid": "Q6477009"
   },
   {
+   "type": "movie",
    "tmdb": 34582,
    "title": "Junk Mail",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q523456",
    "qid": "Q523456"
   },
   {
+   "type": "movie",
    "tmdb": 413846,
    "title": "1992",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q121365761",
    "qid": "Q121365761"
   },
   {
+   "type": "movie",
    "tmdb": 767377,
    "title": "Dhamaka",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q104834950",
    "qid": "Q104834950"
   },
   {
+   "type": "movie",
    "tmdb": 934456,
    "title": "Americana",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q117049250",
    "qid": "Q117049250"
   },
   {
+   "type": "movie",
    "tmdb": 18153,
    "title": "Steal This Movie!",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q5227152",
    "qid": "Q5227152"
   },
   {
+   "type": "movie",
    "tmdb": 459202,
    "title": "Boo 2! A Madea Halloween",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q29079039",
    "qid": "Q29079039"
   },
   {
+   "type": "movie",
    "tmdb": 757725,
    "title": "Shadow Force",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q119625137",
    "qid": "Q119625137"
   },
   {
+   "type": "movie",
    "tmdb": 765897,
    "title": "The Unbreakable Boy",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q113380380",
    "qid": "Q113380380"
   },
   {
+   "type": "movie",
    "tmdb": 1216784,
    "title": "Sunrise",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123784770",
    "qid": "Q123784770"
   },
   {
+   "type": "movie",
    "tmdb": 1292415,
    "title": "Beast",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q132322744",
    "qid": "Q132322744"
   },
   {
+   "type": "movie",
    "tmdb": 28216,
    "title": "Mr. Death: The Rise and Fall of Fred A. Leuchter, Jr.",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q3327151",
    "qid": "Q3327151"
   },
   {
+   "type": "movie",
    "tmdb": 42916,
    "title": "Fading of the Cries",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q590141",
    "qid": "Q590141"
   },
   {
+   "type": "movie",
    "tmdb": 53765,
    "title": "Mr. Jealousy",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q6928780",
    "qid": "Q6928780"
   },
   {
+   "type": "movie",
    "tmdb": 128598,
    "title": "Left for Dead",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q6516951",
    "qid": "Q6516951"
   },
   {
+   "type": "movie",
    "tmdb": 208153,
    "title": "Réjeanne Padovani",
    "year": 1973,
+   "source": "https://www.wikidata.org/wiki/Q376108",
    "qid": "Q376108"
   },
   {
+   "type": "movie",
    "tmdb": 540023,
    "title": "Wander Darkly",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q83727301",
    "qid": "Q83727301"
   },
   {
+   "type": "movie",
    "tmdb": 1206617,
    "title": "Best Christmas Pageant Ever",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123597250",
    "qid": "Q123597250"
   },
   {
+   "type": "movie",
    "tmdb": 15450,
    "title": "The Family That Preys",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q2411262",
    "qid": "Q2411262"
   },
   {
+   "type": "movie",
    "tmdb": 42187,
    "title": "Shark Attack 2",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q2160539",
    "qid": "Q2160539"
   },
   {
+   "type": "movie",
    "tmdb": 60828,
    "title": "Gang Tapes",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q3758083",
    "qid": "Q3758083"
   },
   {
+   "type": "movie",
    "tmdb": 68744,
    "title": "Johnny Skidmarks",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q4160413",
    "qid": "Q4160413"
   },
   {
+   "type": "movie",
    "tmdb": 76891,
    "title": "Jerry and Tom",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q1687787",
    "qid": "Q1687787"
   },
   {
+   "type": "movie",
    "tmdb": 80920,
    "title": "Repentance",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q17141285",
    "qid": "Q17141285"
   },
   {
+   "type": "movie",
    "tmdb": 125762,
    "title": "Shattered Image",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q7490703",
    "qid": "Q7490703"
   },
   {
+   "type": "movie",
    "tmdb": 197649,
    "title": "Misbegotten",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q6875191",
    "qid": "Q6875191"
   },
   {
+   "type": "movie",
    "tmdb": 240681,
    "title": "The Ex",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q7732731",
    "qid": "Q7732731"
   },
   {
+   "type": "movie",
    "tmdb": 1022888,
    "title": "I Wish You All The Best",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q124253867",
    "qid": "Q124253867"
   },
   {
+   "type": "movie",
    "tmdb": 1215918,
    "title": "Blackwater Lane",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q130248805",
    "qid": "Q130248805"
   },
   {
+   "type": "movie",
    "tmdb": 1293286,
    "title": "Gunslingers",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q133055066",
    "qid": "Q133055066"
   },
   {
+   "type": "movie",
    "tmdb": 1412598,
    "title": "Killer Whale",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q137757840",
    "qid": "Q137757840"
   },
   {
+   "type": "movie",
    "tmdb": 15665,
    "title": "The Eyes of Tammy Faye",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q7732942",
    "qid": "Q7732942"
   },
   {
+   "type": "movie",
    "tmdb": 20012,
    "title": "The Void",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q1697911",
    "qid": "Q1697911"
   },
   {
+   "type": "movie",
    "tmdb": 32852,
    "title": "CrossBones",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q5188212",
    "qid": "Q5188212"
   },
   {
+   "type": "movie",
    "tmdb": 47302,
    "title": "Stardom",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q3497106",
    "qid": "Q3497106"
   },
   {
+   "type": "movie",
    "tmdb": 133332,
    "title": "Valérie",
    "year": 1969,
+   "source": "https://www.wikidata.org/wiki/Q3554221",
    "qid": "Q3554221"
   },
   {
+   "type": "movie",
    "tmdb": 146499,
    "title": "Lion of Oz",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q3223936",
    "qid": "Q3223936"
   },
   {
+   "type": "movie",
    "tmdb": 195913,
    "title": "Back to Even",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q18511277",
    "qid": "Q18511277"
   },
   {
+   "type": "movie",
    "tmdb": 272160,
    "title": "My Man Is a Loser",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q6946009",
    "qid": "Q6946009"
   },
   {
+   "type": "movie",
    "tmdb": 481879,
    "title": "Die in a Gunfight",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q76488932",
    "qid": "Q76488932"
   },
   {
+   "type": "movie",
    "tmdb": 618165,
    "title": "Sick Girl",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q104902343",
    "qid": "Q104902343"
   },
   {
+   "type": "movie",
    "tmdb": 842328,
    "title": "Wish You Were Here",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q131543023",
    "qid": "Q131543023"
   },
   {
+   "type": "movie",
    "tmdb": 1115982,
    "title": "Everything’s Going to Be Great",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q117846221",
    "qid": "Q117846221"
   },
   {
+   "type": "movie",
    "tmdb": 18404,
    "title": "Cattle Call",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q1211859",
    "qid": "Q1211859"
   },
   {
+   "type": "movie",
    "tmdb": 21176,
    "title": "Final",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q5449349",
    "qid": "Q5449349"
   },
   {
+   "type": "movie",
    "tmdb": 69934,
    "title": "Full Clip",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q3754212",
    "qid": "Q3754212"
   },
   {
+   "type": "movie",
    "tmdb": 89940,
    "title": "Whispers",
    "year": 1990,
+   "source": "https://www.wikidata.org/wiki/Q4528288",
    "qid": "Q4528288"
   },
   {
+   "type": "movie",
    "tmdb": 110372,
    "title": "Descendents",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q16835071",
    "qid": "Q16835071"
   },
   {
+   "type": "movie",
    "tmdb": 180679,
    "title": "Sexy Evil Genius",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q7458886",
    "qid": "Q7458886"
   },
   {
+   "type": "movie",
    "tmdb": 261252,
    "title": "Memories Unlocked",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q3492416",
    "qid": "Q3492416"
   },
   {
+   "type": "movie",
    "tmdb": 487531,
    "title": "A Friend of the Family",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q2385788",
    "qid": "Q2385788"
   },
   {
+   "type": "movie",
    "tmdb": 503758,
    "title": "Most Likely to Murder",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q55590065",
    "qid": "Q55590065"
   },
   {
+   "type": "movie",
    "tmdb": 1070777,
    "title": "One Day as a Lion",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q119856938",
    "qid": "Q119856938"
   },
   {
+   "type": "movie",
    "tmdb": 1310568,
    "title": "Murder at the Embassy",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q131523345",
    "qid": "Q131523345"
   },
   {
+   "type": "movie",
    "tmdb": 1405769,
    "title": "I Can Only Imagine 2",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q133454601",
    "qid": "Q133454601"
   },
   {
+   "type": "movie",
    "tmdb": 18440,
    "title": "Days of Darkness",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q5243367",
    "qid": "Q5243367"
   },
   {
+   "type": "movie",
    "tmdb": 27743,
    "title": "Serial Killing 4 Dummys",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q7454665",
    "qid": "Q7454665"
   },
   {
+   "type": "movie",
    "tmdb": 41633,
    "title": "One Eyed King",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q7092617",
    "qid": "Q7092617"
   },
   {
+   "type": "movie",
    "tmdb": 48578,
    "title": "The Assistant",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q7714718",
    "qid": "Q7714718"
   },
   {
+   "type": "movie",
    "tmdb": 65583,
    "title": "Zombiez",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q18157198",
    "qid": "Q18157198"
   },
   {
+   "type": "movie",
    "tmdb": 124619,
    "title": "Lotto Land",
    "year": 1995,
+   "source": "https://www.wikidata.org/wiki/Q38463332",
    "qid": "Q38463332"
   },
   {
+   "type": "movie",
    "tmdb": 161795,
    "title": "Déjà Vu",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q5320222",
    "qid": "Q5320222"
   },
   {
+   "type": "movie",
    "tmdb": 279549,
    "title": "Pretend You Don't See Her",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q3339406",
    "qid": "Q3339406"
   },
   {
+   "type": "movie",
    "tmdb": 324338,
    "title": "Keep It in the Family",
    "year": 1973,
+   "source": "https://www.wikidata.org/wiki/Q18915064",
    "qid": "Q18915064"
   },
   {
+   "type": "movie",
    "tmdb": 561155,
    "title": "Saving Christmas",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q59631361",
    "qid": "Q59631361"
   },
   {
+   "type": "movie",
    "tmdb": 1276825,
    "title": "Long Gone Heroes",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q99770432",
    "qid": "Q99770432"
   },
   {
+   "type": "movie",
    "tmdb": 163522,
    "title": "The Hard Part Begins",
    "year": 1973,
+   "source": "https://www.wikidata.org/wiki/Q30642411",
    "qid": "Q30642411"
   },
   {
+   "type": "movie",
    "tmdb": 952390,
    "title": "Continue",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q124419193",
    "qid": "Q124419193"
   },
   {
+   "type": "movie",
    "tmdb": 134639,
    "title": "The Magic of the Golden Bear: Goldy III",
    "year": 1994,
+   "source": "https://www.wikidata.org/wiki/Q140611320",
    "qid": "Q140611320"
   }
  ],
  "studio-focus-features": [
   {
+   "type": "movie",
    "tmdb": 142,
    "title": "Brokeback Mountain",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q160618",
    "qid": "Q160618"
   },
   {
+   "type": "movie",
    "tmdb": 423,
    "title": "The Pianist",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q150804",
    "qid": "Q150804"
   },
   {
+   "type": "movie",
    "tmdb": 153,
    "title": "Lost in Translation",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q107270",
    "qid": "Q107270"
   },
   {
+   "type": "movie",
    "tmdb": 38,
    "title": "Eternal Sunshine of the Spotless Mind",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q208269",
    "qid": "Q208269"
   },
   {
+   "type": "movie",
    "tmdb": 266856,
    "title": "The Theory of Everything",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q15079318",
    "qid": "Q15079318"
   },
   {
+   "type": "movie",
    "tmdb": 10139,
    "title": "Milk",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q201687",
    "qid": "Q201687"
   },
   {
+   "type": "movie",
    "tmdb": 14836,
    "title": "Coraline",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q632668",
    "qid": "Q632668"
   },
   {
+   "type": "movie",
    "tmdb": 8321,
    "title": "In Bruges",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q244931",
    "qid": "Q244931"
   },
   {
+   "type": "movie",
    "tmdb": 152532,
    "title": "Dallas Buyers Club",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q3520498",
    "qid": "Q3520498"
   },
   {
+   "type": "movie",
    "tmdb": 216015,
    "title": "Fifty Shades of Grey",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q14566553",
    "qid": "Q14566553"
   },
   {
+   "type": "movie",
    "tmdb": 306819,
    "title": "The Danish Girl",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q19347583",
    "qid": "Q19347583"
   },
   {
+   "type": "movie",
    "tmdb": 1339713,
    "title": "Obsession",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q136163067",
    "qid": "Q136163067"
   },
   {
+   "type": "movie",
    "tmdb": 470,
    "title": "21 Grams",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q214013",
    "qid": "Q214013"
   },
   {
+   "type": "movie",
    "tmdb": 1927,
    "title": "Hulk",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q696042",
    "qid": "Q696042"
   },
   {
+   "type": "movie",
    "tmdb": 399404,
    "title": "Darkest Hour",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q27958298",
    "qid": "Q27958298"
   },
   {
+   "type": "movie",
    "tmdb": 1900,
    "title": "Traffic",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q142292",
    "qid": "Q142292"
   },
   {
+   "type": "movie",
    "tmdb": 400617,
    "title": "Phantom Thread",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q28840386",
    "qid": "Q28840386"
   },
   {
+   "type": "movie",
    "tmdb": 4944,
    "title": "Burn After Reading",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q381731",
    "qid": "Q381731"
   },
   {
+   "type": "movie",
    "tmdb": 83666,
    "title": "Moonrise Kingdom",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q217112",
    "qid": "Q217112"
   },
   {
+   "type": "movie",
    "tmdb": 96724,
    "title": "Anna Karenina",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q80204",
    "qid": "Q80204"
   },
   {
+   "type": "movie",
    "tmdb": 1653,
    "title": "The Motorcycle Diaries",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q309246",
    "qid": "Q309246"
   },
   {
+   "type": "movie",
    "tmdb": 234004,
    "title": "Ratchet & Clank",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q12127045",
    "qid": "Q12127045"
   },
   {
+   "type": "movie",
    "tmdb": 487558,
    "title": "BlacKkKlansman",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q43370948",
    "qid": "Q43370948"
   },
   {
+   "type": "movie",
    "tmdb": 1985,
    "title": "The Constant Gardener",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q645168",
    "qid": "Q645168"
   },
   {
+   "type": "movie",
    "tmdb": 49517,
    "title": "Tinker Tailor Soldier Spy",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q681962",
    "qid": "Q681962"
   },
   {
+   "type": "movie",
    "tmdb": 12184,
    "title": "The Other Boleyn Girl",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q470073",
    "qid": "Q470073"
   },
   {
+   "type": "movie",
    "tmdb": 267860,
    "title": "London Has Fallen",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q18350210",
    "qid": "Q18350210"
   },
   {
+   "type": "movie",
    "tmdb": 12573,
    "title": "A Serious Man",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q300555",
    "qid": "Q300555"
   },
   {
+   "type": "movie",
    "tmdb": 1958,
    "title": "8 Women",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q274895",
    "qid": "Q274895"
   },
   {
+   "type": "movie",
    "tmdb": 2787,
    "title": "Pitch Black",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q429934",
    "qid": "Q429934"
   },
   {
+   "type": "movie",
    "tmdb": 39781,
    "title": "The Kids Are All Right",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q380841",
    "qid": "Q380841"
   },
   {
+   "type": "movie",
    "tmdb": 313297,
    "title": "Kubo and the Two Strings",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q18786471",
    "qid": "Q18786471"
   },
   {
+   "type": "movie",
    "tmdb": 426063,
    "title": "Nosferatu",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q116361132",
    "qid": "Q116361132"
   },
   {
+   "type": "movie",
    "tmdb": 747188,
    "title": "Asteroid City",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q108086029",
    "qid": "Q108086029"
   },
   {
+   "type": "movie",
    "tmdb": 2252,
    "title": "Eastern Promises",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q752017",
    "qid": "Q752017"
   },
   {
+   "type": "movie",
    "tmdb": 5279,
    "title": "Gosford Park",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q165392",
    "qid": "Q165392"
   },
   {
+   "type": "movie",
    "tmdb": 77174,
    "title": "ParaNorman",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q198028",
    "qid": "Q198028"
   },
   {
+   "type": "movie",
    "tmdb": 777270,
    "title": "Belfast",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q100736066",
    "qid": "Q100736066"
   },
   {
+   "type": "movie",
    "tmdb": 858024,
    "title": "Hamnet",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q122741016",
    "qid": "Q122741016"
   },
   {
+   "type": "movie",
    "tmdb": 12244,
    "title": "9",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q685785",
    "qid": "Q685785"
   },
   {
+   "type": "movie",
    "tmdb": 582014,
    "title": "Promising Young Woman",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q62595383",
    "qid": "Q62595383"
   },
   {
+   "type": "movie",
    "tmdb": 701387,
    "title": "Bugonia",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q125971387",
    "qid": "Q125971387"
   },
   {
+   "type": "movie",
    "tmdb": 840430,
    "title": "The Holdovers",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q112114745",
    "qid": "Q112114745"
   },
   {
+   "type": "movie",
    "tmdb": 4588,
    "title": "Lust, Caution",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q718524",
    "qid": "Q718524"
   },
   {
+   "type": "movie",
    "tmdb": 170687,
    "title": "The Boxtrolls",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q12103758",
    "qid": "Q12103758"
   },
   {
+   "type": "movie",
    "tmdb": 340666,
    "title": "Nocturnal Animals",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q21527905",
    "qid": "Q21527905"
   },
   {
+   "type": "movie",
    "tmdb": 55347,
    "title": "Beginners",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q814343",
    "qid": "Q814343"
   },
   {
+   "type": "movie",
    "tmdb": 45958,
    "title": "Biutiful",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q879174",
    "qid": "Q879174"
   },
   {
+   "type": "movie",
    "tmdb": 341013,
    "title": "Atomic Blonde",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q21528112",
    "qid": "Q21528112"
   },
   {
+   "type": "movie",
    "tmdb": 423899,
    "title": "Victoria and Abdul",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q27701609",
    "qid": "Q27701609"
   },
   {
+   "type": "movie",
    "tmdb": 535544,
    "title": "Downton Abbey",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q55647759",
    "qid": "Q55647759"
   },
   {
+   "type": "movie",
    "tmdb": 817758,
    "title": "Tár",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q108649516",
    "qid": "Q108649516"
   },
   {
+   "type": "movie",
    "tmdb": 51828,
    "title": "One Day",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q232161",
    "qid": "Q232161"
   },
   {
+   "type": "movie",
    "tmdb": 258230,
    "title": "A Monster Calls",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q18200409",
    "qid": "Q18200409"
   },
   {
+   "type": "movie",
    "tmdb": 399019,
    "title": "The Beguiled",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q27684970",
    "qid": "Q27684970"
   },
   {
+   "type": "movie",
    "tmdb": 308,
    "title": "Broken Flowers",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q192301",
    "qid": "Q192301"
   },
   {
+   "type": "movie",
    "tmdb": 639933,
    "title": "The Northman",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q87126244",
    "qid": "Q87126244"
   },
   {
+   "type": "movie",
    "tmdb": 512,
    "title": "Scoop",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q682002",
    "qid": "Q682002"
   },
   {
+   "type": "movie",
    "tmdb": 10544,
    "title": "Ned Kelly",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q391542",
    "qid": "Q391542"
   },
   {
+   "type": "movie",
    "tmdb": 10712,
    "title": "Far from Heaven",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q1130664",
    "qid": "Q1130664"
   },
   {
+   "type": "movie",
    "tmdb": 38684,
    "title": "Jane Eyre",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q258979",
    "qid": "Q258979"
   },
   {
+   "type": "movie",
    "tmdb": 718032,
    "title": "Licorice Pizza",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q102036245",
    "qid": "Q102036245"
   },
   {
+   "type": "movie",
    "tmdb": 27579,
    "title": "The American",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q1164740",
    "qid": "Q1164740"
   },
   {
+   "type": "movie",
    "tmdb": 29572,
    "title": "The Man Who Cried",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q471951",
    "qid": "Q471951"
   },
   {
+   "type": "movie",
    "tmdb": 556678,
    "title": "Emma",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q65091224",
    "qid": "Q65091224"
   },
   {
+   "type": "movie",
    "tmdb": 11632,
    "title": "Vanity Fair",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q1046841",
    "qid": "Q1046841"
   },
   {
+   "type": "movie",
    "tmdb": 457136,
    "title": "Mary Queen of Scots",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q37909408",
    "qid": "Q37909408"
   },
   {
+   "type": "movie",
    "tmdb": 472451,
    "title": "Boy Erased",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q39659543",
    "qid": "Q39659543"
   },
   {
+   "type": "movie",
    "tmdb": 535581,
    "title": "The Dead Don't Die",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q55564530",
    "qid": "Q55564530"
   },
   {
+   "type": "movie",
    "tmdb": 552178,
    "title": "Dark Waters",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q60617937",
    "qid": "Q60617937"
   },
   {
+   "type": "movie",
    "tmdb": 820446,
    "title": "Downton Abbey: A New Era",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q106577763",
    "qid": "Q106577763"
   },
   {
+   "type": "movie",
    "tmdb": 4953,
    "title": "Be Kind Rewind",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q320236",
    "qid": "Q320236"
   },
   {
+   "type": "movie",
    "tmdb": 9270,
    "title": "Brick",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q913439",
    "qid": "Q913439"
   },
   {
+   "type": "movie",
    "tmdb": 31162,
    "title": "Black Lightning",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q185229",
    "qid": "Q185229"
   },
   {
+   "type": "movie",
    "tmdb": 48289,
    "title": "The Debt",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q1306837",
    "qid": "Q1306837"
   },
   {
+   "type": "movie",
    "tmdb": 97367,
    "title": "The Place Beyond the Pines",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q1754980",
    "qid": "Q1754980"
   },
   {
+   "type": "movie",
    "tmdb": 339419,
    "title": "Loving",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q21527828",
    "qid": "Q21527828"
   },
   {
+   "type": "movie",
    "tmdb": 10480,
    "title": "Nurse Betty",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q431793",
    "qid": "Q431793"
   },
   {
+   "type": "movie",
    "tmdb": 39210,
    "title": "Somewhere",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q1338368",
    "qid": "Q1338368"
   },
   {
+   "type": "movie",
    "tmdb": 225565,
    "title": "That Awkward Moment",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q12101199",
    "qid": "Q12101199"
   },
   {
+   "type": "movie",
    "tmdb": 401545,
    "title": "Everybody Knows",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q37816911",
    "qid": "Q37816911"
   },
   {
+   "type": "movie",
    "tmdb": 1249,
    "title": "Hollywoodland",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q1138011",
    "qid": "Q1138011"
   },
   {
+   "type": "movie",
    "tmdb": 400579,
    "title": "Tully",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q27957927",
    "qid": "Q27957927"
   },
   {
+   "type": "movie",
    "tmdb": 407439,
    "title": "Mary Magdalene",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q27957924",
    "qid": "Q27957924"
   },
   {
+   "type": "movie",
    "tmdb": 616651,
    "title": "Stillwater",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q74586939",
    "qid": "Q74586939"
   },
   {
+   "type": "movie",
    "tmdb": 26320,
    "title": "Taking Woodstock",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q696652",
    "qid": "Q696652"
   },
   {
+   "type": "movie",
    "tmdb": 323677,
    "title": "Race",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q17515125",
    "qid": "Q17515125"
   },
   {
+   "type": "movie",
    "tmdb": 1137350,
    "title": "The Phoenician Scheme",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q124758337",
    "qid": "Q124758337"
   },
   {
+   "type": "movie",
    "tmdb": 8284,
    "title": "The Limits of Control",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q192160",
    "qid": "Q192160"
   },
   {
+   "type": "movie",
    "tmdb": 10683,
    "title": "Happiness",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q1426532",
    "qid": "Q1426532"
   },
   {
+   "type": "movie",
    "tmdb": 21612,
    "title": "The Funerals",
    "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q597046",
    "qid": "Q597046"
   },
   {
+   "type": "movie",
    "tmdb": 238615,
    "title": "Self/less",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q15622633",
    "qid": "Q15622633"
   },
   {
+   "type": "movie",
    "tmdb": 1233575,
    "title": "Black Bag",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q124373035",
    "qid": "Q124373035"
   },
   {
+   "type": "movie",
    "tmdb": 480,
    "title": "Monsoon Wedding",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q945586",
    "qid": "Q945586"
   },
   {
+   "type": "movie",
    "tmdb": 6022,
    "title": "Evening",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q1091140",
    "qid": "Q1091140"
   },
   {
+   "type": "movie",
    "tmdb": 22536,
    "title": "Thirst",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q483780",
    "qid": "Q483780"
   },
   {
+   "type": "movie",
    "tmdb": 27583,
    "title": "Greenberg",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q629974",
    "qid": "Q629974"
   },
   {
+   "type": "movie",
    "tmdb": 41211,
    "title": "Heartbreaker",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q1192319",
    "qid": "Q1192319"
   },
   {
+   "type": "movie",
    "tmdb": 339380,
    "title": "On the Basis of Sex",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q42048168",
    "qid": "Q42048168"
   },
   {
+   "type": "movie",
    "tmdb": 1944,
    "title": "The Door in the Floor",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q1766420",
    "qid": "Q1766420"
   },
   {
+   "type": "movie",
    "tmdb": 2144,
    "title": "One Night at McCool's",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q1306527",
    "qid": "Q1306527"
   },
   {
+   "type": "movie",
    "tmdb": 12178,
    "title": "Miss Pettigrew Lives for a Day",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q1576633",
    "qid": "Q1576633"
   },
   {
+   "type": "movie",
    "tmdb": 88005,
    "title": "Seeking a Friend for the End of the World",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q759448",
    "qid": "Q759448"
   },
   {
+   "type": "movie",
    "tmdb": 289222,
    "title": "The Zookeeper's Wife",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q21528262",
    "qid": "Q21528262"
   },
   {
+   "type": "movie",
    "tmdb": 471506,
    "title": "Greta",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q55392278",
    "qid": "Q55392278"
   },
   {
+   "type": "movie",
    "tmdb": 506528,
    "title": "Harriet",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q30609465",
    "qid": "Q30609465"
   },
   {
+   "type": "movie",
    "tmdb": 10092,
    "title": "Cry Wolf",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q1142206",
    "qid": "Q1142206"
   },
   {
+   "type": "movie",
    "tmdb": 43923,
    "title": "It's Kind of a Funny Story",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q1508772",
    "qid": "Q1508772"
   },
   {
+   "type": "movie",
    "tmdb": 187596,
    "title": "Walk of Shame",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q15647962",
    "qid": "Q15647962"
   },
   {
+   "type": "movie",
    "tmdb": 336029,
    "title": "A Tale of Love and Darkness",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q19881205",
    "qid": "Q19881205"
   },
   {
+   "type": "movie",
    "tmdb": 433627,
    "title": "Entebbe",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q30597828",
    "qid": "Q30597828"
   },
   {
+   "type": "movie",
    "tmdb": 799876,
    "title": "The Outfit",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q105962799",
    "qid": "Q105962799"
   },
   {
+   "type": "movie",
    "tmdb": 1289936,
    "title": "Downton Abbey: The Grand Finale",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q126164193",
    "qid": "Q126164193"
   },
   {
+   "type": "movie",
    "tmdb": 19255,
    "title": "Away We Go",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q791651",
    "qid": "Q791651"
   },
   {
+   "type": "movie",
    "tmdb": 133694,
    "title": "Promised Land",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q3017170",
    "qid": "Q3017170"
   },
   {
+   "type": "movie",
    "tmdb": 231576,
    "title": "Wish I Was Here",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q14578326",
    "qid": "Q14578326"
   },
   {
+   "type": "movie",
    "tmdb": 242095,
    "title": "The Signal",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q14774970",
    "qid": "Q14774970"
   },
   {
+   "type": "movie",
    "tmdb": 245916,
    "title": "Kill the Messenger",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q14523264",
    "qid": "Q14523264"
   },
   {
+   "type": "movie",
    "tmdb": 615952,
    "title": "Armageddon Time",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q108877975",
    "qid": "Q108877975"
   },
   {
+   "type": "movie",
    "tmdb": 2171,
    "title": "Wet Hot American Summer",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q2294292",
    "qid": "Q2294292"
   },
   {
+   "type": "movie",
    "tmdb": 28200,
    "title": "Sylvia",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q1169717",
    "qid": "Q1169717"
   },
   {
+   "type": "movie",
    "tmdb": 44009,
    "title": "Another Year",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q568133",
    "qid": "Q568133"
   },
   {
+   "type": "movie",
    "tmdb": 144340,
    "title": "Admission",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q1588422",
    "qid": "Q1588422"
   },
   {
+   "type": "movie",
    "tmdb": 291356,
    "title": "In a Valley of Violence",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q18151017",
    "qid": "Q18151017"
   },
   {
+   "type": "movie",
    "tmdb": 382614,
    "title": "The Book of Henry",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q21098696",
    "qid": "Q21098696"
   },
   {
+   "type": "movie",
    "tmdb": 596161,
    "title": "Let Him Go",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q63434250",
    "qid": "Q63434250"
   },
   {
+   "type": "movie",
    "tmdb": 972533,
    "title": "Last Breath",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q119225271",
    "qid": "Q119225271"
   },
   {
+   "type": "movie",
    "tmdb": 998846,
    "title": "Back to Black",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q116507926",
    "qid": "Q116507926"
   },
   {
+   "type": "movie",
    "tmdb": 21191,
    "title": "Sin Nombre",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q1667482",
    "qid": "Q1667482"
   },
   {
+   "type": "movie",
    "tmdb": 246080,
    "title": "Black Sea",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q15059365",
    "qid": "Q15059365"
   },
   {
+   "type": "movie",
    "tmdb": 310133,
    "title": "Cop Car",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q19824612",
    "qid": "Q19824612"
   },
   {
+   "type": "movie",
    "tmdb": 429471,
    "title": "Captive State",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q28863791",
    "qid": "Q28863791"
   },
   {
+   "type": "movie",
    "tmdb": 533444,
    "title": "Waves",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q56205334",
    "qid": "Q56205334"
   },
   {
+   "type": "movie",
    "tmdb": 754609,
    "title": "Mrs. Harris Goes to Paris",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q104871482",
    "qid": "Q104871482"
   },
   {
+   "type": "movie",
    "tmdb": 1149504,
    "title": "Honey Don't!",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q124352605",
    "qid": "Q124352605"
   },
   {
+   "type": "movie",
    "tmdb": 1318413,
    "title": "Pressure",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q127698549",
    "qid": "Q127698549"
   },
   {
+   "type": "movie",
    "tmdb": 1544,
    "title": "Imagine Me & You",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q697155",
    "qid": "Q697155"
   },
   {
+   "type": "movie",
    "tmdb": 17740,
    "title": "Powder Blue",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q2066934",
    "qid": "Q2066934"
   },
   {
+   "type": "movie",
    "tmdb": 25208,
    "title": "The Caveman's Valentine",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q1766681",
    "qid": "Q1766681"
   },
   {
+   "type": "movie",
    "tmdb": 78571,
    "title": "Being Flynn",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q541445",
    "qid": "Q541445"
   },
   {
+   "type": "movie",
    "tmdb": 333385,
    "title": "Mr. Right",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q18377827",
    "qid": "Q18377827"
   },
   {
+   "type": "movie",
    "tmdb": 643532,
    "title": "The Card Counter",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q85806717",
    "qid": "Q85806717"
   },
   {
+   "type": "movie",
    "tmdb": 957304,
    "title": "Drive-Away Dolls",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q117769481",
    "qid": "Q117769481"
   },
   {
+   "type": "movie",
    "tmdb": 982271,
    "title": "Book Club: The Next Chapter",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q114798301",
    "qid": "Q114798301"
   },
   {
+   "type": "movie",
    "tmdb": 10972,
    "title": "Session 9",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q577221",
    "qid": "Q577221"
   },
   {
+   "type": "movie",
    "tmdb": 17403,
    "title": "How to Deal",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q606244",
    "qid": "Q606244"
   },
   {
+   "type": "movie",
    "tmdb": 37722,
    "title": "Waking the Dead",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q287274",
    "qid": "Q287274"
   },
   {
+   "type": "movie",
    "tmdb": 190847,
    "title": "The Last Days on Mars",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q3218379",
    "qid": "Q3218379"
   },
   {
+   "type": "movie",
    "tmdb": 9005,
    "title": "The Ice Harvest",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q784116",
    "qid": "Q784116"
   },
   {
+   "type": "movie",
    "tmdb": 54933,
    "title": "A Map of the World",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q320417",
    "qid": "Q320417"
   },
   {
+   "type": "movie",
    "tmdb": 87504,
    "title": "Hyde Park on Hudson",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q2604581",
    "qid": "Q2604581"
   },
   {
+   "type": "movie",
    "tmdb": 146223,
    "title": "Closed Circuit",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q2979643",
    "qid": "Q2979643"
   },
   {
+   "type": "movie",
    "tmdb": 206563,
    "title": "Trash",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q14774997",
    "qid": "Q14774997"
   },
   {
+   "type": "movie",
    "tmdb": 458344,
    "title": "Juliet, Naked",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q47461719",
    "qid": "Q47461719"
   },
   {
+   "type": "movie",
    "tmdb": 977942,
    "title": "The Uprising",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q135103999",
    "qid": "Q135103999"
   },
   {
+   "type": "movie",
    "tmdb": 1001811,
    "title": "My Big Fat Greek Wedding 3",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q117444564",
    "qid": "Q117444564"
   },
   {
+   "type": "movie",
    "tmdb": 1032472,
    "title": "Touch",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q124153295",
    "qid": "Q124153295"
   },
   {
+   "type": "movie",
    "tmdb": 10381,
    "title": "Plunkett & Macleane",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q137130",
    "qid": "Q137130"
   },
   {
+   "type": "movie",
    "tmdb": 30072,
    "title": "Possession",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q829817",
    "qid": "Q829817"
   },
   {
+   "type": "movie",
    "tmdb": 318850,
    "title": "The Young Messiah",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q20656805",
    "qid": "Q20656805"
   },
   {
+   "type": "movie",
    "tmdb": 993784,
    "title": "Lisa Frankenstein",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q113677881",
    "qid": "Q113677881"
   },
   {
+   "type": "movie",
    "tmdb": 1158915,
    "title": "Dìdi",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123855936",
    "qid": "Q123855936"
   },
   {
+   "type": "movie",
    "tmdb": 18190,
    "title": "Dream Lover",
    "year": 1994,
+   "source": "https://www.wikidata.org/wiki/Q1383670",
    "qid": "Q1383670"
   },
   {
+   "type": "movie",
    "tmdb": 31776,
    "title": "Where the Money Is",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q905043",
    "qid": "Q905043"
   },
   {
+   "type": "movie",
    "tmdb": 257440,
    "title": "Term Life",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q17144582",
    "qid": "Q17144582"
   },
   {
+   "type": "movie",
    "tmdb": 286521,
    "title": "5 Flights Up",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q16252530",
    "qid": "Q16252530"
   },
   {
+   "type": "movie",
    "tmdb": 397722,
    "title": "Thoroughbreds",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q28114659",
    "qid": "Q28114659"
   },
   {
+   "type": "movie",
    "tmdb": 500860,
    "title": "The Mustang",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q60854519",
    "qid": "Q60854519"
   },
   {
+   "type": "movie",
    "tmdb": 571384,
    "title": "Come Play",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q65049519",
    "qid": "Q65049519"
   },
   {
+   "type": "movie",
    "tmdb": 1364608,
    "title": "Anemone",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q130394023",
    "qid": "Q130394023"
   },
   {
+   "type": "movie",
    "tmdb": 1503762,
    "title": "Sense and Sensibility",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q135436961",
    "qid": "Q135436961"
   },
   {
+   "type": "movie",
    "tmdb": 12621,
    "title": "Hamlet 2",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q1514641",
    "qid": "Q1514641"
   },
   {
+   "type": "movie",
    "tmdb": 22958,
    "title": "The Shape of Things",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q2031878",
    "qid": "Q2031878"
   },
   {
+   "type": "movie",
    "tmdb": 52274,
    "title": "Julia's Eyes",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q2737335",
    "qid": "Q2737335"
   },
   {
+   "type": "movie",
    "tmdb": 567714,
    "title": "The Roads Not Taken",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q59631094",
    "qid": "Q59631094"
   },
   {
+   "type": "movie",
    "tmdb": 595148,
    "title": "Irresistible",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q65091143",
    "qid": "Q65091143"
   },
   {
+   "type": "movie",
    "tmdb": 606679,
    "title": "The High Note",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q64990050",
    "qid": "Q64990050"
   },
   {
+   "type": "movie",
    "tmdb": 664341,
    "title": "Eileen",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q113335768",
    "qid": "Q113335768"
   },
   {
+   "type": "movie",
    "tmdb": 748853,
    "title": "In the Earth",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q104218175",
    "qid": "Q104218175"
   },
   {
+   "type": "movie",
    "tmdb": 1236419,
    "title": "Piece by Piece",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q124364761",
    "qid": "Q124364761"
   },
   {
+   "type": "movie",
    "tmdb": 4786,
    "title": "Rudo y Cursi",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q2382723",
    "qid": "Q2382723"
   },
   {
+   "type": "movie",
    "tmdb": 15506,
    "title": "Agnes Browne",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q265984",
    "qid": "Q265984"
   },
   {
+   "type": "movie",
    "tmdb": 44737,
    "title": "Babies",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q797969",
    "qid": "Q797969"
   },
   {
+   "type": "movie",
    "tmdb": 73939,
    "title": "Pariah",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q7137004",
    "qid": "Q7137004"
   },
   {
+   "type": "movie",
    "tmdb": 933419,
    "title": "Champions",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q116635541",
    "qid": "Q116635541"
   },
   {
+   "type": "movie",
    "tmdb": 15363,
    "title": "Something New",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q1116712",
    "qid": "Q1116712"
   },
   {
+   "type": "movie",
    "tmdb": 505205,
    "title": "Pope Francis: A Man of His Word",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q54554847",
    "qid": "Q54554847"
   },
   {
+   "type": "movie",
    "tmdb": 855263,
    "title": "A Thousand and One",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q115687524",
    "qid": "Q115687524"
   },
   {
+   "type": "movie",
    "tmdb": 958196,
    "title": "Inside",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q114450800",
    "qid": "Q114450800"
   },
   {
+   "type": "movie",
    "tmdb": 6535,
    "title": "Talk to Me",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q2390402",
    "qid": "Q2390402"
   },
   {
+   "type": "movie",
    "tmdb": 84200,
    "title": "For a Good Time, Call...",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q5466990",
    "qid": "Q5466990"
   },
   {
+   "type": "movie",
    "tmdb": 159154,
    "title": "We Steal Secrets: The Story of WikiLeaks",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q7977781",
    "qid": "Q7977781"
   },
   {
+   "type": "movie",
    "tmdb": 507903,
    "title": "Spoiler Alert",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q111939316",
    "qid": "Q111939316"
   },
   {
+   "type": "movie",
    "tmdb": 644089,
    "title": "Blue Bayou",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q84010895",
    "qid": "Q84010895"
   },
   {
+   "type": "movie",
    "tmdb": 26225,
    "title": "Ash Wednesday",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q2546364",
    "qid": "Q2546364"
   },
   {
+   "type": "movie",
    "tmdb": 156713,
    "title": "C.O.G.",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q15109181",
    "qid": "Q15109181"
   },
   {
+   "type": "movie",
    "tmdb": 157375,
    "title": "The Lifeguard",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q610508",
    "qid": "Q610508"
   },
   {
+   "type": "movie",
    "tmdb": 209403,
    "title": "Bad Words",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q15297613",
    "qid": "Q15297613"
   },
   {
+   "type": "movie",
    "tmdb": 490003,
    "title": "Won't You Be My Neighbor?",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q52151494",
    "qid": "Q52151494"
   },
   {
+   "type": "movie",
    "tmdb": 1039773,
    "title": "The American Society of Magical Negroes",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123690415",
    "qid": "Q123690415"
   },
   {
+   "type": "movie",
    "tmdb": 292,
    "title": "Dave Chappelle's Block Party",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q627346",
    "qid": "Q627346"
   },
   {
+   "type": "movie",
    "tmdb": 15940,
    "title": "Beautiful Creatures",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q15088332",
    "qid": "Q15088332"
   },
   {
+   "type": "movie",
    "tmdb": 19513,
    "title": "Series 7: The Contenders",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q7454805",
    "qid": "Q7454805"
   },
   {
+   "type": "movie",
    "tmdb": 80070,
    "title": "On the Edge",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q2023667",
    "qid": "Q2023667"
   },
   {
+   "type": "movie",
    "tmdb": 118052,
    "title": "Rat",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q7295376",
    "qid": "Q7295376"
   },
   {
+   "type": "movie",
    "tmdb": 125709,
    "title": "Joe Gould's Secret",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q1752968",
    "qid": "Q1752968"
   },
   {
+   "type": "movie",
    "tmdb": 128073,
    "title": "Greetings from Tim Buckley",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q5605187",
    "qid": "Q5605187"
   },
   {
+   "type": "movie",
    "tmdb": 466994,
    "title": "Creators: The Past",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q18844655",
    "qid": "Q18844655"
   },
   {
+   "type": "movie",
    "tmdb": 493675,
    "title": "Profile",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q48673984",
    "qid": "Q48673984"
   },
   {
+   "type": "movie",
    "tmdb": 1122099,
    "title": "The Ballad of Wallis Island",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q125274110",
    "qid": "Q125274110"
   },
   {
+   "type": "movie",
    "tmdb": 673121,
    "title": "Wolf",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q101078012",
    "qid": "Q101078012"
   },
   {
+   "type": "movie",
    "tmdb": 1397485,
    "title": "Girls Like Girls",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q131428413",
    "qid": "Q131428413"
   },
   {
+   "type": "movie",
    "tmdb": 40624,
    "title": "In the Shadows",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q1473609",
    "qid": "Q1473609"
   },
   {
+   "type": "movie",
    "tmdb": 52616,
    "title": "Pavilion of Women",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q22000841",
    "qid": "Q22000841"
   },
   {
+   "type": "movie",
    "tmdb": 70666,
    "title": "VIPs",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q10388570",
    "qid": "Q10388570"
   },
   {
+   "type": "movie",
    "tmdb": 135130,
    "title": "Moongirl",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q19880932",
    "qid": "Q19880932"
   },
   {
+   "type": "movie",
    "tmdb": 342169,
    "title": "Puerto Ricans in Paris",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q24211474",
    "qid": "Q24211474"
   },
   {
+   "type": "movie",
    "tmdb": 977223,
    "title": "Polite Society",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q115478681",
    "qid": "Q115478681"
   },
   {
+   "type": "movie",
    "tmdb": 26454,
    "title": "Deliver Us from Eva",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q5254044",
    "qid": "Q5254044"
   },
   {
+   "type": "movie",
    "tmdb": 91272,
    "title": "Loving Jezebel",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q19864377",
    "qid": "Q19864377"
   },
   {
+   "type": "movie",
    "tmdb": 96238,
    "title": "Never Again",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q19865436",
    "qid": "Q19865436"
   },
   {
+   "type": "movie",
    "tmdb": 239568,
    "title": "Search Party",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q17079694",
    "qid": "Q17079694"
   },
   {
+   "type": "movie",
    "tmdb": 848331,
    "title": "Honk for Jesus, Save Your Soul",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q110027954",
    "qid": "Q110027954"
   },
   {
+   "type": "movie",
    "tmdb": 29047,
    "title": "The Kid Stays in the Picture",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q7744232",
    "qid": "Q7744232"
   },
   {
+   "type": "movie",
    "tmdb": 50062,
    "title": "The Ground Truth",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q7738360",
    "qid": "Q7738360"
   },
   {
+   "type": "movie",
    "tmdb": 54358,
    "title": "Resurrect Dead: The Mystery of the Toynbee Tiles",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q7316490",
    "qid": "Q7316490"
   },
   {
+   "type": "movie",
    "tmdb": 242093,
    "title": "Under the Electric Sky",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q17151541",
    "qid": "Q17151541"
   },
   {
+   "type": "movie",
    "tmdb": 34025,
    "title": "Kisses",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q6417178",
    "qid": "Q6417178"
   },
   {
+   "type": "movie",
    "tmdb": 114087,
    "title": "Strictly Sinatra",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q3549797",
    "qid": "Q3549797"
   },
   {
+   "type": "movie",
    "tmdb": 207731,
    "title": "Boricua's Bond",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q21869197",
    "qid": "Q21869197"
   },
   {
+   "type": "movie",
    "tmdb": 642732,
    "title": "Roadrunner: A Film About Anthony Bourdain",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q106763973",
    "qid": "Q106763973"
   },
   {
+   "type": "movie",
    "tmdb": 1114972,
    "title": "Every Body",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q120135476",
    "qid": "Q120135476"
   },
   {
+   "type": "movie",
    "tmdb": 1634949,
    "title": "Lorne",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q138589517",
    "qid": "Q138589517"
   },
   {
+   "type": "movie",
    "tmdb": 385736,
    "title": "Kicks",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q26820822",
    "qid": "Q26820822"
   },
   {
+   "type": "movie",
    "tmdb": 514729,
    "title": "Bathtubs Over Broadway",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q57779964",
    "qid": "Q57779964"
   },
   {
+   "type": "movie",
    "tmdb": 850837,
    "title": "Blurr",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q108084407",
    "qid": "Q108084407"
   },
   {
+   "type": "movie",
    "tmdb": 1125701,
    "title": "Midwinter Break",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q137259390",
    "qid": "Q137259390"
   },
   {
+   "type": "movie",
    "tmdb": 83791,
    "title": "Living with the Enemy",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q6659606",
    "qid": "Q6659606"
   }
  ],
  "studio-searchlight": [
   {
+   "type": "movie",
    "tmdb": 44214,
    "title": "Black Swan",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q180214",
    "qid": "Q180214"
   },
   {
+   "type": "movie",
    "tmdb": 194662,
    "title": "Birdman",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q13255497",
    "qid": "Q13255497"
   },
   {
+   "type": "movie",
    "tmdb": 399055,
    "title": "The Shape of Water",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q26698156",
    "qid": "Q26698156"
   },
   {
+   "type": "movie",
    "tmdb": 10315,
    "title": "Fantastic Mr. Fox",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q465275",
    "qid": "Q465275"
   },
   {
+   "type": "movie",
    "tmdb": 120467,
    "title": "The Grand Budapest Hotel",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q3521099",
    "qid": "Q3521099"
   },
   {
+   "type": "movie",
    "tmdb": 44115,
    "title": "127 Hours",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q174371",
    "qid": "Q174371"
   },
   {
+   "type": "movie",
    "tmdb": 359940,
    "title": "Three Billboards Outside Ebbing, Missouri",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q24053277",
    "qid": "Q24053277"
   },
   {
+   "type": "movie",
    "tmdb": 7326,
    "title": "Juno",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q79503",
    "qid": "Q79503"
   },
   {
+   "type": "movie",
    "tmdb": 773,
    "title": "Little Miss Sunshine",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q192073",
    "qid": "Q192073"
   },
   {
+   "type": "movie",
    "tmdb": 65057,
    "title": "The Descendants",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q273686",
    "qid": "Q273686"
   },
   {
+   "type": "movie",
    "tmdb": 8967,
    "title": "The Tree of Life",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q244257",
    "qid": "Q244257"
   },
   {
+   "type": "movie",
    "tmdb": 581734,
    "title": "Nomadland",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q61740820",
    "qid": "Q61740820"
   },
   {
+   "type": "movie",
    "tmdb": 170,
    "title": "28 Days Later",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q221075",
    "qid": "Q221075"
   },
   {
+   "type": "movie",
    "tmdb": 19913,
    "title": "(500) Days of Summer",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q154935",
    "qid": "Q154935"
   },
   {
+   "type": "movie",
    "tmdb": 375262,
    "title": "The Favourite",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q22001133",
    "qid": "Q22001133"
   },
   {
+   "type": "movie",
    "tmdb": 792307,
    "title": "Poor Things",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q108760382",
    "qid": "Q108760382"
   },
   {
+   "type": "movie",
    "tmdb": 9427,
    "title": "The Full Monty",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q775970",
    "qid": "Q775970"
   },
   {
+   "type": "movie",
    "tmdb": 1562,
    "title": "28 Weeks Later",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q221102",
    "qid": "Q221102"
   },
   {
+   "type": "movie",
    "tmdb": 9675,
    "title": "Sideways",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q675937",
    "qid": "Q675937"
   },
   {
+   "type": "movie",
    "tmdb": 26022,
    "title": "My Name Is Khan",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q330663",
    "qid": "Q330663"
   },
   {
+   "type": "movie",
    "tmdb": 226,
    "title": "Boys Don't Cry",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q465646",
    "qid": "Q465646"
   },
   {
+   "type": "movie",
    "tmdb": 76025,
    "title": "Shame",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q909445",
    "qid": "Q909445"
   },
   {
+   "type": "movie",
    "tmdb": 399174,
    "title": "Isle of Dogs",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q28065409",
    "qid": "Q28065409"
   },
   {
+   "type": "movie",
    "tmdb": 1272,
    "title": "Sunshine",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q478212",
    "qid": "Q478212"
   },
   {
+   "type": "movie",
    "tmdb": 84175,
    "title": "Beasts of the Southern Wild",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q166462",
    "qid": "Q166462"
   },
   {
+   "type": "movie",
    "tmdb": 674324,
    "title": "The Banshees of Inisherin",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q108314506",
    "qid": "Q108314506"
   },
   {
+   "type": "movie",
    "tmdb": 86825,
    "title": "Stoker",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q487271",
    "qid": "Q487271"
   },
   {
+   "type": "movie",
    "tmdb": 228970,
    "title": "Wild",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q17065888",
    "qid": "Q17065888"
   },
   {
+   "type": "movie",
    "tmdb": 4538,
    "title": "The Darjeeling Limited",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q658944",
    "qid": "Q658944"
   },
   {
+   "type": "movie",
    "tmdb": 9357,
    "title": "One Hour Photo",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q990976",
    "qid": "Q990976"
   },
   {
+   "type": "movie",
    "tmdb": 74534,
    "title": "The Best Exotic Marigold Hotel",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q830295",
    "qid": "Q830295"
   },
   {
+   "type": "movie",
    "tmdb": 112336,
    "title": "Hitchcock",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q247733",
    "qid": "Q247733"
   },
   {
+   "type": "movie",
    "tmdb": 376866,
    "title": "Jackie",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q22350767",
    "qid": "Q22350767"
   },
   {
+   "type": "movie",
    "tmdb": 369192,
    "title": "Battle of the Sexes",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q24067722",
    "qid": "Q24067722"
   },
   {
+   "type": "movie",
    "tmdb": 542178,
    "title": "The French Dispatch",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q59551547",
    "qid": "Q59551547"
   },
   {
+   "type": "movie",
    "tmdb": 593643,
    "title": "The Menu",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q108444804",
    "qid": "Q108444804"
   },
   {
+   "type": "movie",
    "tmdb": 9388,
    "title": "Thank You for Smoking",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q840872",
    "qid": "Q840872"
   },
   {
+   "type": "movie",
    "tmdb": 401847,
    "title": "Can You Ever Forgive Me?",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q28860129",
    "qid": "Q28860129"
   },
   {
+   "type": "movie",
    "tmdb": 1013850,
    "title": "A Real Pain",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q123690368",
    "qid": "Q123690368"
   },
   {
+   "type": "movie",
    "tmdb": 1029955,
    "title": "Kinds of Kindness",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q114345051",
    "qid": "Q114345051"
   },
   {
+   "type": "movie",
    "tmdb": 1266,
    "title": "Street Kings",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q785712",
    "qid": "Q785712"
   },
   {
+   "type": "movie",
    "tmdb": 11023,
    "title": "Thirteen",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q1141912",
    "qid": "Q1141912"
   },
   {
+   "type": "movie",
    "tmdb": 25196,
    "title": "Crazy Heart",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q1128750",
    "qid": "Q1128750"
   },
   {
+   "type": "movie",
    "tmdb": 42188,
    "title": "Never Let Me Go",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q927826",
    "qid": "Q927826"
   },
   {
+   "type": "movie",
    "tmdb": 64678,
    "title": "The Art of Getting By",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q1415011",
    "qid": "Q1415011"
   },
   {
+   "type": "movie",
    "tmdb": 8193,
    "title": "Napoleon Dynamite",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q1133772",
    "qid": "Q1133772"
   },
   {
+   "type": "movie",
    "tmdb": 9792,
    "title": "The Hills Have Eyes",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q1141519",
    "qid": "Q1141519"
   },
   {
+   "type": "movie",
    "tmdb": 11184,
    "title": "Kinsey",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q83656",
    "qid": "Q83656"
   },
   {
+   "type": "movie",
    "tmdb": 68924,
    "title": "The Ice Storm",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q1193138",
    "qid": "Q1193138"
   },
   {
+   "type": "movie",
    "tmdb": 308369,
    "title": "Me & Earl & the Dying Girl",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q18152566",
    "qid": "Q18152566"
   },
   {
+   "type": "movie",
    "tmdb": 400928,
    "title": "Gifted",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q21527677",
    "qid": "Q21527677"
   },
   {
+   "type": "movie",
    "tmdb": 401,
    "title": "Garden State",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q59931",
    "qid": "Q59931"
   },
   {
+   "type": "movie",
    "tmdb": 10876,
    "title": "Quills",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q761302",
    "qid": "Q761302"
   },
   {
+   "type": "movie",
    "tmdb": 339408,
    "title": "The Birth of a Nation",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q20022670",
    "qid": "Q20022670"
   },
   {
+   "type": "movie",
    "tmdb": 567609,
    "title": "Ready or Not",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q58815115",
    "qid": "Q58815115"
   },
   {
+   "type": "movie",
    "tmdb": 7509,
    "title": "Water",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q617395",
    "qid": "Q617395"
   },
   {
+   "type": "movie",
    "tmdb": 11826,
    "title": "Sexy Beast",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q552036",
    "qid": "Q552036"
   },
   {
+   "type": "movie",
    "tmdb": 324807,
    "title": "A Bigger Splash",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q18202448",
    "qid": "Q18202448"
   },
   {
+   "type": "movie",
    "tmdb": 8324,
    "title": "Fast Food Nation",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q770000",
    "qid": "Q770000"
   },
   {
+   "type": "movie",
    "tmdb": 9688,
    "title": "Melinda and Melinda",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q1354121",
    "qid": "Q1354121"
   },
   {
+   "type": "movie",
    "tmdb": 16727,
    "title": "The Namesake",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q1557308",
    "qid": "Q1557308"
   },
   {
+   "type": "movie",
    "tmdb": 55420,
    "title": "Another Earth",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q567996",
    "qid": "Q567996"
   },
   {
+   "type": "movie",
    "tmdb": 113947,
    "title": "The Sessions",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q514416",
    "qid": "Q514416"
   },
   {
+   "type": "movie",
    "tmdb": 9962,
    "title": "The Good Girl",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q668357",
    "qid": "Q668357"
   },
   {
+   "type": "movie",
    "tmdb": 11363,
    "title": "She's the One",
    "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q1480910",
    "qid": "Q1480910"
   },
   {
+   "type": "movie",
    "tmdb": 23049,
    "title": "My Life in Ruins",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q1419210",
    "qid": "Q1419210"
   },
   {
+   "type": "movie",
    "tmdb": 154400,
    "title": "The Drop",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q13562077",
    "qid": "Q13562077"
   },
   {
+   "type": "movie",
    "tmdb": 1599,
    "title": "I Heart Huckabees",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q695389",
    "qid": "Q695389"
   },
   {
+   "type": "movie",
    "tmdb": 157832,
    "title": "Calvary",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q5024134",
    "qid": "Q5024134"
   },
   {
+   "type": "movie",
    "tmdb": 244267,
    "title": "I Origins",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q15635667",
    "qid": "Q15635667"
   },
   {
+   "type": "movie",
    "tmdb": 250734,
    "title": "Far from the Madding Crowd",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q15527055",
    "qid": "Q15527055"
   },
   {
+   "type": "movie",
    "tmdb": 303991,
    "title": "Demolition",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q18149188",
    "qid": "Q18149188"
   },
   {
+   "type": "movie",
    "tmdb": 403300,
    "title": "A Hidden Life",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q27555348",
    "qid": "Q27555348"
   },
   {
+   "type": "movie",
    "tmdb": 547565,
    "title": "The Night House",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q77906196",
    "qid": "Q77906196"
   },
   {
+   "type": "movie",
    "tmdb": 601470,
    "title": "The Eyes of Tammy Faye",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q73537423",
    "qid": "Q73537423"
   },
   {
+   "type": "movie",
    "tmdb": 8915,
    "title": "Amelia",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q461447",
    "qid": "Q461447"
   },
   {
+   "type": "movie",
    "tmdb": 10210,
    "title": "A Midsummer Night's Dream",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q1305200",
    "qid": "Q1305200"
   },
   {
+   "type": "movie",
    "tmdb": 14553,
    "title": "Stealing Beauty",
    "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q749191",
    "qid": "Q749191"
   },
   {
+   "type": "movie",
    "tmdb": 39780,
    "title": "Oscar and Lucinda",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q2033052",
    "qid": "Q2033052"
   },
   {
+   "type": "movie",
    "tmdb": 209263,
    "title": "Enough Said",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q14514258",
    "qid": "Q14514258"
   },
   {
+   "type": "movie",
    "tmdb": 268238,
    "title": "The Second Best Exotic Marigold Hotel",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q16203908",
    "qid": "Q16203908"
   },
   {
+   "type": "movie",
    "tmdb": 429203,
    "title": "The Old Man & the Gun",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q29144645",
    "qid": "Q29144645"
   },
   {
+   "type": "movie",
    "tmdb": 468224,
    "title": "Tolkien",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q42689885",
    "qid": "Q42689885"
   },
   {
+   "type": "movie",
    "tmdb": 9081,
    "title": "Waking Life",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q300042",
    "qid": "Q300042"
   },
   {
+   "type": "movie",
    "tmdb": 10511,
    "title": "In America",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q1536722",
    "qid": "Q1536722"
   },
   {
+   "type": "movie",
    "tmdb": 347026,
    "title": "A United Kingdom",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q21528200",
    "qid": "Q21528200"
   },
   {
+   "type": "movie",
    "tmdb": 433502,
    "title": "The Aftermath",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q28517227",
    "qid": "Q28517227"
   },
   {
+   "type": "movie",
    "tmdb": 516329,
    "title": "Antlers",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q60737524",
    "qid": "Q60737524"
   },
   {
+   "type": "movie",
    "tmdb": 994108,
    "title": "All of Us Strangers",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q113516747",
    "qid": "Q113516747"
   },
   {
+   "type": "movie",
    "tmdb": 22051,
    "title": "Adam",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q144929",
    "qid": "Q144929"
   },
   {
+   "type": "movie",
    "tmdb": 22798,
    "title": "Whip It",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q303213",
    "qid": "Q303213"
   },
   {
+   "type": "movie",
    "tmdb": 31640,
    "title": "Blood and Wine",
    "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q470499",
    "qid": "Q470499"
   },
   {
+   "type": "movie",
    "tmdb": 68727,
    "title": "Trance",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q502374",
    "qid": "Q502374"
   },
   {
+   "type": "movie",
    "tmdb": 245706,
    "title": "True Story",
    "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q14317024",
    "qid": "Q14317024"
   },
   {
+   "type": "movie",
    "tmdb": 340104,
    "title": "Lucy in the Sky",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q60049818",
    "qid": "Q60049818"
   },
   {
+   "type": "movie",
    "tmdb": 766475,
    "title": "See How They Run",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q105319897",
    "qid": "Q105319897"
   },
   {
+   "type": "movie",
    "tmdb": 1266127,
    "title": "Ready or Not 2: Here I Come",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q134054683",
    "qid": "Q134054683"
   },
   {
+   "type": "movie",
    "tmdb": 10758,
    "title": "Waitress",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q1380376",
    "qid": "Q1380376"
   },
   {
+   "type": "movie",
    "tmdb": 205601,
    "title": "Belle",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q14953063",
    "qid": "Q14953063"
   },
   {
+   "type": "movie",
    "tmdb": 418680,
    "title": "Goodbye Christopher Robin",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q27703147",
    "qid": "Q27703147"
   },
   {
+   "type": "movie",
    "tmdb": 8272,
    "title": "The Savages",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q1213010",
    "qid": "Q1213010"
   },
   {
+   "type": "movie",
    "tmdb": 9034,
    "title": "The Banger Sisters",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q1191106",
    "qid": "Q1191106"
   },
   {
+   "type": "movie",
    "tmdb": 12524,
    "title": "Titus",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q1635819",
    "qid": "Q1635819"
   },
   {
+   "type": "movie",
    "tmdb": 12837,
    "title": "The Secret Life of Bees",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q940387",
    "qid": "Q940387"
   },
   {
+   "type": "movie",
    "tmdb": 44754,
    "title": "Margaret",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q866694",
    "qid": "Q866694"
   },
   {
+   "type": "movie",
    "tmdb": 45094,
    "title": "Conviction",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q850276",
    "qid": "Q850276"
   },
   {
+   "type": "movie",
    "tmdb": 50837,
    "title": "Martha Marcy May Marlene",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q515277",
    "qid": "Q515277"
   },
   {
+   "type": "movie",
    "tmdb": 520900,
    "title": "The Personal History of David Copperfield",
    "year": 2019,
+   "source": "https://www.wikidata.org/wiki/Q54489141",
    "qid": "Q54489141"
   },
   {
+   "type": "movie",
    "tmdb": 758330,
    "title": "Good Luck to You, Leo Grande",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q106740037",
    "qid": "Q106740037"
   },
   {
+   "type": "movie",
    "tmdb": 39939,
    "title": "Super Troopers",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q1779139",
    "qid": "Q1779139"
   },
   {
+   "type": "movie",
    "tmdb": 309245,
    "title": "Mistress America",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q18699754",
    "qid": "Q18699754"
   },
   {
+   "type": "movie",
    "tmdb": 621587,
    "title": "Next Goal Wins",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q73537958",
    "qid": "Q73537958"
   },
   {
+   "type": "movie",
    "tmdb": 814757,
    "title": "Empire of Light",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q110876878",
    "qid": "Q110876878"
   },
   {
+   "type": "movie",
    "tmdb": 891621,
    "title": "Wild Horse Nine",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q133341572",
    "qid": "Q133341572"
   },
   {
+   "type": "movie",
    "tmdb": 1267905,
    "title": "The Roses",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q126810973",
    "qid": "Q126810973"
   },
   {
+   "type": "movie",
    "tmdb": 10742,
    "title": "The Clearing",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q488345",
    "qid": "Q488345"
   },
   {
+   "type": "movie",
    "tmdb": 13435,
    "title": "Antwone Fisher",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q610339",
    "qid": "Q610339"
   },
   {
+   "type": "movie",
    "tmdb": 77223,
    "title": "Paradise Road",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q1970669",
    "qid": "Q1970669"
   },
   {
+   "type": "movie",
    "tmdb": 413998,
    "title": "My Cousin Rachel",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q27958095",
    "qid": "Q27958095"
   },
   {
+   "type": "movie",
    "tmdb": 560391,
    "title": "Downhill",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q60737609",
    "qid": "Q60737609"
   },
   {
+   "type": "movie",
    "tmdb": 1208348,
    "title": "Rental Family",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q124947229",
    "qid": "Q124947229"
   },
   {
+   "type": "movie",
    "tmdb": 1544,
    "title": "Imagine Me & You",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q697155",
    "qid": "Q697155"
   },
   {
+   "type": "movie",
    "tmdb": 9499,
    "title": "Le Divorce",
    "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q1306265",
    "qid": "Q1306265"
   },
   {
+   "type": "movie",
    "tmdb": 13973,
    "title": "Choke",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q1075839",
    "qid": "Q1075839"
   },
   {
+   "type": "movie",
    "tmdb": 14410,
    "title": "Notorious",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q1809958",
    "qid": "Q1809958"
   },
   {
+   "type": "movie",
    "tmdb": 87499,
    "title": "The East",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q771197",
    "qid": "Q771197"
   },
   {
+   "type": "movie",
    "tmdb": 728949,
    "title": "Nightbitch",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q115475553",
    "qid": "Q115475553"
   },
   {
+   "type": "movie",
    "tmdb": 14629,
    "title": "Woman on Top",
    "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q1853472",
    "qid": "Q1853472"
   },
   {
+   "type": "movie",
    "tmdb": 14771,
    "title": "The Onion Movie",
    "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q1983756",
    "qid": "Q1983756"
   },
   {
+   "type": "movie",
    "tmdb": 42314,
    "title": "Looking for Richard",
    "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q1493156",
    "qid": "Q1493156"
   },
   {
+   "type": "movie",
    "tmdb": 47199,
    "title": "The Secret Agent",
    "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q2975672",
    "qid": "Q2975672"
   },
   {
+   "type": "movie",
    "tmdb": 52067,
    "title": "Cedar Rapids",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q1862218",
    "qid": "Q1862218"
   },
   {
+   "type": "movie",
    "tmdb": 338928,
    "title": "He Named Me Malala",
    "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q19878674",
    "qid": "Q19878674"
   },
   {
+   "type": "movie",
    "tmdb": 353569,
    "title": "Table 19",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q20022668",
    "qid": "Q20022668"
   },
   {
+   "type": "movie",
    "tmdb": 372411,
    "title": "Absolutely Fabulous: The Movie",
    "year": 2016,
+   "source": "https://www.wikidata.org/wiki/Q21527443",
    "qid": "Q21527443"
   },
   {
+   "type": "movie",
    "tmdb": 10162,
    "title": "Waking Ned",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q1804855",
    "qid": "Q1804855"
   },
   {
+   "type": "movie",
    "tmdb": 24618,
    "title": "Bee Season",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q813983",
    "qid": "Q813983"
   },
   {
+   "type": "movie",
    "tmdb": 175541,
    "title": "Black Nativity",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q13580958",
    "qid": "Q13580958"
   },
   {
+   "type": "movie",
    "tmdb": 5956,
    "title": "Joshua",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q2601332",
    "qid": "Q2601332"
   },
   {
+   "type": "movie",
    "tmdb": 8618,
    "title": "The History Boys",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q1236851",
    "qid": "Q1236851"
   },
   {
+   "type": "movie",
    "tmdb": 9927,
    "title": "The Ringer",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q1156530",
    "qid": "Q1156530"
   },
   {
+   "type": "movie",
    "tmdb": 14057,
    "title": "Trust the Man",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q735132",
    "qid": "Q735132"
   },
   {
+   "type": "movie",
    "tmdb": 14434,
    "title": "I Think I Love My Wife",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q1656254",
    "qid": "Q1656254"
   },
   {
+   "type": "movie",
    "tmdb": 14544,
    "title": "Roll Bounce",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q2120775",
    "qid": "Q2120775"
   },
   {
+   "type": "movie",
    "tmdb": 50022,
    "title": "Super Troopers 2",
    "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q21528089",
    "qid": "Q21528089"
   },
   {
+   "type": "movie",
    "tmdb": 1140498,
    "title": "Is This Thing On?",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q132189965",
    "qid": "Q132189965"
   },
   {
+   "type": "movie",
    "tmdb": 18621,
    "title": "Best Laid Plans",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q830304",
    "qid": "Q830304"
   },
   {
+   "type": "movie",
    "tmdb": 20689,
    "title": "The Dancer Upstairs",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q1113039",
    "qid": "Q1113039"
   },
   {
+   "type": "movie",
    "tmdb": 22820,
    "title": "Gentlemen Broncos",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q164080",
    "qid": "Q164080"
   },
   {
+   "type": "movie",
    "tmdb": 32579,
    "title": "Under the Same Moon",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q1036420",
    "qid": "Q1036420"
   },
   {
+   "type": "movie",
    "tmdb": 38583,
    "title": "Separate Lies",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q383810",
    "qid": "Q383810"
   },
   {
+   "type": "movie",
    "tmdb": 346681,
    "title": "Wilson",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q20650048",
    "qid": "Q20650048"
   },
   {
+   "type": "movie",
    "tmdb": 426256,
    "title": "Patti Cake$",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q28466571",
    "qid": "Q28466571"
   },
   {
+   "type": "movie",
    "tmdb": 776527,
    "title": "Summer of Soul (…Or, When the Revolution Could Not Be Televised)",
    "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q104213699",
    "qid": "Q104213699"
   },
   {
+   "type": "movie",
    "tmdb": 812635,
    "title": "Chevalier",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q108782357",
    "qid": "Q108782357"
   },
   {
+   "type": "movie",
    "tmdb": 11217,
    "title": "Club Dread",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q1103047",
    "qid": "Q1103047"
   },
   {
+   "type": "movie",
    "tmdb": 15647,
    "title": "Kissing Jessica Stein",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q1475299",
    "qid": "Q1475299"
   },
   {
+   "type": "movie",
    "tmdb": 34563,
    "title": "Our Family Wedding",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q2625088",
    "qid": "Q2625088"
   },
   {
+   "type": "movie",
    "tmdb": 209276,
    "title": "Starred Up",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q14954169",
    "qid": "Q14954169"
   },
   {
+   "type": "movie",
    "tmdb": 626332,
    "title": "Flamin' Hot",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q111915694",
    "qid": "Q111915694"
   },
   {
+   "type": "movie",
    "tmdb": 838330,
    "title": "Not Okay",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q108123132",
    "qid": "Q108123132"
   },
   {
+   "type": "movie",
    "tmdb": 846250,
    "title": "Fire Island",
    "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q108101957",
    "qid": "Q108101957"
   },
   {
+   "type": "movie",
    "tmdb": 1452168,
    "title": "Behemoth!",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q136706560",
    "qid": "Q136706560"
   },
   {
+   "type": "movie",
    "tmdb": 19084,
    "title": "Johnson Family Vacation",
    "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q742307",
    "qid": "Q742307"
   },
   {
+   "type": "movie",
    "tmdb": 19556,
    "title": "Miss March",
    "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q475136",
    "qid": "Q475136"
   },
   {
+   "type": "movie",
    "tmdb": 28134,
    "title": "The Impostors",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q374507",
    "qid": "Q374507"
   },
   {
+   "type": "movie",
    "tmdb": 39127,
    "title": "Ripley Under Ground",
    "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q570973",
    "qid": "Q570973"
   },
   {
+   "type": "movie",
    "tmdb": 50043,
    "title": "Cousin Bette",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q835676",
    "qid": "Q835676"
   },
   {
+   "type": "movie",
    "tmdb": 100529,
    "title": "Lola Versus",
    "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q2371779",
    "qid": "Q2371779"
   },
   {
+   "type": "movie",
    "tmdb": 399363,
    "title": "Wendy",
    "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q65084758",
    "qid": "Q65084758"
   },
   {
+   "type": "movie",
    "tmdb": 10111,
    "title": "Confetti",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q332093",
    "qid": "Q332093"
   },
   {
+   "type": "movie",
    "tmdb": 11844,
    "title": "The Van",
    "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q1419676",
    "qid": "Q1419676"
   },
   {
+   "type": "movie",
    "tmdb": 32456,
    "title": "Two Girls and a Guy",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q1304913",
    "qid": "Q1304913"
   },
   {
+   "type": "movie",
    "tmdb": 55725,
    "title": "Win Win",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q2704616",
    "qid": "Q2704616"
   },
   {
+   "type": "movie",
    "tmdb": 175528,
    "title": "Baggage Claim",
    "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q12101676",
    "qid": "Q12101676"
   },
   {
+   "type": "movie",
    "tmdb": 14662,
    "title": "Slums of Beverly Hills",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q1460897",
    "qid": "Q1460897"
   },
   {
+   "type": "movie",
    "tmdb": 30139,
    "title": "Phat Girlz",
    "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q1645253",
    "qid": "Q1645253"
   },
   {
+   "type": "movie",
    "tmdb": 37964,
    "title": "Brown Sugar",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q3280697",
    "qid": "Q3280697"
   },
   {
+   "type": "movie",
    "tmdb": 38803,
    "title": "Kingdom Come",
    "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q4311027",
    "qid": "Q4311027"
   },
   {
+   "type": "movie",
    "tmdb": 38093,
    "title": "Just Wright",
    "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q2656371",
    "qid": "Q2656371"
   },
   {
+   "type": "movie",
    "tmdb": 86812,
    "title": "Sound of My Voice",
    "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q7564779",
    "qid": "Q7564779"
   },
   {
+   "type": "movie",
    "tmdb": 1014209,
    "title": "Suncoast",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q119882908",
    "qid": "Q119882908"
   },
   {
+   "type": "movie",
    "tmdb": 1032892,
    "title": "In the Blink of an Eye",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q117443229",
    "qid": "Q117443229"
   },
   {
+   "type": "movie",
    "tmdb": 1075456,
    "title": "O'Dessa",
    "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q125421437",
    "qid": "Q125421437"
   },
   {
+   "type": "movie",
    "tmdb": 38509,
    "title": "Polish Wedding",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q3394268",
    "qid": "Q3394268"
   },
   {
+   "type": "movie",
    "tmdb": 1011082,
    "title": "The Greatest Hits",
    "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q117272587",
    "qid": "Q117272587"
   },
   {
+   "type": "movie",
    "tmdb": 25921,
    "title": "Garage Days",
    "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q3007933",
    "qid": "Q3007933"
   },
   {
+   "type": "movie",
    "tmdb": 1049638,
    "title": "Rye Lane",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q115675219",
    "qid": "Q115675219"
   },
   {
+   "type": "movie",
    "tmdb": 675871,
    "title": "Super Troopers 3",
    "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q136325016",
    "qid": "Q136325016"
   },
   {
+   "type": "movie",
    "tmdb": 784524,
    "title": "Magazine Dreams",
    "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q115631553",
    "qid": "Q115631553"
   },
   {
+   "type": "movie",
    "tmdb": 21182,
    "title": "Young@Heart",
    "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q3147087",
    "qid": "Q3147087"
   },
   {
+   "type": "movie",
    "tmdb": 76996,
    "title": "Love and Other Catastrophes",
    "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q6691661",
    "qid": "Q6691661"
   },
   {
+   "type": "movie",
    "tmdb": 108346,
    "title": "Dreaming of Joseph Lees",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q5306627",
    "qid": "Q5306627"
   },
   {
+   "type": "movie",
    "tmdb": 108401,
    "title": "Star Maps",
    "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q7600796",
    "qid": "Q7600796"
   },
   {
+   "type": "movie",
    "tmdb": 40879,
    "title": "Whiteboyz",
    "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q2567024",
    "qid": "Q2567024"
   },
   {
+   "type": "movie",
    "tmdb": 68545,
    "title": "Intimate Relations",
    "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q6057640",
    "qid": "Q6057640"
   },
   {
+   "type": "movie",
    "tmdb": 125123,
    "title": "Among Giants",
    "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q4747537",
    "qid": "Q4747537"
   },
   {
+   "type": "movie",
    "tmdb": 433010,
    "title": "STEP",
    "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q30612756",
    "qid": "Q30612756"
   }
  ]

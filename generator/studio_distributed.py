@@ -16,6 +16,7 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE / 'studio_distributed.json'
 SPARQL = 'https://query.wikidata.org/sparql'
 UA = 'strand-discovery-studio-distributed/1.0 (https://github.com/xBOBxSAGETx/strand-discovery)'
+WIKIDATA = 'https://www.wikidata.org/wiki/'     # an entry's source: its Wikidata item
 CAP = 400      # per studio; a safety limit; none of the five studios reaches it today
 
 # studio card slug -> [(Wikidata QID, its English label: checked against Wikidata on every run)]
@@ -32,26 +33,27 @@ STUDIO_ITEMS = {
 
 # Hand exclude list: films another company released in the US, so they do not belong on the studio card (the studio only
 # had a territory release, e.g. Lionsgate UK). A title is listed only with a source that names the US distributor.
-# `why` = the quote + URL (Box Office Mojo "Domestic Distributor" unless it says Wikipedia).
+# `why` = the quote + URL (Box Office Mojo "Domestic Distributor" unless it says Wikipedia); `source` = that URL.
+# Each entry is a hand-list entry {"type","tmdb","title","year","source"} (+ why).
 EXCLUDE = {
     'studio-lionsgate': [
-        {'tmdb': 366668, 'title': "Playmobil: The Movie", 'why': "Box Office Mojo \"Domestic Distributor: STX Entertainment\" (https://www.boxofficemojo.com/title/tt4199898/)"},
-        {'tmdb': 86828, 'title': "Absolutely Anything", 'why': "Box Office Mojo \"Domestic Distributor: Atlas Distribution Company\" (https://www.boxofficemojo.com/title/tt1727770/)"},
-        {'tmdb': 283227, 'title': "A Little Chaos", 'why': "Box Office Mojo \"Domestic Distributor: Focus World\" (https://www.boxofficemojo.com/title/tt2639254/)"},
-        {'tmdb': 27429, 'title': "Shivers", 'why': "Wikipedia (https://en.wikipedia.org/wiki/Shivers_(1975_film)): \"Cronenberg blaming American International Pictures's poor distribution\" (US release as They Came from Within); Box Office Mojo has no distributor"},
-        {'tmdb': 11838, 'title': "Ju-On: The Grudge", 'why': "Box Office Mojo \"Domestic Distributor: Vitagraph Films\" (https://www.boxofficemojo.com/title/tt0364385/)"},
-        {'tmdb': 300155, 'title': "A Royal Night Out", 'why': "Box Office Mojo \"Domestic Distributor: Atlas Distribution Company\" (https://www.boxofficemojo.com/title/tt1837562/)"},
-        {'tmdb': 205588, 'title': "Our Kind of Traitor", 'why': "Box Office Mojo \"Domestic Distributor: Roadside Attractions\" (https://www.boxofficemojo.com/title/tt1995390/)"},
-        {'tmdb': 391714, 'title': "On Chesil Beach", 'why': "Box Office Mojo \"Domestic Distributor: Bleecker Street Media\" (https://www.boxofficemojo.com/title/tt1667321/)"},
-        {'tmdb': 438259, 'title': "Journey's End", 'why': "Box Office Mojo \"Domestic Distributor: Good Deed Entertainment\" (https://www.boxofficemojo.com/title/tt3780500/)"},
-        {'tmdb': 429417, 'title': "Ghost Stories", 'why': "Box Office Mojo \"Domestic Distributor: IFC Films\" (https://www.boxofficemojo.com/title/tt5516328/)"},
-        {'tmdb': 200727, 'title': "Love, Rosie", 'why': "Box Office Mojo \"Domestic Distributor: The Film Arcade\" (https://www.boxofficemojo.com/title/tt1638002/)"},
+        {'type': 'movie', 'tmdb': 366668, 'title': "Playmobil: The Movie", 'year': 2019, 'source': 'https://www.boxofficemojo.com/title/tt4199898/', 'why': "Box Office Mojo \"Domestic Distributor: STX Entertainment\" (https://www.boxofficemojo.com/title/tt4199898/)"},
+        {'type': 'movie', 'tmdb': 86828, 'title': "Absolutely Anything", 'year': 2015, 'source': 'https://www.boxofficemojo.com/title/tt1727770/', 'why': "Box Office Mojo \"Domestic Distributor: Atlas Distribution Company\" (https://www.boxofficemojo.com/title/tt1727770/)"},
+        {'type': 'movie', 'tmdb': 283227, 'title': "A Little Chaos", 'year': 2015, 'source': 'https://www.boxofficemojo.com/title/tt2639254/', 'why': "Box Office Mojo \"Domestic Distributor: Focus World\" (https://www.boxofficemojo.com/title/tt2639254/)"},
+        {'type': 'movie', 'tmdb': 27429, 'title': "Shivers", 'year': 1975, 'source': 'https://en.wikipedia.org/wiki/Shivers_(1975_film)', 'why': "Wikipedia (https://en.wikipedia.org/wiki/Shivers_(1975_film)): \"Cronenberg blaming American International Pictures's poor distribution\" (US release as They Came from Within); Box Office Mojo has no distributor"},
+        {'type': 'movie', 'tmdb': 11838, 'title': "Ju-On: The Grudge", 'year': 2002, 'source': 'https://www.boxofficemojo.com/title/tt0364385/', 'why': "Box Office Mojo \"Domestic Distributor: Vitagraph Films\" (https://www.boxofficemojo.com/title/tt0364385/)"},
+        {'type': 'movie', 'tmdb': 300155, 'title': "A Royal Night Out", 'year': 2015, 'source': 'https://www.boxofficemojo.com/title/tt1837562/', 'why': "Box Office Mojo \"Domestic Distributor: Atlas Distribution Company\" (https://www.boxofficemojo.com/title/tt1837562/)"},
+        {'type': 'movie', 'tmdb': 205588, 'title': "Our Kind of Traitor", 'year': 2016, 'source': 'https://www.boxofficemojo.com/title/tt1995390/', 'why': "Box Office Mojo \"Domestic Distributor: Roadside Attractions\" (https://www.boxofficemojo.com/title/tt1995390/)"},
+        {'type': 'movie', 'tmdb': 391714, 'title': "On Chesil Beach", 'year': 2018, 'source': 'https://www.boxofficemojo.com/title/tt1667321/', 'why': "Box Office Mojo \"Domestic Distributor: Bleecker Street Media\" (https://www.boxofficemojo.com/title/tt1667321/)"},
+        {'type': 'movie', 'tmdb': 438259, 'title': "Journey's End", 'year': 2017, 'source': 'https://www.boxofficemojo.com/title/tt3780500/', 'why': "Box Office Mojo \"Domestic Distributor: Good Deed Entertainment\" (https://www.boxofficemojo.com/title/tt3780500/)"},
+        {'type': 'movie', 'tmdb': 429417, 'title': "Ghost Stories", 'year': 2018, 'source': 'https://www.boxofficemojo.com/title/tt5516328/', 'why': "Box Office Mojo \"Domestic Distributor: IFC Films\" (https://www.boxofficemojo.com/title/tt5516328/)"},
+        {'type': 'movie', 'tmdb': 200727, 'title': "Love, Rosie", 'year': 2014, 'source': 'https://www.boxofficemojo.com/title/tt1638002/', 'why': "Box Office Mojo \"Domestic Distributor: The Film Arcade\" (https://www.boxofficemojo.com/title/tt1638002/)"},
     ],
     'studio-focus-features': [
-        {'tmdb': 26428, 'title': "Agora", 'why': "Box Office Mojo \"Domestic Distributor: Newmarket Films\" (https://www.boxofficemojo.com/title/tt1186830/)"},
-        {'tmdb': 8338, 'title': "Blindness", 'why': "Box Office Mojo \"Domestic Distributor: Miramax\" (https://www.boxofficemojo.com/title/tt0861689/)"},
-        {'tmdb': 43079, 'title': "Mad About Mambo", 'why': "Box Office Mojo \"Domestic Distributor: USA Films\" (https://www.boxofficemojo.com/title/tt0156757/)"},
-        {'tmdb': 121830, 'title': "Mr. Pip", 'why': "Box Office Mojo \"Domestic Distributor: Freestyle Releasing\" (https://www.boxofficemojo.com/title/tt1485749/)"},
+        {'type': 'movie', 'tmdb': 26428, 'title': "Agora", 'year': 2009, 'source': 'https://www.boxofficemojo.com/title/tt1186830/', 'why': "Box Office Mojo \"Domestic Distributor: Newmarket Films\" (https://www.boxofficemojo.com/title/tt1186830/)"},
+        {'type': 'movie', 'tmdb': 8338, 'title': "Blindness", 'year': 2008, 'source': 'https://www.boxofficemojo.com/title/tt0861689/', 'why': "Box Office Mojo \"Domestic Distributor: Miramax\" (https://www.boxofficemojo.com/title/tt0861689/)"},
+        {'type': 'movie', 'tmdb': 43079, 'title': "Mad About Mambo", 'year': 2000, 'source': 'https://www.boxofficemojo.com/title/tt0156757/', 'why': "Box Office Mojo \"Domestic Distributor: USA Films\" (https://www.boxofficemojo.com/title/tt0156757/)"},
+        {'type': 'movie', 'tmdb': 121830, 'title': "Mr. Pip", 'year': 2012, 'source': 'https://www.boxofficemojo.com/title/tt1485749/', 'why': "Box Office Mojo \"Domestic Distributor: Freestyle Releasing\" (https://www.boxofficemojo.com/title/tt1485749/)"},
     ],
 }
 
@@ -94,8 +96,9 @@ SELECT ?f (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (MIN(?tmdb) AS ?t
         tid = r['tmdbid']['value']
         if not tid.isdigit():
             continue
-        out.append({'tmdb': int(tid), 'title': r['title']['value'], 'year': int(r['released']['value'][:4]),
-                    'qid': r['f']['value'].rsplit('/', 1)[-1], '_links': int(r['sitelinks']['value'])})
+        qid = r['f']['value'].rsplit('/', 1)[-1]
+        out.append({'type': 'movie', 'tmdb': int(tid), 'title': r['title']['value'], 'year': int(r['released']['value'][:4]),
+                    'source': WIKIDATA + qid, 'qid': qid, '_links': int(r['sitelinks']['value'])})
     return out
 
 

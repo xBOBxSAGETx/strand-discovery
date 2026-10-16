@@ -52,19 +52,23 @@ HAND_LISTS = ('theme_must_haves', 'studio_distributed', 'awards', 'card_ids', 'd
               'official_arrivals', 'precision_unknowns')
 
 
+HAND_FIELDS = ('type', 'tmdb', 'title', 'year', 'source')
+
+
 def hand_entry(type=None, tmdb=None, title=None, year=None, source=None, **extra):
-    """The one shape of a hand-list entry (issue #72). A field the old file has no column for stays None."""
+    """The one shape of a hand-list entry (issues #72, #83): {"type": "movie"|"series", "tmdb": int, "title", "year",
+    "source"} (+ extra fields a list keeps: date, wikidata/qid, why, added, provider)."""
     return {'type': type, 'tmdb': tmdb, 'title': title, 'year': year, 'source': source, **extra}
 
 
-def hand_pairs(pairs):
-    """[[media, id], ...] as written in spec.json / awards.json -> entries."""
-    return [hand_entry(m, i) for m, i in pairs]
+def as_entry(e):
+    """A dict read from a hand-list file -> entry. A missing field stays None (tests/test_hand_lists.py flags it)."""
+    return hand_entry(*(e.get(k) for k in HAND_FIELDS), **{k: v for k, v in e.items() if k not in HAND_FIELDS})
 
 
 def load_hand_list(name, spec=None, path=None):
-    """THE loader of every hand-made list (issue #72): -> {group: [entry, ...]} in file order, each entry
-    {"type","tmdb","title","year","source"} (+ "date" for official_arrivals, "wikidata"/"qid" where the file has it).
+    """THE loader of every hand-made list (issues #72, #83): -> {group: [entry, ...]} in file order, each entry
+    {"type","tmdb","title","year","source"} (+ the extra fields the file keeps, e.g. "date" for official_arrivals).
     Values are NOT coerced (a string id stays a string) so tests/test_hand_lists.py can catch it; readers int() them.
     name: one of HAND_LISTS. group = card slug (theme_must_haves, studio_distributed, card_ids, exclude), award key
     (awards), 'deny', service (official_arrivals), provider (precision_unknowns). deny/exclude/card_ids read `spec`
@@ -76,32 +80,29 @@ def load_hand_list(name, spec=None, path=None):
         return json.loads(Path(path or HERE / fname).read_text(encoding='utf-8'))
 
     if name in ('theme_must_haves', 'studio_distributed'):
-        return {g: [hand_entry(e.get('type'), e['tmdb'], e.get('title'), e.get('year'), e.get('source'),
-                               **{k: e[k] for k in ('wikidata', 'qid') if k in e}) for e in es]
-                for g, es in read(name + '.json').items()}
+        return {g: [as_entry(e) for e in es] for g, es in read(name + '.json').items()}
     if name == 'awards':
-        return {g: hand_pairs(v['ids']) for g, v in read('awards.json').items()}
-    if name == 'precision_unknowns':      # "key": "movie:257344"; the reason it is documented is its source
+        return {g: [as_entry(e) for e in v['ids']] for g, v in read('awards.json').items()}
+    if name == 'precision_unknowns':
         out = {}
         for u in read('precision_unknowns.json'):
-            kind, _, n = u['key'].partition(':')
-            out.setdefault(u['provider'], []).append(
-                hand_entry(kind, int(n) if n.isdigit() else n, u.get('title'), None, u.get('reason')))
+            out.setdefault(u['provider'], []).append(as_entry({k: v for k, v in u.items() if k != 'provider'}))
         return out
     if name == 'official_arrivals':
         out = {}
         with open(path or HERE / 'official_arrivals.csv', encoding='utf-8', newline='') as f:
             for r in csv.DictReader(f):
-                n = r['tmdb_id']
+                n, y = r['tmdb'], r['year']
                 out.setdefault(r['service'], []).append(
-                    hand_entry(r['media'], int(n) if n.isdigit() else n, r['title'], None, None, date=r['date']))
+                    hand_entry(r['type'], int(n) if n.isdigit() else n, r['title'], int(y) if y.isdigit() else None,
+                               r['source'], date=r['date']))
         return out
     if spec is None:
         spec = json.loads((HERE / 'spec.json').read_text(encoding='utf-8'))
-    if name == 'deny':                    # spec.json defaults.deny: [media, tmdb, reason]
-        return {'deny': [hand_entry(m, i, None, None, why) for m, i, why in spec['defaults'].get('deny', [])]}
-    key = 'exclude' if name == 'exclude' else 'ids'          # per-card [media, id] pairs: card exclusions / franchise ids
-    return {c['slug']: hand_pairs(c[key]) for c in spec['catalogs'] if c.get(key)}
+    if name == 'deny':                    # spec.json defaults.deny: entries
+        return {'deny': [as_entry(e) for e in spec['defaults'].get('deny', [])]}
+    key = 'exclude' if name == 'exclude' else 'ids'          # per-card entries: card exclusions / franchise ids
+    return {c['slug']: [as_entry(e) for e in c[key]] for c in spec['catalogs'] if c.get(key)}
 
 
 _last = [0.0]
@@ -443,7 +444,7 @@ def franchise(card):
     movies = [preview(p, 'movie') for p in sorted(parts, key=lambda p: p['release_date'])]
     dates.update({f"tmdb:{p['id']}": p['release_date'] for p in parts})
     extra = {'movie': [], 'series': []}
-    for e in hand_pairs(card.get('ids', [])):
+    for e in card.get('ids', []):
         media, tid = e['type'], e['tmdb']
         p = details_preview(media, tid)
         if p:
@@ -574,9 +575,9 @@ def interleave(lists):
 
 
 def idlist_ids(card):
-    """[[media, id], ...] of an idlist card: its awards.json list (read at build time, so the yearly award refresh
+    """[(media, id), ...] of an idlist card: its awards.json list (read at build time, so the yearly award refresh
     only has to update awards.json), or ids written into the spec."""
-    entries = load_hand_list('awards')[card['awards_key']] if 'awards_key' in card else hand_pairs(card['ids'])
+    entries = load_hand_list('awards')[card['awards_key']] if 'awards_key' in card else card['ids']
     return [(e['type'], e['tmdb']) for e in entries]
 
 

@@ -40,7 +40,7 @@ class FranchiseSpinoffs(unittest.TestCase):
     def test_cards_carry_their_added_ids_once(self):
         cards = self.cards()
         for title, ids in ADDED.items():
-            listed = [i for m, i in cards[title]['ids'] if m == 'movie']
+            listed = [e['tmdb'] for e in cards[title]['ids'] if e['type'] == 'movie']
             self.assertEqual(sorted(listed), sorted(ids), title)
             self.assertEqual(len(listed), len(set(listed)), f'{title}: duplicate id')
 
@@ -73,7 +73,7 @@ class FranchiseSpinoffs(unittest.TestCase):
         old_stable = dict(build._stable)
         build._stable.clear()
         try:
-            card = {'collection_ids': [1], 'ids': [['movie', 2], ['movie', 3], ['movie', 4], ['movie', 6]]}
+            card = {'collection_ids': [1], 'ids': [build.hand_entry('movie', i) for i in (2, 3, 4, 6)]}
             movies, series = build.franchise(card)
         finally:
             build.tmdb = real
