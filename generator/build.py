@@ -487,7 +487,10 @@ def correction_rule(card, dflt, media, d):
     keywords); None = it fits. An add only fixes the source's missing tag/credit/grouping, never the card's other rules.
     Every card: released, not adult, not on the deny / card exclusion lists. A discover card that is not in a New mode
     also: min_age_days, min_votes, movie release type 4|5|6 and the runtime floor, series without_genres, the defaults'
-    without_keywords (+ the card's own), the main-genre rule of a genre card."""
+    without_keywords (+ the card's own), the main-genre rule of a genre card, and every other discover() filter the card
+    uses: vote_average.gte, vote_count.lte, with_original_language, the release / first-air date window, series status
+    (with_status 0|3|4|5), the tv_air_window. A card with with_watch_providers also needs the title on that service in
+    its region (and monetization types), New modes included (TMDB watch/providers, appended to the same request)."""
     tid = d['id']
     date = d.get('release_date') or d.get('first_air_date') or ''
     if not date or date > TODAY:
@@ -499,10 +502,17 @@ def correction_rule(card, dflt, media, d):
         return 'deny list'
     if (media, tid) in {(e['type'], int(e['tmdb'])) for e in card.get('exclude', [])}:
         return 'card exclusion list'
-    if card['kind'] != 'discover' or arrival_mode(card) or first_seen_mode(card):
+    if card['kind'] != 'discover':
         return None
     own = card.get(media, {})
     movie = media == 'movie'
+    if 'watch/providers' in d and own.get('with_watch_providers'):     # a streaming card: on the card's service, in its region
+        res = (d['watch/providers'] or {}).get('results', {}).get(own.get('watch_region') or 'US', {})
+        kinds = _split(own.get('with_watch_monetization_types')) or ['flatrate', 'free', 'ads', 'rent', 'buy']
+        if not {int(x['provider_id']) for k in kinds for x in res.get(k, [])} & {int(x) for x in _split(own['with_watch_providers'])}:
+            return 'not on the card\'s service'
+    if arrival_mode(card) or first_seen_mode(card):
+        return None
     if card.get('min_age_days') and date > (dt.date.fromisoformat(TODAY) - dt.timedelta(days=card['min_age_days'])).isoformat():
         return 'min_age_days'
     votes = card.get('min_votes', 10)
@@ -510,6 +520,22 @@ def correction_rule(card, dflt, media, d):
         votes = votes[media]
     if (d.get('vote_count') or 0) < int(votes):
         return 'min_votes'
+    if (d.get('vote_average') or 0) < float(own.get('vote_average.gte') or 0):
+        return 'vote_average'
+    if 'vote_count.lte' in own and (d.get('vote_count') or 0) > int(own['vote_count.lte']):
+        return 'vote_count.lte'
+    if own.get('with_original_language') and d.get('original_language') not in _split(own['with_original_language']):
+        return 'language'
+    lo, hi = (own.get('primary_release_date.gte'), own.get('primary_release_date.lte')) if movie else \
+             (own.get('first_air_date.gte'), own.get('first_air_date.lte'))
+    if (lo and date < lo) or (hi and date > hi):
+        return 'date window'
+    if not movie:
+        if d.get('status') in ('Planned', 'In Production'):                # with_status 0|3|4|5: returning, ended, cancelled, pilot
+            return 'status'
+        if card.get('tv_air_window') and (d.get('last_air_date') or '') < \
+                (dt.date.fromisoformat(TODAY) - dt.timedelta(days=card['tv_air_window'])).isoformat():
+            return 'air window'                                            # no episode aired in the last tv_air_window days
     gids = [g['id'] if isinstance(g, dict) else g for g in d.get('genres') or d.get('genre_ids') or []]
     if movie:
         types = {r.get('type') for c in (d.get('release_dates') or {}).get('results', []) for r in c.get('release_dates', [])}
@@ -600,7 +626,8 @@ def apply_corrections(card, metas, depth, dflt=None):
         else:
             try:
                 d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}",
-                         append_to_response='release_dates,keywords' if media == 'movie' else 'keywords')
+                         append_to_response=('release_dates,keywords' if media == 'movie' else 'keywords')
+                         + (',watch/providers' if card.get(media, {}).get('with_watch_providers') else ''))
                 why = correction_rule(card, dflt, media, d) if d.get('id') else 'unknown to TMDB'
             except RuntimeError:
                 why = 'TMDB lookup failed'
