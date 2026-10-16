@@ -1,8 +1,8 @@
 """Our own corrections list for theme cards (issue #117), with a stubbed TMDB (no network):
 
-    python -m unittest tests.test_theme_corrections
+    python -m unittest tests.test_corrections
 
-A theme shelf that lacks a Wikidata-confirmed title gets it from generator/theme_corrections.json; a title already on the
+A theme shelf that lacks a Wikidata-confirmed title gets it from generator/corrections.json; a title already on the
 shelf is not added twice or fetched again; the shelf cap holds.
 """
 import json, os, sys, tempfile, unittest
@@ -18,7 +18,7 @@ HERE = Path(build.HERE)
 FIXED = {'movie': 3933, 'series': 50241}      # Corpse Bride (zombies card), Lorong Waktu (time-travel card): corrections, not must-haves
 DFLT = {'depth': {'popular': 1000}}
 CARD = {'slug': 'theme-zombies', 'kind': 'discover', 'media': ['movie'], 'sort': 'popular', 'movie': {'with_keywords': '12377'}}
-CORR_MOVIES = [e['tmdb'] for e in json.loads((HERE / 'theme_corrections.json').read_text(encoding='utf-8'))['theme-zombies']
+CORR_MOVIES = [e['tmdb'] for e in json.loads((HERE / 'corrections.json').read_text(encoding='utf-8'))['theme-zombies']
                if e['type'] == 'movie']
 POOL_SIZE = 4
 
@@ -90,6 +90,16 @@ class Corrections(unittest.TestCase):
         ids = ids_of(build_card(Stub(self.pool()), card={**CARD, 'slug': 'studio-test'}))
         self.assertEqual(ids, [f'tmdb:{9000 + n}' for n in range(POOL_SIZE)])
 
+    def test_only_side_add_is_built(self):
+        real = build.load_hand_list
+        e = build.hand_entry('movie', 777, 'X', 2000, 's')
+        build.load_hand_list = lambda name, *a, **k: {'theme-zombies': [{**e, 'side': 'add'}, {**e, 'tmdb': 778, 'side': 'remove'},
+                                                                       {**e, 'tmdb': 779, 'side': 'keep'}]}
+        try:
+            self.assertEqual(build.corrections(CARD, 'movie'), [777])
+        finally:
+            build.load_hand_list = real
+
     def test_not_released_is_skipped(self):
         class Future(Stub):
             def __call__(self, path, **params):
@@ -103,16 +113,16 @@ class Corrections(unittest.TestCase):
 
 class CorrectionData(unittest.TestCase):
     def test_file_is_well_formed(self):
-        lists = build.load_hand_list('theme_corrections')
+        lists = build.load_hand_list('corrections')
         must = build.load_hand_list('theme_must_haves')
         spec = json.loads((HERE / 'spec.json').read_text(encoding='utf-8'))
-        themes = {c['slug'] for c in spec['catalogs'] if 'themes' in c.get('folders', [])}
-        self.assertTrue(set(lists) <= themes)
+        slugs = {c['slug'] for c in spec['catalogs']}
+        self.assertTrue(set(lists) <= slugs)
         self.assertIn(FIXED['movie'], [e['tmdb'] for e in lists['theme-zombies']])
         for slug, entries in lists.items():
             for e in entries:
                 self.assertTrue(e['title'] and e['wikidata'].startswith('Q') and e['added'], f"{slug}: {e['title']}")
-                self.assertEqual(e['source'], f"https://www.wikidata.org/wiki/{e['wikidata']}")
+                self.assertTrue(e['source'].startswith('https://en.wikipedia.org/wiki/') and e['why'] and e['side'] == 'add')   # two sources: Wikidata id + Wikipedia category
             held = {(m['type'], m['tmdb']) for m in must.get(slug, [])}
             self.assertFalse(held & {(e['type'], e['tmdb']) for e in entries}, f'{slug}: a correction repeats a must-have')
 

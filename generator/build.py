@@ -48,7 +48,7 @@ CACHE_FILE = Path(os.environ.get('SD_CACHE', 'cache')) / 'stable.json'
 
 WORKERS = int(os.environ.get('SD_WORKERS', '6'))   # catalogs built in parallel; the 20 req/s throttle is shared
 
-HAND_LISTS = ('theme_must_haves', 'theme_corrections', 'studio_distributed', 'awards', 'card_ids', 'deny', 'exclude',
+HAND_LISTS = ('theme_must_haves', 'corrections', 'studio_distributed', 'awards', 'card_ids', 'deny', 'exclude',
               'official_arrivals', 'precision_unknowns')
 
 
@@ -70,7 +70,7 @@ def load_hand_list(name, spec=None, path=None):
     """THE loader of every hand-made list (issues #72, #83): -> {group: [entry, ...]} in file order, each entry
     {"type","tmdb","title","year","source"} (+ the extra fields the file keeps, e.g. "date" for official_arrivals).
     Values are NOT coerced (a string id stays a string) so tests/test_hand_lists.py can catch it; readers int() them.
-    name: one of HAND_LISTS. group = card slug (theme_must_haves, theme_corrections, studio_distributed, card_ids, exclude), award key
+    name: one of HAND_LISTS. group = card slug (theme_must_haves, corrections, studio_distributed, card_ids, exclude), award key
     (awards), 'deny', service (official_arrivals), provider (precision_unknowns). deny/exclude/card_ids read `spec`
     (a loaded spec.json; read from HERE when omitted). `path` overrides the file (accuracy_check's --official/--unknowns)."""
     if name not in HAND_LISTS:
@@ -79,7 +79,7 @@ def load_hand_list(name, spec=None, path=None):
     def read(fname):
         return json.loads(Path(path or HERE / fname).read_text(encoding='utf-8'))
 
-    if name in ('theme_must_haves', 'theme_corrections', 'studio_distributed'):
+    if name in ('theme_must_haves', 'corrections', 'studio_distributed'):
         return {g: [as_entry(e) for e in es] for g, es in read(name + '.json').items()}
     if name == 'awards':
         return {g: [as_entry(e) for e in v['ids']] for g, v in read('awards.json').items()}
@@ -454,13 +454,13 @@ def add_must_haves(card, media, metas):
 
 
 def corrections(card, media):
-    """Issue #117: OUR OWN corrections for a theme card (generator/theme_corrections.json): titles TMDB lacks the keyword for
-    but a second source (Wikidata) files under the theme. Adds only. -> [tmdb id, ...] of this medium."""
+    """Issue #117: OUR OWN corrections for any card (generator/corrections.json, side add|remove|keep; only add is built so far): titles TMDB lacks the keyword for
+    but two sources (Wikidata and the English Wikipedia categories) file under the theme. -> [tmdb id, ...] of this medium."""
     try:
-        lists = load_hand_list('theme_corrections')
+        lists = load_hand_list('corrections')
     except OSError:
         return []
-    return [int(e['tmdb']) for e in lists.get(card.get('slug'), []) if e['type'] == media]
+    return [int(e['tmdb']) for e in lists.get(card.get('slug'), []) if e['type'] == media and e.get('side') == 'add']
 
 
 def add_corrections(card, media, metas, depth):
