@@ -48,6 +48,62 @@ CACHE_FILE = Path(os.environ.get('SD_CACHE', 'cache')) / 'stable.json'
 
 WORKERS = int(os.environ.get('SD_WORKERS', '6'))   # catalogs built in parallel; the 20 req/s throttle is shared
 
+HAND_LISTS = ('theme_must_haves', 'studio_distributed', 'awards', 'card_ids', 'deny', 'exclude',
+              'official_arrivals', 'precision_unknowns')
+
+
+def hand_entry(type=None, tmdb=None, title=None, year=None, source=None, **extra):
+    """The one shape of a hand-list entry (issue #72). A field the old file has no column for stays None."""
+    return {'type': type, 'tmdb': tmdb, 'title': title, 'year': year, 'source': source, **extra}
+
+
+def hand_pairs(pairs):
+    """[[media, id], ...] as written in spec.json / awards.json -> entries."""
+    return [hand_entry(m, i) for m, i in pairs]
+
+
+def load_hand_list(name, spec=None, path=None):
+    """THE loader of every hand-made list (issue #72): -> {group: [entry, ...]} in file order, each entry
+    {"type","tmdb","title","year","source"} (+ "date" for official_arrivals, "wikidata"/"qid" where the file has it).
+    Values are NOT coerced (a string id stays a string) so tests/test_hand_lists.py can catch it; readers int() them.
+    name: one of HAND_LISTS. group = card slug (theme_must_haves, studio_distributed, card_ids, exclude), award key
+    (awards), 'deny', service (official_arrivals), provider (precision_unknowns). deny/exclude/card_ids read `spec`
+    (a loaded spec.json; read from HERE when omitted). `path` overrides the file (accuracy_check's --official/--unknowns)."""
+    if name not in HAND_LISTS:
+        raise KeyError(name)
+
+    def read(fname):
+        return json.loads(Path(path or HERE / fname).read_text(encoding='utf-8'))
+
+    if name in ('theme_must_haves', 'studio_distributed'):
+        return {g: [hand_entry(e.get('type'), e['tmdb'], e.get('title'), e.get('year'), e.get('source'),
+                               **{k: e[k] for k in ('wikidata', 'qid') if k in e}) for e in es]
+                for g, es in read(name + '.json').items()}
+    if name == 'awards':
+        return {g: hand_pairs(v['ids']) for g, v in read('awards.json').items()}
+    if name == 'precision_unknowns':      # "key": "movie:257344"; the reason it is documented is its source
+        out = {}
+        for u in read('precision_unknowns.json'):
+            kind, _, n = u['key'].partition(':')
+            out.setdefault(u['provider'], []).append(
+                hand_entry(kind, int(n) if n.isdigit() else n, u.get('title'), None, u.get('reason')))
+        return out
+    if name == 'official_arrivals':
+        out = {}
+        with open(path or HERE / 'official_arrivals.csv', encoding='utf-8', newline='') as f:
+            for r in csv.DictReader(f):
+                n = r['tmdb_id']
+                out.setdefault(r['service'], []).append(
+                    hand_entry(r['media'], int(n) if n.isdigit() else n, r['title'], None, None, date=r['date']))
+        return out
+    if spec is None:
+        spec = json.loads((HERE / 'spec.json').read_text(encoding='utf-8'))
+    if name == 'deny':                    # spec.json defaults.deny: [media, tmdb, reason]
+        return {'deny': [hand_entry(m, i, None, None, why) for m, i, why in spec['defaults'].get('deny', [])]}
+    key = 'exclude' if name == 'exclude' else 'ids'          # per-card [media, id] pairs: card exclusions / franchise ids
+    return {c['slug']: hand_pairs(c[key]) for c in spec['catalogs'] if c.get(key)}
+
+
 _last = [0.0]
 _backfill = [0]
 GENRE_BACKFILL_MAX = int(os.environ.get('SD_GENRE_BACKFILL_MAX', '3000'))   # per run; 0 = no refetch
@@ -182,7 +238,7 @@ def studio_distributed(card):
     if 'studios' not in card.get('folders', []):
         return []
     try:
-        lists = json.loads((HERE / 'studio_distributed.json').read_text(encoding='utf-8'))
+        lists = load_hand_list('studio_distributed')
     except OSError:
         return []
     return [int(e['tmdb']) for e in lists.get(card.get('slug'), [])]
@@ -356,9 +412,8 @@ def discover(card, media, depth, dflt):
 
 def must_haves(card, media):
     """Hand-picked must-have titles of a theme card (generator/theme_must_haves.json, issue #64): [tmdb id, ...]."""
-    path = HERE / 'theme_must_haves.json'
     try:
-        lists = json.loads(path.read_text(encoding='utf-8'))
+        lists = load_hand_list('theme_must_haves')
     except OSError:
         return []
     return [int(e['tmdb']) for e in lists.get(card.get('slug'), []) if e['type'] == media]
@@ -388,7 +443,8 @@ def franchise(card):
     movies = [preview(p, 'movie') for p in sorted(parts, key=lambda p: p['release_date'])]
     dates.update({f"tmdb:{p['id']}": p['release_date'] for p in parts})
     extra = {'movie': [], 'series': []}
-    for media, tid in card.get('ids', []):
+    for e in hand_pairs(card.get('ids', [])):
+        media, tid = e['type'], e['tmdb']
         p = details_preview(media, tid)
         if p:
             extra[media].append(p)
@@ -520,9 +576,8 @@ def interleave(lists):
 def idlist_ids(card):
     """[[media, id], ...] of an idlist card: its awards.json list (read at build time, so the yearly award refresh
     only has to update awards.json), or ids written into the spec."""
-    if 'awards_key' in card:
-        return json.loads((HERE / 'awards.json').read_text(encoding='utf-8'))[card['awards_key']]['ids']
-    return card['ids']
+    entries = load_hand_list('awards')[card['awards_key']] if 'awards_key' in card else hand_pairs(card['ids'])
+    return [(e['type'], e['tmdb']) for e in entries]
 
 
 def source_of(card):
@@ -909,7 +964,8 @@ def main():
                 'behaviorHints': {'configurable': False}}
     counts, rows, t0 = {}, [], time.monotonic()
     genre_stats = {}
-    deny = {(m, int(i)) for m, i, _ in dflt.get('deny', [])}
+    deny = {(e['type'], int(e['tmdb'])) for e in load_hand_list('deny', spec)['deny']}
+    card_exclude = load_hand_list('exclude', spec)
     # Partial rebuild (issue #77): only the listed cards are built; the rest of the site is copied from the live one.
     selected = parse_cards(os.environ.get('SD_CARDS'), spec['catalogs'])
     todo = spec['catalogs'] if selected is None else [c for c in spec['catalogs'] if c['slug'] in selected]
@@ -959,7 +1015,7 @@ def main():
             if len(metas) < before:
                 _excluded.setdefault(cid, {})['deny'] = before - len(metas)
                 notes = f"{notes}; deny-list removed {before - len(metas)}".lstrip('; ')
-            card_ex = {(m, int(i)) for m, i in card.get('exclude', [])}       # this card only (e.g. Oscar 1927/28)
+            card_ex = {(e['type'], int(e['tmdb'])) for e in card_exclude.get(card['slug'], [])}       # this card only (e.g. Oscar 1927/28)
             if card_ex:
                 n = len(metas)
                 metas = [m for m in metas if (m['type'], int(m['id'].split(':', 1)[1])) not in card_ex]

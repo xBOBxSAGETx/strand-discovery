@@ -93,11 +93,7 @@ class MustHaveData(unittest.TestCase):
         self.assertEqual(set(LISTS), themes)                                  # every theme card, nothing else
         for slug, entries in LISTS.items():
             self.assertTrue(10 <= len(entries) <= 20, slug)
-            keys = [(e['type'], e['tmdb']) for e in entries]
-            self.assertEqual(len(keys), len(set(keys)), f'duplicate id on {slug}')
-            for e in entries:
-                self.assertIn(e['type'], ('movie', 'series'), slug)
-                self.assertIsInstance(e['tmdb'], int, slug)
+            for e in entries:        # type / int id / duplicates / source: tests/test_hand_lists.py checks every hand list
                 self.assertTrue(e['title'] and 1900 < e['year'] < 2100, slug)
                 self.assertTrue(str(e.get('source', '')).startswith('https://'), f"{slug}: {e['title']} has no source")
 

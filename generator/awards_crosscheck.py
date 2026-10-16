@@ -11,6 +11,8 @@ import csv, json, sys, urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import build                    # the one loader of the hand lists
 PAIRS = {  # card slug -> (second source kind, value)
     'awards-oscar-best-picture': ('wiki', 'oscar-winners'),
     'awards-oscar-best-picture-nominees': ('wiki', 'oscar-nominees'),
@@ -33,17 +35,17 @@ def sources(c, awards):
     if c['kind'] == 'mdblist':
         card, card_src = mdblist(c['list']), f"MDBList `{c['list']}`"
     else:
-        card, card_src = {i: '' for m, i in awards[c['awards_key']]['ids'] if m == 'movie'}, f"Wikipedia (`{c['awards_key']}`)"
+        card, card_src = {e['tmdb']: '' for e in awards[c['awards_key']] if e['type'] == 'movie'}, f"Wikipedia (`{c['awards_key']}`)"
     kind, val = PAIRS[c['slug']]
     if kind == 'wiki':
-        second, second_src = {i: '' for m, i in awards[val]['ids'] if m == 'movie'}, f'Wikipedia (`{val}`)'
+        second, second_src = {e['tmdb']: '' for e in awards[val] if e['type'] == 'movie'}, f'Wikipedia (`{val}`)'
     else:
         second, second_src = mdblist(val), f'MDBList `{val}`'
     return card, card_src, second, second_src
 
 
 def main():
-    awards = json.loads((HERE / 'awards.json').read_text(encoding='utf-8'))
+    awards = build.load_hand_list('awards')
     titles = {}
     if len(sys.argv) > 1:
         for r in csv.DictReader(open(sys.argv[1], encoding='utf-8')):
@@ -51,6 +53,7 @@ def main():
                 titles[int(r['tmdb_id'].split(':')[1])] = f"{r['tmdb_title']} ({r['tmdb_year']})"
     spec = json.loads((HERE / 'spec.json').read_text(encoding='utf-8'))
     cards = [c for c in spec['catalogs'] if c['slug'].startswith('awards-')]
+    card_exclude = build.load_hand_list('exclude', spec)
     print('Each award card compared with an independent second list (TMDB ids). Differences need a look: a real '
           'list error, a scope difference, or a resolver miss (see the awards refresh CSV).\n')
     print('| card | card source | second source | in both | only on card | only in second |')
@@ -61,7 +64,7 @@ def main():
             src = f"awards.json `{c['awards_key']}`" if 'awards_key' in c else f"MDBList `{c.get('list')}`"
             print(f"| {c['title']} | {src} | none public (single source) | - | - | - |")
             continue
-        excl = {i for m, i in c.get('exclude', [])}
+        excl = {e['tmdb'] for e in card_exclude.get(c['slug'], [])}
         try:
             card, card_src, second, second_src = sources(c, awards)
         except Exception as e:                     # MDBList down / format change: report, keep the yearly job going

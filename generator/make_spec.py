@@ -10,6 +10,8 @@ import csv, json, re, sys, unicodedata
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import build                    # the one loader of the hand lists
 
 # ---- folders (order = order in Strand) ---------------------------------------------------------------------------
 VARIANTS = [('popular', 'Popular'), ('new', 'New'), ('top', 'Top Rated')]
@@ -248,7 +250,8 @@ def main():
         # defining titles per decade (vote count); popularity led the 1960s with "The Ape Woman"
         cats.append(disc(f'decade-{d}s', f'Decade · {d}s', f'{d}s', 'Decade', 'decades', ['movie', 'series'], 'votes',
                          movie=mp, series=sp, min_votes={'movie': 10, 'series': 50}))
-    awards = json.loads((HERE / 'awards.json').read_text(encoding='utf-8'))
+    awards = json.loads((HERE / 'awards.json').read_text(encoding='utf-8'))      # only the `card` flag is read from it here
+    award_ids = build.load_hand_list('awards')
     for name, src in AWARDS:
         card = {'library': f"Award · {src.get('library', name)}", 'title': name, 'eyebrow': 'Awards', 'folders': ['awards']}
         if 'list' in src:
@@ -256,7 +259,7 @@ def main():
         else:
             key = src['awards_key']
             assert awards[key]['card'], f'{key} is a reference list, not a card'
-            card.update(slug=f'awards-{key}', kind='idlist', media=sorted({m for m, _ in awards[key]['ids']}),
+            card.update(slug=f'awards-{key}', kind='idlist', media=sorted({e['type'] for e in award_ids[key]}),
                         awards_key=key)
         if src.get('exclude'):
             card['exclude'] = src['exclude']
