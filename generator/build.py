@@ -36,8 +36,8 @@ IMG = 'https://image.tmdb.org/t/p'
 POSTER_SIZE = 'w780'   # item posters (Strand tiles on a 4K TV; w342 looked soft - measured ~2.6x sharper, 0 extra requests)
 POSTER_RE = re.compile(r'/t/p/w\d+/')   # the size segment of a TMDB image URL; write_pages() rewrites it
 HERE = Path(__file__).resolve().parent
-TODAY = dt.date.today().isoformat()
-YEAR_AGO = (dt.date.today() - dt.timedelta(days=365)).isoformat()
+TODAY = dt.date.today().isoformat()   # read once: every date window below derives from it (watch.py fingerprints against the same value)
+YEAR_AGO = (dt.date.fromisoformat(TODAY) - dt.timedelta(days=365)).isoformat()
 MIN_INTERVAL = 1 / 20          # self-throttle: 20 requests/s (TMDB publishes ~40/s)
 DROP_LIMIT = 0.30              # abort if total items fall by more than 30%
 PARTIAL_TOTAL_MIN_CARDS = 10   # partial rebuild: the total check needs at least this many listed cards (fewer = per-card guards only)
@@ -345,10 +345,10 @@ def discover(card, media, depth, dflt):
     params = {'sort_by': sort, 'include_adult': 'false', 'vote_count.gte': votes, **card.get(media, {})}
     cutoff = TODAY
     if card.get('min_age_days'):              # e.g. hidden gems: at least a year old
-        cutoff = (dt.date.today() - dt.timedelta(days=card['min_age_days'])).isoformat()
+        cutoff = (dt.date.fromisoformat(TODAY) - dt.timedelta(days=card['min_age_days'])).isoformat()
     if not movie and card.get('tv_air_window'):   # any episode aired recently (new seasons of old shows count)
         params.pop('first_air_date.lte', None)
-        params.update({'air_date.gte': (dt.date.today() - dt.timedelta(days=card['tv_air_window'])).isoformat(),
+        params.update({'air_date.gte': (dt.date.fromisoformat(TODAY) - dt.timedelta(days=card['tv_air_window'])).isoformat(),
                        'air_date.lte': TODAY})      # the window picks the pool; the card's own sort orders it (issue #45)
     if movie:
         params.update({'with_release_type': '4|5|6', 'release_date.lte': cutoff})

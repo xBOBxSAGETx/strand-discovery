@@ -195,10 +195,13 @@ class WatchTests(unittest.TestCase):
             self.assertIn(url, src)
         self.assertIn("MDBLIST_JSON = 'https://mdblist.com/lists/{list}/json'", (ROOT / 'generator' / 'build.py').read_text(encoding='utf-8'))
 
-    def test_fingerprint_query_is_the_new_cards_discover_query(self):
-        """fp_params must equal what build.discover sends for page 1 of the same card (drift guard)."""
+    def test_fingerprint_query_is_the_new_cards_discover_query(self, today='2026-10-15'):
+        """fp_params must equal what build.discover sends for page 1 of the same card (drift guard). build.TODAY is
+        pinned so the check never depends on the clock (the CI break: TODAY read at import before midnight UTC, the
+        window read from dt.date.today() after it, one day apart)."""
         seen = []
-        real = build.tmdb
+        real, real_today = build.tmdb, build.TODAY
+        build.TODAY = today
         build.tmdb = lambda path, **p: (seen.append((path, p)), {'results': [], 'total_results': 0, 'total_pages': 0})[1]
         try:
             for slug in ('streaming-netflix-new', 'streaming-tubi-new', 'streaming-mubi-new'):
@@ -210,7 +213,12 @@ class WatchTests(unittest.TestCase):
                     p = {k: v for k, v in p.items() if k != 'page'}
                     self.assertEqual(p, watch.fp_params(card, media, SPEC['defaults'], build.TODAY), (slug, media))
         finally:
-            build.tmdb = real
+            build.tmdb, build.TODAY = real, real_today
+
+    def test_discover_dates_follow_build_today_not_the_live_clock(self):
+        """Replay of the CI break: build.TODAY is a different day than the clock. A pinned 2020 date never equals the
+        real one, so code that reads dt.date.today() for a window fails here on any clock."""
+        self.test_fingerprint_query_is_the_new_cards_discover_query(today='2020-02-29')
 
 
 # a stand-in for `gh`: logs its arguments, answers `run list` from STUB_RUNS, fails `workflow run` when STUB_FAIL=1
