@@ -30,6 +30,7 @@ sys.path.insert(0, str(HERE))
 import build                    # the one loader of the hand lists (build.load_hand_list); no network at import
 import accuracy_frame           # the shared frame for the Popular / Top cards (issue #92)
 import accuracy_people          # Director / Actor cards against Wikidata (issue #93)
+import accuracy_genres          # Genre / Theme cards against Wikidata (issue #95)
 
 SCHEDULES = {'vt', 'fb', 'wodp'}
 ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}      # the sets arrivals.py uses (F2 / F3)
@@ -46,6 +47,8 @@ FRAME_MAX_DROP = 5.0            # points below accuracy_baseline.json "frame" th
 PEOPLE_CARDS = 12               # Director / Actor frame (accuracy_people.py): seeded cards per kind that Wikidata knows
 PEOPLE_SPARE = 3                # extra cards of the seeded order fetched from the live site, for cards Wikidata does not know
 PEOPLE_SEED = 'audit-93'
+GENRE_CARDS = 12                # Genre frame (accuracy_genres.py): seeded cards, a third each of Popular / New / Top (Themes: all 13)
+GENRE_SEED = 'audit-95'
 
 
 def tmdb(path, **params):
@@ -286,6 +289,8 @@ def main():
     ap.add_argument('--frame-seed', default=FRAME_SEED, help='fixed seed of the card + title sample (a stable baseline)')
     ap.add_argument('--people-cards', type=int, default=PEOPLE_CARDS, help='Director / Actor frame: seeded cards per kind (0 = off)')
     ap.add_argument('--people-seed', default=PEOPLE_SEED, help='fixed seed of the Director / Actor card + title sample')
+    ap.add_argument('--genre-cards', type=int, default=GENRE_CARDS, help='Genre frame: seeded cards (0 = Genres and Themes off)')
+    ap.add_argument('--genre-seed', default=GENRE_SEED, help='fixed seed of the Genre card + title sample')
     ap.add_argument('--today', help='tests only: the date to judge against (default: the build date)')
     a = ap.parse_args()
     pages, state_dir, out = Path(a.pages), Path(a.state), Path(a.out)
@@ -293,9 +298,11 @@ def main():
     spec = json.loads(Path(a.spec).read_text(encoding='utf-8'))
     frame_cards = {k: accuracy_frame.pick_cards(spec, k, a.cards, a.frame_seed) for k in accuracy_frame.KINDS} if a.cards else {}
     people_pool = {k: accuracy_people.pick_people(spec, k, a.people_seed) for k in accuracy_people.PROP} if a.people_cards else {}
+    genre_cards = {k: accuracy_genres.pick_cards(spec, k, a.genre_cards, a.genre_seed) for k in accuracy_genres.KINDS} if a.genre_cards else {}
     if a.fetch_site:
         fetch_site(a.fetch_site, pages, [c['slug'] for cs in frame_cards.values() for c in cs] +
-                   [c['slug'] for cs in people_pool.values() for c in cs[:a.people_cards + PEOPLE_SPARE]])
+                   [c['slug'] for cs in people_pool.values() for c in cs[:a.people_cards + PEOPLE_SPARE]] +
+                   [c['slug'] for cs in genre_cards.values() for c in cs])
     summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     cands = load_candidates(state_dir, summary['generated_at'][:10])
     if a.today:                                  # tests only: judge the recall window / list month as of this date
@@ -329,6 +336,16 @@ def main():
             row, gaps = accuracy_people.measure_people(kind, pool, spec, lambda slug: card_order(pages, slug), tmdb,
                                                        accuracy_people.wikidata, dt.date.today().isoformat(), a.people_cards,
                                                        a.frame_sample, a.people_seed)
+        except RuntimeError as e:                 # Wikidata / TMDB down: a note, never a reason to open the issue
+            people_notes.append(f'{kind} cards not measured this week: {e}')
+            continue
+        frame_sum.append(row)
+        frame_gaps += gaps
+    for kind, cs in genre_cards.items():          # Genres / Themes: against Wikidata genre (accuracy_genres.py)
+        try:
+            row, gaps = accuracy_genres.measure_cards(kind, cs, spec, lambda slug: card_order(pages, slug), tmdb,
+                                                      accuracy_people.wikidata, dt.date.today().isoformat(), a.frame_sample,
+                                                      a.genre_seed)
         except RuntimeError as e:                 # Wikidata / TMDB down: a note, never a reason to open the issue
             people_notes.append(f'{kind} cards not measured this week: {e}')
             continue
