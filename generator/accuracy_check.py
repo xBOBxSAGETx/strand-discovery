@@ -27,6 +27,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+import build                    # the one loader of the hand lists (build.load_hand_list); no network at import
 
 SCHEDULES = {'vt', 'fb', 'wodp'}
 ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}      # the sets arrivals.py uses (F2 / F3)
@@ -218,11 +219,13 @@ def main():
     if a.today:                                  # tests only: judge the recall window / list month as of this date
         cands = dict(cands, date=a.today)
     today = cands['date']                        # the date the build ordered the cards with
-    official_rows = list(csv.DictReader(open(a.official, encoding='utf-8')))
+    official_rows = [{'service': svc, 'date': e['date'], 'media': e['type'], 'tmdb_id': str(e['tmdb'])}
+                     for svc, es in build.load_hand_list('official_arrivals', path=a.official).items() for e in es]
     official = {}
     for r in official_rows:
         official.setdefault(r['service'], set()).add(f"{r['media']}:{r['tmdb_id']}")
-    unknowns = {(u['provider'], u['key']): u['reason'] for u in json.loads(Path(a.unknowns).read_text(encoding='utf-8'))}
+    unknowns = {(prov, f"{e['type']}:{e['tmdb']}"): e['source']
+                for prov, es in build.load_hand_list('precision_unknowns', path=a.unknowns).items() for e in es}
     baseline = json.loads(Path(a.baseline).read_text(encoding='utf-8')) if Path(a.baseline).exists() else {}
     seed = a.seed or dt.date.fromisoformat(today).strftime('%G-W%V')          # a new sample every week
     table, rows = precision(pages, state_dir, spec, summary, cands, a.n, seed, official, unknowns)
