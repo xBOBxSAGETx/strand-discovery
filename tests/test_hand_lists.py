@@ -7,7 +7,7 @@ a source. No network:
 KNOWN_GAPS names a list still in an old shape that lacks a field. It is empty since part 2 (#83): every list has the
 one shape. A new gap would need a line with a reason, and the test fails when a listed gap is no longer a gap.
 """
-import os, sys, tempfile, unittest
+import os, re, sys, tempfile, unittest
 from pathlib import Path
 
 _tmp = tempfile.mkdtemp(prefix='sd-tests-')
@@ -38,6 +38,13 @@ def validate(name, groups, gaps=KNOWN_GAPS):
                 bad.append(f'{who}: tmdb is not a positive int: {e["tmdb"]!r}')
             if (name, 'source') not in gaps and not (isinstance(e['source'], str) and e['source'].strip()):
                 bad.append(f'{who}: no source')
+            if name == 'corrections':      # #117: add|remove|keep, optional why (str) and date (YYYY-MM-DD)
+                if e.get('side') not in ('add', 'remove', 'keep'):
+                    bad.append(f'{who}: bad side {e.get("side")!r}')
+                if 'why' in e and not (isinstance(e['why'], str) and e['why'].strip()):
+                    bad.append(f'{who}: why is not text')
+                if 'date' in e and not re.fullmatch(r'\d{4}-\d\d-\d\d', str(e['date'])):
+                    bad.append(f'{who}: bad date {e["date"]!r}')
             k = key_of(name, e)
             if k in seen:
                 bad.append(f'{who}: duplicate {k}')
@@ -91,6 +98,12 @@ class ValidatorCatches(unittest.TestCase):
         gaps = {('theme_must_haves', 'source')}
         self.assertEqual(validate('theme_must_haves', {'g': [{**self.GOOD, 'source': None}]}, gaps), [])
         self.assertTrue(validate('theme_must_haves', {'g': [{**self.GOOD, 'source': None, 'type': 'x'}]}, gaps))
+
+    def test_corrections_side_why_date_are_checked(self):
+        ok = {**self.GOOD, 'side': 'keep', 'why': 'x', 'date': '2026-10-16'}
+        self.assertEqual(validate('corrections', {'g': [ok]}, {}), [])
+        for bad in ({'side': 'drop'}, {'side': None}, {'why': ''}, {'date': '16/10/2026'}):
+            self.assertTrue(validate('corrections', {'g': [{**ok, **bad}]}, {}), bad)
 
     def test_official_arrivals_same_title_other_date_is_not_a_duplicate(self):
         a = {**self.GOOD, 'date': '2026-09-01'}

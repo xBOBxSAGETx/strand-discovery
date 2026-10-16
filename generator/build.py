@@ -48,7 +48,7 @@ CACHE_FILE = Path(os.environ.get('SD_CACHE', 'cache')) / 'stable.json'
 
 WORKERS = int(os.environ.get('SD_WORKERS', '6'))   # catalogs built in parallel; the 20 req/s throttle is shared
 
-HAND_LISTS = ('theme_must_haves', 'studio_distributed', 'awards', 'card_ids', 'deny', 'exclude',
+HAND_LISTS = ('theme_must_haves', 'corrections', 'studio_distributed', 'awards', 'card_ids', 'deny', 'exclude',
               'official_arrivals', 'precision_unknowns')
 
 
@@ -70,7 +70,7 @@ def load_hand_list(name, spec=None, path=None):
     """THE loader of every hand-made list (issues #72, #83): -> {group: [entry, ...]} in file order, each entry
     {"type","tmdb","title","year","source"} (+ the extra fields the file keeps, e.g. "date" for official_arrivals).
     Values are NOT coerced (a string id stays a string) so tests/test_hand_lists.py can catch it; readers int() them.
-    name: one of HAND_LISTS. group = card slug (theme_must_haves, studio_distributed, card_ids, exclude), award key
+    name: one of HAND_LISTS. group = card slug (theme_must_haves, corrections, studio_distributed, card_ids, exclude), award key
     (awards), 'deny', service (official_arrivals), provider (precision_unknowns). deny/exclude/card_ids read `spec`
     (a loaded spec.json; read from HERE when omitted). `path` overrides the file (accuracy_check's --official/--unknowns)."""
     if name not in HAND_LISTS:
@@ -79,7 +79,7 @@ def load_hand_list(name, spec=None, path=None):
     def read(fname):
         return json.loads(Path(path or HERE / fname).read_text(encoding='utf-8'))
 
-    if name in ('theme_must_haves', 'studio_distributed'):
+    if name in ('theme_must_haves', 'corrections', 'studio_distributed'):
         return {g: [as_entry(e) for e in es] for g, es in read(name + '.json').items()}
     if name == 'awards':
         return {g: [as_entry(e) for e in v['ids']] for g, v in read('awards.json').items()}
@@ -451,6 +451,41 @@ def add_must_haves(card, media, metas):
         if m and m not in first:
             first.append(m)
     return first + [m for m in metas if m not in first]
+
+
+def corrections(card, media):
+    """Issue #117: OUR OWN corrections for any card (generator/corrections.json, side add|remove|keep; only add is built so far): titles TMDB lacks the keyword for
+    but two sources (Wikidata and the English Wikipedia categories) file under the theme. -> [tmdb id, ...] of this medium."""
+    try:
+        lists = load_hand_list('corrections')
+    except OSError:
+        return []
+    return [int(e['tmdb']) for e in lists.get(card.get('slug'), []) if e['type'] == media and e.get('side') == 'add']
+
+
+def add_corrections(card, media, metas, depth):
+    """Issue #117: append the corrections the card does not hold yet, AFTER the sorted list (they carry no sort key; the
+    shelf's own order is untouched). Each is fetched like any title (details_preview: None = not released / unknown, skipped).
+    The card keeps its cap: if the additions do not fit, the tail of the sorted list makes room (must-haves are never cut)."""
+    ids = corrections(card, media)
+    if not ids:
+        return metas
+    have = {m['id'] for m in metas}
+    extra = []
+    for tid in ids:
+        m = details_preview(media, tid) if f'tmdb:{tid}' not in have else None
+        if m and m['id'] not in have:
+            have.add(m['id'])
+            extra.append(m)
+    pinned = {f'tmdb:{i}' for i in must_haves(card, media)}                # must-haves are never cut
+    metas, over = list(metas), len(metas) + len(extra) - depth
+    for n in range(len(metas) - 1, -1, -1):
+        if over <= 0:
+            break
+        if metas[n]['id'] not in pinned:
+            del metas[n]
+            over -= 1
+    return metas + extra
 
 
 def franchise(card):
@@ -944,7 +979,8 @@ def build_one(card, dflt):
     if kind == 'discover' and first_seen_mode(card):
         return first_seen_card(card, depth_of(card, dflt)), 'ordered by date first seen on the service'
     if kind == 'discover':
-        return interleave([add_must_haves(card, m, discover(card, m, depth_of(card, dflt), dflt))
+        depth = depth_of(card, dflt)
+        return interleave([add_corrections(card, m, add_must_haves(card, m, discover(card, m, depth, dflt)), depth)
                            for m in card['media']]), notes
     if kind == 'franchise':
         return interleave(franchise(card)), notes

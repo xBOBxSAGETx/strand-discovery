@@ -1,0 +1,902 @@
+{
+ "theme-creature-features": [
+  {
+   "type": "movie",
+   "tmdb": 673,
+   "title": "Harry Potter and the Prisoner of Azkaban",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/Harry_Potter_and_the_Prisoner_of_Azkaban_(film)",
+   "wikidata": "Q102448",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American werewolf films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 585,
+   "title": "Monsters, Inc.",
+   "year": 2001,
+   "source": "https://en.wikipedia.org/wiki/Monsters,_Inc.",
+   "wikidata": "Q187726",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s monster movies"
+  },
+  {
+   "type": "movie",
+   "tmdb": 8966,
+   "title": "Twilight",
+   "year": 2008,
+   "source": "https://en.wikipedia.org/wiki/Twilight_(2008_film)",
+   "wikidata": "Q160071",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s vampire films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1865,
+   "title": "Pirates of the Caribbean: On Stranger Tides",
+   "year": 2011,
+   "source": "https://en.wikipedia.org/wiki/Pirates_of_the_Caribbean:_On_Stranger_Tides",
+   "wikidata": "Q183555",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s zombie films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 679,
+   "title": "Aliens",
+   "year": 1986,
+   "source": "https://en.wikipedia.org/wiki/Aliens_(film)",
+   "wikidata": "Q104814",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1980s monster movies"
+  },
+  {
+   "type": "movie",
+   "tmdb": 62211,
+   "title": "Monsters University",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/Monsters_University",
+   "wikidata": "Q641362",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s monster movies"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9479,
+   "title": "The Nightmare Before Christmas",
+   "year": 1993,
+   "source": "https://en.wikipedia.org/wiki/The_Nightmare_Before_Christmas",
+   "wikidata": "Q322328",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1990s monster movies"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10191,
+   "title": "How to Train Your Dragon",
+   "year": 2010,
+   "source": "https://en.wikipedia.org/wiki/How_to_Train_Your_Dragon_(2010_film)",
+   "wikidata": "Q373096",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s monster movies"
+  },
+  {
+   "type": "movie",
+   "tmdb": 18239,
+   "title": "The Twilight Saga: New Moon",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/The_Twilight_Saga:_New_Moon",
+   "wikidata": "Q116928",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s vampire films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 6479,
+   "title": "I Am Legend",
+   "year": 2007,
+   "source": "https://en.wikipedia.org/wiki/I_Am_Legend_(film)",
+   "wikidata": "Q212689",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s vampire films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 653,
+   "title": "Nosferatu",
+   "year": 1922,
+   "source": "https://en.wikipedia.org/wiki/Nosferatu",
+   "wikidata": "Q151895",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1920s vampire films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 3933,
+   "title": "Corpse Bride",
+   "year": 2005,
+   "source": "https://en.wikipedia.org/wiki/Corpse_Bride",
+   "wikidata": "Q164417",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s zombie films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 76492,
+   "title": "Hotel Transylvania",
+   "year": 2012,
+   "source": "https://en.wikipedia.org/wiki/Hotel_Transylvania_(film)",
+   "wikidata": "Q249967",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s monster movies"
+  },
+  {
+   "type": "movie",
+   "tmdb": 7131,
+   "title": "Van Helsing",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/Van_Helsing_(film)",
+   "wikidata": "Q211009",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s vampire films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 72190,
+   "title": "World War Z",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/World_War_Z_(film)",
+   "wikidata": "Q28196",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s zombie films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1576,
+   "title": "Resident Evil",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/Resident_Evil_(2002_film)",
+   "wikidata": "Q153484",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s zombie films"
+  },
+  {
+   "type": "series",
+   "tmdb": 61345,
+   "title": "Z Nation",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/Z_Nation",
+   "wikidata": "Q17378072",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Fiction about zombie outbreaks"
+  },
+  {
+   "type": "series",
+   "tmdb": 63106,
+   "title": "The Scholar Who Walks the Night",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/The_Scholar_Who_Walks_the_Night",
+   "wikidata": "Q19854771",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Vampires in television"
+  },
+  {
+   "type": "series",
+   "tmdb": 7831,
+   "title": "Dead Set",
+   "year": 2008,
+   "source": "https://en.wikipedia.org/wiki/Dead_Set",
+   "wikidata": "Q265335",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Zombies in television"
+  },
+  {
+   "type": "series",
+   "tmdb": 17687,
+   "title": "Count Dracula",
+   "year": 1977,
+   "source": "https://en.wikipedia.org/wiki/Count_Dracula_(1977_film)",
+   "wikidata": "Q2850168",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1970s vampire films"
+  },
+  {
+   "type": "series",
+   "tmdb": 313630,
+   "title": "Eternally Yours",
+   "year": 2026,
+   "source": "https://en.wikipedia.org/wiki/Eternally_Yours_(TV_series)",
+   "wikidata": "Q141504739",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Television series about vampires"
+  },
+  {
+   "type": "series",
+   "tmdb": 298651,
+   "title": "Silence",
+   "year": 2025,
+   "source": "https://en.wikipedia.org/wiki/Silence_(miniseries)",
+   "wikidata": "Q136024563",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Television series about vampires"
+  },
+  {
+   "type": "series",
+   "tmdb": 48938,
+   "title": "House of Frankenstein",
+   "year": 1997,
+   "source": "https://en.wikipedia.org/wiki/House_of_Frankenstein_(miniseries)",
+   "wikidata": "Q5914950",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Universal Monsters"
+  }
+ ],
+ "theme-disaster": [
+  {
+   "type": "movie",
+   "tmdb": 49047,
+   "title": "Gravity",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/Gravity_(2013_film)",
+   "wikidata": "Q2579784",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s disaster films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9982,
+   "title": "Chicken Little",
+   "year": 2005,
+   "source": "https://en.wikipedia.org/wiki/Chicken_Little_(2005_film)",
+   "wikidata": "Q270940",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s disaster films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 13811,
+   "title": "Knowing",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/Knowing_(film)",
+   "wikidata": "Q244296",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s disaster films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 813,
+   "title": "Airplane!",
+   "year": 1980,
+   "source": "https://en.wikipedia.org/wiki/Airplane!",
+   "wikidata": "Q497256",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1980s disaster films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 253412,
+   "title": "Everest",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/Everest_(2015_film)",
+   "wikidata": "Q15631013",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American disaster films"
+  },
+  {
+   "type": "series",
+   "tmdb": 49191,
+   "title": "10.5",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/10.5_(miniseries)",
+   "wikidata": "Q163904",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American disaster films"
+  },
+  {
+   "type": "series",
+   "tmdb": 9203,
+   "title": "10.5: Apocalypse",
+   "year": 2006,
+   "source": "https://en.wikipedia.org/wiki/10.5:_Apocalypse",
+   "wikidata": "Q163903",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Disaster television films"
+  },
+  {
+   "type": "series",
+   "tmdb": 74170,
+   "title": "Atomic Train",
+   "year": 1999,
+   "source": "https://en.wikipedia.org/wiki/Atomic_Train",
+   "wikidata": "Q228396",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1990s disaster films"
+  },
+  {
+   "type": "series",
+   "tmdb": 126193,
+   "title": "Category 7: The End of the World",
+   "year": 2005,
+   "source": "https://en.wikipedia.org/wiki/Category_7:_The_End_of_the_World",
+   "wikidata": "Q182597",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s disaster films"
+  },
+  {
+   "type": "series",
+   "tmdb": 47146,
+   "title": "Asteroid",
+   "year": 1997,
+   "source": "https://en.wikipedia.org/wiki/Asteroid_(film)",
+   "wikidata": "Q2868436",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1990s disaster films"
+  },
+  {
+   "type": "series",
+   "tmdb": 122900,
+   "title": "Category 6: Day of Destruction",
+   "year": 2004,
+   "source": "https://en.wikipedia.org/wiki/Category_6:_Day_of_Destruction",
+   "wikidata": "Q1050658",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s disaster films"
+  },
+  {
+   "type": "series",
+   "tmdb": 4832,
+   "title": "Superstorm",
+   "year": 2007,
+   "source": "https://en.wikipedia.org/wiki/Superstorm_(film)",
+   "wikidata": "Q3062833",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "British disaster films"
+  },
+  {
+   "type": "series",
+   "tmdb": 288315,
+   "title": "Final Days of Planet Earth",
+   "year": 2006,
+   "source": "https://en.wikipedia.org/wiki/Final_Days_of_Planet_Earth",
+   "wikidata": "Q1415913",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American disaster films"
+  },
+  {
+   "type": "series",
+   "tmdb": 20260,
+   "title": "Shattered City: The Halifax Explosion",
+   "year": 2003,
+   "source": "https://en.wikipedia.org/wiki/Shattered_City:_The_Halifax_Explosion",
+   "wikidata": "Q3146368",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s disaster films"
+  }
+ ],
+ "theme-dystopian": [
+  {
+   "type": "movie",
+   "tmdb": 165,
+   "title": "Back to the Future Part II",
+   "year": 1989,
+   "source": "https://en.wikipedia.org/wiki/Back_to_the_Future_Part_II",
+   "wikidata": "Q109331",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American dystopian films"
+  }
+ ],
+ "theme-heist": [
+  {
+   "type": "movie",
+   "tmdb": 211672,
+   "title": "Minions",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/Minions_(film)",
+   "wikidata": "Q13619743",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American heist films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 168259,
+   "title": "Furious 7",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/Furious_7",
+   "wikidata": "Q14650496",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s heist films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 168672,
+   "title": "American Hustle",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/American_Hustle",
+   "wikidata": "Q9013673",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American heist films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1572,
+   "title": "Die Hard: With a Vengeance",
+   "year": 1995,
+   "source": "https://en.wikipedia.org/wiki/Die_Hard_with_a_Vengeance",
+   "wikidata": "Q106871",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1990s heist films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 954,
+   "title": "Mission: Impossible",
+   "year": 1996,
+   "source": "https://en.wikipedia.org/wiki/Mission:_Impossible_(film)",
+   "wikidata": "Q1741232",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1990s heist films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 82992,
+   "title": "Fast & Furious 6",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/Fast_%26_Furious_6",
+   "wikidata": "Q5516100",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s heist films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11322,
+   "title": "Public Enemies",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/Public_Enemies_(2009_film)",
+   "wikidata": "Q329448",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American heist films"
+  }
+ ],
+ "theme-psychological": [
+  {
+   "type": "movie",
+   "tmdb": 567,
+   "title": "Rear Window",
+   "year": 1954,
+   "source": "https://en.wikipedia.org/wiki/Rear_Window",
+   "wikidata": "Q34414",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1950s psychological thriller films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 223,
+   "title": "Rebecca",
+   "year": 1940,
+   "source": "https://en.wikipedia.org/wiki/Rebecca_(1940_film)",
+   "wikidata": "Q204212",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1940s psychological thriller films"
+  },
+  {
+   "type": "series",
+   "tmdb": 225171,
+   "title": "Pluribus",
+   "year": 2025,
+   "source": "https://en.wikipedia.org/wiki/Pluribus_(TV_series)",
+   "wikidata": "Q122155720",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Psychological thriller television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 95396,
+   "title": "Severance",
+   "year": 2022,
+   "source": "https://en.wikipedia.org/wiki/Severance_(TV_series)",
+   "wikidata": "Q101096725",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Psychological thriller television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 250504,
+   "title": "The Beast in Me",
+   "year": 2025,
+   "source": "https://en.wikipedia.org/wiki/The_Beast_in_Me_(TV_series)",
+   "wikidata": "Q130342708",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Psychological thriller television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 227192,
+   "title": "Pyramid Game",
+   "year": 2024,
+   "source": "https://en.wikipedia.org/wiki/Pyramid_Game_(TV_series)",
+   "wikidata": "Q118994129",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Psychological thriller television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 116612,
+   "title": "Beyond Evil",
+   "year": 2021,
+   "source": "https://en.wikipedia.org/wiki/Beyond_Evil_(TV_series)",
+   "wikidata": "Q97214444",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Psychological thriller television series"
+  }
+ ],
+ "theme-space-epics": [
+  {
+   "type": "movie",
+   "tmdb": 9016,
+   "title": "Treasure Planet",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/Treasure_Planet",
+   "wikidata": "Q392530",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American children's animated space adventure films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 49529,
+   "title": "John Carter",
+   "year": 2012,
+   "source": "https://en.wikipedia.org/wiki/John_Carter_(film)",
+   "wikidata": "Q235347",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Space Western films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10016,
+   "title": "Ghosts of Mars",
+   "year": 2001,
+   "source": "https://en.wikipedia.org/wiki/Ghosts_of_Mars",
+   "wikidata": "Q261700",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s space adventure films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11299,
+   "title": "Cowboy Bebop: The Movie",
+   "year": 2001,
+   "source": "https://en.wikipedia.org/wiki/Cowboy_Bebop:_The_Movie",
+   "wikidata": "Q1334287",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Space Western films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 26581,
+   "title": "Dr. Who and the Daleks",
+   "year": 1965,
+   "source": "https://en.wikipedia.org/wiki/Dr._Who_and_the_Daleks",
+   "wikidata": "Q3038433",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1960s space adventure films"
+  },
+  {
+   "type": "series",
+   "tmdb": 30991,
+   "title": "Cowboy Bebop",
+   "year": 1998,
+   "source": "https://en.wikipedia.org/wiki/Cowboy_Bebop",
+   "wikidata": "Q101244908",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Japanese adult animated space adventure television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 84469,
+   "title": "Cowboy Bebop",
+   "year": 2021,
+   "source": "https://en.wikipedia.org/wiki/Cowboy_Bebop_(2021_TV_series)",
+   "wikidata": "Q101252448",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Space Western television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 13889,
+   "title": "Saber Rider and the Star Sheriffs",
+   "year": 1987,
+   "source": "https://en.wikipedia.org/wiki/Saber_Rider_and_the_Star_Sheriffs",
+   "wikidata": "Q702388",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American children's animated space adventure television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 78183,
+   "title": "Nightflyers",
+   "year": 2018,
+   "source": "https://en.wikipedia.org/wiki/Nightflyers_(TV_series)",
+   "wikidata": "Q47479683",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Space adventure television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 325,
+   "title": "The Adventures of the Galaxy Rangers",
+   "year": 1986,
+   "source": "https://en.wikipedia.org/wiki/The_Adventures_of_the_Galaxy_Rangers",
+   "wikidata": "Q711700",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American children's animated space adventure television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 5172,
+   "title": "BraveStarr",
+   "year": 1987,
+   "source": "https://en.wikipedia.org/wiki/BraveStarr",
+   "wikidata": "Q902626",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American children's animated space adventure television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 13911,
+   "title": "Bismark",
+   "year": 1984,
+   "source": "https://en.wikipedia.org/wiki/Bismark_(TV_series)",
+   "wikidata": "Q3221197",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Space Western anime and manga"
+  }
+ ],
+ "theme-spies": [
+  {
+   "type": "movie",
+   "tmdb": 710,
+   "title": "GoldenEye",
+   "year": 1995,
+   "source": "https://en.wikipedia.org/wiki/GoldenEye",
+   "wikidata": "Q19089",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "British spy action films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 36643,
+   "title": "The World Is Not Enough",
+   "year": 1999,
+   "source": "https://en.wikipedia.org/wiki/The_World_Is_Not_Enough",
+   "wikidata": "Q212145",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1990s spy films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 667,
+   "title": "You Only Live Twice",
+   "year": 1967,
+   "source": "https://en.wikipedia.org/wiki/You_Only_Live_Twice_(film)",
+   "wikidata": "Q107761",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1960s spy thriller films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 612,
+   "title": "Munich",
+   "year": 2005,
+   "source": "https://en.wikipedia.org/wiki/Munich_(2005_film)",
+   "wikidata": "Q152456",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s spy films"
+  },
+  {
+   "type": "series",
+   "tmdb": 31505,
+   "title": "Iris",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/Iris_(South_Korean_TV_series)",
+   "wikidata": "Q496296",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "South Korean espionage television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 118642,
+   "title": "Mr. & Mrs. Smith",
+   "year": 2024,
+   "source": "https://en.wikipedia.org/wiki/Mr._%26_Mrs._Smith_(2024_TV_series)",
+   "wikidata": "Q116265663",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American spy comedy television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 246412,
+   "title": "The Copenhagen Test",
+   "year": 2025,
+   "source": "https://en.wikipedia.org/wiki/The_Copenhagen_Test",
+   "wikidata": "Q130658825",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "American spy television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 40987,
+   "title": "Feuerdrachen",
+   "year": 1981,
+   "source": "https://en.wikipedia.org/wiki/Feuerdrachen",
+   "wikidata": "Q1409528",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Espionage television series"
+  }
+ ],
+ "theme-superheroes": [
+  {
+   "type": "series",
+   "tmdb": 114471,
+   "title": "Ironheart",
+   "year": 2025,
+   "source": "https://en.wikipedia.org/wiki/Ironheart_(miniseries)",
+   "wikidata": "Q108124282",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2020s American superhero television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 219543,
+   "title": "Creature Commandos",
+   "year": 2024,
+   "source": "https://en.wikipedia.org/wiki/Creature_Commandos_(TV_series)",
+   "wikidata": "Q116896366",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2020s American superhero television series"
+  },
+  {
+   "type": "series",
+   "tmdb": 338321,
+   "title": "Atom Man vs. Superman",
+   "year": 1950,
+   "source": "https://en.wikipedia.org/wiki/Atom_Man_vs._Superman",
+   "wikidata": "Q4817223",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "1950s superhero films"
+  }
+ ],
+ "theme-time-travel": [
+  {
+   "type": "movie",
+   "tmdb": 383498,
+   "title": "Deadpool 2",
+   "year": 2018,
+   "source": "https://en.wikipedia.org/wiki/Deadpool_2",
+   "wikidata": "Q25431158",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s films about time travel"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9543,
+   "title": "Prince of Persia: The Sands of Time",
+   "year": 2010,
+   "source": "https://en.wikipedia.org/wiki/Prince_of_Persia:_The_Sands_of_Time_(film)",
+   "wikidata": "Q245172",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s films about time travel"
+  },
+  {
+   "type": "movie",
+   "tmdb": 228165,
+   "title": "The SpongeBob Movie: Sponge Out of Water",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/The_SpongeBob_Movie:_Sponge_Out_of_Water",
+   "wikidata": "Q7765993",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s films about time travel"
+  }
+ ],
+ "theme-zombies": [
+  {
+   "type": "movie",
+   "tmdb": 1865,
+   "title": "Pirates of the Caribbean: On Stranger Tides",
+   "year": 2011,
+   "source": "https://en.wikipedia.org/wiki/Pirates_of_the_Caribbean:_On_Stranger_Tides",
+   "wikidata": "Q183555",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2010s zombie films"
+  },
+  {
+   "type": "movie",
+   "tmdb": 3933,
+   "title": "Corpse Bride",
+   "year": 2005,
+   "source": "https://en.wikipedia.org/wiki/Corpse_Bride",
+   "wikidata": "Q164417",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "2000s zombie films"
+  }
+ ]
+}
