@@ -45,7 +45,7 @@ jobs:
         run: |
           # the newest successful build that SAVED state (a no-op rebuild has pages but no first-seen-state artifact)
           run_id=
-          for id in $(gh run list -R "$GITHUB_REPOSITORY" --workflow build.yml --branch main --status success -L 8 \
+          for id in $(gh run list -R "$GITHUB_REPOSITORY" --workflow build.yml --branch main --status success -L 50 \
                       --json databaseId --jq '.[].databaseId'); do
             if gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/artifacts" \
                  --jq '.artifacts[] | select(.name=="first-seen-state" and (.expired|not)) | .name' | grep -q .; then
@@ -66,6 +66,7 @@ jobs:
             echo "FETCH_SITE=https://xbobxsagetx.github.io/strand-discovery/" >> "$GITHUB_ENV"
             echo "SOURCE=live site + cached state" >> "$GITHUB_ENV"
           else
+            if [ "$GITHUB_EVENT_NAME" = schedule ]; then echo "::error::no build output and no state: the weekly check has nothing to check"; exit 1; fi
             echo "::warning::no build output and no state: nothing to check"; echo "SKIP=1" >> "$GITHUB_ENV"
           fi
       # DuckDB (pinned in requirements-dev.txt, the one place) is installed ONLY here; the daily build stays stdlib-only.
