@@ -64,6 +64,7 @@ def fetch_site(site, pages):
     (pages / 'summary.json').write_bytes(get('summary.json'))
     summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     d = pages / 'catalog' / 'movie'
+    d.mkdir(parents=True, exist_ok=True)
     for cid in summary.get('catalogs', {}):          # every shelf's first page (the weekly DuckDB read + week compare)
         (d / f'{cid}.json').write_bytes(get(f'catalog/movie/{cid}.json'))
     for slug in summary.get('new_card_modes', {}):   # the New cards also page through (the precision / recall checks)
