@@ -110,7 +110,7 @@ def classify_missing(f, media, card, r, mode, item, lo, today, mcount, cap, svc)
             return 'source limit', "the daily crawl never saw it on the service (not in the first_seen state)"
     if mcount >= cap:
         return 'cap', f"the card holds its cap of {cap}"
-    return 'source limit', 'passes every rule and the card is under its cap: TMDB discover paging snapshot (issue #25)'
+    return 'source limit', 'passes every rule and the card is under its cap: no rule explains it; labelled source limit by elimination (TMDB discover paging, issue #25; not verified)'
 
 
 def classify_extra(f, media, card, r, mode, cand, item, today, svc):
