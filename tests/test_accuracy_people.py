@@ -157,5 +157,44 @@ class Measure(unittest.TestCase):
         self.assertEqual((row['cards'], row['no_wikidata'], gaps), (0, ['a'], []))
 
 
+class WikidataCapTest(unittest.TestCase):
+    """Run 38901335090 hit the 90-minute limit: every Wikidata call could take 4 x 90 s + backoff and a slow day never ended.
+    A call is now capped by time, and a few gave-ups in a row make the next calls fail at once (a card gets a note)."""
+
+    def setUp(self):
+        self.calls, self.clock = [], [0.0]
+        self.saved = (ap.time.sleep, ap.time.time, ap.urllib.request.urlopen, dict(ap._WD))
+
+        def sleep(s):
+            self.clock[0] += s
+
+        def urlopen(req, timeout=0):
+            self.calls.append(timeout)
+            self.clock[0] += timeout                 # a call that hangs until its timeout
+            raise TimeoutError('slow')
+        ap.time.sleep, ap.time.time, ap.urllib.request.urlopen = sleep, lambda: self.clock[0], urlopen
+        ap._WD.update(fails=0, last=0.0)
+
+    def tearDown(self):
+        ap.time.sleep, ap.time.time, ap.urllib.request.urlopen = self.saved[:3]
+        ap._WD.clear()
+        ap._WD.update(self.saved[3])
+
+    def test_one_slow_query_is_capped_and_a_run_of_them_switches_it_off(self):
+        for _ in range(ap.WD_MAX_FAILS):
+            with self.assertRaises(RuntimeError):
+                ap.wikidata('SELECT 1')
+        self.assertLess(self.clock[0], ap.WD_MAX_FAILS * (ap.WD_BUDGET + 60 + 30))   # old code: 4 x 90 s + backoff each, no end
+        n = len(self.calls)
+        with self.assertRaises(RuntimeError) as cm:
+            ap.wikidata('SELECT 1')
+        self.assertEqual(len(self.calls), n)                                           # failed at once, no request sent
+        self.assertIn('unavailable', str(cm.exception))
+        self.clock[0] += ap.WD_COOLDOWN + 1                                            # later it probes again
+        with self.assertRaises(RuntimeError):
+            ap.wikidata('SELECT 1')
+        self.assertGreater(len(self.calls), n)
+
+
 if __name__ == '__main__':
     unittest.main()
