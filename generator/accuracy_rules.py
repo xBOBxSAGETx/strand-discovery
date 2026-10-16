@@ -100,7 +100,7 @@ NETWORKS = {
     3353: None,                # Peacock: no Wikidata item used as an original broadcaster was found
     3186: ['Q65359104'],       # HBO Max
     4330: ['Q27903045'],       # Paramount+
-    14: ['Q215616', 'Q3245159'],   # PBS + PBS Kids
+    14: ['Q215616'],           # PBS
     33: ['Q43359'],            # MTV
     318: ['Q2422698'],         # Starz
     71: ['Q212252'],           # The CW
@@ -108,7 +108,7 @@ NETWORKS = {
 
 # Judge-only: a Wikidata broadcaster that also counts as "ok" for the card, but is not used to build its truth list
 # (Max originals are filed under HBO; using HBO's whole catalogue as Max's truth would be wrong).
-JUDGE_ALSO = {3186: ['Q23633']}
+JUDGE_ALSO = {3186: ['Q23633'], 14: ['Q3245159']}       # PBS Kids is its own TMDB network, so it is not PBS's truth
 
 
 def pick_cards(spec, kind, n, seed):
@@ -155,7 +155,8 @@ def _ids(s):
 def breaks(f, media, card, r, today):
     """-> [(kind, text)] with kind 'rule' (a real break), 'near' (within TMDB's daily drift of a numeric line) or 'tag'
     (TMDB's detail data lacks the network / keyword the card's discover filters on)."""
-    out = [('rule', t) for t in af.rule_breaks(f, media, r, today)]
+    # a runtime TMDB now shows as 0 (blank) was filled when the card was built: TMDB changed the data, not the card's rule
+    out = [('near' if t.startswith('runtime 0 ') else 'rule', t) for t in af.rule_breaks(f, media, r, today)]
     own = r['own']
     date_gte = own.get('primary_release_date.gte' if media == 'movie' else 'first_air_date.gte')
     date_lte = own.get('primary_release_date.lte' if media == 'movie' else 'first_air_date.lte')

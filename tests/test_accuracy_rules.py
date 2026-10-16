@@ -108,6 +108,8 @@ class Rules(unittest.TestCase):
         self.assertEqual(r['min_runtime'], 20)
         short = ar.facts(det(5, date='2015-01-01', votes=900, runtime=25, kw=(9716,)), 'movie')
         self.assertIsNone(ar.classify_extra(short, 'movie', card, r, TODAY))
+        blank = ar.facts(det(8, date='2015-01-01', votes=900, runtime=0, kw=(9716,)), 'movie')       # TMDB blanked it since the build
+        self.assertEqual(ar.classify_extra(blank, 'movie', card, r, TODAY)[0], 'source limit')
         nokw = ar.facts(det(6, date='2015-01-01', votes=900, runtime=60), 'movie')
         self.assertEqual(ar.classify_extra(nokw, 'movie', card, r, TODAY)[0], 'source limit')
 
