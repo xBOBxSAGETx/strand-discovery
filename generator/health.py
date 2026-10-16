@@ -1,6 +1,6 @@
 """Health alerts for the build workflow (nightly and watcher-started): keeps ONE open GitHub issue labelled "health" in sync with the latest run.
 
-  python health.py <report dir> <build result> <logger outcome> [<arrivals outcome> [<practice>]]
+  python health.py <report dir> <build result> <logger outcome> [<arrivals outcome> [<practice> [<deploy result>]]]
 
 <practice> = "true" when the build skipped the logger on purpose (a practice build reusing main's saved state, #73):
 only then is a "skipped" logger fine; in every other run it is still reported.
@@ -11,9 +11,9 @@ Test mode (no GitHub calls): HEALTH_DRY_RUN=1 prints every write it would make; 
 <report dir> = the downloaded run-report artifact (out/summary.json, state/fs_summary.json; either may be missing).
 One alert per problem streak (#79): builds can run many times a day, so a run whose problems are the same as the last report
 on the open issue (numbers ignored) adds no comment (GitHub emails every comment); a changed set does.
-Opens (or updates) the issue when the build failed, the first_seen logger failed, a guard tripped, TMDB rejected the
-key (401), or the logger reported warnings/skips; closes it with a comment when a later run is clean. GitHub emails
-the repo owner on new issues and comments. Also opens the one-off "re-score New" reminder on day 15 of first_seen
+#85: only a FAILED build or deploy emails (opens the issue, or adds one comment to it). Routine warnings (logger
+failed/skipped, first_seen warnings, stale feeds, arrival sources) go to the run summary and, if an issue is open, its
+body (an edit sends no email). Any successful run closes the open issue (no comment), leaving its warnings in the body. Also opens the one-off "re-score New" reminder on day 15 of first_seen
 history. Uses the gh CLI with the job's GITHUB_TOKEN (issues: write only).
 """
 import hashlib, json, os, re, subprocess, sys
@@ -110,14 +110,21 @@ def main():
     report, build_result, logger_outcome = Path(sys.argv[1]), sys.argv[2], sys.argv[3]
     arrivals_outcome = sys.argv[4] if len(sys.argv) > 4 else 'skipped'
     practice = len(sys.argv) > 5 and sys.argv[5] == 'true'
+    deploy_result = sys.argv[6] if len(sys.argv) > 6 else 'skipped'
     found, summary, fs = problems(report, build_result, logger_outcome, arrivals_outcome, practice)
+    if deploy_result == 'failure':
+        found.append('Deploy job ended **failure** - the site was not published; the last good deploy stays served.')
+    failed = build_result != 'success' or deploy_result == 'failure'   # only a failure may email (new comment / new issue)
     # arrivals catch-up progress (information, never a problem by itself): run page summary + log, and the issue body
     progress = (read(report / 'arrivals' / 'arrivals_summary.json') or {}).get('catchup_lines') or []
     for line in progress:
         print('progress:', line)
-    if progress and os.environ.get('GITHUB_STEP_SUMMARY'):
+    if os.environ.get('GITHUB_STEP_SUMMARY') and (progress or found):
         with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as f:
-            f.write('### Arrivals catch-up\n' + ''.join(f'- {line}\n' for line in progress))
+            if found:
+                f.write('### Build health\n' + ''.join(f'- {p}\n' for p in found))
+            if progress:
+                f.write('### Arrivals catch-up\n' + ''.join(f'- {line}\n' for line in progress))
     ensure_label('health', 'd73a4a', 'Daily build health (opened/closed automatically)')
     existing = json.loads(gh('issue', 'list', '--label', 'health', '--state', 'open', '--json', 'number,body,comments', '--limit', '5') or '[]')
     sig = signature(found)
@@ -125,8 +132,10 @@ def main():
         body = (f"Latest run: {RUN_URL}\n\n" + '\n'.join(f'- {p}' for p in found) +
                 ("\n\nArrivals catch-up (information):\n" + '\n'.join(f'- {line}' for line in progress)
                  if progress else '') +
-                "\n\nThis issue closes itself after the next clean run. What each alert means: README → Operations."
+                "\n\nThis issue closes itself after the next successful run. What each alert means: README → Operations."
                 f"\n\n<!-- health-sig:{sig} -->")
+    if failed:
+        # a new comment / new issue is the email: failures only (#85)
         if existing and last_signature(existing[0]) == sig:
             print(f"health: same {len(found)} problems as the last report on issue #{existing[0]['number']}; no new comment")
         elif existing:
@@ -135,11 +144,16 @@ def main():
         else:
             print('health:', gh('issue', 'create', '--title', HEALTH_TITLE, '--label', 'health', '--body', body).strip())
     else:
+        # build and deploy are fine: routine warnings go to the body (an edit sends no email) and the run summary, and
+        # the failure issue closes. No comment, no new issue.
         for i in existing:
-            gh('issue', 'close', str(i['number']), '--comment', f"Clean run: {RUN_URL}")
-            print(f"health: closed issue #{i['number']}")
+            if found:
+                gh('issue', 'edit', str(i['number']), '--body', body)
+            gh('issue', 'close', str(i['number']))
+            print(f"health: closed issue #{i['number']}" + (f" ({len(found)} warnings left in its body)" if found else ''))
         if not existing:
-            print('health: clean, no open issue')
+            print('health: clean, no open issue' if not found else
+                  f"health: no failure, no open issue ({len(found)} warnings in the run summary)")
 
     # one-off reminder on day 15 of first_seen history (earliest provider baseline)
     hist = [p.get('history_days', 0) for p in ((summary or {}).get('first_seen', {}).get('providers') or {}).values()]
