@@ -282,6 +282,77 @@ class EveryKind(unittest.TestCase):
         self.assertEqual(build_with(World(pool), POP, [remove(1), {'tmdb': 2, 'side': 'keep'}])[0], ['tmdb:2'])
 
 
+class AddMustPassEveryDiscoverFilter(unittest.TestCase):
+    """An add also passes each discover() filter its card uses: one case per filter, each with a fitting control."""
+
+    def skipped(self, card, row, media='movie'):
+        ids, notes = build_with(World([mk(1)], rows={9: row}), card, [add(9, type=media)])
+        return notes, ids
+
+    def check(self, why, card, bad, good, media='movie'):
+        notes, ids = self.skipped(card, bad, media)
+        self.assertIn(f'correction skipped: T9 ({why})', notes, why)                  # old code: no note, the add went in
+        self.assertNotIn('tmdb:9', ids)
+        notes, ids = self.skipped(card, good, media)                                  # control: a fitting title goes in
+        self.assertEqual(notes, '', why)
+        self.assertIn('tmdb:9', ids)
+
+    def own(self, **f):
+        return {**POP, 'movie': {**POP['movie'], **f}}
+
+    def test_min_rating(self):
+        self.check('vote_average', self.own(**{'vote_average.gte': '7.8'}), mk(9, rating=7.0), mk(9, rating=8.2))
+
+    def test_max_votes(self):
+        self.check('vote_count.lte', self.own(**{'vote_count.lte': '600'}), mk(9, votes=5000), mk(9, votes=300))
+
+    def test_language(self):
+        self.check('language', self.own(with_original_language='ja'), mk(9, original_language='en'), mk(9, original_language='ja'))
+
+    def test_movie_date_window(self):
+        card = self.own(**{'primary_release_date.gte': '1990-01-01', 'primary_release_date.lte': '1999-12-31'})
+        self.check('date window', card, mk(9, date='1985-05-01'), mk(9, date='1995-05-01'))
+        self.assertIn('(date window)', self.skipped(card, mk(9, date='2004-05-01'))[0])
+
+    def test_series_date_window(self):
+        card = {**POP, 'media': ['series'], 'series': {'first_air_date.gte': '2000-01-01', 'first_air_date.lte': '2009-12-31'}}
+        self.check('date window', card, mk(9, date='2015-01-01'), mk(9, date='2005-01-01'), 'series')
+
+    def test_series_status(self):
+        card = {**POP, 'media': ['series'], 'series': {}}
+        self.check('status', card, mk(9, status='Planned'), mk(9, status='Ended'), 'series')
+        self.assertIn('(status)', self.skipped(card, mk(9, status='In Production'), 'series')[0])
+
+    def test_tv_air_window(self):
+        card = {**POP, 'media': ['series'], 'series': {}, 'tv_air_window': 45}
+        self.check('air window', card, mk(9, status='Ended', last_air_date=DAYS(200)), mk(9, status='Returning Series', last_air_date=DAYS(5)), 'series')
+
+    def test_watch_provider_region_and_monetization(self):
+        card = self.own(with_watch_providers='8|337', watch_region='US', with_watch_monetization_types='flatrate')
+
+        def on(region, kind, pid):
+            return mk(9, **{'watch/providers': {'results': {region: {kind: [{'provider_id': pid}]}}}})
+        self.check("not on the card's service", card, on('US', 'flatrate', 15), on('US', 'flatrate', 337))      # other service
+        self.assertIn("(not on the card's service)", self.skipped(card, on('GB', 'flatrate', 8))[0])          # other region
+        self.assertIn("(not on the card's service)", self.skipped(card, on('US', 'rent', 8))[0])              # rent, card wants flatrate
+
+    def test_no_watch_provider_data_fails_closed(self):
+        card = self.own(with_watch_providers='8', watch_region='US')
+        notes, ids = self.skipped(card, mk(9))                                    # TMDB sent no watch/providers block
+        self.assertIn('correction skipped: T9 (no watch/providers data)', notes)  # old code: let it through
+        self.assertNotIn('tmdb:9', ids)
+        notes, ids = self.skipped(card, mk(9, **{'watch/providers': {'results': {'US': {'flatrate': [{'provider_id': 8}]}}}}))
+        self.assertEqual(notes, '')                                               # control: with the block it goes in
+        self.assertIn('tmdb:9', ids)
+
+    def test_watch_provider_also_binds_a_new_card(self):
+        card = {**self.own(with_watch_providers='8', watch_region='US'), 'provider': 'netflix'}
+        off = mk(9, **{'watch/providers': {'results': {'US': {'flatrate': [{'provider_id': 15}]}}}})
+        ids, notes = build_with(World([mk(1)], rows={9: off}), card, [add(9, date='2026-10-01')],
+                                fs=({'providers': {}}, {}))
+        self.assertIn("(not on the card's service)", notes)
+
+
 class CorrectionData(unittest.TestCase):
     def test_every_add_on_a_new_card_has_a_date(self):
         spec = json.loads((HERE / 'spec.json').read_text(encoding='utf-8'))
@@ -301,10 +372,12 @@ class CorrectionData(unittest.TestCase):
         self.assertIn(FIXED['movie'], [e['tmdb'] for e in lists['theme-zombies']])
         for slug, entries in lists.items():
             for e in entries:
-                self.assertTrue(e['title'] and e['wikidata'].startswith('Q') and e['added'], f"{slug}: {e['title']}")
-                self.assertTrue(e['source'].startswith('https://en.wikipedia.org/wiki/') and e['why'] and e['side'] == 'add')   # two sources: Wikidata id + Wikipedia category
+                self.assertTrue(e['title'] and e['added'], f"{slug}: {e['title']}")
+                self.assertTrue(e['source'].startswith('https://') and e['why'], f"{slug}: {e['title']}")      # evidence URL + the reason
+                if e['side'] != 'keep':
+                    self.assertTrue(isinstance(e['year'], int), f"{slug}: {e['title']}")   # an add/remove carries a year (its second source is the evidence URL: Wikidata, Wikipedia or the service's own page)
             held = {(m['type'], m['tmdb']) for m in must.get(slug, [])}
-            self.assertFalse(held & {(e['type'], e['tmdb']) for e in entries}, f'{slug}: a correction repeats a must-have')
+            self.assertFalse(held & {(e['type'], e['tmdb']) for e in entries if e['side'] == 'add'}, f'{slug}: a correction repeats a must-have')
 
 
 if __name__ == '__main__':
