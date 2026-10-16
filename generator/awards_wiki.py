@@ -75,7 +75,7 @@ def sundance_dramatic():
             year = int(y.group(1))
         if 'second place' in row.lower() or not year:
             continue
-        t = re.search(r"''" + LINK + "''", row)
+        t = re.search(r"''" + LINK + r"[^'\[\]]*''", row)   # "''[[What Happened Was]]...''": text after the link
         if t:
             out.append((year, display(t.group(1), t.group(2)), 'Grand_Jury_Prize_Dramatic', t.group(1)))
         else:
@@ -93,8 +93,12 @@ def sundance_documentary():
         y = re.match(r"\*\s*(?:\[\[[^\]|]*\|)?((?:19|20)\d\d)", line)
         if not y:
             continue
-        for t in re.finditer(r"''" + LINK + "''", line):
+        found = list(re.finditer(r"''" + LINK + "''", line))
+        for t in found:
             out.append((int(y.group(1)), display(t.group(1), t.group(2)), 'Grand_Jury_Prize_Documentary', t.group(1)))
+        if not found:                                       # unlinked title: "*[[2013 Sundance Film Festival|2013]]: ''Blood Brother''"
+            for t in re.finditer(r"''((?:(?!'')[^\[\]])+)''", line):
+                out.append((int(y.group(1)), t.group(1).strip(), 'Grand_Jury_Prize_Documentary', None))
     return out
 
 
