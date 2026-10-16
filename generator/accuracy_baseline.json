@@ -1,7 +1,7 @@
 {
  "measured": "2026-09-27",
  "list_month": "2026-09",
- "method": "accuracy_check.py recall on the final arrivals code (50e5a27 semantics, P4 off); official arrivals dated inside the 45-day window found anywhere on the New card; network + decade/acclaimed/hidden/standup (accuracy_rules.py, seed audit-96, 12 network cards + all 14 rule-based cards, Wikidata P449 / TMDB rule-free discover / IMDb top list truth): run 38856525857",
+ "method": "accuracy_check.py recall on the final arrivals code (50e5a27 semantics, P4 off); official arrivals dated inside the 45-day window found anywhere on the New card; network + decade/acclaimed/hidden/standup (accuracy_rules.py, seed audit-96, 12 network cards + all 14 rule-based cards, Wikidata P449 / TMDB rule-free discover / IMDb top list truth): run 38868652404; network code_bugs 11 = the second-TMDB-id gaps on HBO Max / PBS / Showtime that spec.json still lacks (measure only), recorded as today's count",
  "services": {
   "disneyplus": 94.7,
   "hulu": 88.4,
@@ -160,10 +160,10 @@
    "code_bugs": 0
   },
   "network": {
-   "recall": 82.9,
+   "recall": 84.2,
    "precision": 100.0,
-   "code_bugs": 0,
-   "truth_precision": 91.4
+   "code_bugs": 11,
+   "truth_precision": 91.7
   },
   "decade": {
    "recall": 99.6,
@@ -186,7 +186,7 @@
    "precision": 98.3,
    "code_bugs": 0,
    "outside_recall": 19.2,
-   "truth_precision": 38.2
+   "truth_precision": 68.4
   }
  }
 }
