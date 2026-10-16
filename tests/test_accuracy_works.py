@@ -102,6 +102,21 @@ class StudioLabels(unittest.TestCase):
         self.assertEqual({g['key']: g['label'] for g in g2 if g['side'] == 'recall'}, {'movie:4': 'cap'})
         self.assertTrue(all('disagrees' in g['reason'] for g in g2 if g['side'] == 'precision'))
 
+    def test_dead_tmdb_id_is_a_source_limit_not_a_crash(self):
+        truth = aw.parse_truth([row(1, 'A'), row(2, 'Dead')], TODAY)
+
+        def tmdb(path, **p):
+            if path.endswith('/2'):
+                raise RuntimeError('TMDB HTTPError on /movie/2')
+            return det(1)
+        orig, aw.time.sleep = aw.time.sleep, lambda s: None
+        try:
+            r, gaps = aw.measure('studio', [STUDIO], SPEC, lambda slug: ['movie:1'], tmdb, TODAY, 20, 'seed',
+                                 truth_for=lambda c: truth, lookup=lambda m, ids: {}, excluded={}, hand_for=lambda s: set())
+        finally:
+            aw.time.sleep = orig
+        self.assertEqual([(g['key'], g['label']) for g in gaps], [('movie:2', 'source limit')])
+
     def test_listed_card_hand_list_and_exclude(self):
         truth = aw.parse_truth([row(1, 'Stale'), row(2, 'Excluded'), row(3, 'Listed')], TODAY)
         details = {1: det(1, companies=(99,)), 2: det(2, companies=(99,)), 3: det(3, companies=(99,))}
