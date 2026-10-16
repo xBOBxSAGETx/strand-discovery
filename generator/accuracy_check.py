@@ -478,6 +478,11 @@ def main():
                          f"{r['precision']} | {b.get('precision', '-')} | {r['ok']}/{r['sample']} | {g(r['recall_gaps'])} | "
                          f"{g(r['precision_gaps'])} |")
     lines += accuracy_rules.extra_lines(rules_rows)
+    for r in frame_sum:                           # #117: titles our own lists put on a card are shown apart, never counted as TMDB recall
+        if r.get('tmdb_recall') is not None:
+            lines.append(f"\n{r['kind']} recall: {r['recall']} with our own lists, {r['tmdb_recall']} from TMDB alone "
+                         f"({r['filled']} of {r['truth']} claim titles are on the cards because our must-have / corrections lists put them there; "
+                         f"corrections applied {r['corrections']['found']}/{r['corrections']['total']})")
     print('\n'.join(lines))
     problems = [f"precision: {e['provider']} {e['key']} not on the service ({e['precision']} precision, event "
                 f"{e['event_date']}, sources {e['sources']}, status {e['status']}) [{e['label']}: {e['reason']}] {e['urls'][:200]}" for e in errors]

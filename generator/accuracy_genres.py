@@ -242,7 +242,7 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
     theme = kind == 'theme'
     gaps, rf, rt, samp, ok, unjudged = [], 0, 0, 0, 0, 0
     confirmed = not_confirmed = own_n = own_ok = 0
-    mh_found = mh_total = 0
+    mh_found = mh_total = cr_found = cr_total = filled_total = 0
     per_card, no_truth = [], []
     by_sort = {}
     cache = {}
@@ -277,12 +277,12 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
         slug, order = card['slug'], order_of(card['slug'])
         have = set(order)
         sort = card['sort']
-        c = {'card': slug, 'items': len(order), 'truth': 0, 'found': 0, 'judged': 0, 'ok': 0, 'confirmed': 0, 'own_ok': 0, 'own_n': 0}
+        c = {'card': slug, 'items': len(order), 'truth': 0, 'found': 0, 'filled': 0, 'judged': 0, 'ok': 0, 'confirmed': 0, 'own_ok': 0, 'own_n': 0}
         must = set()
         for media in card['media']:
             r = af.card_rules(kind, card, media, spec)
             mcount = sum(1 for k in order if k.startswith(media + ':'))
-            must |= {f'{media}:{i}' for i in build.must_haves(card, media)} if theme else set()
+            must |= {f'{media}:{i}' for i in build.must_haves(card, media) + build.corrections(card, media)} if theme else set()   # OUR lists
             qs = classes_for(card, media)
             if not qs:
                 no_truth.append(f'{slug}:{media}')
@@ -296,6 +296,9 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                 keys = [k for k in keys if (detail(media, int(k.split(':')[1])) or {}).get('rating', 0) >= TOP_RATING]
             truth = keys[:TRUTH_K]
             found, total, missing = af.score(truth, have)
+            filled = sum(1 for k in truth if k in have and k in must)       # on the card because OUR list put it there (#117), not TMDB
+            c['filled'] += filled
+            filled_total += filled
             c['found'] += found
             c['truth'] += total
             for k in missing:
@@ -314,6 +317,16 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                         gaps.append({'kind': kind, 'card': slug, 'side': 'must_have', 'key': f'{media}:{i}', 'name': f['name'] if f else f'{media}:{i}',
                                      'label': 'code bug' if released else 'source limit',
                                      'reason': 'hand-picked must-have is not on its card' if released else 'not released / unknown to TMDB'})
+            for media in card['media']:               # #117: the build applies our corrections (a released one that is missing = a code bug)
+                for i in build.corrections(card, media):
+                    cr_total += 1
+                    if f'{media}:{i}' in have:
+                        cr_found += 1
+                        continue
+                    f = detail(media, i)
+                    if bool(f) and bool(f['date']) and f['date'] <= today:
+                        gaps.append({'kind': kind, 'card': slug, 'side': 'must_have', 'key': f'{media}:{i}', 'name': f['name'],
+                                     'label': 'code bug', 'reason': 'our correction is not on its card'})
         rf += c['found']
         rt += c['truth']
         sample = random.Random(f'{seed}-{slug}').sample(list(order), min(n_sample, len(order)))
@@ -371,6 +384,8 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
     row.update({'per_card': per_card, 'unjudged': unjudged, 'no_truth': no_truth, 'wd_failed': wd_failed})
     if theme:
         row.update({'precision': None, 'confirmed': confirmed, 'not_confirmed': not_confirmed,
+                    'filled': filled_total, 'tmdb_found': rf - filled_total, 'tmdb_recall': af.pct(rf - filled_total, rt),
+                    'corrections': {'found': cr_found, 'total': cr_total},
                     'own_rule': {'ok': own_ok, 'n': own_n}, 'must_have': {'found': mh_found, 'total': mh_total, 'recall': af.pct(mh_found, mh_total)}})
     else:
         row['by_sort'] = {s: dict(v, recall=af.pct(v['found'], v['truth']), precision=af.pct(v['ok'], v['judged'])) for s, v in by_sort.items()}

@@ -1,0 +1,1174 @@
+{
+ "theme-creature-features": [
+  {
+   "type": "movie",
+   "tmdb": 673,
+   "title": "Harry Potter and the Prisoner of Azkaban",
+   "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q102448",
+   "wikidata": "Q102448",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 585,
+   "title": "Monsters, Inc.",
+   "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q187726",
+   "wikidata": "Q187726",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 8966,
+   "title": "Twilight",
+   "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q160071",
+   "wikidata": "Q160071",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1865,
+   "title": "Pirates of the Caribbean: On Stranger Tides",
+   "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q183555",
+   "wikidata": "Q183555",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 679,
+   "title": "Aliens",
+   "year": 1986,
+   "source": "https://www.wikidata.org/wiki/Q104814",
+   "wikidata": "Q104814",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 70981,
+   "title": "Prometheus",
+   "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q192686",
+   "wikidata": "Q192686",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 62211,
+   "title": "Monsters University",
+   "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q641362",
+   "wikidata": "Q641362",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9479,
+   "title": "The Nightmare Before Christmas",
+   "year": 1993,
+   "source": "https://www.wikidata.org/wiki/Q322328",
+   "wikidata": "Q322328",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10191,
+   "title": "How to Train Your Dragon",
+   "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q373096",
+   "wikidata": "Q373096",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 18239,
+   "title": "The Twilight Saga: New Moon",
+   "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q116928",
+   "wikidata": "Q116928",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 6479,
+   "title": "I Am Legend",
+   "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q212689",
+   "wikidata": "Q212689",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 653,
+   "title": "Nosferatu",
+   "year": 1922,
+   "source": "https://www.wikidata.org/wiki/Q151895",
+   "wikidata": "Q151895",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 3933,
+   "title": "Corpse Bride",
+   "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q164417",
+   "wikidata": "Q164417",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 76492,
+   "title": "Hotel Transylvania",
+   "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q249967",
+   "wikidata": "Q249967",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 7131,
+   "title": "Van Helsing",
+   "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q211009",
+   "wikidata": "Q211009",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 72190,
+   "title": "World War Z",
+   "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q28196",
+   "wikidata": "Q28196",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1576,
+   "title": "Resident Evil",
+   "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q153484",
+   "wikidata": "Q153484",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 61345,
+   "title": "Z Nation",
+   "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q17378072",
+   "wikidata": "Q17378072",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 63106,
+   "title": "The Scholar Who Walks the Night",
+   "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q19854771",
+   "wikidata": "Q19854771",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 7831,
+   "title": "Dead Set",
+   "year": 2008,
+   "source": "https://www.wikidata.org/wiki/Q265335",
+   "wikidata": "Q265335",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 41961,
+   "title": "Pumpkinhead 4: Blood Feud",
+   "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q779488",
+   "wikidata": "Q779488",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 37530,
+   "title": "Firebreather",
+   "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q3072841",
+   "wikidata": "Q3072841",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 17687,
+   "title": "Count Dracula",
+   "year": 1977,
+   "source": "https://www.wikidata.org/wiki/Q2850168",
+   "wikidata": "Q2850168",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 313630,
+   "title": "Eternally Yours",
+   "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q141504739",
+   "wikidata": "Q141504739",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 42512,
+   "title": "The Eden Formula",
+   "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q7731548",
+   "wikidata": "Q7731548",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 298651,
+   "title": "Silence",
+   "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q136024563",
+   "wikidata": "Q136024563",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 21474,
+   "title": "Caved In: Prehistoric Terror",
+   "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q4367579",
+   "wikidata": "Q4367579",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 48938,
+   "title": "House of Frankenstein",
+   "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q5914950",
+   "wikidata": "Q5914950",
+   "added": "2026-10-16"
+  }
+ ],
+ "theme-disaster": [
+  {
+   "type": "movie",
+   "tmdb": 49047,
+   "title": "Gravity",
+   "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q2579784",
+   "wikidata": "Q2579784",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9982,
+   "title": "Chicken Little",
+   "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q270940",
+   "wikidata": "Q270940",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 22794,
+   "title": "Cloudy with a Chance of Meatballs",
+   "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q637169",
+   "wikidata": "Q637169",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 13811,
+   "title": "Knowing",
+   "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q244296",
+   "wikidata": "Q244296",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 813,
+   "title": "Airplane!",
+   "year": 1980,
+   "source": "https://www.wikidata.org/wiki/Q497256",
+   "wikidata": "Q497256",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 253412,
+   "title": "Everest",
+   "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q15631013",
+   "wikidata": "Q15631013",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 49191,
+   "title": "10.5",
+   "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q163904",
+   "wikidata": "Q163904",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 9203,
+   "title": "10.5: Apocalypse",
+   "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q163903",
+   "wikidata": "Q163903",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 74170,
+   "title": "Atomic Train",
+   "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q228396",
+   "wikidata": "Q228396",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 68891,
+   "title": "Missing 9",
+   "year": 2017,
+   "source": "https://www.wikidata.org/wiki/Q24514038",
+   "wikidata": "Q24514038",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 126193,
+   "title": "Category 7: The End of the World",
+   "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q182597",
+   "wikidata": "Q182597",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 31756,
+   "title": "Impact",
+   "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q555197",
+   "wikidata": "Q555197",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 41322,
+   "title": "Pandemic",
+   "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q2049283",
+   "wikidata": "Q2049283",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 47146,
+   "title": "Asteroid",
+   "year": 1997,
+   "source": "https://www.wikidata.org/wiki/Q2868436",
+   "wikidata": "Q2868436",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 122900,
+   "title": "Category 6: Day of Destruction",
+   "year": 2004,
+   "source": "https://www.wikidata.org/wiki/Q1050658",
+   "wikidata": "Q1050658",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 4832,
+   "title": "Superstorm",
+   "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q3062833",
+   "wikidata": "Q3062833",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 288315,
+   "title": "Final Days of Planet Earth",
+   "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q1415913",
+   "wikidata": "Q1415913",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 29479,
+   "title": "Die Sturmflut",
+   "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q150549",
+   "wikidata": "Q150549",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 20260,
+   "title": "Shattered City: The Halifax Explosion",
+   "year": 2003,
+   "source": "https://www.wikidata.org/wiki/Q3146368",
+   "wikidata": "Q3146368",
+   "added": "2026-10-16"
+  }
+ ],
+ "theme-dystopian": [
+  {
+   "type": "movie",
+   "tmdb": 1895,
+   "title": "Star Wars: Episode III - Revenge of the Sith",
+   "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q42051",
+   "wikidata": "Q42051",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 165,
+   "title": "Back to the Future Part II",
+   "year": 1989,
+   "source": "https://www.wikidata.org/wiki/Q109331",
+   "wikidata": "Q109331",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 303522,
+   "title": "On the Beach",
+   "year": 2000,
+   "source": "https://www.wikidata.org/wiki/Q747395",
+   "wikidata": "Q747395",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 4783,
+   "title": "Island City",
+   "year": 1994,
+   "source": "https://www.wikidata.org/wiki/Q3598061",
+   "wikidata": "Q3598061",
+   "added": "2026-10-16"
+  }
+ ],
+ "theme-heist": [
+  {
+   "type": "movie",
+   "tmdb": 640,
+   "title": "Catch Me If You Can",
+   "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q208108",
+   "wikidata": "Q208108",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 211672,
+   "title": "Minions",
+   "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q13619743",
+   "wikidata": "Q13619743",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 168259,
+   "title": "Furious 7",
+   "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q14650496",
+   "wikidata": "Q14650496",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 168672,
+   "title": "American Hustle",
+   "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q9013673",
+   "wikidata": "Q9013673",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1572,
+   "title": "Die Hard: With a Vengeance",
+   "year": 1995,
+   "source": "https://www.wikidata.org/wiki/Q106871",
+   "wikidata": "Q106871",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 954,
+   "title": "Mission: Impossible",
+   "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q1741232",
+   "wikidata": "Q1741232",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 7518,
+   "title": "Over the Hedge",
+   "year": 2006,
+   "source": "https://www.wikidata.org/wiki/Q245366",
+   "wikidata": "Q245366",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 82992,
+   "title": "Fast & Furious 6",
+   "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q5516100",
+   "wikidata": "Q5516100",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11322,
+   "title": "Public Enemies",
+   "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q329448",
+   "wikidata": "Q329448",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 21300,
+   "title": "L.A. Takedown",
+   "year": 1989,
+   "source": "https://www.wikidata.org/wiki/Q917117",
+   "wikidata": "Q917117",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 10496,
+   "title": "It Takes a Thief",
+   "year": 1968,
+   "source": "https://www.wikidata.org/wiki/Q1657946",
+   "wikidata": "Q1657946",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 130523,
+   "title": "Ganglands",
+   "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q108752016",
+   "wikidata": "Q108752016",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 218637,
+   "title": "ATM",
+   "year": null,
+   "source": "https://www.wikidata.org/wiki/Q116245342",
+   "wikidata": "Q116245342",
+   "added": "2026-10-16"
+  }
+ ],
+ "theme-psychological": [
+  {
+   "type": "movie",
+   "tmdb": 28,
+   "title": "Apocalypse Now",
+   "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q3620669",
+   "wikidata": "Q3620669",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 6977,
+   "title": "No Country for Old Men",
+   "year": 2007,
+   "source": "https://www.wikidata.org/wiki/Q183081",
+   "wikidata": "Q183081",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 70160,
+   "title": "The Hunger Games",
+   "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q212965",
+   "wikidata": "Q212965",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 500,
+   "title": "Reservoir Dogs",
+   "year": 1992,
+   "source": "https://www.wikidata.org/wiki/Q72962",
+   "wikidata": "Q72962",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 567,
+   "title": "Rear Window",
+   "year": 1954,
+   "source": "https://www.wikidata.org/wiki/Q34414",
+   "wikidata": "Q34414",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 223,
+   "title": "Rebecca",
+   "year": 1940,
+   "source": "https://www.wikidata.org/wiki/Q204212",
+   "wikidata": "Q204212",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 890,
+   "title": "Neon Genesis Evangelion",
+   "year": 1995,
+   "source": "https://www.wikidata.org/wiki/Q662",
+   "wikidata": "Q662",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 60622,
+   "title": "Fargo",
+   "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q15931555",
+   "wikidata": "Q15931555",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 225171,
+   "title": "Pluribus",
+   "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q122155720",
+   "wikidata": "Q122155720",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 95396,
+   "title": "Severance",
+   "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q101096725",
+   "wikidata": "Q101096725",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 54344,
+   "title": "The Leftovers",
+   "year": 2014,
+   "source": "https://www.wikidata.org/wiki/Q16468818",
+   "wikidata": "Q16468818",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 76719,
+   "title": "The Rain",
+   "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q48855569",
+   "wikidata": "Q48855569",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 210232,
+   "title": "The Watcher",
+   "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q110885430",
+   "wikidata": "Q110885430",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 136283,
+   "title": "The Glory",
+   "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q113197148",
+   "wikidata": "Q113197148",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 94028,
+   "title": "RIPLEY",
+   "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q116769269",
+   "wikidata": "Q116769269",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 250504,
+   "title": "The Beast in Me",
+   "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q130342708",
+   "wikidata": "Q130342708",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 117378,
+   "title": "Mouse",
+   "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q97223114",
+   "wikidata": "Q97223114",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 113985,
+   "title": "Outer Range",
+   "year": 2022,
+   "source": "https://www.wikidata.org/wiki/Q105085590",
+   "wikidata": "Q105085590",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 227192,
+   "title": "Pyramid Game",
+   "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q118994129",
+   "wikidata": "Q118994129",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 116612,
+   "title": "Beyond Evil",
+   "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q97214444",
+   "wikidata": "Q97214444",
+   "added": "2026-10-16"
+  }
+ ],
+ "theme-space-epics": [
+  {
+   "type": "movie",
+   "tmdb": 9016,
+   "title": "Treasure Planet",
+   "year": 2002,
+   "source": "https://www.wikidata.org/wiki/Q392530",
+   "wikidata": "Q392530",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 49529,
+   "title": "John Carter",
+   "year": 2012,
+   "source": "https://www.wikidata.org/wiki/Q235347",
+   "wikidata": "Q235347",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 8069,
+   "title": "Barbarella",
+   "year": 1968,
+   "source": "https://www.wikidata.org/wiki/Q41132",
+   "wikidata": "Q41132",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10016,
+   "title": "Ghosts of Mars",
+   "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q261700",
+   "wikidata": "Q261700",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11299,
+   "title": "Cowboy Bebop: The Movie",
+   "year": 2001,
+   "source": "https://www.wikidata.org/wiki/Q1334287",
+   "wikidata": "Q1334287",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 26581,
+   "title": "Dr. Who and the Daleks",
+   "year": 1965,
+   "source": "https://www.wikidata.org/wiki/Q3038433",
+   "wikidata": "Q3038433",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 30991,
+   "title": "Cowboy Bebop",
+   "year": 1998,
+   "source": "https://www.wikidata.org/wiki/Q101244908",
+   "wikidata": "Q101244908",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 51704,
+   "title": "Defiance",
+   "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q2080272",
+   "wikidata": "Q2080272",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 74387,
+   "title": "Final Space",
+   "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q28406285",
+   "wikidata": "Q28406285",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 84469,
+   "title": "Cowboy Bebop",
+   "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q101252448",
+   "wikidata": "Q101252448",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 13889,
+   "title": "Saber Rider and the Star Sheriffs",
+   "year": 1987,
+   "source": "https://www.wikidata.org/wiki/Q702388",
+   "wikidata": "Q702388",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 78183,
+   "title": "Nightflyers",
+   "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q47479683",
+   "wikidata": "Q47479683",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 325,
+   "title": "The Adventures of the Galaxy Rangers",
+   "year": 1986,
+   "source": "https://www.wikidata.org/wiki/Q711700",
+   "wikidata": "Q711700",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 5172,
+   "title": "BraveStarr",
+   "year": 1987,
+   "source": "https://www.wikidata.org/wiki/Q902626",
+   "wikidata": "Q902626",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 35106,
+   "title": "Outlaw Star",
+   "year": null,
+   "source": "https://www.wikidata.org/wiki/Q2470001",
+   "wikidata": "Q2470001",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 13911,
+   "title": "Bismark",
+   "year": 1984,
+   "source": "https://www.wikidata.org/wiki/Q3221197",
+   "wikidata": "Q3221197",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 112718,
+   "title": "The Astronauts",
+   "year": 2020,
+   "source": "https://www.wikidata.org/wiki/Q105038165",
+   "wikidata": "Q105038165",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 233547,
+   "title": "Quantum Heroes Dinoster",
+   "year": 2023,
+   "source": "https://www.wikidata.org/wiki/Q121898317",
+   "wikidata": "Q121898317",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 16465,
+   "title": "Coyote Ragtime Show",
+   "year": null,
+   "source": "https://www.wikidata.org/wiki/Q2069910",
+   "wikidata": "Q2069910",
+   "added": "2026-10-16"
+  }
+ ],
+ "theme-spies": [
+  {
+   "type": "movie",
+   "tmdb": 409,
+   "title": "The English Patient",
+   "year": 1996,
+   "source": "https://www.wikidata.org/wiki/Q63026",
+   "wikidata": "Q63026",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 710,
+   "title": "GoldenEye",
+   "year": 1995,
+   "source": "https://www.wikidata.org/wiki/Q19089",
+   "wikidata": "Q19089",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 36643,
+   "title": "The World Is Not Enough",
+   "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q212145",
+   "wikidata": "Q212145",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 667,
+   "title": "You Only Live Twice",
+   "year": 1967,
+   "source": "https://www.wikidata.org/wiki/Q107761",
+   "wikidata": "Q107761",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 612,
+   "title": "Munich",
+   "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q152456",
+   "wikidata": "Q152456",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 31505,
+   "title": "Iris",
+   "year": 2009,
+   "source": "https://www.wikidata.org/wiki/Q496296",
+   "wikidata": "Q496296",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 118642,
+   "title": "Mr. & Mrs. Smith",
+   "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q116265663",
+   "wikidata": "Q116265663",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 119769,
+   "title": "Taxi Driver",
+   "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q104607512",
+   "wikidata": "Q104607512",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 214032,
+   "title": "Citadel: Diana",
+   "year": null,
+   "source": "https://www.wikidata.org/wiki/Q118744558",
+   "wikidata": "Q118744558",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 47532,
+   "title": "Steal the Sky",
+   "year": 1988,
+   "source": "https://www.wikidata.org/wiki/Q4237400",
+   "wikidata": "Q4237400",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 246412,
+   "title": "The Copenhagen Test",
+   "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q130658825",
+   "wikidata": "Q130658825",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 40987,
+   "title": "Feuerdrachen",
+   "year": 1981,
+   "source": "https://www.wikidata.org/wiki/Q1409528",
+   "wikidata": "Q1409528",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 274776,
+   "title": "Unfamiliar",
+   "year": 2026,
+   "source": "https://www.wikidata.org/wiki/Q137993658",
+   "wikidata": "Q137993658",
+   "added": "2026-10-16"
+  }
+ ],
+ "theme-superheroes": [
+  {
+   "type": "movie",
+   "tmdb": 603,
+   "title": "The Matrix",
+   "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q83495",
+   "wikidata": "Q83495",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 114471,
+   "title": "Ironheart",
+   "year": 2025,
+   "source": "https://www.wikidata.org/wiki/Q108124282",
+   "wikidata": "Q108124282",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 219543,
+   "title": "Creature Commandos",
+   "year": 2024,
+   "source": "https://www.wikidata.org/wiki/Q116896366",
+   "wikidata": "Q116896366",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 114695,
+   "title": "Marvel Studios Legends",
+   "year": 2021,
+   "source": "https://www.wikidata.org/wiki/Q104193683",
+   "wikidata": "Q104193683",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 338321,
+   "title": "Atom Man vs. Superman",
+   "year": 1950,
+   "source": "https://www.wikidata.org/wiki/Q4817223",
+   "wikidata": "Q4817223",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 132995,
+   "title": "BIMA Satria Garuda",
+   "year": 2013,
+   "source": "https://www.wikidata.org/wiki/Q13319187",
+   "wikidata": "Q13319187",
+   "added": "2026-10-16"
+  }
+ ],
+ "theme-time-travel": [
+  {
+   "type": "movie",
+   "tmdb": 383498,
+   "title": "Deadpool 2",
+   "year": 2018,
+   "source": "https://www.wikidata.org/wiki/Q25431158",
+   "wikidata": "Q25431158",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9543,
+   "title": "Prince of Persia: The Sands of Time",
+   "year": 2010,
+   "source": "https://www.wikidata.org/wiki/Q245172",
+   "wikidata": "Q245172",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 228165,
+   "title": "The SpongeBob Movie: Sponge Out of Water",
+   "year": 2015,
+   "source": "https://www.wikidata.org/wiki/Q7765993",
+   "wikidata": "Q7765993",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "series",
+   "tmdb": 50241,
+   "title": "Lorong Waktu",
+   "year": 1999,
+   "source": "https://www.wikidata.org/wiki/Q12495308",
+   "wikidata": "Q12495308",
+   "added": "2026-10-16"
+  }
+ ],
+ "theme-zombies": [
+  {
+   "type": "movie",
+   "tmdb": 1865,
+   "title": "Pirates of the Caribbean: On Stranger Tides",
+   "year": 2011,
+   "source": "https://www.wikidata.org/wiki/Q183555",
+   "wikidata": "Q183555",
+   "added": "2026-10-16"
+  },
+  {
+   "type": "movie",
+   "tmdb": 3933,
+   "title": "Corpse Bride",
+   "year": 2005,
+   "source": "https://www.wikidata.org/wiki/Q164417",
+   "wikidata": "Q164417",
+   "added": "2026-10-16"
+  }
+ ]
+}

@@ -169,6 +169,23 @@ class Measure(unittest.TestCase):
         self.assertEqual((row['must_have']['found'], row['must_have']['total']), (0, n))           # none of them on the stub card
         self.assertTrue(all(g['label'] == 'code bug' for g in gaps if g['side'] == 'must_have'))
 
+    def test_theme_recall_shows_what_our_list_filled(self):
+        card = CARDS['theme-heist']                       # #117: recall is shown with and without our own lists
+        corr = build.corrections(card, 'movie')[0]
+        details = {corr: det(corr, 'Corrected', [80]), 1: det(1, 'Heist', [80], kw=[10051])}
+
+        def tmdb(path, **kw):
+            i = int(path.rsplit('/', 1)[1])
+            return details.get(i) or det(i, f'Must-have {i}', [80])
+
+        def sparql(q):
+            return [{'id': '1', 'sl': '90'}, {'id': str(corr), 'sl': '80'}] if 'SELECT ?id (MAX(?sl0)' in q and 'P4947' in q else []
+        row, gaps = ag.measure_cards('theme', [card], SPEC, lambda s: ['movie:1', f'movie:{corr}'], tmdb, sparql, TODAY, 20, 's')
+        self.assertEqual((row['found'], row['truth'], row['recall']), (2, 2, 100.0))      # with our lists
+        self.assertEqual((row['filled'], row['tmdb_found'], row['tmdb_recall']), (1, 1, 50.0))   # TMDB alone: only the keyworded one
+        self.assertEqual(row['own_rule'], {'ok': 2, 'n': 2})                               # the corrected title is excused from the keyword rule
+        self.assertEqual(row['corrections']['found'], 1)
+
 
 if __name__ == '__main__':
     unittest.main()
