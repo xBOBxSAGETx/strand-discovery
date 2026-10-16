@@ -15,7 +15,16 @@ import build  # noqa: E402
 import accuracy_people as ap  # noqa: E402
 
 TODAY = '2026-10-15'
-build.TODAY, build.YEAR_AGO = TODAY, '2025-10-15'
+_saved = {}
+
+
+def setUpModule():                      # pinned only while this module runs; other modules (test_watch) see the real clock
+    _saved['v'] = (build.TODAY, build.YEAR_AGO)
+    build.TODAY, build.YEAR_AGO = TODAY, '2025-10-15'
+
+
+def tearDownModule():
+    build.TODAY, build.YEAR_AGO = _saved['v']
 
 
 def wd(q, m=None, t=None, d='2000-01-01T00:00:00Z', sh='0'):
