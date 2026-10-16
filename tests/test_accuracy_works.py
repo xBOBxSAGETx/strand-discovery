@@ -48,8 +48,16 @@ class TruthMapping(unittest.TestCase):
     def test_lookup_parse(self):
         rows = [{'id': {'value': '9'}, 'f': {'value': 'http://x/Q99'}, 'v0': {'value': 'Acme; Beta'}},
                 {'id': {'value': '8'}, 'f': {'value': 'http://x/Q88'}}]
-        self.assertEqual(aw.parse_lookup(rows, ('P272', 'P750')), {9: {'qid': 'Q99', 'statements': 'Acme; Beta'},
-                                                                  8: {'qid': 'Q88', 'statements': ''}})
+        got = aw.parse_lookup(rows, ('P272', 'P750'))
+        self.assertEqual((got[9]['qid'], got[9]['statements'], got[9]['by']['P272']), ('Q99', 'Acme; Beta', ('Acme; Beta', set())))
+        self.assertEqual((got[8]['qid'], got[8]['statements']), ('Q88', ''))
+
+    def test_distributor_only_reason(self):
+        wd = {'qid': 'Q9', 'statements': 'Other; Studio X', 'by': {'P272': ('Other', {'Q5'}), 'P750': ('Studio X', {'Q7'})}}
+        lab, why = aw.classify_studio_extra(aw.detail_facts(lambda *a, **k: det(9), 'movie', 9), aw.af.card_rules(
+            'popular', STUDIO, 'movie', SPEC), TODAY, wd, ('Q7',))
+        self.assertEqual(lab, 'source limit')
+        self.assertIn('distributor only (production: Other)', why)
 
     def test_every_card_has_a_wikidata_item(self):
         spec = json.loads((Path(aw.HERE) / 'spec.json').read_text(encoding='utf-8'))
@@ -88,7 +96,7 @@ class StudioLabels(unittest.TestCase):
         truth = aw.parse_truth([row(1, 'OnCard'), row(2, 'FewVotes'), row(3, 'NoCredit'), row(4, 'Paged'), row(5, 'Cut')], TODAY)
         details = {2: det(2, votes=3), 3: det(3, companies=(99,)), 4: det(4), 5: det(5),
                    9: det(9, votes=2), 10: det(10), 11: det(11)}                                     # 9: on the card, under its own floor
-        wd = {9: {'qid': 'Q9', 'statements': ''}}
+        wd = {9: {'qid': 'Q9', 'statements': '', 'by': {}}}
         r, gaps = run(['movie:1', 'movie:9'], truth, details, wd=wd)
         by = {g['key']: g['label'] for g in gaps}
         self.assertEqual(by['movie:2'], 'deliberate rule')                  # vote floor
@@ -98,7 +106,7 @@ class StudioLabels(unittest.TestCase):
         self.assertEqual((r['found'], r['truth']), (1, 5))
         # cap: same card at its depth of 3 -> the passing film is cut
         r2, g2 = run(['movie:1', 'movie:10', 'movie:11'], aw.parse_truth([row(1, 'A'), row(4, 'Paged')], TODAY),
-                     {4: det(4), 10: det(10), 11: det(11)}, wd={10: {'qid': 'Q', 'statements': 'Acme'}, 11: {'qid': 'Q', 'statements': 'Acme'}})
+                     {4: det(4), 10: det(10), 11: det(11)}, wd={10: {'qid': 'Q', 'statements': 'Acme', 'by': {'P272': ('Acme', {'Q1'})}}, 11: {'qid': 'Q', 'statements': 'Acme', 'by': {'P272': ('Acme', {'Q1'})}}})
         self.assertEqual({g['key']: g['label'] for g in g2 if g['side'] == 'recall'}, {'movie:4': 'cap'})
         self.assertTrue(all('disagrees' in g['reason'] for g in g2 if g['side'] == 'precision'))
 
