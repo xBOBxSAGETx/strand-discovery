@@ -32,6 +32,7 @@ import accuracy_frame           # the shared frame for the Popular / Top cards (
 import accuracy_people          # Director / Actor cards against Wikidata (issue #93)
 import accuracy_genres          # Genre / Theme cards against Wikidata (issue #95)
 import accuracy_works           # Studios + Movie series, truth = Wikidata (issue #94)
+import accuracy_rules           # Network + rule-based cards: Decades, Acclaimed, Hidden Gems, Stand-up (issue #96)
 import accuracy_awards          # the 7 award cards, truth = Wikidata P166 / Wikipedia (issue #97)
 import accuracy_new             # every service's New card + the label of the dated precision errors (issue #97)
 
@@ -50,8 +51,18 @@ FRAME_MAX_DROP = 5.0            # points below accuracy_baseline.json "frame" th
 PEOPLE_CARDS = 12               # Director / Actor frame (accuracy_people.py): seeded cards per kind that Wikidata knows
 PEOPLE_SPARE = 3                # extra cards of the seeded order fetched from the live site, for cards Wikidata does not know
 PEOPLE_SEED = 'audit-93'
+RULES_CARDS = 12                # Network / rule-based frame (accuracy_rules.py): seeded cards per kind (a kind with fewer: all)
+RULES_SEED = 'audit-96'
 GENRE_CARDS = 12                # Genre frame (accuracy_genres.py): seeded cards, a third each of Popular / New / Top (Themes: all 13)
 GENRE_SEED = 'audit-95'
+
+
+_T0 = time.time()
+
+
+def mark(label):
+    """One log line per block: the minutes since the run began (the weekly log shows which block is slow)."""
+    print(f'[{int(time.time() - _T0) // 60:02d}:{int(time.time() - _T0) % 60:02d}] {label}', flush=True)
 
 
 def tmdb(path, **params):
@@ -318,6 +329,8 @@ def main():
     ap.add_argument('--frame-seed', default=FRAME_SEED, help='fixed seed of the card + title sample (a stable baseline)')
     ap.add_argument('--people-cards', type=int, default=PEOPLE_CARDS, help='Director / Actor frame: seeded cards per kind (0 = off)')
     ap.add_argument('--people-seed', default=PEOPLE_SEED, help='fixed seed of the Director / Actor card + title sample')
+    ap.add_argument('--rules-cards', type=int, default=RULES_CARDS, help='Network / rule-based frame: seeded cards per kind (0 = off)')
+    ap.add_argument('--rules-seed', default=RULES_SEED, help='fixed seed of the Network / rule-based card + title sample')
     ap.add_argument('--genre-cards', type=int, default=GENRE_CARDS, help='Genre frame: seeded cards (0 = Genres and Themes off)')
     ap.add_argument('--genre-seed', default=GENRE_SEED, help='fixed seed of the Genre card + title sample')
     ap.add_argument('--today', help='tests only: the date to judge against (default: the build date)')
@@ -327,6 +340,7 @@ def main():
     spec = json.loads(Path(a.spec).read_text(encoding='utf-8'))
     frame_cards = {k: accuracy_frame.pick_cards(spec, k, a.cards, a.frame_seed) for k in accuracy_frame.KINDS} if a.cards else {}
     people_pool = {k: accuracy_people.pick_people(spec, k, a.people_seed) for k in accuracy_people.PROP} if a.people_cards else {}
+    rules_cards = {k: accuracy_rules.pick_cards(spec, k, a.rules_cards, a.rules_seed) for k in accuracy_rules.KINDS} if a.rules_cards else {}
     genre_cards = {k: accuracy_genres.pick_cards(spec, k, a.genre_cards, a.genre_seed) for k in accuracy_genres.KINDS} if a.genre_cards else {}
     works_cards = {}                              # Studios + Movie series (accuracy_works.py): the cards the pick names
     if a.cards:
@@ -336,6 +350,7 @@ def main():
         fetch_site(a.fetch_site, pages, [c['slug'] for cs in frame_cards.values() for c in cs] +
                    [c['slug'] for cs in people_pool.values() for c in cs[:a.people_cards + PEOPLE_SPARE]] +
                    [c['slug'] for cs in works_cards.values() for c in cs] + list(accuracy_awards.CARDS) +
+                   [c['slug'] for cs in rules_cards.values() for c in cs] +
                    [c['slug'] for cs in genre_cards.values() for c in cs])
     summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     cands = load_candidates(state_dir, summary['generated_at'][:10])
@@ -351,6 +366,7 @@ def main():
                 for prov, es in build.load_hand_list('precision_unknowns', path=a.unknowns).items() for e in es}
     baseline = json.loads(Path(a.baseline).read_text(encoding='utf-8')) if Path(a.baseline).exists() else {}
     seed = a.seed or dt.date.fromisoformat(today).strftime('%G-W%V')          # a new sample every week
+    mark('precision + recall')
     table, rows = precision(pages, state_dir, spec, summary, cands, a.n, seed, official, unknowns)
     rec = recall(pages, summary, official_rows, today, baseline)
     with open(out / 'precision.csv', 'w', newline='', encoding='utf-8') as f:
@@ -358,6 +374,7 @@ def main():
         w.writeheader()
         w.writerows(rows)
     errors = [r for r in rows if r['class'] == 'ERROR (ii)']
+    mark('popular / top frame')
     frame_sum, frame_gaps = [], []
     for kind, cs in frame_cards.items():          # Popular / Top: recall + precision + labelled gaps (accuracy_frame.py)
         row, gaps = accuracy_frame.measure(kind, cs, spec, lambda slug: card_order(pages, slug), tmdb, dt.date.today().isoformat(),
@@ -365,6 +382,7 @@ def main():
         frame_sum.append(row)
         frame_gaps += gaps
     people_notes = []
+    mark('people (Wikidata)')
     for kind, pool in people_pool.items():        # Director / Actor: against Wikidata (accuracy_people.py)
         try:
             row, gaps = accuracy_people.measure_people(kind, pool, spec, lambda slug: card_order(pages, slug), tmdb,
@@ -377,6 +395,7 @@ def main():
         frame_gaps += gaps
         for w in row.get('wd_failed', []):         # a Wikidata query that timed out: that card was not measured (a note, not a problem)
             people_notes.append(f'{kind} not measured: {w}')
+    mark('genres / themes (Wikidata)')
     for kind, cs in genre_cards.items():          # Genres / Themes: against Wikidata genre (accuracy_genres.py)
         try:
             row, gaps = accuracy_genres.measure_cards(kind, cs, spec, lambda slug: card_order(pages, slug), tmdb,
@@ -389,6 +408,18 @@ def main():
         frame_gaps += gaps
         for w in row.get('wd_failed', []):         # a Wikidata query that timed out: that card was not measured (a note, not a problem)
             people_notes.append(f'{kind} not measured: {w}')
+    mark('networks + rule cards (Wikidata)')
+    rules_rows = []
+    if rules_cards:                               # Network + rule-based cards (accuracy_rules.py)
+        t_rules = time.time()
+        rules_rows, g, rules_notes = accuracy_rules.run_all(rules_cards, spec, lambda slug: card_order(pages, slug), tmdb,
+                                                            accuracy_people.wikidata, dt.date.today().isoformat(), a.frame_sample,
+                                                            a.rules_seed)
+        frame_sum += rules_rows
+        frame_gaps += g
+        people_notes += rules_notes
+        print(f'accuracy_rules: {len(rules_rows)} kinds in {round(time.time() - t_rules)} s')
+    mark('studios / series (Wikidata)')
     works_errors = []
     for kind, cs in works_cards.items():          # Studios / Movie series: Wikidata is the truth; a Wikidata outage is a note
         try:
@@ -399,6 +430,7 @@ def main():
             continue
         frame_sum.append(row)
         frame_gaps += gaps
+    mark('awards (Wikidata)')
     award_notes = []
     for slug in accuracy_awards.CARDS:            # Awards: Wikidata P166 / the Wikipedia list is the truth; an outage is a note
         try:
@@ -408,6 +440,7 @@ def main():
                 frame_gaps += gaps
         except Exception as e:
             award_notes.append(f'{slug}: not measured ({type(e).__name__}: {str(e)[:120]})')
+    mark('new shelves')
     new_notes = []
     new_state = json.loads(gzip.decompress((state_dir / 'first_seen.json.gz').read_bytes()))
     for slug, mode in sorted(summary.get('new_card_modes', {}).items()):     # every New card: recall vs TMDB window, precision
@@ -421,6 +454,7 @@ def main():
             continue
         frame_sum.append(row)
         frame_gaps += gaps
+    mark('all measured; writing the report')
     if frame_gaps:
         with open(out / 'frame_gaps.csv', 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=list(frame_gaps[0]))
@@ -443,12 +477,14 @@ def main():
             lines.append(f"| {r['kind']} | {r['cards']} | {r['recall']} | {b.get('recall', '-')} | {r['found']}/{r['truth']} | "
                          f"{r['precision']} | {b.get('precision', '-')} | {r['ok']}/{r['sample']} | {g(r['recall_gaps'])} | "
                          f"{g(r['precision_gaps'])} |")
+    lines += accuracy_rules.extra_lines(rules_rows)
     print('\n'.join(lines))
     problems = [f"precision: {e['provider']} {e['key']} not on the service ({e['precision']} precision, event "
                 f"{e['event_date']}, sources {e['sources']}, status {e['status']}) [{e['label']}: {e['reason']}] {e['urls'][:200]}" for e in errors]
     problems += [f"recall: {r['service']} {r['recall']}% is {r['drop']} points below the baseline {r['baseline']}%"
                  for r in rec if r.get('problem')]
     problems += frame_problems(frame_sum, fbase)
+    problems += accuracy_rules.extra_problems(rules_rows, fbase, FRAME_MAX_DROP)
     # NOTES are shown, never problems: stale official lists (a manual refresh; the precision gate is the weekly guard)
     # and services with too few official arrivals in the window to measure
     notes = list(people_notes)
