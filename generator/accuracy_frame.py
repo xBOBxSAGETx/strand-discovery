@@ -41,6 +41,8 @@ Pure functions (classify_*, score, pick_cards) take plain dicts and are unit-tes
 """
 import datetime as dt, math, random
 
+import accuracy_corrections as ac
+
 KINDS = {
     'popular': {'folder': 'streaming-popular', 'sort_by': 'popularity.desc', 'truth_votes': 0,
                 'claim': 'the most popular titles streaming on the service in the US'},
@@ -170,12 +172,14 @@ def pct(a, b):
     return round(100 * a / b, 1) if b else None
 
 
-def summarize(kind, cards, recall_found, recall_total, sample, ok, gaps):
-    """One row per kind for the report table / accuracy.json. gaps = [{'side','label',...}]."""
+def summarize(kind, cards, recall_found, recall_total, sample, ok, gaps, filled=0):
+    """One row per kind for the report table / accuracy.json. gaps = [{'side','label',...}]. filled = claim titles on the
+    cards because OUR corrections list added them (#129): shown apart, TMDB-alone recall is `tmdb_recall`."""
     by = {side: {lab: sum(1 for g in gaps if g['side'] == side and g['label'] == lab) for lab in LABELS}
           for side in ('recall', 'precision')}
     return {'kind': kind, 'cards': len(cards), 'truth': recall_total, 'found': recall_found,
-            'recall': pct(recall_found, recall_total), 'sample': sample, 'ok': ok, 'precision': pct(ok, sample),
+            'recall': pct(recall_found, recall_total), 'filled': filled, 'tmdb_recall': pct(recall_found - filled, recall_total),
+            'sample': sample, 'ok': ok, 'precision': pct(ok, sample),
             'recall_gaps': by['recall'], 'precision_gaps': by['precision'],
             'code_bugs': by['precision']['code bug'] + by['recall']['code bug']}
 
@@ -183,7 +187,7 @@ def summarize(kind, cards, recall_found, recall_total, sample, ok, gaps):
 def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_k=TRUTH_K):
     """Run the frame on the picked cards. order_of(slug) -> ordered keys 'movie:1' / 'series:2' of the whole card;
     tmdb(path, **params) -> json. Returns (summary row, gap rows)."""
-    gaps, rf, rt, samp, ok, at_cap = [], 0, 0, 0, 0, []
+    gaps, rf, rt, samp, ok, at_cap, filled = [], 0, 0, 0, 0, [], 0
     cache = {}
 
     def detail(media, tid):
@@ -206,6 +210,7 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_k=TR
             if mcount >= r['depth']:
                 at_cap.append(f'{slug}:{media}')
             found, total, missing = score(truth_keys, have)
+            filled += ac.filled(slug, truth_keys, have)
             rf += found
             rt += total
             names = dict(truth)
@@ -224,6 +229,6 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_k=TR
                              'reason': bad[1]})
             else:
                 ok += 1
-    row = summarize(kind, cards, rf, rt, samp, ok, gaps)
+    row = summarize(kind, cards, rf, rt, samp, ok, gaps, filled)
     row['at_cap'] = at_cap                         # card parts that hold exactly their depth: titles beyond it are cut
     return row, gaps

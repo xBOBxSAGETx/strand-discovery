@@ -34,6 +34,7 @@ import accuracy_genres          # Genre / Theme cards against Wikidata (issue #9
 import accuracy_works           # Studios + Movie series, truth = Wikidata (issue #94)
 import accuracy_rules           # Network + rule-based cards: Decades, Acclaimed, Hidden Gems, Stand-up (issue #96)
 import accuracy_awards          # the 7 award cards, truth = Wikidata P166 / Wikipedia (issue #97)
+import accuracy_corrections     # our corrections list: keep / add / remove settle the gaps (issue #129)
 import accuracy_new             # every service's New card + the label of the dated precision errors (issue #97)
 
 SCHEDULES = {'vt', 'fb', 'wodp'}
@@ -117,6 +118,20 @@ def card_order(pages, slug):
                                          key=lambda p: int(p.stem.split('=')[1]))
     return [f"{m['type']}:{m['id'].split(':')[1]}" for f in files if f.exists()
             for m in json.loads(f.read_text(encoding='utf-8'))['metas']]
+
+
+def rule_reason_of(spec, today):
+    """reason_of(slug, key) for accuracy_corrections.settle: the card's OWN rules a title fails (text), or None. Only discover
+    cards carry those floors (votes / age / runtime / release type / status); any other card has no rule to name."""
+    def reason(slug, key):
+        card = by_slug_card(spec, slug)
+        if card.get('kind') != 'discover':
+            return None
+        media, tid = key.split(':')
+        f = accuracy_frame.facts(tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}", append_to_response=accuracy_frame.DETAIL_APPEND), media)
+        r = accuracy_frame.card_rules('popular', {**card, 'sort': card.get('sort', 'popular')}, media, spec)
+        return '; '.join(accuracy_frame.rule_breaks(f, media, r, today)) or None
+    return reason
 
 
 def load_candidates(state_dir, today):
@@ -455,6 +470,10 @@ def main():
         frame_sum.append(row)
         frame_gaps += gaps
     mark('all measured; writing the report')
+    audited = {c['slug'] for cs in list(frame_cards.values()) + list(people_pool.values()) + list(rules_cards.values()) +
+               list(genre_cards.values()) + list(works_cards.values()) for c in cs} | set(accuracy_awards.CARDS) | set(summary.get('new_card_modes', {}))
+    settled = accuracy_corrections.settle(frame_sum, frame_gaps, accuracy_corrections.current(), audited,
+                                          lambda slug: card_order(pages, slug), rule_reason_of(spec, today), summary['generated_at'][:10])
     if frame_gaps:
         with open(out / 'frame_gaps.csv', 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=list(frame_gaps[0]))
@@ -479,16 +498,17 @@ def main():
                          f"{g(r['precision_gaps'])} |")
     lines += accuracy_rules.extra_lines(rules_rows)
     for r in frame_sum:                           # #117: titles our own lists put on a card are shown apart, never counted as TMDB recall
-        if r.get('tmdb_recall') is not None:
+        if r.get('tmdb_recall') is not None and (r.get('filled') or 'corrections' in r):
             lines.append(f"\n{r['kind']} recall: {r['recall']} with our own lists, {r['tmdb_recall']} from TMDB alone "
                          f"({r['filled']} of {r['truth']} claim titles are on the cards because our must-have / corrections lists put them there; "
                          f"corrections applied {r['corrections']['found']}/{r['corrections']['total']})")
+    lines += accuracy_corrections.lines(frame_sum, settled['kept'])
     print('\n'.join(lines))
     problems = [f"precision: {e['provider']} {e['key']} not on the service ({e['precision']} precision, event "
                 f"{e['event_date']}, sources {e['sources']}, status {e['status']}) [{e['label']}: {e['reason']}] {e['urls'][:200]}" for e in errors]
     problems += [f"recall: {r['service']} {r['recall']}% is {r['drop']} points below the baseline {r['baseline']}%"
                  for r in rec if r.get('problem')]
-    problems += frame_problems(frame_sum, fbase)
+    problems += frame_problems(frame_sum, fbase) + settled['problems']
     problems += accuracy_rules.extra_problems(rules_rows, fbase, FRAME_MAX_DROP)
     # NOTES are shown, never problems: stale official lists (a manual refresh; the precision gate is the weekly guard)
     # and services with too few official arrivals in the window to measure
@@ -498,6 +518,9 @@ def main():
         notes.append(f"stale: official lists are for {', '.join(stale)} (run {today[:7]}); recall is measured on "
                      "that month - refresh generator/official_arrivals.csv + accuracy_baseline.json when convenient")
     notes += works_errors + award_notes + new_notes
+    if settled['pending']:
+        notes.append(f"{len(settled['pending'])} correction(s) added on or after the live build's day ({summary['generated_at'][:10]}) are not "
+                     'on the live cards yet: not judged this week')
     notes += [f"recall not measured for {r['service']}: {r['note']}" for r in rec if r['status'] == 'skipped']
     cmp = None
     if a.snapshot:                               # DuckDB reads all shelves; then the week-over-week compare (notes only)

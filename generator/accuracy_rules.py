@@ -62,6 +62,7 @@ Pure functions take plain dicts and are unit-tested offline (tests/test_accuracy
 import datetime as dt, gzip, io, random, urllib.request
 import build
 import accuracy_frame as af
+import accuracy_corrections as ac
 
 KINDS = ('network', 'decade', 'acclaimed', 'hidden', 'standup')
 TRUTH_K = 20                      # claim titles per medium
@@ -413,7 +414,7 @@ def imdb_truth(lines, sparql, k=TRUTH_K):
 def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, seed, imdb=None, truth_k=TRUTH_K):
     """Walk the cards. order_of(slug) -> ordered keys of the whole card; tmdb(path, **params) -> json; sparql(query) -> rows;
     imdb = {'movie': [keys], 'series': [keys]} (Acclaimed's outside list) or None. -> (summary row, gap rows)."""
-    gaps, rf, rt, samp, ok = [], 0, 0, 0, 0
+    gaps, rf, rt, samp, ok, filled = [], 0, 0, 0, 0, 0
     of = ot = 0                                      # outside recall (IMDb / Wikidata stand-up)
     tj = tok = tun = 0                               # truth precision (Wikidata-judged)
     runj = 0                                         # recall truth titles left out as unjudged (parent-organisation-only)
@@ -481,6 +482,7 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                 res = tmdb(f"/discover/{'movie' if media == 'movie' else 'tv'}", page=1, **claim_params(kind, card, media, today))
                 truth = [f"{media}:{x['id']}" for x in res.get('results', [])][:truth_k]
             found, total, missing = af.score(truth, have)
+            filled += ac.filled(slug, truth, have)
             rf += found
             rt += total
             c['found'] += found
@@ -543,7 +545,7 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                 gaps.append({'kind': kind, 'card': slug, 'side': 'truth_precision', 'key': k, 'name': f['name'] if f else k,
                              'label': lab, 'reason': why})
         per_card.append({**c, 'recall': af.pct(c['found'], c['truth']), 'precision': af.pct(c['ok'], c['judged'])})
-    row = af.summarize(kind, cards, rf, rt, samp, ok, gaps)
+    row = af.summarize(kind, cards, rf, rt, samp, ok, gaps, filled)
 
     def by(side):
         return {lab: sum(1 for g in gaps if g['side'] == side and g['label'] == lab) for lab in af.LABELS}

@@ -38,6 +38,7 @@ Pure functions take plain dicts and are unit-tested offline (tests/test_accuracy
 import datetime as dt, json, random, time, urllib.error, urllib.parse, urllib.request
 import build
 import accuracy_frame as af
+import accuracy_corrections as ac
 
 WD_URL = 'https://query.wikidata.org/sparql'
 UA = 'strand-discovery/1.0 (accuracy check; +https://github.com/xBOBxSAGETx/strand-discovery)'
@@ -89,9 +90,10 @@ def person_query(pid):
 
 
 def works_query(kind, pid):
-    """Films + TV series whose director / cast member is the person: one row per work with its TMDB ids, earliest date
-    and whether Wikidata calls it a short film."""
-    return (f'SELECT ?w (MAX(?m0) AS ?m) (MAX(?t0) AS ?t) (MIN(?d0) AS ?d) (MAX(?s0) AS ?sh) WHERE {{ '
+    """Films + TV series whose director / cast member is the person: one row per work with ALL its TMDB ids (a space-
+    separated list: an item may carry a stale id next to the live one, #129), earliest date and whether Wikidata calls
+    it a short film."""
+    return (f'SELECT ?w (GROUP_CONCAT(DISTINCT STR(?m0); separator=" ") AS ?m) (GROUP_CONCAT(DISTINCT STR(?t0); separator=" ") AS ?t) (MIN(?d0) AS ?d) (MAX(?s0) AS ?sh) WHERE {{ '
             f'?p wdt:P4985 "{int(pid)}". ?w wdt:{PROP[kind]} ?p. VALUES ?c {{ {FILM} {TV_SERIES} }} ?w wdt:P31/wdt:P279* ?c. '
             f'OPTIONAL {{ ?w wdt:P4947 ?m0 }} OPTIONAL {{ ?w wdt:P4983 ?t0 }} '
             f'OPTIONAL {{ ?w wdt:P577 ?d1 }} OPTIONAL {{ ?w wdt:P580 ?d2 }} BIND(COALESCE(?d1, ?d2) AS ?d0) '
@@ -106,12 +108,21 @@ def parse_works(rows, today):
         if date and date > today:
             unreleased += 1
             continue
-        keys = ([f"movie:{r['m']}"] if r.get('m') else []) + ([f"series:{r['t']}"] if r.get('t') else [])
+        keys = [f'movie:{i}' for i in (r.get('m') or '').split()] + [f'series:{i}' for i in (r.get('t') or '').split()]
         if not keys:
             unmapped.append(wd)
         for k in keys:
             works[k] = {'wd': wd, 'date': date, 'short': r.get('sh') == '1'}
     return works, sorted(unmapped), unreleased
+
+
+def item_truth(works, have):
+    """One claim key per (Wikidata item, medium), #129: an item that carries several TMDB ids counts as found when ANY of
+    them is on the card (-> the one on the card), else it stands for its lowest id. Sorted, like the old truth list."""
+    groups = {}
+    for k, w in works.items():
+        groups.setdefault((w['wd'], k.split(':')[0]), []).append(k)
+    return sorted(next((x for x in sorted(ks) if x in have), sorted(ks)[0]) for ks in groups.values())
 
 
 def sample_query(kind, media, ids):
@@ -243,7 +254,7 @@ def credit_name(cs):
 def measure_people(kind, pool, spec, order_of, tmdb, sparql, today, n_cards, n_sample, seed):
     """Walk the seeded pool until n_cards cards that Wikidata knows are measured. order_of(slug) -> ordered keys of the card;
     tmdb(path, **params) -> json; sparql(query) -> rows. Returns (summary row, gap rows)."""
-    gaps, rf, rt, samp, ok, unjudged, unmapped = [], 0, 0, 0, 0, 0, 0
+    gaps, rf, rt, samp, ok, unjudged, unmapped, filled = [], 0, 0, 0, 0, 0, 0, 0
     measured, skipped, per_card = [], [], []
     medium = {m: [0, 0] for m in ('movie', 'series')}
     wd_short = [0, 0]                                     # Wikidata short films: [on the card, total]
@@ -274,16 +285,17 @@ def measure_people(kind, pool, spec, order_of, tmdb, sparql, today, n_cards, n_s
             status = lambda media, tid: actor_status(media, tid, ctx, today)
             title_of = lambda media, tid: credit_name(ctx['by'][(media, tid)]) if ctx['by'].get((media, tid)) else None
         measured.append(card)
-        truth = sorted(works)
+        truth = item_truth(works, have)
         found, total, missing = af.score(truth, have)
+        filled += ac.filled(slug, truth, have)
         rf += found
         rt += total
         for m in medium:
             ks = [k for k in truth if k.startswith(m + ':')]
             medium[m][0] += sum(1 for k in ks if k in have)
             medium[m][1] += len(ks)
-        for k, w in works.items():
-            if w['short']:
+        for k in truth:
+            if works[k]['short']:
                 wd_short[1] += 1
                 wd_short[0] += k in have
         for k in missing:
@@ -330,7 +342,7 @@ def measure_people(kind, pool, spec, order_of, tmdb, sparql, today, n_cards, n_s
                 gaps.append({'kind': kind, 'card': slug, 'side': 'precision', 'key': k, 'name': name, 'label': lab, 'reason': why})
         per_card.append({'card': slug, 'items': len(order), 'truth': total, 'found': found, 'recall': af.pct(found, total),
                          'judged': c_judged, 'ok': c_ok, 'precision': af.pct(c_ok, c_judged), 'unmapped': len(unm)})
-    row = af.summarize(kind, measured, rf, rt, samp, ok, gaps)
+    row = af.summarize(kind, measured, rf, rt, samp, ok, gaps, filled)
     row.update({'by_medium': {m: {'found': f, 'total': t, 'recall': af.pct(f, t)} for m, (f, t) in medium.items()},
                 'unmapped': unmapped, 'unjudged': unjudged, 'no_wikidata': skipped, 'per_card': per_card,
                 'wikidata_short_films': {'on_card': wd_short[0], 'total': wd_short[1]}})
