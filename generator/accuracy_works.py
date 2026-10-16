@@ -289,7 +289,15 @@ def wd_lookup(media, ids, props):
 
 
 def detail_facts(tmdb, media, tid):
-    det = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}", append_to_response=STUDIO_DETAIL)
+    """One title's facts; None when TMDB has no such id (twice in a row: a dead / merged TMDB id on Wikidata)."""
+    for attempt in (1, 2):
+        try:
+            det = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}", append_to_response=STUDIO_DETAIL)
+            break
+        except RuntimeError:
+            if attempt == 2:
+                return None
+            time.sleep(3)
     f = af.facts(det, media)
     f['companies'] = {c['id'] for c in det.get('production_companies') or []}
     f['collection'] = (det.get('belongs_to_collection') or {}).get('id')
@@ -340,7 +348,9 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
         for k in missing:
             media, tid = k.split(':')
             f = detail(media, int(tid))
-            if studio:
+            if f is None:
+                lab, why = 'source limit', 'TMDB has no title with the id Wikidata carries (dead or merged id)'
+            elif studio:
                 lab, why = classify_studio_missing(f, r['movie'], card, listed, hand_for(slug), excluded.get(slug, set()),
                                                    today, counts['movie'])
             else:
@@ -356,12 +366,15 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
             media, tid = k.split(':')
             f = detail(media, int(tid))
             w = wd[media].get(int(tid))
-            lab, why = (classify_studio_extra(f, r['movie'], today, w) if studio
-                        else classify_series_extra(f, media, card, r.get(media) or r[medias[0]], today, w))
+            if f is None:
+                lab, why = 'source limit', 'TMDB returned no such title'
+            else:
+                lab, why = (classify_studio_extra(f, r['movie'], today, w) if studio
+                            else classify_series_extra(f, media, card, r.get(media) or r[medias[0]], today, w))
             for tag in prec:
                 if why.startswith(tag):
                     prec[tag] += 1
-            gaps.append({'kind': kind, 'card': slug, 'side': 'precision', 'key': k, 'name': f['name'], 'label': lab, 'reason': why})
+            gaps.append({'kind': kind, 'card': slug, 'side': 'precision', 'key': k, 'name': f['name'] if f else k, 'label': lab, 'reason': why})
     row = af.summarize(kind, cards, rf, rt, samp, ok, gaps)
     row['at_cap'] = at_cap
     row['precision_unconfirmed'], row['precision_disagrees'] = prec['unconfirmed'], prec['disagrees']
