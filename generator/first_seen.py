@@ -18,7 +18,7 @@ with popularity, for build.py) and fs_summary.json (per-provider size / adds / r
 
 Budget (copilot ruling): subscription services first, free services last; the free-service enumeration is skipped
 (and reported) if the logger would push the whole run past MAX_REQUESTS or MAX_MINUTES.
-Env: TMDB_API_KEY (never printed), SD_WORKERS, SD_FS_ONLY (comma list of slugs), SD_TODAY / SD_FS_CAP (tests only),
+Env: TMDB_API_KEY (never printed), SD_WORKERS, SD_FS_ONLY (comma list of slugs; the other services' new_candidates / fs_summary entries are kept, #79), SD_TODAY / SD_FS_CAP (tests only),
      SD_BUILD_REQUESTS_EST (requests the build step will need; default from the previous summary, else 14000).
 """
 import datetime as dt, gzip, json, os, sys, time
@@ -245,6 +245,16 @@ def main():
     summary['requests'] = build._calls[0]
     summary['discover_fill'] = {'pages': _fill[0], 'recovered': _fill[1]}
     summary['seconds'] = round(time.monotonic() - t0)
+    if os.environ.get('SD_FS_ONLY'):          # #79: a run for a few services refreshes only those; the rest stay as saved
+        for name, fresh_part in (('new_candidates.json', candidates), ('fs_summary.json', summary['providers'])):
+            try:
+                kept = json.loads((state_dir / name).read_text(encoding='utf-8'))
+            except (OSError, ValueError):
+                kept = {}
+            if name == 'new_candidates.json':
+                candidates = {**kept, **candidates}
+            else:
+                summary['providers'] = {**(kept.get('providers') or {}), **summary['providers']}
     (state_dir / 'new_candidates.json').write_text(json.dumps(candidates, separators=(',', ':')), encoding='utf-8')
     (state_dir / 'fs_summary.json').write_text(json.dumps(summary, indent=1), encoding='utf-8')
     print(json.dumps({k: v for k, v in summary.items() if k != 'providers'}))

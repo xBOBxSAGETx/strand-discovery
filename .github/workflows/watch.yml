@@ -1,0 +1,76 @@
+name: watch
+
+# #79: every 5 minutes, ask the sources "anything new?" (generator/watch.py: 5 news feeds, 3 MDBList exports, 42 TMDB
+# discover page-1 fingerprints = about 50 requests when nothing moved). If something moved, start build.yml on main with
+# the shelves it touches (cards=<list>), or a full build when more than 150 shelves would rebuild. The nightly full build
+# in build.yml stays as the safety net (it also picks up TMDB's own edits to titles, which the watcher does not follow).
+#
+# Off until the repository variable SD_WATCH is set to "on" (Settings > Variables), like SD_SCHEDULE_DEPLOY for the
+# nightly: merging this file starts nothing. A manual run always works; it defaults to "dry" (read and report only).
+#
+# The watcher state (validators, body hashes, provider fingerprints) lives in the Actions cache. It is saved only after
+# watch.py says it dispatched (or had nothing to dispatch); a failed dispatch exits 1 and saves nothing, so the same change
+# is found again on the next run. While a build of main is queued or running, nothing is dispatched (see watch.py: GitHub
+# keeps ONE pending run per concurrency group and cancels an older pending one, which would drop its shelves).
+#
+# `gh workflow run` with the job's GITHUB_TOKEN: GitHub's docs say events triggered by the GITHUB_TOKEN create no new
+# workflow runs "with the exception of workflow_dispatch and repository_dispatch", and the dispatch endpoint needs the
+# token's "Actions" repository permission = write (the `actions: write` below). Only a live run proves this repo's setup.
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      dry:
+        description: 'Read and report only: dispatch nothing, save no state (off = a real run: dispatches and saves)'
+        type: boolean
+        default: true
+
+permissions: {}
+
+# one watcher at a time; a run that waits behind another is replaced by the next tick (the watcher keeps no queue)
+concurrency:
+  group: watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    if: github.event_name == 'workflow_dispatch' || vars.SD_WATCH == 'on'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read         # checkout
+      actions: write         # gh workflow run build.yml, gh run list (is a build of main already queued / running?)
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      # newest saved state (keys are per run; the newest prefix match wins). No cache = a baseline run: reports nothing.
+      - name: Restore the watcher state
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: watch-state
+          key: sd-watch-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: sd-watch-
+      - name: Watch
+        id: watch
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          DRY: ${{ inputs.dry }}
+        run: |
+          set -o pipefail
+          mode=--dispatch
+          if [ "$DRY" = true ]; then mode=--dry; fi
+          python generator/watch.py --cache watch-state --out changes.json "$mode" | tee -a "$GITHUB_STEP_SUMMARY"
+      # Only after the step above succeeded (a failed dispatch fails it), and only when the state changed.
+      - name: Save the watcher state
+        if: success() && steps.watch.outputs.dirty == 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: watch-state
+          key: sd-watch-${{ github.run_id }}-${{ github.run_attempt }}

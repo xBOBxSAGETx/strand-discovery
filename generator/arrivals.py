@@ -1,6 +1,6 @@
 """Arrival signals for the "New on X" cards: when titles arrive on each service, from published schedules.
 
-  python arrivals.py <out dir> [--backfill] [--today YYYY-MM-DD]     (daily, after the first_seen logger)
+  python arrivals.py <out dir> [--backfill] [--today YYYY-MM-DD]     (each scheduled run, after the first_seen logger)
 
 TMDB's watch-provider data says what is on a service, not when it arrived; the first_seen logger (our own daily
 snapshots) needs 14 days of history. These sources publish the dates directly:
@@ -39,7 +39,9 @@ from the stored signals, by the logger - so a failing source or step falls back 
 Outputs in <out dir>: arrivals.json (today's merged signals), rows.csv, check_rows.csv, parse_stats.csv,
 arrivals_summary.json (per-source posts / rows / accepted / errors + warnings, read by health.py). A source whose
 resolve rate drops 25+ points below its recent median is a warning (resolve_rate_check(), history in the state).
-Env: TMDB_API_KEY (never printed), SD_CACHE, SD_STATE (default state), SD_HTTP_CACHE (default cache/http).
+Env: TMDB_API_KEY (never printed), SD_CACHE, SD_STATE (default state), SD_HTTP_CACHE (default cache/http),
+SD_ARRIVALS_LISTING_MAX_AGE (hours a feed / sitemap listing is reused before a conditional GET; default 20; the watcher-started
+partial rebuild sets 0 so a feed that just changed is read now, #79).
 """
 import csv, datetime as dt, gzip, hashlib, html, json, os, re, statistics, sys, time, unicodedata
 import urllib.error, urllib.parse, urllib.request
@@ -66,6 +68,7 @@ UA = 'strand-discovery/1.0 (personal non-commercial; +https://github.com/xBOBxSA
 # 'arrivals-v2': the earlier namespace ('arrivals') held page bodies; it is deleted on start and never read again.
 HTTP_ROOT = Path(os.environ.get('SD_HTTP_CACHE', 'cache/http'))
 HTTP_CACHE = HTTP_ROOT / 'arrivals-v2'
+LISTING_MAX_AGE = float(os.environ.get('SD_ARRIVALS_LISTING_MAX_AGE') or 20.0)
 PARSER_VERSION = 5              # bump on ANY parser change: stored parsed data from another version is refetched in full
 # politeness: at least 3 s between requests to any host; film-book.com's robots Crawl-delay is 5 s; Vital Thrills
 # rate-limits (HTTP 429 to 17 fetches at ~1 s spacing from a GitHub runner, 2026-09-28): 5 s as a courtesy
@@ -121,7 +124,7 @@ def _record_path(url, parser):
     return HTTP_CACHE / (hashlib.sha256(f'{parser}|{url}'.encode()).hexdigest()[:24] + '.json')
 
 
-def get_parsed(url, parser, parse, max_age=20.0):
+def get_parsed(url, parser, parse, max_age=LISTING_MAX_AGE):
     """(status, data, from_cache). `parse(text)` -> JSON-serialisable data; `parser` names it (with PARSER_VERSION it
     keys the record). Records younger than max_age hours are reused; older ones are revalidated with ETag /
     Last-Modified (304 -> the stored data). A network error falls back to the stored data if there is any."""
@@ -612,12 +615,12 @@ def post_body(t):
 
 def sitemap_posts(site, index, n=3):
     """Post URLs from the newest n post sitemaps listed in a WordPress sitemap index."""
-    st, locs, _ = get_parsed(f'{site}/{index}', 'sitemap', loc_urls, max_age=20)
+    st, locs, _ = get_parsed(f'{site}/{index}', 'sitemap', loc_urls, max_age=LISTING_MAX_AGE)
     maps = [u for u in locs if re.search(r'post-sitemap\d*\.xml', u)] if st == 200 else []
     maps.sort(key=lambda u: int((re.search(r'post-sitemap(\d*)\.xml', u).group(1) or 1)))
     urls = []
     for u in maps[-n:]:
-        s, x, _ = get_parsed(u, 'sitemap', loc_urls, max_age=20)
+        s, x, _ = get_parsed(u, 'sitemap', loc_urls, max_age=LISTING_MAX_AGE)
         urls += x if s == 200 else []
     return urls
 
@@ -762,7 +765,7 @@ def src_wodp(months, backfill, stats):
 # together with the signals those posts produced; a new PARSER_VERSION re-opens the catch-up by itself. Once every
 # in-window post is read, the listing is checked again only every CATCHUP_RESCAN_DAYS (0 requests in between).
 # A 429/503 in the catch-up stops that host (circuit breaker) and is a note, not a health warning; the catch-up
-# resumes next run. CATCHUP_STALL_RUNS runs in a row without progress while posts are pending = one warning.
+# resumes next run. CATCHUP_STALL_RUNS days in a row without progress (several runs in one day count once) while posts are pending = one warning.
 # (A 429 in the regular feed path stays ONE health warning per stopped host, as before.) Weekly, reread() also
 # revalidates the done posts of the current and next month, within the same per-run cap.
 CATCHUP_MAX = {'vt': VT_BACKFILL_MAX, 'wodp': 20}
@@ -773,6 +776,13 @@ CATCHUP_SOURCES = {'vt': ('https://www.vitalthrills.com', 'sitemap_index.xml', v
                    'wodp': ('https://whatsondisneyplus.com', 'sitemap.xml', wodp_match, wodp_post, 'wodp-post')}
 PARSED_OK = {'vt': set(), 'wodp': set()}      # posts read (HTTP 200) by this run's feed / backfill path
 GONE = (404, 410)                             # a post that no longer exists is not waited for
+
+
+def _stall(st, today):
+    """One stalled DAY (#79: the watcher can start several builds a day; CATCHUP_STALL_RUNS counts days with no progress, not runs)."""
+    if st.get('stalled_on') != today:
+        st['stalled'] = st.get('stalled', 0) + 1
+        st['stalled_on'] = today
 
 
 def catchup(state, months, today_d, backfill):
@@ -805,13 +815,13 @@ def catchup(state, months, today_d, backfill):
                             f"done (listing re-checked on {dt.date.fromisoformat(st['scanned']) + dt.timedelta(days=CATCHUP_RESCAN_DAYS)})")
         elif host in _stopped:
             rep['state'] = f'skipped: {host} stopped earlier in this run ({_stopped[host]})'
-            st['stalled'] = st.get('stalled', 0) + 1
+            _stall(st, today)
         else:
             urls = sitemap_posts(site, index)
             inwin = {u: info for u in dict.fromkeys(urls) if (info := match(u, months))}
             if not inwin:
                 rep['state'] = 'skipped: the post sitemaps listed no post in the window (unavailable?)'
-                st['stalled'] = st.get('stalled', 0) + 1
+                _stall(st, today)
             else:
                 # newest month first: this and next month's posts date the New cards; older months only history
                 todo = sorted((u for u in inwin if u not in done), key=lambda u: inwin[u][-2:], reverse=True)
@@ -839,14 +849,17 @@ def catchup(state, months, today_d, backfill):
                         notes.append(f'{u}: HTTP {s} (retried next run)')
                 pending = sum(1 for u in inwin if u not in done)
                 st.update(scanned=today, listed=len(inwin), pending=pending)
-                st['stalled'] = 0 if read or not pending else st.get('stalled', 0) + 1
+                if read or not pending:
+                    st['stalled'] = 0
+                else:
+                    _stall(st, today)
                 rep.update(listed=len(inwin), done=len(inwin) - pending, pending=pending, fetched=fetched, read=read,
                            eta_runs=-(-pending // cap),
                            state=('done' if not pending else f'stopped: {stop}' if stop else 'catching up'))
         if not backfill:
             fetched = reread(name, st, done, match, fetch, host, cap, fetched, months, today_d, rows, rep)
         if st.get('pending') and st['stalled'] >= CATCHUP_STALL_RUNS:
-            warns.append(f"{name} catch-up: no progress for {st['stalled']} runs in a row with {st['pending']} posts "
+            warns.append(f"{name} catch-up: no progress for {st['stalled']} days in a row with {st['pending']} posts "
                          f"pending ({rep['state']})")
     return rows, report, warns, led
 
