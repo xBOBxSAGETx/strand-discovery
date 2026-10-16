@@ -130,6 +130,8 @@ class Rules(unittest.TestCase):
         keep, wide = ar.split_wide(rows)
         self.assertEqual([r['id'] for r in keep], ['1', '3'])
         self.assertEqual([r['id'] for r in wide], ['2'])
+        self.assertIn('?spec', ar.broadcaster_truth_query(['Q191472', 'Q9531']))
+        self.assertNotIn('?spec', ar.broadcaster_truth_query(['Q215616']))     # PBS: the extra column timed Wikidata out (HTTP 500)
         self.assertEqual(ar.parse_judge([{'id': '5', 'n': '2', 'hit': '1'}], 'series'), {'series:5': (0, False)})   # unjudged
         self.assertEqual(ar.parse_judge([{'id': '6', 'n': '1', 'hit': '2'}], 'series'), {'series:6': (1, True)})
 

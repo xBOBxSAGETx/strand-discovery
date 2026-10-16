@@ -258,8 +258,9 @@ def _values(qs):
 
 def broadcaster_truth_query(qs, limit=CANDIDATES):
     """Series whose ORIGINAL broadcaster (P449) is one of the network items, with a TMDB series id, most notable first."""
-    par = ', '.join('wd:' + q for q in sorted(PARENT_ONLY))
-    return (f'SELECT ?id (MAX(?sl0) AS ?sl) (MIN(?d0) AS ?d) (MAX(IF(?B IN ({par}), 0, 1)) AS ?spec) '
+    par = ', '.join('wd:' + q for q in sorted(PARENT_ONLY & set(qs)))
+    spec = f' (MAX(IF(?B IN ({par}), 0, 1)) AS ?spec)' if par else ''       # only cards that list a parent organisation pay for it
+    return (f'SELECT ?id (MAX(?sl0) AS ?sl) (MIN(?d0) AS ?d){spec} '
             f'WHERE {{ VALUES ?B {{ {_values(qs)} }} ?w wdt:P449 ?B. '
             f'?w wdt:P4983 ?id. ?w wikibase:sitelinks ?sl0. OPTIONAL {{ ?w wdt:P580 ?d1 }} OPTIONAL {{ ?w wdt:P577 ?d2 }} '
             f'BIND(COALESCE(?d1, ?d2) AS ?d0) }} GROUP BY ?id ORDER BY DESC(?sl) LIMIT {int(limit)}')
