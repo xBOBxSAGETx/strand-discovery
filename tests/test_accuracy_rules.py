@@ -73,10 +73,13 @@ class Standup(unittest.TestCase):
         self.assertIn('P279*', ar.class_closure_query(ar.STANDUP_CLASSES))
 
     def test_subclass_counts_and_truth_merges_both_properties(self):
-        rows = [{'id': '1', 'x': 'http://www.wikidata.org/entity/Q106633193'}, {'id': '1', 'x': 'http://www.wikidata.org/entity/Q11424'},
-                {'id': '2', 'x': 'http://www.wikidata.org/entity/Q11424'}, {'id': '3'}]
+        E = 'http://www.wikidata.org/entity/'
+        rows = [{'id': '1', 'g': E + 'Q106633193', 't': E + 'Q11424'}, {'id': '1', 'g': E + 'Q5', 't': E + 'Q11424'},
+                {'id': '2', 'g': E + 'Q5'}, {'id': '3', 't': E + 'Q11424'}, {'id': '4', 't': E + 'Q145806'}]
         got = ar.parse_judge_classes(rows, 'movie', ['Q145806', 'Q106633193'])
-        self.assertEqual(got, {'movie:1': (2, True), 'movie:2': (1, False), 'movie:3': (0, False)})   # 3 is unjudged, not wrong
+        # 1: stand-up subclass genre = ok; 2: another genre = wrong; 3: no genre statement at all = unjudged (not wrong);
+        # 4: no genre but a stand-up type = ok
+        self.assertEqual(got, {'movie:1': (2, True), 'movie:2': (1, False), 'movie:3': (0, False), 'movie:4': (1, True)})
 
         def sparql(q):
             return [{'id': '9', 'sl': '5'}] if 'wdt:P31 ' in q else [{'id': '8', 'sl': '7'}, {'id': '9', 'sl': '5'}]
@@ -113,6 +116,23 @@ class Rules(unittest.TestCase):
         nokw = ar.facts(det(6, date='2015-01-01', votes=900, runtime=60), 'movie')
         self.assertEqual(ar.classify_extra(nokw, 'movie', card, r, TODAY)[0], 'source limit')
 
+    def test_second_tmdb_id_of_the_cards_own_network_is_a_code_bug(self):
+        """The Pitt (HBO Max, TMDB lists 8304 / 6783 not 3186), Dinosaur Train (PBS Kids 122), Dexter: Original Sin (6631)."""
+        for slug, nets in (('network-hbo-max', (8304, 6783)), ('network-pbs', (122,)), ('network-showtime', (6631,))):
+            card, r = self.r(slug, 'series')
+            f = ar.facts(det(9, movie=False, nets=nets), 'series')
+            lab, why = ar.classify_missing(f, 'series', card, r, TODAY, 10)
+            self.assertEqual(lab, 'code bug', slug)
+            self.assertIn('second TMDB id', why)
+
+    def test_parent_organisation_only_truth_is_left_out_and_counted(self):
+        rows = [{'id': '1', 'spec': '1'}, {'id': '2', 'spec': '0'}, {'id': '3'}]
+        keep, wide = ar.split_wide(rows)
+        self.assertEqual([r['id'] for r in keep], ['1', '3'])
+        self.assertEqual([r['id'] for r in wide], ['2'])
+        self.assertEqual(ar.parse_judge([{'id': '5', 'n': '2', 'hit': '1'}], 'series'), {'series:5': (0, False)})   # unjudged
+        self.assertEqual(ar.parse_judge([{'id': '6', 'n': '1', 'hit': '2'}], 'series'), {'series:6': (1, True)})
+
     def test_network_membership_is_a_tag_not_a_rule(self):
         card, r = self.r('network-hbo', 'series')
         other = ar.facts(det(7, movie=False, nets=(213,)), 'series')
@@ -133,7 +153,7 @@ class Measure(unittest.TestCase):
         def sparql(q):
             if 'ORDER BY DESC(?sl)' in q:
                 return [{'id': '1399', 'sl': '9'}, {'id': '99', 'sl': '3'}]
-            return [{'id': '1399', 'n': '1', 'hit': '1'}, {'id': '22', 'n': '1', 'hit': '0'}]
+            return [{'id': '1399', 'n': '1', 'hit': '2'}, {'id': '22', 'n': '1', 'hit': '0'}]
         row, gaps = ar.measure_rules('network', [card], SPEC, lambda s: ['series:1399', 'series:22'], tmdb, sparql, TODAY, 20, 'x')
         self.assertEqual((row['found'], row['truth'], row['recall']), (1, 2, 50.0))
         miss = [g for g in gaps if g['side'] == 'recall']

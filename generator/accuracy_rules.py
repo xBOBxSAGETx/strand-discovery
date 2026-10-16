@@ -108,7 +108,15 @@ NETWORKS = {
 
 # Judge-only: a Wikidata broadcaster that also counts as "ok" for the card, but is not used to build its truth list
 # (Max originals are filed under HBO; using HBO's whole catalogue as Max's truth would be wrong).
-JUDGE_ALSO = {3186: ['Q23633'], 14: ['Q3245159']}       # PBS Kids is its own TMDB network, so it is not PBS's truth
+JUDGE_ALSO = {3186: ['Q23633', 'Q47494573', 'Q106651154', 'Q94641886', 'Q3502585', 'Q6321919'], 14: ['Q3245159']}       # PBS Kids is its own TMDB network, so it is not PBS's truth
+
+
+# A parent organisation, not a channel: a title whose only statement for the card is this one cannot be placed on the card
+# (Wikidata's "BBC" may be BBC One or Two), so it is left out of the score as unjudged instead of counted either way.
+PARENT_ONLY = {'Q9531'}
+# The same network under a second TMDB id the card's with_networks lacks: TMDB lists a title under it, Wikidata agrees, and
+# the card misses it (arrivals.py: "TMDB has two, 3186 and 8304"). card network_id -> the other ids.
+SECOND_IDS = {3186: [8304, 6783], 14: [122], 67: [6631]}
 
 
 def pick_cards(spec, kind, n, seed):
@@ -188,6 +196,9 @@ def classify_missing(f, media, card, r, today, mcount):
     """Label ONE claim title the card lacks. -> (label, reason)."""
     bs = breaks(f, media, card, r, today)
     tag = [t for k, t in bs if k == 'tag']
+    second = sorted(f.get('networks', set()) & set(SECOND_IDS.get(card.get('network_id'), []))) if media == 'series' else []
+    if second and not f['networks'] & card_networks(card):
+        return 'code bug', f"card misses its network's second TMDB id {second[0]} (TMDB lists the title under it; the card's with_networks lacks it)"
     if tag:
         return 'source limit', '; '.join(tag) + ' (the two sources disagree)'
     if bs:
@@ -247,7 +258,9 @@ def _values(qs):
 
 def broadcaster_truth_query(qs, limit=CANDIDATES):
     """Series whose ORIGINAL broadcaster (P449) is one of the network items, with a TMDB series id, most notable first."""
-    return (f'SELECT ?id (MAX(?sl0) AS ?sl) (MIN(?d0) AS ?d) WHERE {{ VALUES ?B {{ {_values(qs)} }} ?w wdt:P449 ?B. '
+    par = ', '.join('wd:' + q for q in sorted(PARENT_ONLY))
+    return (f'SELECT ?id (MAX(?sl0) AS ?sl) (MIN(?d0) AS ?d) (MAX(IF(?B IN ({par}), 0, 1)) AS ?spec) '
+            f'WHERE {{ VALUES ?B {{ {_values(qs)} }} ?w wdt:P449 ?B. '
             f'?w wdt:P4983 ?id. ?w wikibase:sitelinks ?sl0. OPTIONAL {{ ?w wdt:P580 ?d1 }} OPTIONAL {{ ?w wdt:P577 ?d2 }} '
             f'BIND(COALESCE(?d1, ?d2) AS ?d0) }} GROUP BY ?id ORDER BY DESC(?sl) LIMIT {int(limit)}')
 
@@ -281,6 +294,13 @@ def standup_truth(sparql, media, classes, today, k):
     return parse_truth(ordered, media, today)[:k]
 
 
+def split_wide(rows):
+    """-> (rows the card can be judged on, rows whose only statement is a parent organisation). Rows with no 'spec' column
+    (other kinds, tests) are all kept."""
+    wide = [r for r in rows if r.get('spec') == '0']
+    return [r for r in rows if r.get('spec') != '0'], wide
+
+
 def parse_truth(rows, media, today):
     """-> [key] in notability order, unreleased dropped."""
     return [f"{media}:{r['id']}" for r in rows if not ((r.get('d') or '')[:10] > today)]
@@ -292,22 +312,32 @@ def judge_query(kind, media, ids, qs):
     p = 'P4947' if media == 'movie' else 'P4983'
     vals = ' '.join(f'"{i}"' for i in ids)
     if kind == 'network':
+        own = [q for q in qs if q not in PARENT_ONLY]
+        par = [q for q in qs if q in PARENT_ONLY]
+        hit = f'EXISTS {{ VALUES ?B {{ {_values(own)} }} ?w wdt:P449 ?B }}'
+        score = f'IF({hit}, 2, IF(EXISTS {{ VALUES ?B {{ {_values(par)} }} ?w wdt:P449 ?B }}, 1, 0))' if par else f'IF({hit}, 2, 0)'
+        # hit 2 = the network itself, 1 = only its parent organisation (cannot tell which channel: unjudged), 0 = another broadcaster
         return (f'SELECT ?id (MAX(?hit0) AS ?hit) (COUNT(DISTINCT ?x) AS ?n) WHERE {{ VALUES ?id {{ {vals} }} ?w wdt:{p} ?id. '
-                f'OPTIONAL {{ ?w wdt:P449 ?x }} BIND(IF(EXISTS {{ VALUES ?B {{ {_values(qs)} }} ?w wdt:P449 ?B }}, 1, 0) AS ?hit0) }} GROUP BY ?id')
-    # stand-up: the title's own types and genres, one row each; "is it stand-up" is decided in Python against the closure
-    return f'SELECT ?id ?x WHERE {{ VALUES ?id {{ {vals} }} ?w wdt:{p} ?id. OPTIONAL {{ ?w (wdt:P136|wdt:P31) ?x }} }}'
+                f'OPTIONAL {{ ?w wdt:P449 ?x }} BIND({score} AS ?hit0) }} GROUP BY ?id')
+    # stand-up: the title's genres (P136) and types (P31), kept apart; "is it stand-up" is decided in Python against the closure
+    return (f'SELECT ?id ?g ?t WHERE {{ VALUES ?id {{ {vals} }} ?w wdt:{p} ?id. OPTIONAL {{ ?w wdt:P136 ?g }} '
+            f'OPTIONAL {{ ?w wdt:P31 ?t }} }}')
 
 
 def parse_judge_classes(rows, media, closure):
-    """Rows (id, x) -> {key: (statements, is_it)}: is_it when one of the title's own types / genres is in the closure."""
-    seen, out = {}, {}
+    """Rows (id, g genre, t type) -> {key: (statements, is_it)}. A title is judged only when Wikidata gives it a genre (P136),
+    or a type that is stand-up; no genre statement at all = (0, False) = unjudged, never wrong."""
+    gs, ts, out = {}, {}, {}
     for r in rows:
         k = f"{media}:{r['id']}"
-        s = seen.setdefault(k, set())
-        if r.get('x'):
-            s.add(r['x'].rsplit('/', 1)[-1])
-    for k, s in seen.items():
-        out[k] = (len(s), bool(s & set(closure)))
+        g, t = gs.setdefault(k, set()), ts.setdefault(k, set())
+        if r.get('g'):
+            g.add(r['g'].rsplit('/', 1)[-1])
+        if r.get('t'):
+            t.add(r['t'].rsplit('/', 1)[-1])
+    for k in gs:
+        hit = bool((gs[k] | ts[k]) & set(closure))
+        out[k] = (len(gs[k]) or (1 if hit else 0), hit)
     return out
 
 
@@ -317,7 +347,8 @@ def parse_judge(rows, media):
     for r in rows:
         k = f"{media}:{r['id']}"
         n, hit = out.get(k, (0, False))
-        out[k] = (max(n, int(r.get('n') or 0)), hit or r.get('hit') == '1')
+        h = r.get('hit')
+        out[k] = (max(n, int(r.get('n') or 0)) if h != '1' else 0, hit or h == '2')     # parent-organisation-only = unjudged
     return out
 
 
@@ -380,6 +411,7 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
     gaps, rf, rt, samp, ok = [], 0, 0, 0, 0
     of = ot = 0                                      # outside recall (IMDb / Wikidata stand-up)
     tj = tok = tun = 0                               # truth precision (Wikidata-judged)
+    runj = 0                                         # recall truth titles left out as unjudged (parent-organisation-only)
     no_truth, at_cap, per_card, cache, clo = [], [], [], {}, []
 
     def closure():
@@ -421,7 +453,11 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                 if not qs:
                     no_truth.append(slug)
                     continue
-                truth = parse_truth(sparql(broadcaster_truth_query(qs)), media, today)[:truth_k]
+                rows = sparql(broadcaster_truth_query(qs))
+                keep, wide = split_wide(rows)
+                wide_keys = {f"{media}:{r['id']}" for r in wide}
+                runj += sum(1 for k in parse_truth(rows, media, today)[:truth_k] if k in wide_keys)    # truth wider than the card
+                truth = parse_truth(keep, media, today)[:truth_k]
             else:
                 res = tmdb(f"/discover/{'movie' if media == 'movie' else 'tv'}", page=1, **claim_params(kind, card, media, today))
                 truth = [f"{media}:{x['id']}" for x in res.get('results', [])][:truth_k]
@@ -496,7 +532,7 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                           'found': of, 'truth': ot, 'recall': af.pct(of, ot), 'gaps': by('outside_recall')}
     if kind in ('network', 'standup'):
         row['truth_precision'] = {'ok': tok, 'judged': tj, 'unjudged': tun, 'precision': af.pct(tok, tj), 'gaps': by('truth_precision')}
-    row.update({'no_truth': no_truth, 'at_cap': at_cap, 'per_card': per_card})
+    row.update({'recall_unjudged': runj, 'no_truth': no_truth, 'at_cap': at_cap, 'per_card': per_card})
     return row, gaps
 
 
@@ -527,6 +563,8 @@ def extra_lines(rows):
     out = []
     for r in rows:
         o, t = r.get('outside'), r.get('truth_precision')
+        if r.get('recall_unjudged'):
+            out.append(f"| {r['kind']} | recall truth left out as unjudged (parent organisation only) | - | {r['recall_unjudged']} titles |")
         if o:
             out.append(f"| {r['kind']} | outside recall ({o['source']}) | {o['recall']} | {o['found']}/{o['truth']} |")
         if t:
