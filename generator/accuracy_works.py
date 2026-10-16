@@ -20,14 +20,16 @@ THE CLAIMS and THE RULES in code (generator/build.py, line numbers of the commit
            Universe, MonsterVerse) are keyword discover cards instead: TMDB with_keywords, movies + series, release_asc,
            no vote floor (:339-373).
 
-TRUTH. studio: Wikidata films (TMDB movie id P4947, English label, release date P577, not a short film) whose production
+TRUTH. studio: Wikidata films (TMDB movie id P4947, English label (label service, so items with only a "mul" label such as Iron Man still count), release date P577; short films stay in, the studio cards have no shorts rule) whose production
 company (P272) is one of the studio's Wikidata items (STUDIOS below, matched to the TMDB company id by the item's
 "TMDB company ID" P11806 where Wikidata has it, else by hand); the five listed cards use P750 or P272, as the list does.
 Recall = the K=100 most-linked of them (sitelinks = popularity proxy, as studio_distributed.py ranks) found on the card.
 Precision = a seeded 20 of the card's titles, each must be a Wikidata film of the studio (any rank).
-series: Wikidata films (P4947, short films left out as for studios) and TV series (P4983) that are "part of the series" (P179, followed up through sub-series
+series: Wikidata films (P4947; short films left out: the series cards are feature-film shelves) and TV series (P4983) that are "part of the series" (P179, followed up through sub-series
 such as MCU Phase One) of the card's Wikidata series item(s) (SERIES below) or have it as "media franchise" (P8345).
-Recall = those found on the card; precision = a seeded 20 of the card's titles, each must be in that set.
+Recall = those found on the card; precision = a seeded 20 of the card's titles, each must be in that set. A sampled title
+Wikidata has no statement for ("unconfirmed") is UNJUDGED: left out of the precision denominator and counted in `unjudged`
+(as accuracy_people does); only titles Wikidata can judge count.
 
 LABELS here (same four): code bug = the card breaks its own rule, or a rule/hand list that must hold does not;
 deliberate rule = a written rule keeps the title out (vote floor, release types, released-only, hand exclude list);
@@ -130,25 +132,28 @@ def studio_truth_query(qids, props):
 SELECT ?f (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (MIN(?tmdb) AS ?tmdbid) (MAX(?links) AS ?sitelinks) WHERE {
   VALUES ?co { %s }
   %s
-  ?f wdt:P4947 ?tmdb ; wikibase:sitelinks ?links ; rdfs:label ?label .
+  ?f wdt:P4947 ?tmdb ; wikibase:sitelinks ?links .
   OPTIONAL { ?f wdt:P577 ?date }
-  FILTER(lang(?label) = "en")
-  FILTER NOT EXISTS { ?f wdt:P31 wd:%s }
-} GROUP BY ?f""" % (values, union, SHORT_FILM)
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul" . ?f rdfs:label ?label }
+} GROUP BY ?f""" % (values, union)
 
 
-def series_truth_query(qids):
+def series_truth_query(qids, media='movie'):
+    """One query per medium (P4947 films / P4983 TV): a single query that joins the P179 path with a movie-or-TV branch makes
+    WDQS silently drop members (Iron Man, Infinity War, Shazam! in the first version). Members = direct P179, P179 through
+    sub-series (MCU Phase One), or P8345 media franchise; short films left out."""
     values = ' '.join('wd:' + q for q in qids)
+    prop = 'P4947' if media == 'movie' else 'P4983'
     return """
 SELECT ?f ?kind (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (MIN(?id) AS ?tmdbid) (MAX(?links) AS ?sitelinks) WHERE {
   VALUES ?root { %s }
-  { ?f wdt:P179 ?s . ?s wdt:P179* ?root } UNION { ?f wdt:P8345 ?root }
-  { ?f wdt:P4947 ?id . BIND("movie" AS ?kind) } UNION { ?f wdt:P4983 ?id . BIND("series" AS ?kind) }
-  ?f wikibase:sitelinks ?links ; rdfs:label ?label .
+  { ?f wdt:P179 ?root } UNION { ?f wdt:P179/wdt:P179+ ?root } UNION { ?f wdt:P8345 ?root }
+  ?f wdt:%s ?id ; wikibase:sitelinks ?links .
+  BIND("%s" AS ?kind)
   OPTIONAL { { ?f wdt:P577 ?date } UNION { ?f wdt:P580 ?date } }
-  FILTER(lang(?label) = "en")
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,mul" . ?f rdfs:label ?label }
   FILTER NOT EXISTS { ?f wdt:P31 wd:%s }
-} GROUP BY ?f ?kind""" % (values, SHORT_FILM)
+} GROUP BY ?f ?kind""" % (values, prop, media, SHORT_FILM)
 
 
 def parse_truth(rows, today, kind='movie'):
@@ -160,6 +165,8 @@ def parse_truth(rows, today, kind='movie'):
         if not tid.isdigit():
             continue
         date = (val(r, 'released') or '')[:10]
+        if not (date[:4].isdigit() and date[4:5] == '-'):      # Wikidata "unknown value" is a URI, not a date
+            date = ''
         if date and date > today:
             continue
         key = f'{k}:{int(tid)}'
@@ -283,7 +290,8 @@ def wd_studio_truth(slug, listed, today):
 
 
 def wd_series_truth(slug, today):
-    return parse_truth(sparql(series_truth_query(SERIES[slug])), today)
+    rows = sparql(series_truth_query(SERIES[slug], 'movie')) + sparql(series_truth_query(SERIES[slug], 'series'))
+    return parse_truth(rows, today)
 
 
 def wd_lookup(media, ids, props):
@@ -330,6 +338,7 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
         excluded = {s: {e['tmdb'] for e in es} for s, es in EXCLUDE.items()}
     gaps, rf, rt, samp, ok, at_cap, cache = [], 0, 0, 0, 0, [], {}
     prec = {'unconfirmed': 0, 'disagrees': 0}
+    unj = 0
 
     def detail(media, tid):
         if (media, tid) not in cache:
@@ -380,8 +389,13 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
             for tag in prec:
                 if why.startswith(tag):
                     prec[tag] += 1
+            if why.startswith('unconfirmed'):          # Wikidata has nothing to compare with: unjudged, not a gap (as in accuracy_people)
+                unj += 1
+                continue
             gaps.append({'kind': kind, 'card': slug, 'side': 'precision', 'key': k, 'name': f['name'] if f else k, 'label': lab, 'reason': why})
     row = af.summarize(kind, cards, rf, rt, samp, ok, gaps)
+    row['unjudged'] = unj
+    row['precision'] = af.pct(ok, samp - unj)            # only titles Wikidata can judge count
     row['at_cap'] = at_cap
-    row['precision_unconfirmed'], row['precision_disagrees'] = prec['unconfirmed'], prec['disagrees']
+    row['precision_disagrees'] = prec['disagrees']
     return row, gaps

@@ -59,6 +59,29 @@ class TruthMapping(unittest.TestCase):
         self.assertEqual(lab, 'source limit')
         self.assertIn('distributor only (production: Other)', why)
 
+    def test_studio_truth_keeps_shorts(self):                           # critic break: Lou (a short, P272 Pixar) was scored wrong
+        q = aw.studio_truth_query(['Q127552'], ('P272',))
+        self.assertNotIn(aw.SHORT_FILM, q)                              # studio cards have no shorts rule: shorts are in the claim
+        self.assertIn('wikibase:label', q)                              # items with only a "mul" label (Iron Man) still count
+
+    def test_series_truth_query_is_one_medium_and_direct_members_count(self):   # critic break: Iron Man, Infinity War, Shazam! dropped
+        for media, prop, other in (('movie', 'P4947', 'P4983'), ('series', 'P4983', 'P4947')):
+            q = aw.series_truth_query(['Q642878'], media)
+            self.assertIn(prop, q)
+            self.assertNotIn(other, q)                                   # the combined movie-or-TV branch made WDQS drop members
+            self.assertIn('{ ?f wdt:P179 ?root }', q)                    # a film directly part of the root series
+            self.assertIn('wdt:P179/wdt:P179+ ?root', q)                 # or through a sub-series
+
+    def test_unknown_value_date_is_not_a_future_date(self):
+        r = row(7, 'Armor Wars', date=None)
+        r['released'] = {'value': 'http://www.wikidata.org/.well-known/genid/abc'}
+        self.assertIn('movie:7', aw.parse_truth([r], TODAY))
+
+    def test_unconfirmed_titles_are_unjudged_not_wrong(self):
+        truth = aw.parse_truth([row(1, 'A')], TODAY)
+        r, gaps = run(['movie:1', 'movie:10'], truth, {10: det(10)})     # 10: on the card, Wikidata has no item for it
+        self.assertEqual((r['sample'], r['ok'], r['unjudged'], r['precision'], gaps), (2, 1, 1, 100.0, []))
+
     def test_every_card_has_a_wikidata_item(self):
         spec = json.loads((Path(aw.HERE) / 'spec.json').read_text(encoding='utf-8'))
         ind, listed = aw.pick_studio_cards(spec)
