@@ -28,6 +28,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import build                    # the one loader of the hand lists (build.load_hand_list); no network at import
+import accuracy_frame           # the shared frame for the Popular / Top cards (issue #92)
 
 SCHEDULES = {'vt', 'fb', 'wodp'}
 ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}      # the sets arrivals.py uses (F2 / F3)
@@ -37,22 +38,26 @@ MIN_OFFICIAL = 10               # fewer official arrivals of the measured month 
 MAX_DROP = 3.0                  # recall points below the baseline that open the issue
 UA = 'strand-discovery/1.0 (accuracy check; +https://github.com/xBOBxSAGETx/strand-discovery)'
 TITLE = 'Weekly accuracy check'
+FRAME_CARDS = 12                # Popular / Top frame (accuracy_frame.py): seeded cards per kind
+FRAME_SAMPLE = 20               # card titles checked per card (precision)
+FRAME_SEED = 'audit-92'         # fixed, so the baseline compares like with like
+FRAME_MAX_DROP = 5.0            # points below accuracy_baseline.json "frame" that open the issue
 
 
-def tmdb(path):
+def tmdb(path, **params):
     key = os.environ.get('TMDB_API_KEY')
     if not key:
         sys.exit('TMDB_API_KEY is not set')
     time.sleep(0.25)
     try:
-        with urllib.request.urlopen(f'https://api.themoviedb.org/3{path}?{urllib.parse.urlencode({"api_key": key})}',
+        with urllib.request.urlopen(f'https://api.themoviedb.org/3{path}?{urllib.parse.urlencode({**params, "api_key": key})}',
                                     timeout=30) as r:
             return json.load(r)
     except Exception as e:                     # never surface the URL (it carries the key)
         raise RuntimeError(f'TMDB {type(e).__name__} on {path}') from None
 
 
-def fetch_site(site, pages):
+def fetch_site(site, pages, audit_slugs=()):
     """The live site's summary.json + every shelf's first page + the New cards' further pages (terminal page included),
     politely: one request a second, one at a time."""
     site = site.rstrip('/')
@@ -68,7 +73,7 @@ def fetch_site(site, pages):
     d.mkdir(parents=True, exist_ok=True)
     for cid in summary.get('catalogs', {}):          # every shelf's first page (the weekly DuckDB read + week compare)
         (d / f'{cid}.json').write_bytes(get(f'catalog/movie/{cid}.json'))
-    for slug in summary.get('new_card_modes', {}):   # the New cards also page through (the precision / recall checks)
+    for slug in list(summary.get('new_card_modes', {})) + list(audit_slugs):   # these cards also page through
         cid = f'sd-{slug}'
         (d / cid).mkdir(parents=True, exist_ok=True)
         first = (d / f'{cid}.json').read_bytes()
@@ -272,14 +277,18 @@ def main():
     ap.add_argument('--unknowns', default=str(HERE / 'precision_unknowns.json'))
     ap.add_argument('--baseline', default=str(HERE / 'accuracy_baseline.json'))
     ap.add_argument('--spec', default=str(HERE / 'spec.json'))
+    ap.add_argument('--cards', type=int, default=FRAME_CARDS, help='Popular / Top frame: seeded cards per kind (0 = off)')
+    ap.add_argument('--frame-sample', type=int, default=FRAME_SAMPLE, help='Popular / Top frame: card titles checked per card')
+    ap.add_argument('--frame-seed', default=FRAME_SEED, help='fixed seed of the card + title sample (a stable baseline)')
     ap.add_argument('--today', help='tests only: the date to judge against (default: the build date)')
     a = ap.parse_args()
     pages, state_dir, out = Path(a.pages), Path(a.state), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    if a.fetch_site:
-        fetch_site(a.fetch_site, pages)
-    summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     spec = json.loads(Path(a.spec).read_text(encoding='utf-8'))
+    frame_cards = {k: accuracy_frame.pick_cards(spec, k, a.cards, a.frame_seed) for k in accuracy_frame.KINDS} if a.cards else {}
+    if a.fetch_site:
+        fetch_site(a.fetch_site, pages, [c['slug'] for cs in frame_cards.values() for c in cs])
+    summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     cands = load_candidates(state_dir, summary['generated_at'][:10])
     if a.today:                                  # tests only: judge the recall window / list month as of this date
         cands = dict(cands, date=a.today)
@@ -300,6 +309,17 @@ def main():
         w.writeheader()
         w.writerows(rows)
     errors = [r for r in rows if r['class'] == 'ERROR (ii)']
+    frame_sum, frame_gaps = [], []
+    for kind, cs in frame_cards.items():          # Popular / Top: recall + precision + labelled gaps (accuracy_frame.py)
+        row, gaps = accuracy_frame.measure(kind, cs, spec, lambda slug: card_order(pages, slug), tmdb, dt.date.today().isoformat(),
+                                           a.frame_sample, a.frame_seed)
+        frame_sum.append(row)
+        frame_gaps += gaps
+    if frame_gaps:
+        with open(out / 'frame_gaps.csv', 'w', newline='', encoding='utf-8') as f:
+            w = csv.DictWriter(f, fieldnames=list(frame_gaps[0]))
+            w.writeheader()
+            w.writerows(frame_gaps)
     lines = ['| provider | dated | sample | on service | lag (i) | official (iii) | documented | errors (ii) |',
              '|---|---|---|---|---|---|---|---|']
     lines += [f"| {t['provider']} | {t['dated_items']} | {t['sample']} | {t['on_service']} | {t['lag_i']} | "
@@ -307,11 +327,30 @@ def main():
     lines += ['', '| service | recall | baseline | official arrivals in window | note |', '|---|---|---|---|---|']
     lines += [f"| {r['service']} | {r.get('recall', '-')} | {r.get('baseline', '-')} | {r['official_in_window']} | "
               f"{r.get('note', '')} |" for r in rec]
+    fbase = baseline.get('frame', {})
+    if frame_sum:
+        lines += ['', '| kind | cards | recall | baseline | claim titles found | precision | baseline | sample ok | recall gaps (code bug / '
+                  'deliberate / cap / source) | precision gaps (same order) |', '|---|---|---|---|---|---|---|---|---|---|']
+        for r in frame_sum:
+            b = fbase.get(r['kind'], {})
+            g = lambda d: ' / '.join(str(d[x]) for x in accuracy_frame.LABELS)
+            lines.append(f"| {r['kind']} | {r['cards']} | {r['recall']} | {b.get('recall', '-')} | {r['found']}/{r['truth']} | "
+                         f"{r['precision']} | {b.get('precision', '-')} | {r['ok']}/{r['sample']} | {g(r['recall_gaps'])} | "
+                         f"{g(r['precision_gaps'])} |")
     print('\n'.join(lines))
     problems = [f"precision: {e['provider']} {e['key']} not on the service ({e['precision']} precision, event "
                 f"{e['event_date']}, sources {e['sources']}, status {e['status']}) {e['urls'][:200]}" for e in errors]
     problems += [f"recall: {r['service']} {r['recall']}% is {r['drop']} points below the baseline {r['baseline']}%"
                  for r in rec if r.get('problem')]
+    for r in frame_sum:                          # a drop below the baseline, or more code bugs than the baseline had
+        b = fbase.get(r['kind'])
+        if not b:
+            continue
+        for what in ('recall', 'precision'):
+            if r[what] is not None and b.get(what) is not None and b[what] - r[what] > FRAME_MAX_DROP:
+                problems.append(f"{r['kind']} {what}: {r[what]}% is {round(b[what] - r[what], 1)} points below the baseline {b[what]}%")
+        if r['code_bugs'] > b.get('code_bugs', 0):
+            problems.append(f"{r['kind']}: {r['code_bugs']} code-bug gaps (baseline {b.get('code_bugs', 0)}); see frame_gaps.csv")
     # NOTES are shown, never problems: stale official lists (a manual refresh; the precision gate is the weekly guard)
     # and services with too few official arrivals in the window to measure
     notes = []
@@ -333,7 +372,7 @@ def main():
     for n in notes:
         print(' NOTE:', n)
     (out / 'accuracy.json').write_text(json.dumps({'date': today, 'seed': seed, 'precision': table, 'recall': rec,
-                                                   'errors': errors, 'notes': notes, 'week_compare': cmp}, indent=1), encoding='utf-8')
+                                                   'errors': errors, 'frame': frame_sum, 'notes': notes, 'week_compare': cmp}, indent=1), encoding='utf-8')
     if a.report:
         run_url = (f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{os.environ.get('GITHUB_REPOSITORY', '')}"
                    f"/actions/runs/{os.environ.get('GITHUB_RUN_ID', '')}")
