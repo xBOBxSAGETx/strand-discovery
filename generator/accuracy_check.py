@@ -32,6 +32,8 @@ import accuracy_frame           # the shared frame for the Popular / Top cards (
 import accuracy_people          # Director / Actor cards against Wikidata (issue #93)
 import accuracy_works           # Studios + Movie series, truth = Wikidata (issue #94)
 import accuracy_rules           # Network + rule-based cards: Decades, Acclaimed, Hidden Gems, Stand-up (issue #96)
+import accuracy_awards          # the 7 award cards, truth = Wikidata P166 / Wikipedia (issue #97)
+import accuracy_new             # every service's New card + the label of the dated precision errors (issue #97)
 
 SCHEDULES = {'vt', 'fb', 'wodp'}
 ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}      # the sets arrivals.py uses (F2 / F3)
@@ -93,6 +95,10 @@ def fetch_site(site, pages, audit_slugs=()):
             skip += n
 
 
+def by_slug_card(spec, slug):
+    return next(c for c in spec['catalogs'] if c['slug'] == slug)
+
+
 def card_order(pages, slug):
     d, cid = pages / 'catalog' / 'movie', f'sd-{slug}'
     files = [d / f'{cid}.json'] + sorted((p for p in (d / cid).glob('skip=*.json') if '&' not in p.name),
@@ -125,6 +131,8 @@ def precision(pages, state_dir, spec, summary, cands, n, seed, official, unknown
         random.seed(f'{seed}-{svc}')
         sample = random.sample(dated, min(n, len(dated)))
         sig = state['providers'].get(svc, {}).get('signals', {})
+        items = state['providers'].get(svc, {}).get('items', {})
+        run_date = state['providers'].get(svc, {}).get('last_run')
         t = {'provider': svc, 'dated_items': len(dated), 'sample': len(sample), 'on_service': 0, 'lag_i': 0,
              'official_iii': 0, 'documented_ii': 0, 'errors_ii': 0}
         for k in sample:
@@ -154,7 +162,10 @@ def precision(pages, state_dir, spec, summary, cands, n, seed, official, unknown
             else:
                 cls = 'ERROR (ii)'
                 t['errors_ii'] += 1
-            rows.append({'provider': svc, 'key': k, 'class': cls, 'event_date': c['date'], 'precision': c['precision'],
+            label = reason = ''
+            if cls == 'ERROR (ii)':                  # labelled, still an error (the gate is unchanged): issue #97
+                label, reason = accuracy_new.label_dated_error(accuracy_new.state_item(items, k), c, run_date, today.isoformat())
+            rows.append({'provider': svc, 'key': k, 'class': cls, 'label': label, 'reason': reason, 'event_date': c['date'], 'precision': c['precision'],
                          'sources': '|'.join(c['sources']), 'status': c['status'], 'urls': ' '.join(urls),
                          'card_rank': order.index(k) + 1})
         table.append(t)
@@ -270,6 +281,22 @@ def report(problems, lines, run_url):
             print('accuracy: clean, no open issue')
 
 
+def frame_problems(frame_sum, fbase):
+    """A drop below the baseline, or more code bugs than the baseline had. Only the keys a kind's baseline holds are compared
+    (new-* kinds hold code_bugs only: circular truth + a weekly sample, issue #97)."""
+    problems = []
+    for r in frame_sum:
+        b = fbase.get(r['kind'])
+        if not b:
+            continue
+        for what in ('recall', 'precision'):
+            if r[what] is not None and b.get(what) is not None and b[what] - r[what] > FRAME_MAX_DROP:
+                problems.append(f"{r['kind']} {what}: {r[what]}% is {round(b[what] - r[what], 1)} points below the baseline {b[what]}%")
+        if r['code_bugs'] > b.get('code_bugs', 0):
+            problems.append(f"{r['kind']}: {r['code_bugs']} code-bug gaps (baseline {b.get('code_bugs', 0)}); see frame_gaps.csv")
+    return problems
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--pages', required=True)
@@ -307,7 +334,7 @@ def main():
     if a.fetch_site:
         fetch_site(a.fetch_site, pages, [c['slug'] for cs in frame_cards.values() for c in cs] +
                    [c['slug'] for cs in people_pool.values() for c in cs[:a.people_cards + PEOPLE_SPARE]] +
-                   [c['slug'] for cs in works_cards.values() for c in cs] +
+                   [c['slug'] for cs in works_cards.values() for c in cs] + list(accuracy_awards.CARDS) +
                    [c['slug'] for cs in rules_cards.values() for c in cs])
     summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     cands = load_candidates(state_dir, summary['generated_at'][:10])
@@ -367,6 +394,28 @@ def main():
             continue
         frame_sum.append(row)
         frame_gaps += gaps
+    award_notes = []
+    for slug in accuracy_awards.CARDS:            # Awards: Wikidata P166 / the Wikipedia list is the truth; an outage is a note
+        try:
+            for row, gaps in accuracy_awards.measure_card(next(c for c in spec['catalogs'] if c['slug'] == slug),
+                                                          card_order(pages, slug), spec, accuracy_awards.load_lists()):
+                frame_sum.append(row)
+                frame_gaps += gaps
+        except Exception as e:
+            award_notes.append(f'{slug}: not measured ({type(e).__name__}: {str(e)[:120]})')
+    new_notes = []
+    new_state = json.loads(gzip.decompress((state_dir / 'first_seen.json.gz').read_bytes()))
+    for slug, mode in sorted(summary.get('new_card_modes', {}).items()):     # every New card: recall vs TMDB window, precision
+        svc = slug[len('streaming-'):-len('-new')]
+        try:
+            row, gaps = accuracy_new.measure(by_slug_card(spec, slug), card_order(pages, slug), spec, tmdb, today, mode,
+                                             new_state['providers'].get(svc, {}).get('items', {}),
+                                             {c['key']: c for c in cands['providers'].get(svc, [])}, seed)
+        except Exception as e:
+            new_notes.append(f'new-{svc}: not measured ({type(e).__name__}: {str(e)[:120]})')
+            continue
+        frame_sum.append(row)
+        frame_gaps += gaps
     if frame_gaps:
         with open(out / 'frame_gaps.csv', 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=list(frame_gaps[0]))
@@ -391,19 +440,11 @@ def main():
                          f"{g(r['precision_gaps'])} |")
     lines += accuracy_rules.extra_lines(rules_rows)
     print('\n'.join(lines))
-    problems =[f"precision: {e['provider']} {e['key']} not on the service ({e['precision']} precision, event "
-                f"{e['event_date']}, sources {e['sources']}, status {e['status']}) {e['urls'][:200]}" for e in errors]
+    problems = [f"precision: {e['provider']} {e['key']} not on the service ({e['precision']} precision, event "
+                f"{e['event_date']}, sources {e['sources']}, status {e['status']}) [{e['label']}: {e['reason']}] {e['urls'][:200]}" for e in errors]
     problems += [f"recall: {r['service']} {r['recall']}% is {r['drop']} points below the baseline {r['baseline']}%"
                  for r in rec if r.get('problem')]
-    for r in frame_sum:                          # a drop below the baseline, or more code bugs than the baseline had
-        b = fbase.get(r['kind'])
-        if not b:
-            continue
-        for what in ('recall', 'precision'):
-            if r[what] is not None and b.get(what) is not None and b[what] - r[what] > FRAME_MAX_DROP:
-                problems.append(f"{r['kind']} {what}: {r[what]}% is {round(b[what] - r[what], 1)} points below the baseline {b[what]}%")
-        if r['code_bugs'] > b.get('code_bugs', 0):
-            problems.append(f"{r['kind']}: {r['code_bugs']} code-bug gaps (baseline {b.get('code_bugs', 0)}); see frame_gaps.csv")
+    problems += frame_problems(frame_sum, fbase)
     problems += accuracy_rules.extra_problems(rules_rows, fbase, FRAME_MAX_DROP)
     # NOTES are shown, never problems: stale official lists (a manual refresh; the precision gate is the weekly guard)
     # and services with too few official arrivals in the window to measure
@@ -412,7 +453,7 @@ def main():
     if stale:
         notes.append(f"stale: official lists are for {', '.join(stale)} (run {today[:7]}); recall is measured on "
                      "that month - refresh generator/official_arrivals.csv + accuracy_baseline.json when convenient")
-    notes += works_errors
+    notes += works_errors + award_notes + new_notes
     notes += [f"recall not measured for {r['service']}: {r['note']}" for r in rec if r['status'] == 'skipped']
     cmp = None
     if a.snapshot:                               # DuckDB reads all shelves; then the week-over-week compare (notes only)
