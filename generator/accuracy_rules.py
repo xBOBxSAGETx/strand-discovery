@@ -313,13 +313,9 @@ def judge_query(kind, media, ids, qs):
     p = 'P4947' if media == 'movie' else 'P4983'
     vals = ' '.join(f'"{i}"' for i in ids)
     if kind == 'network':
-        own = [q for q in qs if q not in PARENT_ONLY]
-        par = [q for q in qs if q in PARENT_ONLY]
-        hit = f'EXISTS {{ VALUES ?B {{ {_values(own)} }} ?w wdt:P449 ?B }}'
-        score = f'IF({hit}, 2, IF(EXISTS {{ VALUES ?B {{ {_values(par)} }} ?w wdt:P449 ?B }}, 1, 0))' if par else f'IF({hit}, 2, 0)'
-        # hit 2 = the network itself, 1 = only its parent organisation (cannot tell which channel: unjudged), 0 = another broadcaster
-        return (f'SELECT ?id (MAX(?hit0) AS ?hit) (COUNT(DISTINCT ?x) AS ?n) WHERE {{ VALUES ?id {{ {vals} }} ?w wdt:{p} ?id. '
-                f'OPTIONAL {{ ?w wdt:P449 ?x }} BIND({score} AS ?hit0) }} GROUP BY ?id')
+        # the plain list of the title's original broadcasters; which one counts is decided in parse_judge (an EXISTS /
+        # aggregate version timed out on the GitHub runner for BBC One)
+        return f'SELECT ?id ?x WHERE {{ VALUES ?id {{ {vals} }} ?w wdt:{p} ?id. OPTIONAL {{ ?w wdt:P449 ?x }} }}'
     # stand-up: the title's genres (P136) and types (P31), kept apart; "is it stand-up" is decided in Python against the closure
     return (f'SELECT ?id ?g ?t WHERE {{ VALUES ?id {{ {vals} }} ?w wdt:{p} ?id. OPTIONAL {{ ?w wdt:P136 ?g }} '
             f'OPTIONAL {{ ?w wdt:P31 ?t }} }}')
@@ -342,14 +338,22 @@ def parse_judge_classes(rows, media, closure):
     return out
 
 
-def parse_judge(rows, media):
-    """-> {key: (statements, is_it)}; a TMDB id with no Wikidata item is absent."""
-    out = {}
+def parse_judge(rows, media, qs):
+    """Rows (id, x broadcaster) -> {key: (statements, is_it)}; a TMDB id with no Wikidata item is absent. is_it = one of the
+    title's broadcasters is the card's network (qs without the parent organisation). A title whose only match is the parent
+    organisation, or that has no broadcaster statement, is (0, False) = unjudged."""
+    own, seen, out = set(qs) - PARENT_ONLY, {}, {}
     for r in rows:
-        k = f"{media}:{r['id']}"
-        n, hit = out.get(k, (0, False))
-        h = r.get('hit')
-        out[k] = (max(n, int(r.get('n') or 0)) if h != '1' else 0, hit or h == '2')     # parent-organisation-only = unjudged
+        s = seen.setdefault(f"{media}:{r['id']}", set())
+        if r.get('x'):
+            s.add(r['x'].rsplit('/', 1)[-1])
+    for k, s in seen.items():
+        if s & own:
+            out[k] = (len(s), True)
+        elif s & PARENT_ONLY:
+            out[k] = (0, False)
+        else:
+            out[k] = (len(s), False)
     return out
 
 
@@ -504,7 +508,7 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                     qs = network_qs(card) + JUDGE_ALSO.get(card['network_id'], [])
                     if ids and qs:
                         jr = ask(slug, judge_query(kind, media, ids, qs))
-                        judge.update(parse_judge(jr, media) if jr is not None else {})
+                        judge.update(parse_judge(jr, media, qs) if jr is not None else {})
                 elif ids:
                     judge.update(parse_judge_classes(sparql(judge_query(kind, media, ids, STANDUP_CLASSES)), media, closure()))
         for k in sample:

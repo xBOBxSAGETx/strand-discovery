@@ -132,8 +132,14 @@ class Rules(unittest.TestCase):
         self.assertEqual([r['id'] for r in wide], ['2'])
         self.assertIn('?spec', ar.broadcaster_truth_query(['Q191472', 'Q9531']))
         self.assertNotIn('?spec', ar.broadcaster_truth_query(['Q215616']))     # PBS: the extra column timed Wikidata out (HTTP 500)
-        self.assertEqual(ar.parse_judge([{'id': '5', 'n': '2', 'hit': '1'}], 'series'), {'series:5': (0, False)})   # unjudged
-        self.assertEqual(ar.parse_judge([{'id': '6', 'n': '1', 'hit': '2'}], 'series'), {'series:6': (1, True)})
+        E = 'http://www.wikidata.org/entity/'
+        jr = [{'id': '5', 'x': E + 'Q9531'}, {'id': '6', 'x': E + 'Q191472'}, {'id': '7', 'x': E + 'Q9531'}, {'id': '7', 'x': E + 'Q191472'},
+              {'id': '8', 'x': E + 'Q99'}, {'id': '9'}]
+        self.assertEqual(ar.parse_judge(jr, 'series', ['Q191472', 'Q9531']),
+                         {'series:5': (0, False),       # only the parent organisation: unjudged
+                          'series:6': (1, True), 'series:7': (2, True),
+                          'series:8': (1, False),       # another broadcaster: wrong
+                          'series:9': (0, False)})      # no broadcaster statement: unjudged
 
     def test_network_membership_is_a_tag_not_a_rule(self):
         card, r = self.r('network-hbo', 'series')
@@ -155,7 +161,7 @@ class Measure(unittest.TestCase):
         def sparql(q):
             if 'ORDER BY DESC(?sl)' in q:
                 return [{'id': '1399', 'sl': '9'}, {'id': '99', 'sl': '3'}]
-            return [{'id': '1399', 'n': '1', 'hit': '2'}, {'id': '22', 'n': '1', 'hit': '0'}]
+            return [{'id': '1399', 'x': 'http://www.wikidata.org/entity/Q23633'}, {'id': '22', 'x': 'http://www.wikidata.org/entity/Q3'}]
         row, gaps = ar.measure_rules('network', [card], SPEC, lambda s: ['series:1399', 'series:22'], tmdb, sparql, TODAY, 20, 'x')
         self.assertEqual((row['found'], row['truth'], row['recall']), (1, 2, 50.0))
         miss = [g for g in gaps if g['side'] == 'recall']
