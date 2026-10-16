@@ -120,7 +120,8 @@ def settle(frame_sum, frame_gaps, entries, audited, order_of, reason_of, built=N
         r['open'] = len(mine)
         r['fixed_by_list'] = r.get('filled', 0) + sum(1 for g in fixed if g['kind'] == r['kind'])
         r['kept'] = [g for g in kept if g['kind'] == r['kind']]
-    return {'kept': kept, 'fixed': fixed, 'problems': problems, 'pending': pending}
+    once = {(p['card'], p['key']): {'card': p['card'], 'key': p['key']} for p in pending}      # an add that is also a claim gap counts once
+    return {'kept': kept, 'fixed': fixed, 'problems': problems, 'pending': list(once.values())}
 
 
 def _row(rows, frame_sum):
@@ -131,6 +132,33 @@ def _row(rows, frame_sum):
                                'precision_gaps': {l: 0 for l in LABELS}, 'code_bugs': 0}
         frame_sum.append(rows['corrections'])
     return rows['corrections']
+
+
+def build_rule_reason(spec, tmdb):
+    """reason_of(slug, key) for settle(): the build's OWN check of an add (build.correction_rule, fetched the way
+    build.apply_corrections fetches it), so the check and the build can never disagree. -> text, or None when the card takes it."""
+    cards = {c['slug']: c for c in spec['catalogs']}
+
+    def reason(slug, key):
+        card = cards[slug]
+        media, tid = key.split(':')
+        if media not in (card.get('media') or ('movie', 'series')):
+            return f'card holds no {media}'
+        d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}", append_to_response='release_dates,keywords' if media == 'movie' else 'keywords')
+        return build.correction_rule(card, spec.get('defaults'), media, d) if d.get('id') else 'unknown to TMDB'
+    return reason
+
+
+def recall_lines(frame_sum):
+    """Per kind with titles our list filled: recall with and without our lists. 'corrections applied' only for the rows that
+    count it (theme rows)."""
+    out = []
+    for r in frame_sum:
+        if r.get('tmdb_recall') is not None and (r.get('filled') or 'corrections' in r):
+            applied = f"; corrections applied {r['corrections']['found']}/{r['corrections']['total']}" if 'corrections' in r else ''
+            out.append(f"\n{r['kind']} recall: {r['recall']} with our own lists, {r['tmdb_recall']} from TMDB alone "
+                       f"({r['filled']} of {r['truth']} claim titles are on the cards because our must-have / corrections lists put them there{applied})")
+    return out
 
 
 def relabel_add(slug, key, reason_of):

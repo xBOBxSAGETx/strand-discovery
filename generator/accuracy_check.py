@@ -120,20 +120,6 @@ def card_order(pages, slug):
             for m in json.loads(f.read_text(encoding='utf-8'))['metas']]
 
 
-def rule_reason_of(spec, today):
-    """reason_of(slug, key) for accuracy_corrections.settle: the card's OWN rules a title fails (text), or None. Only discover
-    cards carry those floors (votes / age / runtime / release type / status); any other card has no rule to name."""
-    def reason(slug, key):
-        card = by_slug_card(spec, slug)
-        if card.get('kind') != 'discover':
-            return None
-        media, tid = key.split(':')
-        f = accuracy_frame.facts(tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}", append_to_response=accuracy_frame.DETAIL_APPEND), media)
-        r = accuracy_frame.card_rules('popular', {**card, 'sort': card.get('sort', 'popular')}, media, spec)
-        return '; '.join(accuracy_frame.rule_breaks(f, media, r, today)) or None
-    return reason
-
-
 def load_candidates(state_dir, today):
     f = state_dir / 'signal_candidates.json'
     if f.exists():
@@ -473,7 +459,7 @@ def main():
     audited = {c['slug'] for cs in list(frame_cards.values()) + list(people_pool.values()) + list(rules_cards.values()) +
                list(genre_cards.values()) + list(works_cards.values()) for c in cs} | set(accuracy_awards.CARDS) | set(summary.get('new_card_modes', {}))
     settled = accuracy_corrections.settle(frame_sum, frame_gaps, accuracy_corrections.current(), audited,
-                                          lambda slug: card_order(pages, slug), rule_reason_of(spec, today), summary['generated_at'][:10])
+                                          lambda slug: card_order(pages, slug), accuracy_corrections.build_rule_reason(spec, tmdb), summary['generated_at'][:10])
     if frame_gaps:
         with open(out / 'frame_gaps.csv', 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=list(frame_gaps[0]))
@@ -497,11 +483,7 @@ def main():
                          f"{r['precision']} | {b.get('precision', '-')} | {r['ok']}/{r['sample']} | {g(r['recall_gaps'])} | "
                          f"{g(r['precision_gaps'])} |")
     lines += accuracy_rules.extra_lines(rules_rows)
-    for r in frame_sum:                           # #117: titles our own lists put on a card are shown apart, never counted as TMDB recall
-        if r.get('tmdb_recall') is not None and (r.get('filled') or 'corrections' in r):
-            lines.append(f"\n{r['kind']} recall: {r['recall']} with our own lists, {r['tmdb_recall']} from TMDB alone "
-                         f"({r['filled']} of {r['truth']} claim titles are on the cards because our must-have / corrections lists put them there; "
-                         f"corrections applied {r['corrections']['found']}/{r['corrections']['total']})")
+    lines += accuracy_corrections.recall_lines(frame_sum)       # #117: titles our own lists put on a card are shown apart, never counted as TMDB recall
     lines += accuracy_corrections.lines(frame_sum, settled['kept'])
     print('\n'.join(lines))
     problems = [f"precision: {e['provider']} {e['key']} not on the service ({e['precision']} precision, event "

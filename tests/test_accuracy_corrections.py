@@ -154,6 +154,39 @@ class Remove(Base):
         self.assertEqual([(g['side'], g['key'], g['label']) for g in gaps], [('precision', 'movie:5', 'code bug')])   # only the one still there
 
 
+class Report(Base):
+    def test_recall_line_for_a_non_theme_row_with_filled_does_not_crash(self):   # critic: KeyError 'corrections' on any non-theme kind
+        row = af.summarize('studio', [CARD], 9, 10, 5, 5, [], 1)               # as accuracy_works builds it: filled=1, no 'corrections'
+        text = '\n'.join(ac.recall_lines([row]))
+        self.assertIn('studio recall: 90.0 with our own lists, 80.0 from TMDB alone', text)
+        self.assertNotIn('corrections applied', text)
+        theme = dict(row, kind='theme', corrections={'found': 2, 'total': 3})
+        self.assertIn('corrections applied 2/3', '\n'.join(ac.recall_lines([theme])))
+        self.assertEqual(ac.recall_lines([af.summarize('studio', [CARD], 9, 10, 5, 5, [], 0)]), [])     # nothing filled: no line
+
+    def test_pending_add_that_is_also_a_claim_gap_counts_once(self):
+        row, gaps = measure(['movie:1'], [1, 4], {('movie', 1): movie(1), ('movie', 4): movie(4)})        # 4: a claim gap AND an add
+        out = ac.settle([row], gaps, {('streaming-x', 'movie:4'): entry(4, 'add')}, {'streaming-x'}, lambda s: ['movie:1'],
+                        lambda s, k: None, '2026-10-16')
+        self.assertEqual(out['pending'], [{'card': 'streaming-x', 'key': 'movie:4'}])
+        row, gaps = measure(['movie:1'], [1], {('movie', 1): movie(1)})                                    # an add outside the claim list: still once
+        out = ac.settle([row], gaps, {('streaming-x', 'movie:77'): entry(77, 'add')}, {'streaming-x'}, lambda s: ['movie:1'],
+                        lambda s, k: None, '2026-10-16')
+        self.assertEqual(len(out['pending']), 1)
+
+
+class BuildRule(Base):
+    def test_deliberate_rule_comes_from_the_builds_own_check(self):
+        import build
+        spec = {'defaults': {'deny': []}, 'catalogs': [CARD]}
+        det = {'id': 4, 'title': 'M4', 'release_date': '2020-01-01', 'vote_count': 3, 'genres': [], 'runtime': 100,
+               'release_dates': {'results': [{'release_dates': [{'type': 4}]}]}, 'keywords': {'keywords': []}}
+        reason = ac.build_rule_reason(spec, lambda path, **kw: det)
+        self.assertEqual(reason('streaming-x', 'movie:4'), build.correction_rule(CARD, spec['defaults'], 'movie', det))
+        self.assertEqual(reason('streaming-x', 'movie:4'), 'min_votes')
+        self.assertIsNone(ac.build_rule_reason(spec, lambda path, **kw: dict(det, vote_count=900))('streaming-x', 'movie:4'))
+
+
 class Loader(unittest.TestCase):
     def test_real_list_loads_by_card_and_key(self):
         got = ac.load()
