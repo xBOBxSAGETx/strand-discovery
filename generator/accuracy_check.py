@@ -342,6 +342,8 @@ def main():
             continue
         frame_sum.append(row)
         frame_gaps += gaps
+        for w in row.get('wd_failed', []):         # a Wikidata query that timed out: that card was not measured (a note, not a problem)
+            people_notes.append(f'{kind} not measured: {w}')
     for kind, cs in genre_cards.items():          # Genres / Themes: against Wikidata genre (accuracy_genres.py)
         try:
             row, gaps = accuracy_genres.measure_cards(kind, cs, spec, lambda slug: card_order(pages, slug), tmdb,
@@ -352,6 +354,8 @@ def main():
             continue
         frame_sum.append(row)
         frame_gaps += gaps
+        for w in row.get('wd_failed', []):         # a Wikidata query that timed out: that card was not measured (a note, not a problem)
+            people_notes.append(f'{kind} not measured: {w}')
     if frame_gaps:
         with open(out / 'frame_gaps.csv', 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=list(frame_gaps[0]))

@@ -140,6 +140,15 @@ class Measure(unittest.TestCase):
         self.assertEqual([(g['side'], g['label']) for g in gaps], [('recall', 'source limit')])
         self.assertEqual(row['unjudged'], 1)
 
+    def test_wikidata_timeout_on_one_card_is_a_note_not_a_crash(self):
+        card = CARDS['genre-comedy']                       # the widened parent classes made the first widened run hit HTTP 504
+
+        def sparql(q):
+            raise RuntimeError('Wikidata HTTP 504')
+        row, gaps = ag.measure_cards('genre', [card], SPEC, lambda s: ['movie:1'], lambda p, **k: det(1, 'x', [35]), sparql, TODAY, 5, 's')
+        self.assertEqual(gaps, [])
+        self.assertEqual(len(row['wd_failed']), 3)         # the movie truth, the series truth and the movie judge query
+
     def test_theme_has_no_precision_truth(self):
         card = CARDS['theme-heist']
         details = {1: det(1, 'Heist', [80], kw=[10051]), 2: det(2, 'No keyword', [80])}

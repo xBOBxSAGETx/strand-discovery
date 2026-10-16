@@ -248,6 +248,21 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
     cache = {}
     since = (dt.date.fromisoformat(today) - dt.timedelta(days=NEW_DAYS)).isoformat()
 
+    wd_failed, asked = [], {}
+
+    def ask(query, what):
+        """One Wikidata query, asked once per distinct text (popular + top share their truth). The big parent classes can time out
+        (HTTP 504): that card/medium is listed as not measured, never a crash of the whole kind."""
+        if query not in asked:
+            try:
+                asked[query] = sparql(query)
+            except RuntimeError as e:
+                if 'Wikidata' not in str(e):
+                    raise
+                asked[query] = None
+                wd_failed.append(f'{what}: {e}')
+        return asked[query]
+
     def detail(media, tid):
         """The title's facts, or None when TMDB does not know the id (a Wikidata id TMDB dropped / merged): never a crash."""
         if (media, tid) not in cache:
@@ -272,7 +287,10 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
             if not qs:
                 no_truth.append(f'{slug}:{media}')
                 continue
-            cand = parse_truth(sparql(truth_query(media, qs, since=since if sort == 'new' else None)), media, today)
+            rows = ask(truth_query(media, qs, since=since if sort == 'new' else None), f'{slug}:{media}')
+            if rows is None:
+                continue
+            cand = parse_truth(rows, media, today)
             keys = [k for k, _, _ in cand]
             if sort == 'top':                         # the claim is the well-rated ones; Wikidata has no rating: TMDB's
                 keys = [k for k in keys if (detail(media, int(k.split(':')[1])) or {}).get('rating', 0) >= TOP_RATING]
@@ -304,7 +322,7 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
             qs = classes_for(card, media)
             ids = [k.split(':')[1] for k in sample if k.startswith(media + ':')]
             if qs and ids:
-                judge.update(parse_judge(sparql(judge_query(media, qs, ids)), media))
+                judge.update(parse_judge(ask(judge_query(media, qs, ids), f'{slug}:{media} judge') or [], media))
         for k in sample:
             media, tid = k.split(':')
             f = detail(media, int(tid))
@@ -350,7 +368,7 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
         for key, v in (('cards', 1), ('found', c['found']), ('truth', c['truth']), ('judged', c['judged']), ('ok', c['ok'])):
             s[key] += v
     row = af.summarize(kind, cards, rf, rt, samp, ok, gaps)
-    row.update({'per_card': per_card, 'unjudged': unjudged, 'no_truth': no_truth})
+    row.update({'per_card': per_card, 'unjudged': unjudged, 'no_truth': no_truth, 'wd_failed': wd_failed})
     if theme:
         row.update({'precision': None, 'confirmed': confirmed, 'not_confirmed': not_confirmed,
                     'own_rule': {'ok': own_ok, 'n': own_n}, 'must_have': {'found': mh_found, 'total': mh_total, 'recall': af.pct(mh_found, mh_total)}})
