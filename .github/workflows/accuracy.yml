@@ -26,6 +26,29 @@ jobs:
       issues: write            # the "accuracy" issue only
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: PROBE ghosts (temporary)
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          python3 - <<'PY'
+          import sys; sys.path.insert(0,'generator')
+          import build
+          d=build.tmdb('/movie/37793')
+          print('detail', {k:d.get(k) for k in ('id','title','runtime','release_date','genres','vote_count','status')})
+          rd=build.tmdb('/movie/37793/release_dates')
+          print('release_dates runtimes', [(c['iso_3166_1'],[(t['type'],t.get('release_date','')[:10]) for t in c['release_dates']]) for c in rd['results']][:6])
+          base={'sort_by':'vote_average.desc','include_adult':'false','vote_count.gte':300,'with_genres':'10402','with_release_type':'4|5|6','release_date.lte':'2026-04-01'}
+          for label,extra in (('none',{}),('gte40',{'with_runtime.gte':40}),('gte39',{'with_runtime.gte':39}),('gte38',{'with_runtime.gte':38})):
+              found=None; n=0
+              for pg in range(1,30):
+                  r=build.tmdb('/discover/movie',page=pg,**base,**extra)
+                  for it in r['results']:
+                      n+=1
+                      if it['id']==37793: found=(pg,n)
+                  if pg>=r['total_pages']: break
+              print('discover',label,'total',r['total_results'],'found',found)
+          PY
+          exit 1
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: '3.12'
