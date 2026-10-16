@@ -4,3 +4,6 @@
 Pillow==12.3.0
 # PyYAML: tests/test_practice_skip_logger.py parses .github/workflows/build.yml.
 PyYAML==6.0.2
+# DuckDB: the weekly accuracy check (generator/accuracy_check.py) reads all shelf files and compares weeks; its test needs
+# it too. accuracy.yml installs this exact pin; the daily build never imports it.
+duckdb==1.5.6
