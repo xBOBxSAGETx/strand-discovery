@@ -9,9 +9,8 @@ baseline and the report table treat the two kinds like the Popular / Top kinds.
 THE CLAIMS (what the card name promises, in plain words) and THE RULES in code (generator/build.py line numbers):
   director "Director . Name" = every film they directed, and the TV series they directed. (Owner, issue #30: "director
            cards don't list the director's entire portfolio".)
-           Rule, build.director() :464-490: movie_credits crew with job Director / Co-Director and released (:470, released()
-           :209); runtime >= 40 minutes, or unknown runtime with >= 500 votes (MIN_RUNTIME :460, KNOWN_VOTES :461, test :475)
-           = SHORTS DROPPED; then tv_credits crew with job Director, one episode counts (:483), released only (:483), no
+           Rule, build.director(): movie_credits crew with job Director / Co-Director and released (released() :209), any
+           runtime (shorts included since issue #30; no runtime floor); then tv_credits crew with job Director, one episode counts (:483), released only (:483), no
            talk / news / reality genres (NOT_ACTING :496, :484) and not a TV movie already listed as a movie by title + year
            (:480, :485); best-known (votes) first. No depth cap.
   actor    "Actor . Name" = the films and series they act in.
@@ -169,9 +168,6 @@ def director_status(media, tid, ctx, today, runtime_of):
             return 'deliberate rule', 'TMDB credits them as ' + '/'.join(sorted({x.get('job') or '?' for x in cs})) + ', not Director / Co-Director'
         if not released(c, 'movie', today):
             return 'deliberate rule', 'not released yet (released-only rule)'
-        rt = runtime_of(tid)
-        if rt < build.MIN_RUNTIME and not (rt == 0 and (c.get('vote_count') or 0) >= build.KNOWN_VOTES):
-            return 'deliberate rule', f'short film: runtime {rt or "unknown"} min, floor {build.MIN_RUNTIME} (MIN_RUNTIME)'
         return None
     c = next((x for x in cs if x.get('job') == 'Director'), None)
     if not c:

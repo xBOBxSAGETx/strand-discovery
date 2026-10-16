@@ -474,25 +474,19 @@ def franchise(card):
     return [sorted(movies, key=by_date), sorted(extra['series'], key=by_date)]
 
 
-MIN_RUNTIME = 40      # director cards: drop shorts; unknown runtime kept only for well-known titles
-KNOWN_VOTES = 500
+MIN_RUNTIME = 40      # Top / Most Voted movie cards only (not_short); director cards keep shorts (issue #30)
 
 
 def director(card, dropped):
-    """Movies they directed (shorts dropped, best-known first), then the TV series they directed episodes of
+    """Movies they directed (shorts included, issue #30, best-known first), then the TV series they directed episodes of
     (TMDB tv_credits, crew job Director; one episode counts; talk/news/reality shows and TV movies already listed
     as movies are left out), best-known first."""
     pid = card['person_id']
     crew = tmdb(f"/person/{pid}/movie_credits").get('crew', [])
     films = {c['id']: c for c in crew if c.get('job') in ('Director', 'Co-Director') and released(c, 'movie')}
-    kept = []
     # best-known first (vote count): release order put restorations/compilations on top (Wyler, Leone - report.csv)
-    for c in sorted(films.values(), key=lambda c: (-(c.get('vote_count') or 0), c['release_date'])):
-        runtime = stable(f"runtime:{c['id']}", lambda: tmdb(f"/movie/{c['id']}").get('runtime') or 0)
-        if runtime >= MIN_RUNTIME or (runtime == 0 and c.get('vote_count', 0) >= KNOWN_VOTES):
-            kept.append(preview(c, 'movie'))
-        else:
-            dropped.append(f"{c.get('title')} ({c['release_date'][:4]}, {runtime or 'no'} min)")
+    kept = [preview(c, 'movie')
+            for c in sorted(films.values(), key=lambda c: (-(c.get('vote_count') or 0), c['release_date']))]
     # TV movies come back from tv_credits under a different (tv) id: match them to the movie list by title + year
     film_keys = {((c.get('title') or '').casefold(), c['release_date'][:4]) for c in films.values()}
     shows = {}

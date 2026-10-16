@@ -110,8 +110,7 @@ class Rules(unittest.TestCase):
         mine = {(media, tid) for media in ('movie', 'series') for tid in ctx[media]
                 if ap.director_status(media, tid, ctx, TODAY, runtimes.get) is None}
         self.assertEqual(mine, kept)
-        self.assertEqual(kept, {('movie', 1), ('movie', 4), ('series', 20)})
-        self.assertIn('short film', ap.director_status('movie', 2, ctx, TODAY, runtimes.get)[1])
+        self.assertEqual(kept, {('movie', 1), ('movie', 2), ('movie', 4), ('movie', 5), ('series', 20)})   # shorts in (#30)
 
 
 class Measure(unittest.TestCase):
@@ -126,7 +125,7 @@ class Measure(unittest.TestCase):
             return list(sample_rows)
         return ap.measure_people(kind, [card], {}, lambda slug: order, tmdb, sparql, TODAY, 5, 20, 'seed')
 
-    def test_director_recall_labels_and_shorts_both_ways(self):
+    def test_director_recall_labels_shorts_are_code_bugs_now(self):
         movies = [mc(1, 'Feature'), mc(2, 'Short'), mc(4, 'Dropped feature')]
         runtimes = {1: 120, 2: 15, 4: 100}
         tmdb = lambda path, **p: ({'crew': movies} if path.endswith('movie_credits') else {'crew': []} if path.endswith('tv_credits')
@@ -134,10 +133,10 @@ class Measure(unittest.TestCase):
         rows = [wd('Q1', m=1), wd('Q2', m=2, sh='1'), wd('Q3', m=3), wd('Q4', m=4), wd('Q5')]
         row, gaps = self.run_card('director', rows, ['movie:1'], tmdb)
         got = {g['key']: g['label'] for g in gaps if g['side'] == 'recall'}
-        self.assertEqual(got, {'movie:2': 'deliberate rule', 'movie:3': 'source limit', 'movie:4': 'code bug'})
+        self.assertEqual(got, {'movie:2': 'code bug', 'movie:3': 'source limit', 'movie:4': 'code bug'})
         self.assertEqual((row['found'], row['truth'], row['recall']), (1, 4, 25.0))
         self.assertEqual(row['unmapped'], 1)
-        self.assertEqual(row['shorts'], {'missing_as_shorts': 1, 'recall_shorts_in_claim': 25.0, 'recall_shorts_out_of_claim': 33.3})
+        self.assertEqual(row['shorts'], {'missing_as_shorts': 0, 'recall_shorts_in_claim': 25.0, 'recall_shorts_out_of_claim': 25.0})
         self.assertEqual(row['wikidata_short_films'], {'on_card': 0, 'total': 1})
 
     def test_actor_precision_judged_only(self):
