@@ -7,5 +7,19 @@
   "hulu": 88.4,
   "netflix": 95.8,
   "prime-video": 92.5
+ },
+ "frame": {
+  "measured": "2026-10-16",
+  "method": "accuracy_frame.py, 12 seeded cards per kind (seed audit-92), 20 titles per card, claim top 20 per medium; run 38844323755 on build run 38837399173",
+  "popular": {
+   "recall": 87.1,
+   "precision": 100.0,
+   "code_bugs": 0
+  },
+  "top": {
+   "recall": 84.5,
+   "precision": 100.0,
+   "code_bugs": 0
+  }
  }
 }
