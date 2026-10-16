@@ -482,6 +482,15 @@ def _blocked_by_keywords(rule, kw_ids):
     return any(all(x in kw_ids for x in part.split(',')) for part in str(rule or '').split('|') if part.strip())
 
 
+def correction_details(card, media, tid, fetch=None):
+    """THE TMDB fetch of a correction add (the build and the accuracy check both use it, so they judge the same data):
+    details + what correction_rule reads (release types, keywords, and watch providers on a service card).
+    fetch: the caller's TMDB getter (path, **params) -> dict; default this module's tmdb()."""
+    return (fetch or tmdb)(f"/{'movie' if media == 'movie' else 'tv'}/{tid}",
+                append_to_response=('release_dates,keywords' if media == 'movie' else 'keywords')
+                + (',watch/providers' if card.get(media, {}).get('with_watch_providers') else ''))
+
+
 def correction_rule(card, dflt, media, d):
     """Issue #129: the first of the card's OWN rules a hand-added title fails, from its TMDB details (+ release_dates and
     keywords); None = it fits. An add only fixes the source's missing tag/credit/grouping, never the card's other rules.
@@ -627,9 +636,7 @@ def apply_corrections(card, metas, depth, dflt=None):
             why = 'no date for a New card'
         else:
             try:
-                d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}",
-                         append_to_response=('release_dates,keywords' if media == 'movie' else 'keywords')
-                         + (',watch/providers' if card.get(media, {}).get('with_watch_providers') else ''))
+                d = correction_details(card, media, tid)
                 why = correction_rule(card, dflt, media, d) if d.get('id') else 'unknown to TMDB'
             except RuntimeError:
                 why = 'TMDB lookup failed'

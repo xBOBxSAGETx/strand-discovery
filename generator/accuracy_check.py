@@ -34,6 +34,7 @@ import accuracy_genres          # Genre / Theme cards against Wikidata (issue #9
 import accuracy_works           # Studios + Movie series, truth = Wikidata (issue #94)
 import accuracy_rules           # Network + rule-based cards: Decades, Acclaimed, Hidden Gems, Stand-up (issue #96)
 import accuracy_awards          # the 7 award cards, truth = Wikidata P166 / Wikipedia (issue #97)
+import accuracy_corrections     # our corrections list: keep / add / remove settle the gaps (issue #129)
 import accuracy_new             # every service's New card + the label of the dated precision errors (issue #97)
 
 SCHEDULES = {'vt', 'fb', 'wodp'}
@@ -455,6 +456,10 @@ def main():
         frame_sum.append(row)
         frame_gaps += gaps
     mark('all measured; writing the report')
+    audited = {c['slug'] for cs in list(frame_cards.values()) + list(people_pool.values()) + list(rules_cards.values()) +
+               list(genre_cards.values()) + list(works_cards.values()) for c in cs} | set(accuracy_awards.CARDS) | set(summary.get('new_card_modes', {}))
+    settled = accuracy_corrections.settle(frame_sum, frame_gaps, accuracy_corrections.current(), audited,
+                                          lambda slug: card_order(pages, slug), accuracy_corrections.build_rule_reason(spec, tmdb), summary['generated_at'][:10])
     if frame_gaps:
         with open(out / 'frame_gaps.csv', 'w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=list(frame_gaps[0]))
@@ -478,17 +483,14 @@ def main():
                          f"{r['precision']} | {b.get('precision', '-')} | {r['ok']}/{r['sample']} | {g(r['recall_gaps'])} | "
                          f"{g(r['precision_gaps'])} |")
     lines += accuracy_rules.extra_lines(rules_rows)
-    for r in frame_sum:                           # #117: titles our own lists put on a card are shown apart, never counted as TMDB recall
-        if r.get('tmdb_recall') is not None:
-            lines.append(f"\n{r['kind']} recall: {r['recall']} with our own lists, {r['tmdb_recall']} from TMDB alone "
-                         f"({r['filled']} of {r['truth']} claim titles are on the cards because our must-have / corrections lists put them there; "
-                         f"corrections applied {r['corrections']['found']}/{r['corrections']['total']})")
+    lines += accuracy_corrections.recall_lines(frame_sum)       # #117: titles our own lists put on a card are shown apart, never counted as TMDB recall
+    lines += accuracy_corrections.lines(frame_sum, settled['kept'])
     print('\n'.join(lines))
     problems = [f"precision: {e['provider']} {e['key']} not on the service ({e['precision']} precision, event "
                 f"{e['event_date']}, sources {e['sources']}, status {e['status']}) [{e['label']}: {e['reason']}] {e['urls'][:200]}" for e in errors]
     problems += [f"recall: {r['service']} {r['recall']}% is {r['drop']} points below the baseline {r['baseline']}%"
                  for r in rec if r.get('problem')]
-    problems += frame_problems(frame_sum, fbase)
+    problems += frame_problems(frame_sum, fbase) + settled['problems']
     problems += accuracy_rules.extra_problems(rules_rows, fbase, FRAME_MAX_DROP)
     # NOTES are shown, never problems: stale official lists (a manual refresh; the precision gate is the weekly guard)
     # and services with too few official arrivals in the window to measure
@@ -498,6 +500,9 @@ def main():
         notes.append(f"stale: official lists are for {', '.join(stale)} (run {today[:7]}); recall is measured on "
                      "that month - refresh generator/official_arrivals.csv + accuracy_baseline.json when convenient")
     notes += works_errors + award_notes + new_notes
+    if settled['pending']:
+        notes.append(f"{len(settled['pending'])} correction(s) added on or after the live build's day ({summary['generated_at'][:10]}) are not "
+                     'on the live cards yet: not judged this week')
     notes += [f"recall not measured for {r['service']}: {r['note']}" for r in rec if r['status'] == 'skipped']
     cmp = None
     if a.snapshot:                               # DuckDB reads all shelves; then the week-over-week compare (notes only)
