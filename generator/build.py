@@ -193,9 +193,15 @@ def canon_genres(ids):
     return sorted({g for i in ids or [] for g in CANON_GENRES.get(i, [])})
 
 
+_keys = {}                     # (medium, tmdb id) -> sort values seen on TMDB's own rows (issue #129: where a correction lands)
+_new_keys = {}                 # (card slug, medium, tmdb id) -> "new" card order key (arrival / first_seen date + popularity)
+
+
 def preview(item, media):
     title = item.get('title') or item.get('name')
     date = item.get('release_date') or item.get('first_air_date') or ''
+    _keys[(media, item['id'])] = {'pop': item.get('popularity') or 0, 'vote': item.get('vote_average') or 0,
+                                  'votes': item.get('vote_count') or 0, 'date': date}
     meta = {'id': f"tmdb:{item['id']}", 'type': media, 'name': title}
     if item.get('poster_path'):
         meta['poster'] = f"{IMG}/{POSTER_SIZE}{item['poster_path']}"
@@ -453,39 +459,182 @@ def add_must_haves(card, media, metas):
     return first + [m for m in metas if m not in first]
 
 
-def corrections(card, media):
-    """Issue #117: OUR OWN corrections for any card (generator/corrections.json, side add|remove|keep; only add is built so far): titles TMDB lacks the keyword for
-    but two sources (Wikidata and the English Wikipedia categories) file under the theme. -> [tmdb id, ...] of this medium."""
+def corrections_of(card):
+    """Issue #117/#129: every entry of OUR corrections list for this card (any side), in file order."""
     try:
-        lists = load_hand_list('corrections')
+        return load_hand_list('corrections').get(card.get('slug'), [])
     except OSError:
         return []
-    return [int(e['tmdb']) for e in lists.get(card.get('slug'), []) if e['type'] == media and e.get('side') == 'add']
 
 
-def add_corrections(card, media, metas, depth):
-    """Issue #117: append the corrections the card does not hold yet, AFTER the sorted list (they carry no sort key; the
-    shelf's own order is untouched). Each is fetched like any title (details_preview: None = not released / unknown, skipped).
-    The card keeps its cap: if the additions do not fit, the tail of the sorted list makes room (must-haves are never cut)."""
-    ids = corrections(card, media)
-    if not ids:
-        return metas
-    have = {m['id'] for m in metas}
-    extra = []
-    for tid in ids:
-        m = details_preview(media, tid) if f'tmdb:{tid}' not in have else None
-        if m and m['id'] not in have:
-            have.add(m['id'])
-            extra.append(m)
-    pinned = {f'tmdb:{i}' for i in must_haves(card, media)}                # must-haves are never cut
-    metas, over = list(metas), len(metas) + len(extra) - depth
-    for n in range(len(metas) - 1, -1, -1):
-        if over <= 0:
-            break
-        if metas[n]['id'] not in pinned:
-            del metas[n]
-            over -= 1
-    return metas + extra
+def corrections(card, media):
+    """Issue #117: the tmdb ids the list adds to this card for one medium (side add): titles TMDB lacks the keyword,
+    credit or grouping for but two sources (Wikidata and the English Wikipedia) file under it."""
+    return [int(e['tmdb']) for e in corrections_of(card) if e['type'] == media and e.get('side') == 'add']
+
+
+def _split(rule):
+    return [x for x in re.split(r'[|,]', str(rule or '')) if x.strip()]
+
+
+def _blocked_by_keywords(rule, kw_ids):
+    """TMDB without_keywords syntax: '|' = any of, ',' = all of (a part between '|' may hold ',' groups)."""
+    return any(all(x in kw_ids for x in part.split(',')) for part in str(rule or '').split('|') if part.strip())
+
+
+def correction_rule(card, dflt, media, d):
+    """Issue #129: the first of the card's OWN rules a hand-added title fails, from its TMDB details (+ release_dates and
+    keywords); None = it fits. An add only fixes the source's missing tag/credit/grouping, never the card's other rules.
+    Every card: released, not adult, not on the deny / card exclusion lists. A discover card that is not in a New mode
+    also: min_age_days, min_votes, movie release type 4|5|6 and the runtime floor, series without_genres, the defaults'
+    without_keywords (+ the card's own), the main-genre rule of a genre card."""
+    tid = d['id']
+    date = d.get('release_date') or d.get('first_air_date') or ''
+    if not date or date > TODAY:
+        return 'not released'
+    if d.get('adult'):
+        return 'adult'
+    dflt = dflt or {}
+    if (media, tid) in {(e['type'], int(e['tmdb'])) for e in dflt.get('deny', [])}:
+        return 'deny list'
+    if (media, tid) in {(e['type'], int(e['tmdb'])) for e in card.get('exclude', [])}:
+        return 'card exclusion list'
+    if card['kind'] != 'discover' or arrival_mode(card) or first_seen_mode(card):
+        return None
+    own = card.get(media, {})
+    movie = media == 'movie'
+    if card.get('min_age_days') and date > (dt.date.fromisoformat(TODAY) - dt.timedelta(days=card['min_age_days'])).isoformat():
+        return 'min_age_days'
+    votes = card.get('min_votes', 10)
+    if isinstance(votes, dict):
+        votes = votes[media]
+    if (d.get('vote_count') or 0) < int(votes):
+        return 'min_votes'
+    gids = [g['id'] if isinstance(g, dict) else g for g in d.get('genres') or d.get('genre_ids') or []]
+    if movie:
+        types = {r.get('type') for c in (d.get('release_dates') or {}).get('results', []) for r in c.get('release_dates', [])}
+        if 'release_dates' in d and not {4, 5, 6} & types:
+            return 'release type 4|5|6'
+        floor = own.get('with_runtime.gte') or (MIN_RUNTIME if card['sort'] in ('top', 'votes') else 0)
+        if floor and 0 < (d.get('runtime') or 0) < int(floor):
+            return 'runtime'
+    elif set(gids) & {int(x) for x in _split(own.get('without_genres', '10767|10763'))}:
+        return 'without_genres'
+    if dflt.get('without_keywords'):
+        excl = dflt['without_keywords'] + ('' if movie or not dflt.get('without_keywords_tv') else '|' + dflt['without_keywords_tv'])
+        rule = f"{own['without_keywords']}|{excl}" if own.get('without_keywords') else excl
+        kws = (d.get('keywords') or {}).get('keywords' if movie else 'results', [])
+        if _blocked_by_keywords(rule, {str(k['id']) for k in kws}):
+            return 'without_keywords'
+    mains = main_genres(card, media)
+    if mains and not genre_fits(gids, mains):
+        return 'main genre'
+    return None
+
+
+def placement(card):
+    """How this card orders its list -> (key of a meta, highest first?, name) or None (= appended). Reuses the key each
+    kind sorts by today: popular -> popularity; top -> rating; votes (Most Voted, director, actor) -> vote count;
+    new / release_asc / franchise -> release date; arrival and first_seen New cards -> recent_first_key of the arrival
+    date (the entry's "date"); mdblist year_desc -> release date. Idlist and plain mdblist keep list order: appended."""
+    def val(field):
+        return lambda m: (_keys.get((m['type'], int(m['id'].split(':', 1)[1]))) or {}).get(field) or None
+
+    def date_of(m):
+        k = int(m['id'].split(':', 1)[1])
+        return (_keys.get((m['type'], k)) or {}).get('date') or (_stable.get(f"{m['type']}:{k}") or {}).get('d') \
+            or m.get('releaseInfo') or None
+
+    kind = card['kind']
+    if kind == 'discover':
+        if 'studios' not in card.get('folders', []) and (arrival_mode(card) or first_seen_mode(card)):
+            return (lambda m: _new_keys.get((card['slug'], m['type'], int(m['id'].split(':', 1)[1])))), True, 'arrival'
+        return {'popular': (val('pop'), True), 'top': (val('vote'), True), 'votes': (val('votes'), True),
+                'new': (date_of, True), 'release_asc': (date_of, False)}[card['sort']] + (card['sort'],)
+    if kind == 'franchise':
+        return date_of, False, 'release date'
+    if kind in ('director', 'actor'):
+        return val('votes'), True, 'vote count'
+    if kind == 'mdblist' and card.get('order') == 'year_desc':
+        return date_of, True, 'release date'
+    return None
+
+
+def _insert(metas, new, key, desc):
+    """Put `new` among the same-medium entries by key: right after the last one that ranks at or above it (before the
+    first keyed one when it outranks them all; appended when none has a key). Entries without a key are skipped."""
+    k_new = key(new)
+    keyed = [(i, key(m)) for i, m in enumerate(metas) if m['type'] == new['type'] and key(m) is not None]
+    if k_new is None or not keyed:
+        metas.append(new)
+        return
+    above = [i for i, k in keyed if (k >= k_new if desc else k <= k_new)]
+    metas.insert(above[-1] + 1 if above else keyed[0][0], new)
+
+
+def apply_corrections(card, metas, depth, dflt=None):
+    """Issue #129 (part of #117): OUR OWN corrections list (generator/corrections.json), one step at the end of build_one
+    for every card kind. side remove: the title leaves the card. side add: fetched like any title, not duplicated,
+    checked against the card's own other rules (correction_rule; a failing add is skipped and named), and PLACED BY THE
+    CARD'S OWN ORDER (placement()). The card keeps its depth: the tail of the list makes room, never the must-haves nor
+    the additions (a kind with no depth is not cut). side keep: no effect here. -> (metas, [skip notes])."""
+    entries = corrections_of(card)
+    metas, skipped = list(metas), []
+    if not entries:
+        return metas, skipped
+    holds = card.get('media') or ('movie', 'series')
+    gone = {(e['type'], f"tmdb:{int(e['tmdb'])}") for e in entries if e.get('side') == 'remove'}
+    metas = [m for m in metas if (m['type'], m['id']) not in gone]
+    order = placement(card)
+    have = {(m['type'], m['id']) for m in metas}
+    added = []
+    for e in (e for e in entries if e.get('side') == 'add'):
+        media, tid = e['type'], int(e['tmdb'])
+        if (media, f'tmdb:{tid}') in have:
+            continue
+        d, why = None, None
+        if media not in holds:
+            why = f'card holds no {media}'
+        elif order and order[2] == 'arrival' and not e.get('date'):
+            why = 'no date for a New card'
+        else:
+            try:
+                d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}",
+                         append_to_response='release_dates,keywords' if media == 'movie' else 'keywords')
+                why = correction_rule(card, dflt, media, d) if d.get('id') else 'unknown to TMDB'
+            except RuntimeError:
+                why = 'TMDB lookup failed'
+        if why:
+            skipped.append(f"correction skipped: {e.get('title') or tid} ({why})")
+            continue
+        m = preview(d, media)
+        twin = next((o for o in metas if o['type'] != media and (o.get('name') or '').casefold() == (m.get('name') or '').casefold()
+                     and o.get('releaseInfo') == m.get('releaseInfo')), None)
+        if twin:           # a TV film that Wikidata also lists as a movie: the shelf must not show one film twice
+            skipped.append(f"correction skipped: {e.get('title') or tid} (same title and year already on the card as a {twin['type']})")
+            continue
+        have.add((media, m['id']))
+        added.append(m['id'])
+        if order and order[2] == 'arrival':
+            _new_keys[(card['slug'], media, tid)] = recent_first_key(e['date'], d.get('popularity') or 0, 0)
+        if order:
+            _insert(metas, m, order[0], order[1])
+        else:
+            metas.append(m)
+    if depth and added:
+        cap = depth * len(card.get('media') or ('movie',))
+        listed = {f"tmdb:{int(e['tmdb'])}" for e in entries if e.get('side') == 'add'}    # corrections already in the sorted list too
+        pinned = set(added) | listed | {f'tmdb:{i}' for media in holds for i in must_haves(card, media)}
+        over = len(metas) - cap
+        if 'studios' in card.get('folders', []):      # a studio card is longer than its depth by design (distributed films): only make room for the additions
+            over = len(added) - max(0, cap - (len(metas) - len(added)))
+        for n in range(len(metas) - 1, -1, -1):
+            if over <= 0:
+                break
+            if metas[n]['id'] not in pinned:
+                del metas[n]
+                over -= 1
+    return metas, skipped
 
 
 def franchise(card):
@@ -912,6 +1061,8 @@ def first_seen_card(card, depth):
     older ones newest first; no vote floor (arrivals are often obscure); movies and TV interleaved."""
     c = sorted(FS_CANDIDATES[card['provider']], key=lambda m: recent_first_key(m['first_seen'], m['popularity']), reverse=True)
     strip = lambda m: {k: v for k, v in m.items() if k not in ('first_seen', 'popularity')}
+    for m in c:                                  # issue #129: the order key a hand-added title is placed by
+        _new_keys[(card['slug'], m['type'], int(m['id'].split(':', 1)[1]))] = recent_first_key(m['first_seen'], m['popularity'])
     return interleave([[strip(m) for m in c if m['type'] == t][:depth] for t in ('movie', 'series')])
 
 
@@ -950,7 +1101,7 @@ def arrival_card(card, depth, dflt):
     timeline.sort(key=lambda t: recent_first_key(t[0], t[2], t[1]), reverse=True)
     cap = depth * len(card['media'])
     out, seen, n_sig = [], set(), 0
-    for date, _, _, k, meta in timeline:
+    for date, rank, pop, k, meta in timeline:
         if len(out) >= cap:
             break
         if meta is None:
@@ -959,6 +1110,7 @@ def arrival_card(card, depth, dflt):
             n_sig += meta is not None
         if meta and meta['id'] not in seen and meta['type'] in card['media']:
             seen.add(meta['id'])
+            _new_keys[(card['slug'], meta['type'], int(meta['id'].split(':', 1)[1]))] = recent_first_key(date, pop, rank)
             out.append(meta)
     n_arr = len(out)
     fill = interleave([discover(card, m, depth, dflt) for m in card['media']])
@@ -967,7 +1119,14 @@ def arrival_card(card, depth, dflt):
 
 
 def build_one(card, dflt):
-    """Returns (metas, notes)."""
+    """Returns (metas, notes). The card is built by its kind, then OUR corrections list is applied to it (issue #129)."""
+    metas, notes = build_kind(card, dflt)
+    depth = depth_of(card, dflt) if 'sort' in card or card.get('depth') else None    # franchise / people / id lists have none
+    metas, skipped = apply_corrections(card, metas, depth, dflt)
+    return metas, '; '.join(x for x in [notes] + skipped if x)
+
+
+def build_kind(card, dflt):
     kind, notes = card['kind'], ''
     if kind == 'discover' and 'studios' in card.get('folders', []):      # issue #66: + the films the studio distributed
         return interleave([add_studio_distributed(card, discover(card, m, depth_of(card, dflt), dflt))
@@ -980,8 +1139,7 @@ def build_one(card, dflt):
         return first_seen_card(card, depth_of(card, dflt)), 'ordered by date first seen on the service'
     if kind == 'discover':
         depth = depth_of(card, dflt)
-        return interleave([add_corrections(card, m, add_must_haves(card, m, discover(card, m, depth, dflt)), depth)
-                           for m in card['media']]), notes
+        return interleave([add_must_haves(card, m, discover(card, m, depth, dflt)) for m in card['media']]), notes
     if kind == 'franchise':
         return interleave(franchise(card)), notes
     if kind == 'director':
