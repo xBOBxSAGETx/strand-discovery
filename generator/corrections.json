@@ -730,6 +730,17 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "source limit: TMDB year unknown"
+  },
+  {
+   "type": "movie",
+   "tmdb": 100,
+   "title": "Lock, Stock and Two Smoking Barrels",
+   "year": 1998,
+   "source": "https://en.wikipedia.org/wiki/Lock,_Stock_and_Two_Smoking_Barrels",
+   "wikidata": "Q851095",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Wikidata Q851095 genre \"heist film\" + Wikipedia: \"follows a heist\", categories 1990s heist films / British heist films; TMDB lacks keyword 10051"
   }
  ],
  "theme-psychological": [
@@ -1625,6 +1636,28 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "IMDb tags it ['Adventure'] too (genres ['Action', 'Adventure', 'War']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11416,
+   "title": "The Mission",
+   "year": 1986,
+   "source": "https://www.imdb.com/title/tt0091530/ (IMDb genres: Adventure,Drama,History)",
+   "wikidata": "Q302490",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Adventure'] too (genres ['Adventure', 'Drama', 'History']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 774370,
+   "title": "Dog Man",
+   "year": 2025,
+   "source": "https://www.imdb.com/title/tt10954718/ (IMDb genres: Action,Adventure,Animation)",
+   "wikidata": "Q124464619",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Adventure'] too (genres ['Action', 'Adventure', 'Animation']): the two sources disagree, keep"
   }
  ],
  "genre-comedy-new": [
@@ -1905,6 +1938,50 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "IMDb tags it ['Crime'] too (genres ['Adventure', 'Comedy', 'Crime']): the two sources disagree, keep"
+  },
+  {
+   "type": "series",
+   "tmdb": 6024,
+   "title": "Police Squad!",
+   "year": 1982,
+   "source": "https://www.imdb.com/title/tt0083466/ (IMDb genres: Comedy,Crime)",
+   "wikidata": "Q974857",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Crime'] too (genres ['Comedy', 'Crime']): the two sources disagree, keep"
+  },
+  {
+   "type": "series",
+   "tmdb": 62816,
+   "title": "Quantico",
+   "year": 2015,
+   "source": "https://www.imdb.com/title/tt4428122/ (IMDb genres: Crime,Drama,Mystery)",
+   "wikidata": "Q19866569",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Crime'] too (genres ['Crime', 'Drama', 'Mystery']): the two sources disagree, keep"
+  },
+  {
+   "type": "series",
+   "tmdb": 70384,
+   "title": "Tin Star",
+   "year": 2017,
+   "source": "https://www.imdb.com/title/tt4607112/ (IMDb genres: Crime,Drama,Thriller)",
+   "wikidata": "Q30612281",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Crime'] too (genres ['Crime', 'Drama', 'Thriller']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 648579,
+   "title": "The Unbearable Weight of Massive Talent",
+   "year": 2022,
+   "source": "https://www.imdb.com/title/tt11291274/ (IMDb genres: Action,Comedy,Crime)",
+   "wikidata": "Q87220566",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Crime'] too (genres ['Action', 'Comedy', 'Crime']): the two sources disagree, keep"
   }
  ],
  "genre-documentary-top": [
@@ -2172,6 +2249,72 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "IMDb tags it ['Drama'] too (genres ['Biography', 'Drama', 'History']): the two sources disagree, keep"
+  },
+  {
+   "type": "series",
+   "tmdb": 311025,
+   "title": "Affinity",
+   "year": 2026,
+   "source": "https://www.imdb.com/title/tt39394556/ (IMDb genres: Action,Romance,Sci-Fi)",
+   "wikidata": "Q137939253",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3 (['Action', 'Romance', 'Sci-Fi']); cannot confirm absence"
+  },
+  {
+   "type": "series",
+   "tmdb": 305551,
+   "title": "Merry Berry Love",
+   "year": 2026,
+   "source": "https://www.imdb.com/title/tt38937897/ (IMDb genres: Comedy,Romance)",
+   "wikidata": "Q141131777",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata genres [romantic comedy] and IMDb genres [Comedy,Romance] both lack the card genre"
+  },
+  {
+   "type": "movie",
+   "tmdb": 972232,
+   "title": "K-Pops!",
+   "year": 2026,
+   "source": "https://www.imdb.com/title/tt19896510/ (IMDb genres: Comedy,Drama,Music)",
+   "wikidata": "Q127414328",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Drama'] too (genres ['Comedy', 'Drama', 'Music']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1602727,
+   "title": "Night King",
+   "year": 2026,
+   "source": "https://www.imdb.com/title/tt37284356/ (IMDb genres: Comedy)",
+   "wikidata": "Q137711426",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata genres [comedy film] and IMDb genres [Comedy] both lack the card genre"
+  },
+  {
+   "type": "series",
+   "tmdb": 269160,
+   "title": "Cash Queens",
+   "year": 2026,
+   "source": "https://www.imdb.com/title/tt34139155/ (IMDb genres: Comedy,Crime,Drama)",
+   "wikidata": "Q131363429",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Drama'] too (genres ['Comedy', 'Crime', 'Drama']): the two sources disagree, keep"
+  },
+  {
+   "type": "series",
+   "tmdb": 322428,
+   "title": "Moria",
+   "year": 2026,
+   "source": "https://www.imdb.com/title/tt41559147/ (IMDb genres: Biography,Drama)",
+   "wikidata": "Q138992950",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Drama'] too (genres ['Biography', 'Drama']): the two sources disagree, keep"
   }
  ],
  "genre-family-new": [
@@ -2295,6 +2438,83 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "IMDb genre list truncated at 3; cannot confirm absence"
+  },
+  {
+   "type": "movie",
+   "tmdb": 858408,
+   "title": "Dog Gone",
+   "year": 2023,
+   "source": "https://www.imdb.com/title/tt15334430/ (IMDb genres: Biography,Drama,Family)",
+   "wikidata": "Q116189434",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Family'] too (genres ['Biography', 'Drama', 'Family']): the two sources disagree, keep"
+  },
+  {
+   "type": "series",
+   "tmdb": 137680,
+   "title": "Twenty Your Life On",
+   "year": 2020,
+   "source": "https://www.imdb.com/title/tt11357988/ (IMDb genres: Drama,Romance)",
+   "wikidata": "Q97192105",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata genres [drama television series] and IMDb genres [Drama,Romance] both lack the card genre"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1255559,
+   "title": "Dilan 1983",
+   "year": 2024,
+   "source": "https://www.imdb.com/title/tt31070645/ (IMDb genres: Drama,Romance)",
+   "wikidata": "Q130355877",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata genres [drama film] and IMDb genres [Drama,Romance] both lack the card genre"
+  },
+  {
+   "type": "movie",
+   "tmdb": 967585,
+   "title": "Alibi.com 2",
+   "year": 2023,
+   "source": "https://www.imdb.com/title/tt20424172/ (IMDb genres: Comedy)",
+   "wikidata": "Q115786347",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata genres [comedy film] and IMDb genres [Comedy] both lack the card genre"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1068452,
+   "title": "Hi Nanna",
+   "year": 2023,
+   "source": "https://www.imdb.com/title/tt25433734/ (IMDb genres: Drama,Family,Romance)",
+   "wikidata": "Q123169099",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Family'] too (genres ['Drama', 'Family', 'Romance']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1147400,
+   "title": "Miraculous World: Paris, Tales of Shadybug and Claw Noir",
+   "year": 2024,
+   "source": "https://www.imdb.com/title/tt29259099/ (IMDb genres: Action,Adventure,Animation)",
+   "wikidata": "Q123158267",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3 (['Action', 'Adventure', 'Animation']); cannot confirm absence"
+  },
+  {
+   "type": "series",
+   "tmdb": 128567,
+   "title": "Don't Say No",
+   "year": 2021,
+   "source": "https://www.imdb.com/title/tt15452616/ (IMDb genres: Romance)",
+   "wikidata": "Q108029640",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikidata's only filing is a topic tag (LGBT-related television series), not a genre that replaces the card genre; IMDb genres ['Romance']: not two complete sources, keep"
   }
  ],
  "genre-family-top": [
@@ -2481,6 +2701,83 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "IMDb genre list truncated at 3; cannot confirm absence"
+  },
+  {
+   "type": "movie",
+   "tmdb": 598331,
+   "title": "Rumble",
+   "year": 2021,
+   "source": "https://www.imdb.com/title/tt8337158/ (IMDb genres: Animation,Comedy,Family)",
+   "wikidata": "Q83952024",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Family'] too (genres ['Animation', 'Comedy', 'Family']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 431580,
+   "title": "Abominable",
+   "year": 2019,
+   "source": "https://www.imdb.com/title/tt6324278/ (IMDb genres: Adventure,Animation,Comedy)",
+   "wikidata": "Q55087665",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3 (['Adventure', 'Animation', 'Comedy']); cannot confirm absence"
+  },
+  {
+   "type": "movie",
+   "tmdb": 15400,
+   "title": "Mickey's Once Upon a Christmas",
+   "year": 1999,
+   "source": "https://www.imdb.com/title/tt0238414/ (IMDb genres: Animation,Comedy,Family)",
+   "wikidata": "Q1655222",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Family'] too (genres ['Animation', 'Comedy', 'Family']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1667,
+   "title": "March of the Penguins",
+   "year": 2005,
+   "source": "https://www.imdb.com/title/tt0428803/ (IMDb genres: Documentary,Family)",
+   "wikidata": "Q330113",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Family'] too (genres ['Documentary', 'Family']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 285733,
+   "title": "Barbie and the Secret Door",
+   "year": 2014,
+   "source": "https://www.imdb.com/title/tt3921852/ (IMDb genres: Animation,Family)",
+   "wikidata": "Q18326707",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Family'] too (genres ['Animation', 'Family']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 81440,
+   "title": "Good Luck Charlie, It's Christmas!",
+   "year": 2011,
+   "source": "https://www.imdb.com/title/tt1828976/ (IMDb genres: Comedy,Drama,Family)",
+   "wikidata": "Q1573500",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Family'] too (genres ['Comedy', 'Drama', 'Family']): the two sources disagree, keep"
+  },
+  {
+   "type": "series",
+   "tmdb": 100963,
+   "title": "The Big Show Show",
+   "year": 2020,
+   "source": "https://www.imdb.com/title/tt10726356/ (IMDb genres: Comedy,Family)",
+   "wikidata": "Q85806550",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Family'] too (genres ['Comedy', 'Family']): the two sources disagree, keep"
   }
  ],
  "genre-music-top": [
@@ -2594,6 +2891,17 @@
    "title": "Get Him to the Greek",
    "year": null,
    "source": "https://www.themoviedb.org/movie/32823",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Music'] too (genres ['Comedy', 'Music']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 14648,
+   "title": "Podium",
+   "year": 2004,
+   "source": "https://www.imdb.com/title/tt0354836/ (IMDb genres: Comedy,Music)",
+   "wikidata": "Q2444913",
    "added": "2026-10-16",
    "side": "keep",
    "why": "IMDb tags it ['Music'] too (genres ['Comedy', 'Music']): the two sources disagree, keep"
@@ -2747,6 +3055,17 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "IMDb tags it ['Fantasy'] too (genres ['Action', 'Adventure', 'Fantasy']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 981347,
+   "title": "The Loch Ness Horror",
+   "year": 2023,
+   "source": "https://www.imdb.com/title/tt15481986/ (IMDb genres: Action,Horror,Sci-Fi)",
+   "wikidata": "Q134741291",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['Sci-Fi'] too (genres ['Action', 'Horror', 'Sci-Fi']): the two sources disagree, keep"
   }
  ],
  "genre-war": [
@@ -3011,6 +3330,127 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "IMDb tags it ['War'] too (genres ['Action', 'Drama', 'War']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 504949,
+   "title": "The King",
+   "year": 2019,
+   "source": "https://www.imdb.com/title/tt7984766/ (IMDb genres: Biography,Drama,History)",
+   "wikidata": "Q54801155",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3 (['Biography', 'Drama', 'History']); cannot confirm absence"
+  },
+  {
+   "type": "movie",
+   "tmdb": 8418,
+   "title": "Kolberg",
+   "year": 1945,
+   "source": "https://www.imdb.com/title/tt0036989/ (IMDb genres: Drama,History,Romance)",
+   "wikidata": "Q706951",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3 (['Drama', 'History', 'Romance']); cannot confirm absence"
+  },
+  {
+   "type": "movie",
+   "tmdb": 607844,
+   "title": "Escape from Mogadishu",
+   "year": 2021,
+   "source": "https://www.imdb.com/title/tt14810692/ (IMDb genres: Action,Drama,Thriller)",
+   "wikidata": "Q107208538",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3 (['Action', 'Drama', 'Thriller']); cannot confirm absence"
+  },
+  {
+   "type": "movie",
+   "tmdb": 573531,
+   "title": "Halo Legends",
+   "year": 2010,
+   "source": "https://www.imdb.com/title/tt1480660/ (IMDb genres: Action,Adventure,Animation)",
+   "wikidata": "Q3113058",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3 (['Action', 'Adventure', 'Animation']); cannot confirm absence"
+  },
+  {
+   "type": "series",
+   "tmdb": 73550,
+   "title": "Gunpowder",
+   "year": 2017,
+   "source": "https://www.imdb.com/title/tt6128262/ (IMDb genres: Drama,History)",
+   "wikidata": "Q30603293",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata genres [historical drama] and IMDb genres [Drama,History] both lack the card genre"
+  },
+  {
+   "type": "movie",
+   "tmdb": 56143,
+   "title": "The Battle of Midway",
+   "year": 1942,
+   "source": "https://www.imdb.com/title/tt0034498/ (IMDb genres: Documentary,Short,War)",
+   "wikidata": "Q1795389",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['War'] too (genres ['Documentary', 'Short', 'War']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 3063,
+   "title": "Duck Soup",
+   "year": 1933,
+   "source": "https://www.imdb.com/title/tt0023969/ (IMDb genres: Comedy,Musical)",
+   "wikidata": "Q1125566",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata genres [musical film|comedy film] and IMDb genres [Comedy,Musical] both lack the card genre"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1318037,
+   "title": "G-Day",
+   "year": 2025,
+   "source": "https://www.imdb.com/title/tt33069817/ (IMDb genres: Adventure,Comedy,War)",
+   "wikidata": "Q133273670",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb tags it ['War'] too (genres ['Adventure', 'Comedy', 'War']): the two sources disagree, keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 31169,
+   "title": "The Courageous Heart of Irena Sendler",
+   "year": 2009,
+   "source": "https://www.imdb.com/title/tt1010278/ (IMDb genres: Biography,Drama,History)",
+   "wikidata": "Q24520",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3 (['Biography', 'Drama', 'History']); cannot confirm absence"
+  },
+  {
+   "type": "movie",
+   "tmdb": 1001435,
+   "title": "The Future Awaits",
+   "year": 2025,
+   "source": "https://www.imdb.com/title/tt30399248/ (IMDb genres: Biography,Drama,History)",
+   "wikidata": "Q131828549",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3 (['Biography', 'Drama', 'History']); cannot confirm absence"
+  },
+  {
+   "type": "movie",
+   "tmdb": 488465,
+   "title": "Gdansk",
+   "year": 2017,
+   "source": "https://www.imdb.com/title/tt13644656/ (IMDb genres: Animation,Fantasy,Short)",
+   "wikidata": "Q67102008",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "IMDb genre list truncated at 3 (['Animation', 'Fantasy', 'Short']); cannot confirm absence"
   }
  ],
  "genre-westerns": [
@@ -3266,6 +3706,17 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "Wikipedia infobox production lists Amblin Entertainment"
+  },
+  {
+   "type": "movie",
+   "tmdb": 101125,
+   "title": "Class of '61",
+   "year": 1993,
+   "source": "https://en.wikipedia.org/wiki/Class_of_'61",
+   "wikidata": "Q2975711",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikipedia infobox production company is \"Amblin Television\" (Amblin Entertainment link) + Universal Television; Wikidata Amblin Television is the same company group"
   }
  ],
  "studio-blumhouse": [
@@ -3399,6 +3850,39 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "Wikipedia infobox production lists Blumhouse Productions"
+  },
+  {
+   "type": "movie",
+   "tmdb": 23827,
+   "title": "Paranormal Activity",
+   "year": 2009,
+   "source": "https://en.wikipedia.org/wiki/Paranormal_Activity",
+   "wikidata": "Q381028",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikidata only; Wikipedia infobox studio lists Blumhouse Productions"
+  },
+  {
+   "type": "movie",
+   "tmdb": 298312,
+   "title": "The Visit",
+   "year": 2015,
+   "source": "https://en.wikipedia.org/wiki/The_Visit_(2015_American_film)",
+   "wikidata": "Q18386312",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikidata only; Wikipedia infobox production companies list Blumhouse Productions"
+  },
+  {
+   "type": "movie",
+   "tmdb": 155084,
+   "title": "13 Sins",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/13_Sins",
+   "wikidata": "Q15110422",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikidata only; Wikipedia infobox studio lists Blumhouse Productions"
   }
  ],
  "studio-dreamworks-animation": [
@@ -3514,6 +3998,17 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "Wikipedia infobox production lists Legendary Pictures"
+  },
+  {
+   "type": "movie",
+   "tmdb": 311324,
+   "title": "The Great Wall",
+   "year": 2016,
+   "source": "https://en.wikipedia.org/wiki/The_Great_Wall_(2016_film)",
+   "wikidata": "Q19587336",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikidata only; Wikipedia infobox studio lists Legendary Pictures"
   }
  ],
  "studio-new-line": [
@@ -3603,6 +4098,50 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "Wikipedia infobox production lists New Line Cinema"
+  },
+  {
+   "type": "movie",
+   "tmdb": 46889,
+   "title": "Living Out Loud",
+   "year": 1998,
+   "source": "https://en.wikipedia.org/wiki/Living_Out_Loud",
+   "wikidata": "Q1761989",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata production: Jersey Films; Wikipedia infobox studio: Jersey Films, distributor New Line Cinema only; Wikidata and Wikipedia both lack the studio as producer"
+  },
+  {
+   "type": "movie",
+   "tmdb": 116745,
+   "title": "The Secret Life of Walter Mitty",
+   "year": 2013,
+   "source": "https://en.wikipedia.org/wiki/The_Secret_Life_of_Walter_Mitty_(2013_film)",
+   "wikidata": "Q3522637",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikidata only; Wikipedia infobox production companies list New Line Cinema (co-produced)"
+  },
+  {
+   "type": "movie",
+   "tmdb": 11284,
+   "title": "Freddy's Dead: The Final Nightmare",
+   "year": 1991,
+   "source": "https://en.wikipedia.org/wiki/Freddy's_Dead:_The_Final_Nightmare",
+   "wikidata": "Q748614",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikidata production company is \"New Line Cinema's House of Horror\" (a New Line label); Wikipedia infobox has distributor New Line Cinema only, no production line: not two sources saying it did not produce it"
+  },
+  {
+   "type": "movie",
+   "tmdb": 4564,
+   "title": "Sex and the City",
+   "year": 2008,
+   "source": "https://en.wikipedia.org/wiki/Sex_and_the_City_(film)",
+   "wikidata": "Q381751",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikidata only; Wikipedia infobox production companies list New Line Cinema"
   }
  ],
  "studio-pixar": [
@@ -4012,6 +4551,61 @@
    "added": "2026-10-16",
    "side": "remove",
    "why": "Wikidata: Universal is distributor only; Wikipedia infobox production = United Artists, Amblin"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9027,
+   "title": "The Guru",
+   "year": 2002,
+   "source": "https://en.wikipedia.org/wiki/The_Guru_(2002_film)",
+   "wikidata": "Q1197236",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata production: StudioCanal, Working Title Films; Wikipedia infobox production: StudioCanal, Working Title Films, distributor Universal only; Wikidata and Wikipedia both lack the studio as producer"
+  },
+  {
+   "type": "movie",
+   "tmdb": 399366,
+   "title": "Marrowbone",
+   "year": 2017,
+   "source": "https://en.wikipedia.org/wiki/Marrowbone_(film)",
+   "wikidata": "Q39073809",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata production: Telecinco Cinema, Starz Entertainment; Wikipedia infobox studio list (Lionsgate Intl, Mediaset, Marrowbone, Telecinco, Movistar+) has no Universal, which only distributed in Spain; Wikidata and Wikipedia both lack the studio as producer"
+  },
+  {
+   "type": "movie",
+   "tmdb": 10407,
+   "title": "Housesitter",
+   "year": 1992,
+   "source": "https://en.wikipedia.org/wiki/Housesitter",
+   "wikidata": "Q1631466",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata production: Imagine Entertainment; Wikipedia infobox studio: Imagine Films Entertainment, distributor Universal only; Wikidata and Wikipedia both lack the studio as producer"
+  },
+  {
+   "type": "movie",
+   "tmdb": 40374,
+   "title": "Breezy",
+   "year": 1973,
+   "source": "https://en.wikipedia.org/wiki/Breezy",
+   "wikidata": "Q653251",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata production: Malpaso Productions; Wikipedia infobox studio: The Malpaso Company, distributor Universal only; Wikidata and Wikipedia both lack the studio as producer"
+  },
+  {
+   "type": "movie",
+   "tmdb": 631842,
+   "title": "Knock at the Cabin",
+   "year": 2023,
+   "source": "https://en.wikipedia.org/wiki/Knock_at_the_Cabin",
+   "wikidata": "Q111684978",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikidata only; Wikipedia infobox studio lists Universal Pictures"
   }
  ],
  "studio-walt-disney-animation": [
@@ -4652,6 +5246,17 @@
    "added": "2026-10-16",
    "side": "remove",
    "why": "Wikidata: Warner is distributor only; Wikipedia infobox production = Electric City, Zero Gravity"
+  },
+  {
+   "type": "movie",
+   "tmdb": 9425,
+   "title": "Soldier",
+   "year": 1998,
+   "source": "https://en.wikipedia.org/wiki/Soldier_(1998_American_film)",
+   "wikidata": "Q1138936",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "Wikidata only; Wikipedia infobox studio lists Warner Bros. Pictures"
   }
  ],
  "studio-a24": [
@@ -4677,6 +5282,17 @@
    "added": "2026-10-16",
    "side": "remove",
    "why": "Wikidata names Relativity/Rogue, not Focus; Wikipedia infobox production = Rogue Pictures, Misher Films, distributor Universal"
+  },
+  {
+   "type": "movie",
+   "tmdb": 293262,
+   "title": "I Am Ali",
+   "year": 2014,
+   "source": "https://en.wikipedia.org/wiki/I_Am_Ali",
+   "wikidata": "Q19844900",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "distribution card: Wikidata lacks it, but Wikipedia infobox names Focus Features (Focus World) as the US distributor"
   }
  ],
  "studio-lionsgate": [
@@ -4790,6 +5406,17 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "Summit Entertainment (named by Wikidata and Wikipedia distributor) is a Lionsgate label since 2012; not clearly off the card"
+  },
+  {
+   "type": "movie",
+   "tmdb": 450766,
+   "title": "The Forgiven",
+   "year": 2018,
+   "source": "https://en.wikipedia.org/wiki/The_Forgiven_(2017_film)",
+   "wikidata": "Q50280870",
+   "added": "2026-10-16",
+   "side": "remove",
+   "why": "Wikidata distributor: Saban Capital Group (no Lionsgate); Wikipedia infobox names Saban Films as the US distributor and lists no Lionsgate credit; Wikidata and Wikipedia both lack the studio as producer"
   }
  ],
  "studio-searchlight": [
@@ -5379,6 +6006,17 @@
    "added": "2026-10-16",
    "side": "add",
    "why": "Wikidata P449 and enwiki infobox both name Discovery Channel"
+  },
+  {
+   "type": "series",
+   "tmdb": 11960,
+   "title": "Lunar Jim",
+   "year": 2006,
+   "source": "https://en.wikipedia.org/wiki/Lunar_Jim",
+   "wikidata": "Q2563390",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "source limit: Wikidata (original broadcaster Discovery Channel) alone; Wikipedia infobox lists CBC, BBC Kids, Ici Radio-Canada and TMDB lists networks 23/141/414, not Discovery (64): two of three sources disagree"
   }
  ],
  "network-hbo-max": [
@@ -5770,6 +6408,17 @@
    "added": "2026-10-16",
    "side": "remove",
    "why": "Wikidata Q22022717 genre = comedy drama (no stand-up); enwiki: 'American comedy-drama television series', IMDb tt4938700 Comedy,Drama: a scr"
+  },
+  {
+   "type": "movie",
+   "tmdb": 642738,
+   "title": "Iliza Shlesinger: Unveiled",
+   "year": 2019,
+   "source": "https://en.wikipedia.org/wiki/Iliza_Shlesinger:_Unveiled",
+   "wikidata": "Q107380226",
+   "added": "2026-10-16",
+   "side": "add",
+   "why": "Wikidata Q107380226 genre \"stand-up comedy\" + Wikipedia: \"2019 American stand-up comedy film\", category Netflix stand-up comedy specials; TMDB lacks keyword 9716"
   }
  ],
  "standup-new": [
@@ -6079,6 +6728,16 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "TMDB runtime shows 0 (blank, not a real break); no Wikidata item and not found in the IMDb dataset by title, so there is no second source saying it does not belong -> keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 682633,
+   "title": "Anders Matthesen - Anden taler ud",
+   "year": 2020,
+   "source": "https://www.themoviedb.org/movie/682633",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "source limit: TMDB runtime is 0 min (floor 20) and the title has no Wikidata item or IMDb row to cross-check; one source, so no removal"
   }
  ],
  "standup-top": [
@@ -6378,6 +7037,17 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "Wikidata has no stand-up type but enwiki does not say it is something else: '23 Hours to Kill is a 2020 stand-up comedy special starring Jerry Seinfeld. The special debuted on Netflix on May 5, 2020. It was taped in O'; the two sources do not agree it is wrong -> keep"
+  },
+  {
+   "type": "movie",
+   "tmdb": 14541,
+   "title": "Jeff Dunham's Very Special Christmas Special",
+   "year": 2008,
+   "source": "https://en.wikipedia.org/wiki/Jeff_Dunham's_Very_Special_Christmas_Special",
+   "wikidata": "Q4489951",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "source limit: neither Wikidata (genre Christmas film) nor Wikipedia (third Jeff Dunham special, Comedy Central) calls it stand-up, but it is a live Dunham theater special; no source says it does not belong"
   }
  ],
  "streaming-disneyplus": [
@@ -6676,6 +7346,27 @@
    "added": "2026-10-16",
    "side": "keep",
    "why": "keep (coordinator): window-edge date, many services"
+  },
+  {
+   "type": "series",
+   "tmdb": 298550,
+   "title": "Friends Sex and Games",
+   "year": 2026,
+   "source": "https://www.themoviedb.org/tv/298550",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "source limit: TMDB shows 0 votes, under the card min_votes 5, so it does not pass the card rule; no Wikidata item to add it from"
+  },
+  {
+   "type": "series",
+   "tmdb": 72879,
+   "title": "Tomorrow Is Ours",
+   "year": 2017,
+   "source": "https://www.themoviedb.org/tv/72879",
+   "wikidata": "Q30753456",
+   "added": "2026-10-16",
+   "side": "keep",
+   "why": "source limit: TMDB lists it for the US only on the paid France Channel Amazon Channel add-on; no independent second source says it is not on Prime Video"
   }
  ],
  "streaming-tubi-new": [
