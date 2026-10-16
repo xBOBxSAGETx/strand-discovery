@@ -336,6 +336,20 @@ def main_genres(card, media):
     return {int(i) for i in ids if i.strip().isdigit()} or None
 
 
+def not_short(item):
+    """Issue #118: the 40-minute floor of a Top / Most Voted movie card, checked on the title's own /movie runtime.
+    /discover with_runtime.gte=40 still returned Ghosts (1997), whose /movie/37793 says 39 min. Runtime unknown (0) or a
+    TMDB error keeps the title (as the director and award cards do; an error is not cached). Durable cache runtime:{id}."""
+    try:
+        rt = stable(f"runtime:{item['id']}", lambda: tmdb(f"/movie/{item['id']}").get('runtime') or 0)
+    except RuntimeError:
+        return True
+    if rt == 0 or rt >= MIN_RUNTIME:
+        return True
+    print(f"  runtime floor: {item.get('title')} ({(item.get('release_date') or '')[:4]}, tmdb:{item['id']}, {rt} min) left off", flush=True)
+    return False
+
+
 def discover(card, media, depth, dflt):
     movie = media == 'movie'
     sort = SORTS[card['sort']][0 if movie else 1]
@@ -374,6 +388,9 @@ def discover(card, media, depth, dflt):
     path = f"/discover/{'movie' if movie else 'tv'}"
     mains = main_genres(card, media)
     ok = (lambda it: genre_fits(it.get('genre_ids'), mains)) if mains else (lambda it: True)
+    if movie and card['sort'] in ('top', 'votes'):   # issue #118: TMDB's discover runtime filter lets some shorts through
+        genre_ok = ok
+        ok = lambda it: genre_ok(it) and not_short(it)
     last = MAIN_GENRE_PAGES if mains else 500
     out, seen, page, raw = [], set(), 1, {}
     while len(out) < depth:

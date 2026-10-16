@@ -34,7 +34,7 @@
   "genre": {
    "recall": 57.1,
    "precision": 64.5,
-   "code_bugs": 1
+   "code_bugs": 0
   },
   "theme": {
    "recall": 54.6,
