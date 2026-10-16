@@ -143,7 +143,8 @@ def build_with(world, card, entries, dflt=DFLT, fs=None):
     build.load_hand_list = lambda name, *a, **k: {card['slug']: group} if name == 'corrections' else base(name, *a, **k)
     if fs:
         build.FS_SUMMARY, build.FS_CANDIDATES = fs
-    build._stable.clear(); build._names.clear(); build._keys.clear(); build._new_keys.clear()
+    for n in ('_stable', '_names', '_keys', '_new_keys'):
+        getattr(build, n, {}).clear()
     try:
         metas, notes = build.build_one(card, dflt)
         return ids_of(metas), notes
