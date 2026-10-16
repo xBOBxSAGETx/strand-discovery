@@ -144,7 +144,7 @@ def build_rule_reason(spec, tmdb):
         media, tid = key.split(':')
         if media not in (card.get('media') or ('movie', 'series')):
             return f'card holds no {media}'
-        d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}", append_to_response='release_dates,keywords' if media == 'movie' else 'keywords')
+        d = build.correction_details(card, media, int(tid), fetch=tmdb)
         return build.correction_rule(card, spec.get('defaults'), media, d) if d.get('id') else 'unknown to TMDB'
     return reason
 

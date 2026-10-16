@@ -181,10 +181,29 @@ class BuildRule(Base):
         spec = {'defaults': {'deny': []}, 'catalogs': [CARD]}
         det = {'id': 4, 'title': 'M4', 'release_date': '2020-01-01', 'vote_count': 3, 'genres': [], 'runtime': 100,
                'release_dates': {'results': [{'release_dates': [{'type': 4}]}]}, 'keywords': {'keywords': []}}
-        reason = ac.build_rule_reason(spec, lambda path, **kw: det)
-        self.assertEqual(reason('streaming-x', 'movie:4'), build.correction_rule(CARD, spec['defaults'], 'movie', det))
+        on_service = {'results': {'US': {'flatrate': [{'provider_id': 8}]}}}
+
+        def fake(extra=None):                       # like TMDB: the providers block comes back only when it was asked for
+            def get(path, **kw):
+                d = dict(det, **(extra or {}))
+                return dict(d, **{'watch/providers': on_service}) if 'watch/providers' in kw.get('append_to_response', '') else d
+            return get
+        reason = ac.build_rule_reason(spec, fake())
+        self.assertEqual(reason('streaming-x', 'movie:4'),
+                         build.correction_rule(CARD, spec['defaults'], 'movie', build.correction_details(CARD, 'movie', 4, fetch=fake())))
         self.assertEqual(reason('streaming-x', 'movie:4'), 'min_votes')
-        self.assertIsNone(ac.build_rule_reason(spec, lambda path, **kw: dict(det, vote_count=900))('streaming-x', 'movie:4'))
+        self.assertIsNone(ac.build_rule_reason(spec, fake({'vote_count': 900}))('streaming-x', 'movie:4'))
+
+    def test_check_asks_tmdb_for_what_the_build_asks(self):
+        """#131 x #133: the check fetched without watch/providers, so every add on a service card would read
+        'no watch/providers data' (deliberate rule) while the build, which asks for it, took the title."""
+        import build
+        calls = []
+        ac.build_rule_reason({'defaults': {}, 'catalogs': [CARD]}, lambda path, **kw: calls.append((path, kw)) or {'id': 0})('streaming-x', 'movie:4')
+        build_calls = []
+        build.correction_details(CARD, 'movie', 4, fetch=lambda path, **kw: build_calls.append((path, kw)) or {})
+        self.assertEqual(calls, build_calls)
+        self.assertIn('watch/providers', calls[0][1]['append_to_response'])
 
 
 class Loader(unittest.TestCase):
