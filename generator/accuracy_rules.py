@@ -79,10 +79,10 @@ STANDUP_CLASSES = ['Q145806', 'Q140299056']      # stand-up comedy / stand-up sp
 # Each Q id was read off Wikidata (label + description) when this was written; the one with the most P449 series was taken
 # where a name is shared (Nickelodeon, Cartoon Network, History: the US channels). None = Wikidata has no usable item.
 NETWORKS = {
-    49: ['Q23633'],            # HBO
+    49: ['Q23633', 'Q47494573', 'Q106651154', 'Q94641886', 'Q3502585', 'Q6321919'],   # HBO + HBO Espana / Latino / Portugal / 2 / 3
     174: ['Q294660'],          # AMC
     88: ['Q651228'],           # FX
-    4: ['Q191472'],            # BBC One
+    4: ['Q191472', 'Q9531'],   # BBC One + the BBC itself (Wikidata's usual broadcaster for BBC shows)
     2552: ['Q62446736'],       # Apple TV (Apple TV+)
     213: ['Q907311'],          # Netflix
     67: ['Q23589'],            # Showtime
@@ -95,16 +95,20 @@ NETWORKS = {
     64: ['Q43404'],            # Discovery Channel
     43: ['Q157118'],           # National Geographic
     129: ['Q277561'],          # A&E
-    453: ['Q1630304'],         # Hulu
+    453: ['Q1630304', 'Q108409114'],   # Hulu + FX on Hulu
     1024: ['Q4740856'],        # Amazon Prime Video
     3353: None,                # Peacock: no Wikidata item used as an original broadcaster was found
     3186: ['Q65359104'],       # HBO Max
     4330: ['Q27903045'],       # Paramount+
-    14: ['Q215616'],           # PBS
+    14: ['Q215616', 'Q3245159'],   # PBS + PBS Kids
     33: ['Q43359'],            # MTV
     318: ['Q2422698'],         # Starz
     71: ['Q212252'],           # The CW
 }
+
+# Judge-only: a Wikidata broadcaster that also counts as "ok" for the card, but is not used to build its truth list
+# (Max originals are filed under HBO; using HBO's whole catalogue as Max's truth would be wrong).
+JUDGE_ALSO = {3186: ['Q23633']}
 
 
 def pick_cards(spec, kind, n, seed):
@@ -247,11 +251,33 @@ def broadcaster_truth_query(qs, limit=CANDIDATES):
             f'BIND(COALESCE(?d1, ?d2) AS ?d0) }} GROUP BY ?id ORDER BY DESC(?sl) LIMIT {int(limit)}')
 
 
-def standup_truth_query(media, limit=CANDIDATES):
+def class_closure_query(qs):
+    """The classes and every subclass of them. Kept apart from the truth / judge queries: a property path (P279*) next to a
+    class union in one WDQS query silently drops rows."""
+    return f'SELECT ?c WHERE {{ VALUES ?G {{ {_values(qs)} }} ?c wdt:P279* ?G }}'
+
+
+def class_closure(sparql, qs):
+    got = {r['c'].rsplit('/', 1)[-1] for r in sparql(class_closure_query(qs)) if r.get('c')}
+    return sorted(got | set(qs))
+
+
+def standup_truth_query(media, classes, prop, limit=CANDIDATES):
+    """Titles typed (P31) or genred (P136) as one of the classes, with a TMDB id. One film / TV query per property, no path."""
     p = 'P4947' if media == 'movie' else 'P4983'
-    return (f'SELECT ?id (MAX(?sl0) AS ?sl) (MIN(?d0) AS ?d) WHERE {{ VALUES ?G {{ {_values(STANDUP_CLASSES)} }} '
-            f'?w (wdt:P31|wdt:P136) ?G. ?w wdt:{p} ?id. ?w wikibase:sitelinks ?sl0. OPTIONAL {{ ?w wdt:P577 ?d1 }} '
+    return (f'SELECT ?id (MAX(?sl0) AS ?sl) (MIN(?d0) AS ?d) WHERE {{ VALUES ?G {{ {_values(classes)} }} '
+            f'?w wdt:{prop} ?G. ?w wdt:{p} ?id. ?w wikibase:sitelinks ?sl0. OPTIONAL {{ ?w wdt:P577 ?d1 }} '
             f'OPTIONAL {{ ?w wdt:P580 ?d2 }} BIND(COALESCE(?d1, ?d2) AS ?d0) }} GROUP BY ?id ORDER BY DESC(?sl) LIMIT {int(limit)}')
+
+
+def standup_truth(sparql, media, classes, today, k):
+    rows = {}
+    for prop in ('P31', 'P136'):
+        for r in sparql(standup_truth_query(media, classes, prop)):
+            if r['id'] not in rows or int(r.get('sl') or 0) > int(rows[r['id']].get('sl') or 0):
+                rows[r['id']] = r
+    ordered = sorted(rows.values(), key=lambda r: -int(r.get('sl') or 0))
+    return parse_truth(ordered, media, today)[:k]
 
 
 def parse_truth(rows, media, today):
@@ -267,9 +293,21 @@ def judge_query(kind, media, ids, qs):
     if kind == 'network':
         return (f'SELECT ?id (MAX(?hit0) AS ?hit) (COUNT(DISTINCT ?x) AS ?n) WHERE {{ VALUES ?id {{ {vals} }} ?w wdt:{p} ?id. '
                 f'OPTIONAL {{ ?w wdt:P449 ?x }} BIND(IF(EXISTS {{ VALUES ?B {{ {_values(qs)} }} ?w wdt:P449 ?B }}, 1, 0) AS ?hit0) }} GROUP BY ?id')
-    return (f'SELECT ?id (MAX(?hit0) AS ?hit) (COUNT(DISTINCT ?x) AS ?n) WHERE {{ VALUES ?id {{ {vals} }} ?w wdt:{p} ?id. '
-            f'OPTIONAL {{ ?w (wdt:P136|wdt:P31) ?x }} BIND(IF(EXISTS {{ VALUES ?G {{ {_values(qs)} }} ?w (wdt:P31|wdt:P136) ?g. '
-            f'?g wdt:P279* ?G }}, 1, 0) AS ?hit0) }} GROUP BY ?id')
+    # stand-up: the title's own types and genres, one row each; "is it stand-up" is decided in Python against the closure
+    return f'SELECT ?id ?x WHERE {{ VALUES ?id {{ {vals} }} ?w wdt:{p} ?id. OPTIONAL {{ ?w (wdt:P136|wdt:P31) ?x }} }}'
+
+
+def parse_judge_classes(rows, media, closure):
+    """Rows (id, x) -> {key: (statements, is_it)}: is_it when one of the title's own types / genres is in the closure."""
+    seen, out = {}, {}
+    for r in rows:
+        k = f"{media}:{r['id']}"
+        s = seen.setdefault(k, set())
+        if r.get('x'):
+            s.add(r['x'].rsplit('/', 1)[-1])
+    for k, s in seen.items():
+        out[k] = (len(s), bool(s & set(closure)))
+    return out
 
 
 def parse_judge(rows, media):
@@ -341,7 +379,12 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
     gaps, rf, rt, samp, ok = [], 0, 0, 0, 0
     of = ot = 0                                      # outside recall (IMDb / Wikidata stand-up)
     tj = tok = tun = 0                               # truth precision (Wikidata-judged)
-    no_truth, at_cap, per_card, cache = [], [], [], {}
+    no_truth, at_cap, per_card, cache, clo = [], [], [], {}, []
+
+    def closure():
+        if not clo:
+            clo.extend(class_closure(sparql, STANDUP_CLASSES))
+        return clo
 
     def detail(media, tid):
         """The title's facts, or None when TMDB does not know the id (a Wikidata id TMDB merged / dropped)."""
@@ -392,7 +435,7 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
             if kind == 'acclaimed' and imdb is not None:
                 outside = imdb.get(media, [])[:truth_k]
             elif kind == 'standup':
-                outside = parse_truth(sparql(standup_truth_query(media)), media, today)[:truth_k]
+                outside = standup_truth(sparql, media, closure(), today, truth_k)
             if outside:
                 f2, t2, m2 = af.score(outside, have)
                 of += f2
@@ -405,9 +448,12 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
         if kind in ('network', 'standup'):
             for media in card['media']:
                 ids = [k.split(':')[1] for k in sample if k.startswith(media + ':')]
-                qs = network_qs(card) if kind == 'network' else STANDUP_CLASSES
-                if ids and qs:
-                    judge.update(parse_judge(sparql(judge_query(kind, media, ids, qs)), media))
+                if kind == 'network':
+                    qs = network_qs(card) + JUDGE_ALSO.get(card['network_id'], [])
+                    if ids and qs:
+                        judge.update(parse_judge(sparql(judge_query(kind, media, ids, qs)), media))
+                elif ids:
+                    judge.update(parse_judge_classes(sparql(judge_query(kind, media, ids, STANDUP_CLASSES)), media, closure()))
         for k in sample:
             media, tid = k.split(':')
             f = detail(media, int(tid))
@@ -436,7 +482,7 @@ def measure_rules(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                            "(TMDB lists this network among its networks)" if lab == 'deliberate rule' else
                            'Wikidata lists another original broadcaster and TMDB does not list this network (the two disagree)')
                 else:
-                    lab, why = 'source limit', 'Wikidata files it under other genres, not stand-up (the two sources disagree)'
+                    lab, why = 'source limit', 'Wikidata has no stand-up type or genre for it, only generic ones such as film / television special (the two sources disagree)'
                 gaps.append({'kind': kind, 'card': slug, 'side': 'truth_precision', 'key': k, 'name': f['name'] if f else k,
                              'label': lab, 'reason': why})
         per_card.append({**c, 'recall': af.pct(c['found'], c['truth']), 'precision': af.pct(c['ok'], c['judged'])})

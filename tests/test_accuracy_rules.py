@@ -37,7 +37,8 @@ class Mapping(unittest.TestCase):
             self.assertIn(c['network_id'], ar.NETWORKS, c['slug'])
             for q in ar.NETWORKS[c['network_id']] or []:
                 self.assertRegex(q, r'^Q\d+$')
-        self.assertEqual(ar.network_qs(CARDS['network-hbo']), ['Q23633'])
+        self.assertEqual(ar.network_qs(CARDS['network-hbo'])[0], 'Q23633')
+        self.assertIn('Q9531', ar.network_qs(CARDS['network-bbc-one']))              # BBC shows are filed under the BBC itself
         self.assertEqual(ar.network_qs(CARDS['network-peacock']), [])              # no Wikidata item: no truth, listed
 
     def test_pick_cards_kinds_and_counts(self):
@@ -63,6 +64,23 @@ class Mapping(unittest.TestCase):
         got = ar.imdb_truth(lines, lambda q: [r for k, v in rows.items() if f'"{k}"' in q for r in v])
         self.assertEqual(got['movie'], ['movie:238'])                                # tt1 is a series: not a movie key
         self.assertEqual(got['series'], ['series:5'])
+
+
+class Standup(unittest.TestCase):
+    def test_no_query_mixes_a_path_with_a_class_union(self):
+        for q in (ar.standup_truth_query('movie', ['Q1', 'Q2'], 'P31'), ar.judge_query('standup', 'movie', ['1'], ar.STANDUP_CLASSES)):
+            self.assertNotIn('P279', q)                       # WDQS drops rows when a path meets a class union
+        self.assertIn('P279*', ar.class_closure_query(ar.STANDUP_CLASSES))
+
+    def test_subclass_counts_and_truth_merges_both_properties(self):
+        rows = [{'id': '1', 'x': 'http://www.wikidata.org/entity/Q106633193'}, {'id': '1', 'x': 'http://www.wikidata.org/entity/Q11424'},
+                {'id': '2', 'x': 'http://www.wikidata.org/entity/Q11424'}, {'id': '3'}]
+        got = ar.parse_judge_classes(rows, 'movie', ['Q145806', 'Q106633193'])
+        self.assertEqual(got, {'movie:1': (2, True), 'movie:2': (1, False), 'movie:3': (0, False)})   # 3 is unjudged, not wrong
+
+        def sparql(q):
+            return [{'id': '9', 'sl': '5'}] if 'wdt:P31 ' in q else [{'id': '8', 'sl': '7'}, {'id': '9', 'sl': '5'}]
+        self.assertEqual(ar.standup_truth(sparql, 'movie', ['Q145806'], TODAY, 10), ['movie:8', 'movie:9'])
 
 
 class Rules(unittest.TestCase):
