@@ -175,9 +175,10 @@ def top_k(truth, k):
 
 
 def lookup_query(media, ids, props):
-    """The Wikidata item (if any) of each TMDB id and the labels of its `props` statements."""
+    """The Wikidata item (if any) of each TMDB id: the labels (?v) and the item ids (?i) of its `props` statements."""
     idp = 'P4947' if media == 'movie' else 'P4983'
-    sel = ' '.join(f'(GROUP_CONCAT(DISTINCT ?l{i}; separator="; ") AS ?v{i})' for i in range(len(props)))
+    sel = ' '.join(f'(GROUP_CONCAT(DISTINCT ?l{i}; separator="; ") AS ?v{i}) (GROUP_CONCAT(DISTINCT STR(?o{i}); separator=" ") AS ?i{i})'
+                   for i in range(len(props)))
     opt = ' '.join('OPTIONAL { ?f wdt:%s ?o%d . ?o%d rdfs:label ?l%d . FILTER(lang(?l%d) = "en") }' % (p, i, i, i, i)
                    for i, p in enumerate(props))
     return 'SELECT ?id ?f %s WHERE { VALUES ?id { %s } ?f wdt:%s ?id . %s } GROUP BY ?id ?f' % (
@@ -185,11 +186,13 @@ def lookup_query(media, ids, props):
 
 
 def parse_lookup(rows, props):
-    """-> {tmdb id (int): {'qid', 'statements': 'label; label' joined over props}}; absent id = no Wikidata item."""
+    """-> {tmdb id (int): {'qid', 'statements': 'label; label' over all props, 'by': {prop: (labels, {item qids})}}};
+    an id absent from the result has no Wikidata item."""
     out = {}
     for r in rows:
-        txt = '; '.join(x for x in (val(r, f'v{i}', '') for i in range(len(props))) if x)
-        out[int(val(r, 'id'))] = {'qid': val(r, 'f', '').rsplit('/', 1)[-1], 'statements': txt}
+        by = {p: (val(r, f'v{i}', ''), {u.rsplit('/', 1)[-1] for u in val(r, f'i{i}', '').split()}) for i, p in enumerate(props)}
+        txt = '; '.join(x for x in (b[0] for b in by.values()) if x)
+        out[int(val(r, 'id'))] = {'qid': val(r, 'f', '').rsplit('/', 1)[-1], 'statements': txt, 'by': by}
     return out
 
 
@@ -220,8 +223,8 @@ def classify_studio_missing(f, r, card, listed, hand_ids, excluded, today, mcoun
     return 'source limit', 'passes every rule and the card is under its cap: TMDB discover paging snapshot (issue #25)'
 
 
-def classify_studio_extra(f, r, today, wd):
-    """ONE sampled studio-card title Wikidata does not list for the studio. wd = parse_lookup entry or None.
+def classify_studio_extra(f, r, today, wd, studio_qids=()):
+    """ONE sampled studio-card title Wikidata does not list as the studio's production. wd = parse_lookup entry or None.
     -> (label, reason). Never None: the caller only asks for titles not in the Wikidata set."""
     breaks = af.rule_breaks(f, 'movie', r, today)
     if breaks:
@@ -230,6 +233,9 @@ def classify_studio_extra(f, r, today, wd):
         return 'source limit', 'unconfirmed: no Wikidata item for this TMDB id'
     if not wd['statements']:
         return 'source limit', f"unconfirmed: Wikidata item {wd['qid']} has no production company / distributor statement"
+    prod, dist = wd['by'].get('P272', ('', set())), wd['by'].get('P750', ('', set()))
+    if set(studio_qids) & dist[1]:
+        return 'source limit', f"disagrees: Wikidata {wd['qid']} lists the studio as distributor only (production: {prod[0] or 'none'})"
     return 'source limit', f"disagrees: Wikidata {wd['qid']} names {wd['statements']}, not the studio"
 
 
@@ -369,7 +375,7 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
             if f is None:
                 lab, why = 'source limit', 'TMDB returned no such title'
             else:
-                lab, why = (classify_studio_extra(f, r['movie'], today, w) if studio
+                lab, why = (classify_studio_extra(f, r['movie'], today, w, (LISTED if listed else STUDIOS).get(slug, ())) if studio
                             else classify_series_extra(f, media, card, r.get(media) or r[medias[0]], today, w))
             for tag in prec:
                 if why.startswith(tag):
