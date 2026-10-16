@@ -10,7 +10,7 @@
  },
  "frame": {
   "measured": "2026-10-16",
-  "method": "accuracy_frame.py, 12 seeded cards per kind (seed audit-92), 20 titles per card, claim top 20 per medium; run 38844323755 on build run 38837399173; director + actor (accuracy_people.py, 12 cards each, seed audit-93, Wikidata truth, 2026-10-16): run 38846642330; Studios + Movie series (accuracy_works.py, truth = Wikidata, seed audit-94): 13 independent studio cards, 5 circular listed studio cards, 10 seeded collection cards + 3 universe cards, 20 titles per card; check run 38855514451 (precision counts only titles Wikidata can judge; studio truth keeps shorts); awards (accuracy_awards.py, 7 cards vs Wikidata P166 / the Wikipedia list) and Streaming New (accuracy_new.py, 21 cards vs the TMDB provider window, circular) from accuracy.yml run 38859523658 on branch accuracy-awards-new-97 (issue #97); new-* rows keep code_bugs only (circular truth, weekly sample: numbers are shown, never alarmed)",
+  "method": "accuracy_frame.py, 12 seeded cards per kind (seed audit-92), 20 titles per card, claim top 20 per medium; run 38844323755 on build run 38837399173; director + actor (accuracy_people.py, 12 cards each, seed audit-93, Wikidata truth, 2026-10-16): run 38846642330; Studios + Movie series (accuracy_works.py, truth = Wikidata, seed audit-94): 13 independent studio cards, 5 circular listed studio cards, 10 seeded collection cards + 3 universe cards, 20 titles per card; check run 38855514451 (precision counts only titles Wikidata can judge; studio truth keeps shorts); awards (accuracy_awards.py, 7 cards vs Wikidata P166 / the Wikipedia list) and Streaming New (accuracy_new.py, 21 cards vs the TMDB provider window, circular) from accuracy.yml run 38859523658 on branch accuracy-awards-new-97 (issue #97); new-* rows keep code_bugs only (circular truth, weekly sample: numbers are shown, never alarmed); genre + theme (accuracy_genres.py, 12 genre cards seed audit-95, all 13 theme cards, Wikidata genre truth): run 38860725588",
   "popular": {
    "recall": 87.1,
    "precision": 100.0,
@@ -29,6 +29,16 @@
   "actor": {
    "recall": 78.0,
    "precision": 95.0,
+   "code_bugs": 0
+  },
+  "genre": {
+   "recall": 57.1,
+   "precision": 64.5,
+   "code_bugs": 0
+  },
+  "theme": {
+   "recall": 54.6,
+   "precision": null,
    "code_bugs": 0
   },
   "studio": {

@@ -19,7 +19,7 @@ permissions: {}
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 90
     permissions:
       contents: read
       actions: read            # the latest build's artifacts (Pages output + encrypted state backup)
