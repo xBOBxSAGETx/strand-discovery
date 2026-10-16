@@ -294,9 +294,10 @@ jobs:
         with:
           path: out
 
-  # One "health" issue, opened/updated on problems and closed after a clean run (GitHub emails the owner).
+  # One "health" issue: opened / commented only when the build or deploy FAILS (GitHub emails the owner), closed by the
+  # next successful run; routine warnings go to the run summary + the issue body (#85).
   alert:
-    needs: build
+    needs: [build, deploy]      # #85: only a failed build or deploy emails; deploy is "skipped" when it did not run
     # a clean partial rebuild says nothing about the nightly's health (it did not run the logger): it must not close the
     # nightly's open issue. A failed partial rebuild is still reported.
     if: always() && !(needs.build.result == 'success' && needs.build.outputs.partial == 'true')
@@ -315,7 +316,7 @@ jobs:
       - name: Update the health issue
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python generator/health.py report "${{ needs.build.result }}" "${{ needs.build.outputs.logger || 'unknown' }}" "${{ needs.build.outputs.arrivals || 'unknown' }}" "${{ needs.build.outputs.practice || 'false' }}"
+        run: python generator/health.py report "${{ needs.build.result }}" "${{ needs.build.outputs.logger || 'unknown' }}" "${{ needs.build.outputs.arrivals || 'unknown' }}" "${{ needs.build.outputs.practice || 'false' }}" "${{ needs.deploy.result }}"
 
   deploy:
     needs: build
