@@ -211,28 +211,6 @@
   },
   {
    "type": "series",
-   "tmdb": 41961,
-   "title": "Pumpkinhead 4: Blood Feud",
-   "year": 2007,
-   "source": "https://en.wikipedia.org/wiki/Pumpkinhead:_Blood_Feud",
-   "wikidata": "Q779488",
-   "added": "2026-10-16",
-   "side": "add",
-   "why": "American monster movies"
-  },
-  {
-   "type": "series",
-   "tmdb": 37530,
-   "title": "Firebreather",
-   "year": 2010,
-   "source": "https://en.wikipedia.org/wiki/Firebreather_(film)",
-   "wikidata": "Q3072841",
-   "added": "2026-10-16",
-   "side": "add",
-   "why": "Animated films about dragons"
-  },
-  {
-   "type": "series",
    "tmdb": 17687,
    "title": "Count Dracula",
    "year": 1977,
@@ -255,17 +233,6 @@
   },
   {
    "type": "series",
-   "tmdb": 42512,
-   "title": "The Eden Formula",
-   "year": 2006,
-   "source": "https://en.wikipedia.org/wiki/The_Eden_Formula",
-   "wikidata": "Q7731548",
-   "added": "2026-10-16",
-   "side": "add",
-   "why": "2000s monster movies"
-  },
-  {
-   "type": "series",
    "tmdb": 298651,
    "title": "Silence",
    "year": 2025,
@@ -274,17 +241,6 @@
    "added": "2026-10-16",
    "side": "add",
    "why": "Television series about vampires"
-  },
-  {
-   "type": "series",
-   "tmdb": 21474,
-   "title": "Caved In: Prehistoric Terror",
-   "year": 2006,
-   "source": "https://en.wikipedia.org/wiki/Caved_In:_Prehistoric_Terror",
-   "wikidata": "Q4367579",
-   "added": "2026-10-16",
-   "side": "add",
-   "why": "Giant monster films"
   },
   {
    "type": "series",
@@ -465,17 +421,6 @@
    "added": "2026-10-16",
    "side": "add",
    "why": "American dystopian films"
-  },
-  {
-   "type": "series",
-   "tmdb": 4783,
-   "title": "Island City",
-   "year": 1994,
-   "source": "https://en.wikipedia.org/wiki/Island_City_(1994_film)",
-   "wikidata": "Q3598061",
-   "added": "2026-10-16",
-   "side": "add",
-   "why": "American dystopian films"
   }
  ],
  "theme-heist": [
@@ -555,17 +500,6 @@
    "added": "2026-10-16",
    "side": "add",
    "why": "American heist films"
-  },
-  {
-   "type": "series",
-   "tmdb": 21300,
-   "title": "L.A. Takedown",
-   "year": 1989,
-   "source": "https://en.wikipedia.org/wiki/L.A._Takedown",
-   "wikidata": "Q917117",
-   "added": "2026-10-16",
-   "side": "add",
-   "why": "1980s heist films"
   }
  ],
  "theme-psychological": [
@@ -850,17 +784,6 @@
   },
   {
    "type": "series",
-   "tmdb": 47532,
-   "title": "Steal the Sky",
-   "year": 1988,
-   "source": "https://en.wikipedia.org/wiki/Steal_the_Sky",
-   "wikidata": "Q4237400",
-   "added": "2026-10-16",
-   "side": "add",
-   "why": "1980s spy films"
-  },
-  {
-   "type": "series",
    "tmdb": 246412,
    "title": "The Copenhagen Test",
    "year": 2025,
@@ -950,17 +873,6 @@
    "added": "2026-10-16",
    "side": "add",
    "why": "2010s films about time travel"
-  },
-  {
-   "type": "series",
-   "tmdb": 50241,
-   "title": "Lorong Waktu",
-   "year": 1999,
-   "source": "https://en.wikipedia.org/wiki/Lorong_Waktu_(1999_TV_series)",
-   "wikidata": "Q12495308",
-   "added": "2026-10-16",
-   "side": "add",
-   "why": "1990s television series about time travel"
   }
  ],
  "theme-zombies": [
