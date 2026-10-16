@@ -278,6 +278,22 @@ def report(problems, lines, run_url):
             print('accuracy: clean, no open issue')
 
 
+def frame_problems(frame_sum, fbase):
+    """A drop below the baseline, or more code bugs than the baseline had. Only the keys a kind's baseline holds are compared
+    (new-* kinds hold code_bugs only: circular truth + a weekly sample, issue #97)."""
+    problems = []
+    for r in frame_sum:
+        b = fbase.get(r['kind'])
+        if not b:
+            continue
+        for what in ('recall', 'precision'):
+            if r[what] is not None and b.get(what) is not None and b[what] - r[what] > FRAME_MAX_DROP:
+                problems.append(f"{r['kind']} {what}: {r[what]}% is {round(b[what] - r[what], 1)} points below the baseline {b[what]}%")
+        if r['code_bugs'] > b.get('code_bugs', 0):
+            problems.append(f"{r['kind']}: {r['code_bugs']} code-bug gaps (baseline {b.get('code_bugs', 0)}); see frame_gaps.csv")
+    return problems
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--pages', required=True)
@@ -410,15 +426,7 @@ def main():
                 f"{e['event_date']}, sources {e['sources']}, status {e['status']}) [{e['label']}: {e['reason']}] {e['urls'][:200]}" for e in errors]
     problems += [f"recall: {r['service']} {r['recall']}% is {r['drop']} points below the baseline {r['baseline']}%"
                  for r in rec if r.get('problem')]
-    for r in frame_sum:                          # a drop below the baseline, or more code bugs than the baseline had
-        b = fbase.get(r['kind'])
-        if not b:
-            continue
-        for what in ('recall', 'precision'):
-            if r[what] is not None and b.get(what) is not None and b[what] - r[what] > FRAME_MAX_DROP:
-                problems.append(f"{r['kind']} {what}: {r[what]}% is {round(b[what] - r[what], 1)} points below the baseline {b[what]}%")
-        if r['code_bugs'] > b.get('code_bugs', 0):
-            problems.append(f"{r['kind']}: {r['code_bugs']} code-bug gaps (baseline {b.get('code_bugs', 0)}); see frame_gaps.csv")
+    problems += frame_problems(frame_sum, fbase)
     # NOTES are shown, never problems: stale official lists (a manual refresh; the precision gate is the weekly guard)
     # and services with too few official arrivals in the window to measure
     notes = list(people_notes)

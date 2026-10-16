@@ -3,7 +3,7 @@ window truth and the per-card measure. Stubbed TMDB (no network).
 
     python -m unittest tests.test_accuracy_new
 """
-import os, sys, unittest
+import json, os, sys, unittest
 from pathlib import Path
 
 os.environ.setdefault('TMDB_API_KEY', 'unused-in-tests')
@@ -86,6 +86,30 @@ class Measure(unittest.TestCase):
         cands = {'movie:7': {'date': '2026-09-01', 'precision': 'day', 'sources': ['x']}}
         row, gaps = self.run_card(['movie:7'], {'movie': []}, {7: det(7, on=False)}, mode='arrivals', cands=cands, items={'m:7': ['2026-09-01', '2026-09-30']})
         self.assertEqual([(g['side'], g['label']) for g in gaps], [('precision', 'deliberate rule')])
+
+
+class NewRowsNeverAlarmOnNumbers(unittest.TestCase):
+    """Critic of PR #109: New rows are circular and use a weekly-reseeded sample, so their numbers are shown, never alarmed."""
+    BASE = json.loads((Path(__file__).resolve().parents[1] / 'generator' / 'accuracy_baseline.json').read_text(encoding='utf-8'))['frame']
+
+    @staticmethod
+    def row(kind, recall, precision, bugs=0):
+        return {'kind': kind, 'recall': recall, 'precision': precision, 'code_bugs': bugs}
+
+    def test_committed_baseline_holds_no_numbers_for_new_rows(self):
+        news = {k: v for k, v in self.BASE.items() if k.startswith('new-')}
+        self.assertEqual(len(news), 21)
+        self.assertTrue(all(set(v) == {'code_bugs'} for v in news.values()))
+
+    def test_lower_recall_and_precision_than_last_week_raise_nothing(self):
+        import accuracy_check as ac
+        rows = [self.row(k, 10.0, 50.0) for k in self.BASE if k.startswith('new-')]
+        self.assertEqual(ac.frame_problems(rows, self.BASE), [])
+
+    def test_control_a_numeric_baseline_would_alarm_and_a_code_bug_still_does(self):
+        import accuracy_check as ac
+        self.assertEqual(len(ac.frame_problems([self.row('new-x', 80.0, 90.0)], {'new-x': {'recall': 96.0, 'precision': 100.0, 'code_bugs': 0}})), 2)
+        self.assertEqual(len(ac.frame_problems([self.row('new-netflix', 96.0, 100.0, 1)], self.BASE)), 1)
 
 
 if __name__ == '__main__':
