@@ -18,16 +18,20 @@
   "without_keywords": "195669|285672|198385|384581|155477|382870|10053|335048|281749|378816",
   "without_keywords_tv": "256466",
   "deny": [
-   [
-    "series",
-    95897,
-    "Overflow (2020): ecchi anime not flagged adult"
-   ],
-   [
-    "series",
-    70998,
-    "Souryo to Majiwaru Shikiyoku no Yoru ni (2017): explicit"
-   ]
+   {
+    "type": "series",
+    "tmdb": 95897,
+    "title": "Overflow",
+    "year": 2020,
+    "source": "Overflow (2020): ecchi anime not flagged adult"
+   },
+   {
+    "type": "series",
+    "tmdb": 70998,
+    "title": "Souryo to Majiwaru Shikiyoku no Yoru ni",
+    "year": 2017,
+    "source": "Souryo to Majiwaru Shikiyoku no Yoru ni (2017): explicit"
+   }
   ]
  },
  "folders": [
@@ -4079,18 +4083,27 @@
     8091
    ],
    "ids": [
-    [
-     "movie",
-     70981
-    ],
-    [
-     "movie",
-     126889
-    ],
-    [
-     "movie",
-     945961
-    ]
+    {
+     "type": "movie",
+     "tmdb": 70981,
+     "title": "Prometheus",
+     "year": 2012,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/70981)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 126889,
+     "title": "Alien: Covenant",
+     "year": 2017,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/126889)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 945961,
+     "title": "Alien: Romulus",
+     "year": 2024,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/945961)"
+    }
    ]
   },
   {
@@ -4335,10 +4348,13 @@
     2980
    ],
    "ids": [
-    [
-     "movie",
-     43074
-    ]
+    {
+     "type": "movie",
+     "tmdb": 43074,
+     "title": "Ghostbusters",
+     "year": 2016,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/43074)"
+    }
    ]
   },
   {
@@ -4374,14 +4390,20 @@
     91361
    ],
    "ids": [
-    [
-     "movie",
-     2082
-    ],
-    [
-     "movie",
-     24150
-    ]
+    {
+     "type": "movie",
+     "tmdb": 2082,
+     "title": "Halloween",
+     "year": 2007,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/2082)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 24150,
+     "title": "Halloween II",
+     "year": 2009,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/24150)"
+    }
    ]
   },
   {
@@ -4625,10 +4647,13 @@
     121938
    ],
    "ids": [
-    [
-     "movie",
-     839033
-    ]
+    {
+     "type": "movie",
+     "tmdb": 839033,
+     "title": "The Lord of the Rings: The War of the Rohirrim",
+     "year": 2024,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/839033)"
+    }
    ]
   },
   {
@@ -4664,10 +4689,13 @@
     14740
    ],
    "ids": [
-    [
-     "movie",
-     270946
-    ]
+    {
+     "type": "movie",
+     "tmdb": 270946,
+     "title": "Penguins of Madagascar",
+     "year": 2014,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/270946)"
+    }
    ]
   },
   {
@@ -4742,10 +4770,13 @@
     86055
    ],
    "ids": [
-    [
-     "movie",
-     479455
-    ]
+    {
+     "type": "movie",
+     "tmdb": 479455,
+     "title": "Men in Black: International",
+     "year": 2019,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/479455)"
+    }
    ]
   },
   {
@@ -4803,10 +4834,13 @@
     304
    ],
    "ids": [
-    [
-     "movie",
-     402900
-    ]
+    {
+     "type": "movie",
+     "tmdb": 402900,
+     "title": "Ocean's Eight",
+     "year": 2018,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/402900)"
+    }
    ]
   },
   {
@@ -4843,10 +4877,13 @@
     173710
    ],
    "ids": [
-    [
-     "movie",
-     869
-    ]
+    {
+     "type": "movie",
+     "tmdb": 869,
+     "title": "Planet of the Apes",
+     "year": 2001,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/869)"
+    }
    ]
   },
   {
@@ -4865,10 +4902,13 @@
     399
    ],
    "ids": [
-    [
-     "movie",
-     1376434
-    ]
+    {
+     "type": "movie",
+     "tmdb": 1376434,
+     "title": "Predator: Killer of Killers",
+     "year": 2025,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/1376434)"
+    }
    ]
   },
   {
@@ -4972,14 +5012,20 @@
     2150
    ],
    "ids": [
-    [
-     "movie",
-     417859
-    ],
-    [
-     "movie",
-     315162
-    ]
+    {
+     "type": "movie",
+     "tmdb": 417859,
+     "title": "Puss in Boots",
+     "year": 2011,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/417859)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 315162,
+     "title": "Puss in Boots: The Last Wish",
+     "year": 2022,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/315162)"
+    }
    ]
   },
   {
@@ -5019,54 +5065,90 @@
     10
    ],
    "ids": [
-    [
-     "movie",
-     330459
-    ],
-    [
-     "movie",
-     348350
-    ],
-    [
-     "series",
-     82856
-    ],
-    [
-     "series",
-     83867
-    ],
-    [
-     "series",
-     114461
-    ],
-    [
-     "series",
-     4194
-    ],
-    [
-     "series",
-     115036
-    ],
-    [
-     "series",
-     92830
-    ],
-    [
-     "series",
-     105971
-    ],
-    [
-     "series",
-     60554
-    ],
-    [
-     "series",
-     202879
-    ],
-    [
-     "series",
-     114479
-    ]
+    {
+     "type": "movie",
+     "tmdb": 330459,
+     "title": "Rogue One: A Star Wars Story",
+     "year": 2016,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/330459)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 348350,
+     "title": "Solo: A Star Wars Story",
+     "year": 2018,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/348350)"
+    },
+    {
+     "type": "series",
+     "tmdb": 82856,
+     "title": "The Mandalorian",
+     "year": 2019,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/tv/82856)"
+    },
+    {
+     "type": "series",
+     "tmdb": 83867,
+     "title": "Andor",
+     "year": 2022,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/tv/83867)"
+    },
+    {
+     "type": "series",
+     "tmdb": 114461,
+     "title": "Ahsoka",
+     "year": 2023,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/tv/114461)"
+    },
+    {
+     "type": "series",
+     "tmdb": 4194,
+     "title": "Star Wars: The Clone Wars",
+     "year": 2008,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/tv/4194)"
+    },
+    {
+     "type": "series",
+     "tmdb": 115036,
+     "title": "The Book of Boba Fett",
+     "year": 2021,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/tv/115036)"
+    },
+    {
+     "type": "series",
+     "tmdb": 92830,
+     "title": "Obi-Wan Kenobi",
+     "year": 2022,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/tv/92830)"
+    },
+    {
+     "type": "series",
+     "tmdb": 105971,
+     "title": "Star Wars: The Bad Batch",
+     "year": 2021,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/tv/105971)"
+    },
+    {
+     "type": "series",
+     "tmdb": 60554,
+     "title": "Star Wars Rebels",
+     "year": 2014,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/tv/60554)"
+    },
+    {
+     "type": "series",
+     "tmdb": 202879,
+     "title": "Star Wars: Skeleton Crew",
+     "year": 2024,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/tv/202879)"
+    },
+    {
+     "type": "series",
+     "tmdb": 114479,
+     "title": "The Acolyte",
+     "year": 2024,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/tv/114479)"
+    }
    ]
   },
   {
@@ -5102,10 +5184,13 @@
     10194
    ],
    "ids": [
-    [
-     "movie",
-     718789
-    ]
+    {
+     "type": "movie",
+     "tmdb": 718789,
+     "title": "Lightyear",
+     "year": 2022,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/718789)"
+    }
    ]
   },
   {
@@ -5124,18 +5209,27 @@
     8650
    ],
    "ids": [
-    [
-     "movie",
-     424783
-    ],
-    [
-     "movie",
-     667538
-    ],
-    [
-     "movie",
-     698687
-    ]
+    {
+     "type": "movie",
+     "tmdb": 424783,
+     "title": "Bumblebee",
+     "year": 2018,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/424783)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 667538,
+     "title": "Transformers: Rise of the Beasts",
+     "year": 2023,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/667538)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 698687,
+     "title": "Transformers One",
+     "year": 2024,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/698687)"
+    }
    ]
   },
   {
@@ -5171,34 +5265,55 @@
     748
    ],
    "ids": [
-    [
-     "movie",
-     76170
-    ],
-    [
-     "movie",
-     2080
-    ],
-    [
-     "movie",
-     263115
-    ],
-    [
-     "movie",
-     293660
-    ],
-    [
-     "movie",
-     383498
-    ],
-    [
-     "movie",
-     533535
-    ],
-    [
-     "movie",
-     340102
-    ]
+    {
+     "type": "movie",
+     "tmdb": 76170,
+     "title": "The Wolverine",
+     "year": 2013,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/76170)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 2080,
+     "title": "X-Men Origins: Wolverine",
+     "year": 2009,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/2080)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 263115,
+     "title": "Logan",
+     "year": 2017,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/263115)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 293660,
+     "title": "Deadpool",
+     "year": 2016,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/293660)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 383498,
+     "title": "Deadpool 2",
+     "year": 2018,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/383498)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 533535,
+     "title": "Deadpool & Wolverine",
+     "year": 2024,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/533535)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 340102,
+     "title": "The New Mutants",
+     "year": 2020,
+     "source": "spin-off TMDB doesn't group into the collection (https://www.themoviedb.org/movie/340102)"
+    }
    ]
   },
   {
@@ -5692,18 +5807,27 @@
    "list": "apg2886/oscar-best-picture-winners",
    "order": "year_desc",
    "exclude": [
-    [
-     "movie",
-     631
-    ],
-    [
-     "movie",
-     3061
-    ],
-    [
-     "movie",
-     44657
-    ]
+    {
+     "type": "movie",
+     "tmdb": 631,
+     "title": "Sunrise",
+     "year": 1927,
+     "source": "1927/28 \"Unique and Artistic Production\" (Sunrise, The Crowd, Chang): a separate award, not Best Picture; the Academy starts with Wings (https://www.themoviedb.org/movie/631)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 3061,
+     "title": "The Crowd",
+     "year": 1928,
+     "source": "1927/28 \"Unique and Artistic Production\" (Sunrise, The Crowd, Chang): a separate award, not Best Picture; the Academy starts with Wings (https://www.themoviedb.org/movie/3061)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 44657,
+     "title": "Chang",
+     "year": 1927,
+     "source": "1927/28 \"Unique and Artistic Production\" (Sunrise, The Crowd, Chang): a separate award, not Best Picture; the Academy starts with Wings (https://www.themoviedb.org/movie/44657)"
+    }
    ]
   },
   {
@@ -5721,18 +5845,27 @@
    "list": "gatornylon/oscar-best-picture-nominated",
    "order": "year_desc",
    "exclude": [
-    [
-     "movie",
-     631
-    ],
-    [
-     "movie",
-     3061
-    ],
-    [
-     "movie",
-     44657
-    ]
+    {
+     "type": "movie",
+     "tmdb": 631,
+     "title": "Sunrise",
+     "year": 1927,
+     "source": "1927/28 \"Unique and Artistic Production\" (Sunrise, The Crowd, Chang): a separate award, not Best Picture; the Academy starts with Wings (https://www.themoviedb.org/movie/631)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 3061,
+     "title": "The Crowd",
+     "year": 1928,
+     "source": "1927/28 \"Unique and Artistic Production\" (Sunrise, The Crowd, Chang): a separate award, not Best Picture; the Academy starts with Wings (https://www.themoviedb.org/movie/3061)"
+    },
+    {
+     "type": "movie",
+     "tmdb": 44657,
+     "title": "Chang",
+     "year": 1927,
+     "source": "1927/28 \"Unique and Artistic Production\" (Sunrise, The Crowd, Chang): a separate award, not Best Picture; the Academy starts with Wings (https://www.themoviedb.org/movie/44657)"
+    }
    ]
   },
   {

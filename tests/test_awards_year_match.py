@@ -22,6 +22,10 @@ ENTRIES = [(1981, 'Shogun', 'p', None), (2024, 'Shogun', 'p', 'Shogun (2024 TV s
            (2010, 'Modern Family', 'p', None), (2014, 'Modern Family', 'p', None)]
 
 
+def keys(ids):
+    return [(e['type'], e['tmdb']) for e in ids]
+
+
 def stub(path, **params):
     return {'results': SHOWS.get(params.get('query'), [])}
 
@@ -36,15 +40,21 @@ class AwardsYearMatch(unittest.TestCase):
 
     def test_late_win_resolves_to_the_work_of_that_year(self):
         ids, rows, _ = self.run_list()
-        self.assertIn(['series', 126308], ids, 'the 2024 Shogun series must be in the list')
+        self.assertIn(('series', 126308), keys(ids), 'the 2024 Shogun series must be in the list')
         self.assertEqual([r[4] for r in rows if r[2] == 'Shogun' and r[0] == 2024], ['series:126308'])
 
     def test_long_runner_and_order(self):
         ids, rows, _ = self.run_list()
-        self.assertIn(['series', 1421], ids)               # Modern Family stays the 2009 show, not the 2014 remake
-        self.assertNotIn(['series', 99], ids)
+        self.assertIn(('series', 1421), keys(ids))         # Modern Family stays the 2009 show, not the 2014 remake
+        self.assertNotIn(('series', 99), keys(ids))
         years = [r[0] for r in rows]
         self.assertEqual(years, sorted(years, reverse=True), 'newest win first')
+
+    def test_entries_are_the_one_shape_with_a_wikipedia_source(self):      # issue #83
+        ids, _, _ = self.run_list()
+        shogun = next(e for e in ids if e['tmdb'] == 126308)
+        self.assertEqual(shogun, {'type': 'series', 'tmdb': 126308, 'title': 'Shogun', 'year': 2024,
+                                  'source': 'https://en.wikipedia.org/wiki/p'})
 
 
 if __name__ == '__main__':

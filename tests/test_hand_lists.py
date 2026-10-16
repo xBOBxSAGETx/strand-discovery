@@ -4,8 +4,8 @@ a source. No network:
 
     python -m unittest tests.test_hand_lists
 
-KNOWN_GAPS names the lists still in an old shape that lack a field. Part 2 (#83) moves them to the one shape and MUST
-delete the matching line here: the test fails when a listed gap is no longer a gap.
+KNOWN_GAPS names a list still in an old shape that lacks a field. It is empty since part 2 (#83): every list has the
+one shape. A new gap would need a line with a reason, and the test fails when a listed gap is no longer a gap.
 """
 import os, sys, tempfile, unittest
 from pathlib import Path
@@ -16,15 +16,8 @@ os.environ['SD_CACHE'] = str(Path(_tmp) / 'sd_cache')
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'generator'))
 import build  # noqa: E402
 
-# (list, field) -> why. Remove the line in #83 when the data carries the field.
-KNOWN_GAPS = {
-    ('studio_distributed', 'type'): '#83: the file has no type (all movies)',
-    ('studio_distributed', 'source'): '#83: the file has a Wikidata qid, no source URL per title',
-    ('awards', 'source'): '#83: awards.json holds [media, id] pairs only',
-    ('card_ids', 'source'): '#83: spec.json franchise ids are [media, id] pairs only',
-    ('exclude', 'source'): '#83: spec.json per-card exclude is [media, id] pairs only',
-    ('official_arrivals', 'source'): '#83: official_arrivals.csv has no source column',
-}
+# (list, field) -> why. Empty: every hand list carries type, tmdb and source (#83).
+KNOWN_GAPS = {}
 
 
 def key_of(name, e):
