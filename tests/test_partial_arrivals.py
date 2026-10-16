@@ -48,7 +48,7 @@ class PartialArrivals(unittest.TestCase):
     def test_workflow_runs_arrivals_for_a_partial_with_new_cards(self):
         wf = yaml.safe_load((ROOT / '.github' / 'workflows' / 'build.yml').read_text(encoding='utf-8'))
         step = next(s for s in wf['jobs']['build']['steps'] if s.get('id') == 'arrivals')
-        self.assertEqual(step['if'], "env.SD_CARDS == '' || contains(env.SD_CARDS, '-new')")
+        self.assertEqual(step['if'], "env.SD_CARDS == '' || steps.partial_logger.outputs.providers != ''")
         self.assertEqual(step['env']['SD_ARRIVALS_LISTING_MAX_AGE'], "${{ env.SD_CARDS != '' && '0' || '' }}")
 
     def test_listing_max_age_zero_revalidates_a_fresh_listing(self):

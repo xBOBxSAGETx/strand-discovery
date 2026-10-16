@@ -180,13 +180,32 @@ jobs:
           SD_CACHE: cache
           SD_ARRIVALS_SINGLE_SOURCE_DROP: ${{ vars.SD_ARRIVALS_SINGLE_SOURCE_DROP }}   # the logger rebuilds the fallback
         run: python generator/first_seen.py state
+      # #79: a PARTIAL rebuild that includes streaming New cards (streaming-<service>-new) first re-runs the first_seen
+      # logger for just those services (SD_FS_ONLY), so "New on X" sees today's catalogue, not last night's snapshot: a
+      # title that just landed is first seen now, and the arrival signals below are confirmed against today's presence
+      # (Presence reads the logger's last_run; a second same-day run falls back to prev_run). The logger merges its output
+      # into the restored new_candidates.json / fs_summary.json, so the other services' New cards in this build keep
+      # theirs. Nothing here is saved: a partial never saves state (the save steps below need a full build).
+      - name: Partial rebuild - first_seen for the New cards' services
+        id: partial_logger
+        if: env.SD_CARDS != ''
+        continue-on-error: true    # a failure leaves the saved snapshot in place, as before
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          SD_CACHE: cache
+          SD_ARRIVALS_SINGLE_SOURCE_DROP: ${{ vars.SD_ARRIVALS_SINGLE_SOURCE_DROP }}
+        run: |
+          providers=$(echo "$SD_CARDS" | tr ',' '\n' | sed -E 's/^ +| +$//g; s/^sd-//' | grep -E '^streaming-.+-new$' | sed -E 's/^streaming-//; s/-new$//' | sort -u | paste -sd, -)
+          echo "providers=$providers" >> "$GITHUB_OUTPUT"
+          echo "New-card services: ${providers:-none}"
+          if [ -n "$providers" ]; then SD_FS_ONLY="$providers" python generator/first_seen.py state; fi
       # Arrival signals (published schedules) merged into the first_seen state before it is saved; a failure leaves
-      # the logger's fallback (the stored signals) in place for the build. #79: a PARTIAL rebuild that includes New cards
-      # (a slug ending -new) reads the feeds again first, with the feed listings revalidated now (not reused for 20 h), so a
-      # post that just appeared is in the New cards; the result is used by this build only (a partial never saves state).
+      # the logger's fallback (the stored signals) in place for the build. #79: a PARTIAL rebuild that includes streaming
+      # New cards reads the feeds again first, with the feed listings revalidated now (not reused for 20 h), so a post
+      # that just appeared is in the New cards; the result is used by this build only (a partial never saves state).
       - name: Arrival signals
         id: arrivals
-        if: env.SD_CARDS == '' || contains(env.SD_CARDS, '-new')
+        if: env.SD_CARDS == '' || steps.partial_logger.outputs.providers != ''
         continue-on-error: true
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
@@ -197,21 +216,21 @@ jobs:
           SD_ARRIVALS_SINGLE_SOURCE_DROP: ${{ vars.SD_ARRIVALS_SINGLE_SOURCE_DROP }}
         run: python generator/arrivals.py arrivals ${{ inputs.arrivals_backfill && '--backfill' || '' }}
       - name: Save first_seen state (cache)
-        if: github.ref == 'refs/heads/main' && steps.logger.outcome == 'success'
+        if: github.ref == 'refs/heads/main' && env.SD_CARDS == '' && steps.logger.outcome == 'success'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: state
           key: sd-state-${{ github.run_id }}
       - name: Encrypt first_seen state for the artifact backup
         id: encrypt
-        if: github.ref == 'refs/heads/main' && steps.logger.outcome == 'success'
+        if: github.ref == 'refs/heads/main' && env.SD_CARDS == '' && steps.logger.outcome == 'success'
         env:
           SD_STATE_KEY: ${{ secrets.SD_STATE_KEY }}
         run: |
           mkdir -p state-backup
           openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:SD_STATE_KEY             -in state/first_seen.json.gz -out state-backup/first_seen.json.gz.enc
       - name: Save first_seen state (artifact backup)
-        if: github.ref == 'refs/heads/main' && steps.logger.outcome == 'success' && steps.encrypt.outcome == 'success'
+        if: github.ref == 'refs/heads/main' && env.SD_CARDS == '' && steps.logger.outcome == 'success' && steps.encrypt.outcome == 'success'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: first-seen-state
