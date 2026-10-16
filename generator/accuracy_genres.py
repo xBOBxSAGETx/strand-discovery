@@ -65,27 +65,27 @@ FILM, TV = 'movie', 'series'
 # TMDB genre card (slug without genre- / -new / -top) -> Wikidata classes, per medium. The label of each Q id was read
 # off Wikidata (wbsearchentities / rdfs:label) when this was written.
 GENRES = {
-    'action': {FILM: ['Q188473'], TV: ['Q343782', 'Q188473']},              # action film / action television series
+    'action': {FILM: ['Q188473'], TV: ['Q343782', 'Q188473', 'Q56064758', 'Q319221']},  # action film / action TV series / adventure TV series / adventure film (TV 10759 = Action & Adventure)
     'adventure': {FILM: ['Q319221']},                                       # adventure film
     'animation': {FILM: ['Q202866'], TV: ['Q581714']},                      # animated film / animated series
     'anime': {FILM: ['Q20650540', 'Q1107'], TV: ['Q63952888', 'Q1107']},    # anime film / anime television series / anime
-    'comedy': {FILM: ['Q157443'], TV: ['Q9335576', 'Q170238', 'Q7696995']},  # comedy film / comedy TV series / sitcom / comedy TV program
-    'crime': {FILM: ['Q959790'], TV: ['Q9335577', 'Q56878968', 'Q2321734']},  # crime film / crime TV series / detective TV series / police procedural
+    'comedy': {FILM: ['Q157443', 'Q40831'], TV: ['Q9335576', 'Q170238', 'Q7696995', 'Q157443', 'Q40831']},  # comedy film / comedy (parent: comedy drama, romantic comedy ...) / comedy TV series / sitcom / comedy TV program
+    'crime': {FILM: ['Q959790', 'Q5937792'], TV: ['Q9335577', 'Q56878968', 'Q2321734', 'Q959790', 'Q5937792']},  # crime film / crime fiction (parent: gangster film ...) / crime TV series / detective TV series / police procedural
     'documentary': {FILM: ['Q93204'], TV: ['Q7603925', 'Q4164344']},        # documentary film / documentary TV program / documentary
-    'drama': {FILM: ['Q130232'], TV: ['Q1366112', 'Q1287716', 'Q25372']},   # drama film / drama TV series / drama TV program / drama
-    'family': {FILM: ['Q1361932'], TV: ['Q178840']},                        # family film / family television series
-    'fantasy': {FILM: ['Q157394']},                                         # fantasy film
+    'drama': {FILM: ['Q130232', 'Q21010853'], TV: ['Q1366112', 'Q1287716', 'Q25372', 'Q130232', 'Q21010853']},  # drama film / drama fiction / drama TV series / drama TV program / drama
+    'family': {FILM: ['Q1361932', 'Q2143665'], TV: ['Q178840', 'Q1361932', 'Q2143665']},  # family film / children's film / family television series
+    'fantasy': {FILM: ['Q157394', 'Q132311']},                              # fantasy film / fantasy (parent: fantasy anime and manga, Xianxia)
     'history': {FILM: ['Q17013749', 'Q542475']},                            # historical film / period drama film
     'horror': {FILM: ['Q200092']},                                          # horror film
     'kids': {TV: ['Q1273568']},                                             # children's television series
-    'music': {FILM: ['Q842256']},                                           # musical film
+    'music': {FILM: ['Q842256', 'Q109733358', 'Q2743'], TV: ['Q842256', 'Q109733358', 'Q2743']},  # musical film / music-themed film (parent: music documentary film)
     'mystery': {FILM: ['Q1200678'], TV: ['Q101898470']},                    # mystery film / mystery television series
     'reality': {TV: ['Q182415']},                                           # reality television
     'romance': {FILM: ['Q1054574']},                                        # romance film
-    'sci-fi': {FILM: ['Q471839'], TV: ['Q140472311']},                      # science fiction film / science fiction television series
+    'sci-fi': {FILM: ['Q471839'], TV: ['Q140472311', 'Q471839', 'Q98526245', 'Q132311']},  # science fiction film / sci-fi TV series / fantasy TV series / fantasy (TV 10765 = Sci-Fi & Fantasy)
     'thriller': {FILM: ['Q2484376']},                                       # thriller film
-    'war': {FILM: ['Q369747'], TV: ['Q369747']},                            # war film
-    'westerns': {FILM: ['Q172980'], TV: ['Q7988576']},                      # Western film / Westerns on television
+    'war': {FILM: ['Q369747'], TV: ['Q369747', 'Q102245189', 'Q7210294']},  # war film / war TV series / political drama (TV 10768 = War & Politics)
+    'westerns': {FILM: ['Q172980', 'Q21590660'], TV: ['Q7988576', 'Q172980', 'Q21590660']},  # Western film / Western (parent: neo-Western) / Westerns on television
 }
 # Theme card slug -> Wikidata classes (same for both media). None = Wikidata has no genre for the theme: no truth.
 THEMES = {
@@ -93,7 +93,7 @@ THEMES = {
     'theme-zombies': ['Q3072049'],                                          # zombie film
     'theme-space-epics': ['Q468478'],                                       # space opera
     'theme-spies': ['Q2297927'],                                            # spy film
-    'theme-aliens': ['Q116680334', 'Q116212252'],                           # alien invasion film / extraterrestrial film
+    'theme-aliens': None,                                                   # Wikidata's alien classes hold 1 TMDB-id title: no truth
     'theme-robots-and-ai': None,                                            # no Wikidata genre found
     'theme-dystopian': ['Q20443008'],                                       # dystopian film
     'theme-disaster': ['Q846544'],                                          # disaster film
@@ -254,7 +254,7 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
             try:
                 cache[(media, tid)] = title_facts(tmdb(f"/{'movie' if media == FILM else 'tv'}/{tid}", append_to_response=af.DETAIL_APPEND), media)
             except RuntimeError as e:
-                if 'HTTPError' not in str(e):
+                if 'HTTPError 404' not in str(e):        # only a 404 means 'TMDB does not know it'; 429 / 5xx stay errors
                     raise
                 cache[(media, tid)] = None
         return cache[(media, tid)]
@@ -282,7 +282,7 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
             c['truth'] += total
             for k in missing:
                 f = detail(media, int(k.split(':')[1]))
-                lab, why = classify_missing(f, media, card, r, today, mcount) if f else ('source limit', 'TMDB does not know this id (Wikidata lists it)')
+                lab, why = classify_missing(f, media, card, r, today, mcount) if f else ('source limit', 'TMDB answers 404 for this id (Wikidata lists it)')
                 gaps.append({'kind': kind, 'card': slug, 'side': 'recall', 'key': k, 'name': f['name'] if f else k, 'label': lab, 'reason': why})
         if theme:                                     # the hand list the build adds: recall shows the build applies it
             for media in card['media']:

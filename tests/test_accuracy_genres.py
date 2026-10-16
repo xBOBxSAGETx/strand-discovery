@@ -30,16 +30,29 @@ class Mapping(unittest.TestCase):
                 self.assertTrue(ag.classes_for(c, media), (c['slug'], media))
         themes = ag.pick_cards(SPEC, 'theme', 0, 's')
         self.assertEqual(sorted(c['slug'] for c in themes), sorted(ag.THEMES))
-        self.assertEqual(sorted(s for s, q in ag.THEMES.items() if not q), ['theme-myths-and-legends', 'theme-robots-and-ai'])
+        self.assertEqual(sorted(s for s, q in ag.THEMES.items() if not q), ['theme-aliens', 'theme-myths-and-legends', 'theme-robots-and-ai'])
 
     def test_sci_fi_series_maps_to_the_tv_class_and_movie_to_the_film_class(self):
         card = CARDS['genre-sci-fi-top']                  # base slug drops the -top / -new suffix
         self.assertEqual(ag.base_slug(card['slug']), 'sci-fi')
         self.assertEqual(ag.classes_for(card, 'movie'), ['Q471839'])
-        self.assertEqual(ag.classes_for(card, 'series'), ['Q140472311'])
+        self.assertEqual(ag.classes_for(card, 'series')[0], 'Q140472311')
         self.assertEqual(ag.card_tag(card, 'series'), ('with_genres', {10765}))
         self.assertEqual(ag.card_tag(CARDS['genre-anime'], 'movie'), ('with_keywords', {210024}))
         self.assertEqual(ag.card_tag(CARDS['theme-creature-features'], 'movie')[0], 'with_keywords')
+
+    def test_wikidata_filings_the_card_genre_includes_are_judged_correct(self):
+        # critic of PR 105: Wikidata files these titles under the card's genre, the first map was too narrow and scored them wrong
+        sci_tv = ag.judge_query('series', ag.classes_for(CARDS['genre-sci-fi-new'], 'series'), ['1'])
+        self.assertIn('wd:Q98526245', sci_tv)                       # fantasy television series: TV 'Sci-Fi & Fantasy' is one TMDB genre
+        self.assertIn('wd:Q132311', sci_tv)                         # fantasy (parent of fantasy anime and manga, Xianxia)
+        self.assertIn('wd:Q40831', ag.judge_query('movie', ag.classes_for(CARDS['genre-comedy'], 'movie'), ['1']))   # comedy: comedy drama, romantic comedy
+        for slug, media, q in (('genre-action', 'series', 'Q56064758'), ('genre-war', 'series', 'Q7210294'), ('genre-crime', 'movie', 'Q5937792'),
+                               ('genre-westerns', 'series', 'Q21590660'), ('genre-family', 'movie', 'Q2143665'),
+                               ('genre-music', 'movie', 'Q109733358'), ('genre-drama', 'series', 'Q21010853')):
+            self.assertIn(q, ag.classes_for(CARDS[slug], media), (slug, media))
+        for slug in ('genre-action', 'genre-comedy', 'genre-drama', 'genre-sci-fi'):   # a series is also a film-class title
+            self.assertTrue(set(ag.classes_for(CARDS[slug], 'movie')) & set(ag.classes_for(CARDS[slug], 'series')), slug)
 
     def test_pick_is_a_third_of_each_sort_and_stable(self):
         a = ag.pick_cards(SPEC, 'genre', 12, 'audit-95')
@@ -119,7 +132,7 @@ class Measure(unittest.TestCase):
         card = CARDS['genre-horror']                       # the first run crashed on a Wikidata id TMDB answers 404 for
 
         def tmdb(path, **kw):
-            raise RuntimeError('TMDB HTTPError on ' + path)
+            raise RuntimeError('TMDB HTTPError 404 on ' + path)
 
         def sparql(q):
             return [{'id': '3', 'sl': '80'}] if 'SELECT ?id (MAX(?sl0)' in q else []

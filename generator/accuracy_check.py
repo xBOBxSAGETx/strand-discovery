@@ -22,7 +22,7 @@ of that month fall in the window (not measured). The lists are an optional manua
 health.py: HEALTH_DRY_RUN=1 prints the writes; HEALTH_MOCK_ISSUES=<json> stands in for `gh issue list`.
 TMDB_API_KEY from the environment (never printed). Reads only; never writes state.
 """
-import argparse, csv, datetime as dt, gzip, json, os, random, sys, time, urllib.parse, urllib.request
+import argparse, csv, datetime as dt, gzip, json, os, random, sys, time, urllib.error, urllib.parse, urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -61,7 +61,8 @@ def tmdb(path, **params):
                                     timeout=30) as r:
             return json.load(r)
     except Exception as e:                     # never surface the URL (it carries the key)
-        raise RuntimeError(f'TMDB {type(e).__name__} on {path}') from None
+        code = f' {e.code}' if isinstance(e, urllib.error.HTTPError) else ''
+        raise RuntimeError(f'TMDB {type(e).__name__}{code} on {path}') from None
 
 
 def fetch_site(site, pages, audit_slugs=()):
