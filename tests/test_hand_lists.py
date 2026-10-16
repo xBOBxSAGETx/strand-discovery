@@ -41,6 +41,9 @@ def validate(name, groups, gaps=KNOWN_GAPS):
             if name == 'corrections':      # #117: add|remove|keep, optional why (str) and date (YYYY-MM-DD)
                 if e.get('side') not in ('add', 'remove', 'keep'):
                     bad.append(f'{who}: bad side {e.get("side")!r}')
+                y = e.get('year')       # #129: a year is a 4-digit int; only a keep may leave it unknown (null)
+                if not (type(y) is int and 1850 <= y <= 2100 or (y is None and e.get('side') == 'keep')):
+                    bad.append(f'{who}: bad year {y!r}')
                 if 'why' in e and not (isinstance(e['why'], str) and e['why'].strip()):
                     bad.append(f'{who}: why is not text')
                 if 'date' in e and not re.fullmatch(r'\d{4}-\d\d-\d\d', str(e['date'])):
@@ -104,6 +107,12 @@ class ValidatorCatches(unittest.TestCase):
         self.assertEqual(validate('corrections', {'g': [ok]}, {}), [])
         for bad in ({'side': 'drop'}, {'side': None}, {'why': ''}, {'date': '16/10/2026'}):
             self.assertTrue(validate('corrections', {'g': [{**ok, **bad}]}, {}), bad)
+
+    def test_corrections_year_may_be_unknown_only_for_keep(self):
+        ok = {**self.GOOD, 'side': 'keep', 'why': 'x', 'year': None}
+        self.assertEqual(validate('corrections', {'g': [ok]}, {}), [])
+        for bad in ({'side': 'add'}, {'side': 'remove'}, {'year': '1999'}, {'year': 0}):
+            self.assertTrue(any('bad year' in b for b in validate('corrections', {'g': [{**ok, **bad}]}, {})), bad)
 
     def test_official_arrivals_same_title_other_date_is_not_a_duplicate(self):
         a = {**self.GOOD, 'date': '2026-09-01'}

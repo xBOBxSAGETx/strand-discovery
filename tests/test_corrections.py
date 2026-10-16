@@ -301,10 +301,12 @@ class CorrectionData(unittest.TestCase):
         self.assertIn(FIXED['movie'], [e['tmdb'] for e in lists['theme-zombies']])
         for slug, entries in lists.items():
             for e in entries:
-                self.assertTrue(e['title'] and e['wikidata'].startswith('Q') and e['added'], f"{slug}: {e['title']}")
-                self.assertTrue(e['source'].startswith('https://en.wikipedia.org/wiki/') and e['why'] and e['side'] == 'add')   # two sources: Wikidata id + Wikipedia category
+                self.assertTrue(e['title'] and e['added'], f"{slug}: {e['title']}")
+                self.assertTrue(e['source'].startswith('https://') and e['why'], f"{slug}: {e['title']}")      # evidence URL + the reason
+                if e['side'] != 'keep':
+                    self.assertTrue(isinstance(e['year'], int), f"{slug}: {e['title']}")   # an add/remove carries a year (its second source is the evidence URL: Wikidata, Wikipedia or the service's own page)
             held = {(m['type'], m['tmdb']) for m in must.get(slug, [])}
-            self.assertFalse(held & {(e['type'], e['tmdb']) for e in entries}, f'{slug}: a correction repeats a must-have')
+            self.assertFalse(held & {(e['type'], e['tmdb']) for e in entries if e['side'] == 'add'}, f'{slug}: a correction repeats a must-have')
 
 
 if __name__ == '__main__':
