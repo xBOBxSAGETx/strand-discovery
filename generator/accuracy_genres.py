@@ -249,8 +249,14 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
     since = (dt.date.fromisoformat(today) - dt.timedelta(days=NEW_DAYS)).isoformat()
 
     def detail(media, tid):
+        """The title's facts, or None when TMDB does not know the id (a Wikidata id TMDB dropped / merged): never a crash."""
         if (media, tid) not in cache:
-            cache[(media, tid)] = title_facts(tmdb(f"/{'movie' if media == FILM else 'tv'}/{tid}", append_to_response=af.DETAIL_APPEND), media)
+            try:
+                cache[(media, tid)] = title_facts(tmdb(f"/{'movie' if media == FILM else 'tv'}/{tid}", append_to_response=af.DETAIL_APPEND), media)
+            except RuntimeError as e:
+                if 'HTTPError' not in str(e):
+                    raise
+                cache[(media, tid)] = None
         return cache[(media, tid)]
     for card in cards:
         slug, order = card['slug'], order_of(card['slug'])
@@ -269,15 +275,15 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
             cand = parse_truth(sparql(truth_query(media, qs, since=since if sort == 'new' else None)), media, today)
             keys = [k for k, _, _ in cand]
             if sort == 'top':                         # the claim is the well-rated ones; Wikidata has no rating: TMDB's
-                keys = [k for k in keys if detail(media, int(k.split(':')[1]))['rating'] >= TOP_RATING]
+                keys = [k for k in keys if (detail(media, int(k.split(':')[1])) or {}).get('rating', 0) >= TOP_RATING]
             truth = keys[:TRUTH_K]
             found, total, missing = af.score(truth, have)
             c['found'] += found
             c['truth'] += total
             for k in missing:
                 f = detail(media, int(k.split(':')[1]))
-                lab, why = classify_missing(f, media, card, r, today, mcount)
-                gaps.append({'kind': kind, 'card': slug, 'side': 'recall', 'key': k, 'name': f['name'], 'label': lab, 'reason': why})
+                lab, why = classify_missing(f, media, card, r, today, mcount) if f else ('source limit', 'TMDB does not know this id (Wikidata lists it)')
+                gaps.append({'kind': kind, 'card': slug, 'side': 'recall', 'key': k, 'name': f['name'] if f else k, 'label': lab, 'reason': why})
         if theme:                                     # the hand list the build adds: recall shows the build applies it
             for media in card['media']:
                 ids = build.must_haves(card, media)
@@ -286,8 +292,8 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                 for i in ids:
                     if f'{media}:{i}' not in have:
                         f = detail(media, i)
-                        released = bool(f['date']) and f['date'] <= today
-                        gaps.append({'kind': kind, 'card': slug, 'side': 'must_have', 'key': f'{media}:{i}', 'name': f['name'],
+                        released = bool(f) and bool(f['date']) and f['date'] <= today
+                        gaps.append({'kind': kind, 'card': slug, 'side': 'must_have', 'key': f'{media}:{i}', 'name': f['name'] if f else f'{media}:{i}',
                                      'label': 'code bug' if released else 'source limit',
                                      'reason': 'hand-picked must-have is not on its card' if released else 'not released / unknown to TMDB'})
         rf += c['found']
@@ -302,6 +308,9 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
         for k in sample:
             media, tid = k.split(':')
             f = detail(media, int(tid))
+            if not f:                                 # on the card but TMDB no longer knows the id: not judged
+                unjudged += 1
+                continue
             r = af.card_rules(kind, card, media, spec)
             bad = None if k in must else classify_extra(f, media, card, r, today)      # a must-have is excused from the rules
             if theme:

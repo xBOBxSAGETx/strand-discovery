@@ -115,6 +115,18 @@ class Measure(unittest.TestCase):
         self.assertEqual((row['sample'], row['ok'], row['precision']), (2, 1, 50.0))
         self.assertEqual(sorted((g['side'], g['label']) for g in gaps), [('precision', 'source limit'), ('recall', 'deliberate rule')])
 
+    def test_title_unknown_to_tmdb_is_a_gap_not_a_crash(self):
+        card = CARDS['genre-horror']                       # the first run crashed on a Wikidata id TMDB answers 404 for
+
+        def tmdb(path, **kw):
+            raise RuntimeError('TMDB HTTPError on ' + path)
+
+        def sparql(q):
+            return [{'id': '3', 'sl': '80'}] if 'SELECT ?id (MAX(?sl0)' in q else []
+        row, gaps = ag.measure_cards('genre', [card], SPEC, lambda s: ['movie:1'], tmdb, sparql, TODAY, 20, 's')
+        self.assertEqual([(g['side'], g['label']) for g in gaps], [('recall', 'source limit')])
+        self.assertEqual(row['unjudged'], 1)
+
     def test_theme_has_no_precision_truth(self):
         card = CARDS['theme-heist']
         details = {1: det(1, 'Heist', [80], kw=[10051]), 2: det(2, 'No keyword', [80])}
