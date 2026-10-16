@@ -38,8 +38,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SD_STATE_KEY: ${{ secrets.SD_STATE_KEY }}
         run: |
-          run_id=$(gh run list -R "$GITHUB_REPOSITORY" --workflow build.yml --branch main --status success -L 1 \
-                   --json databaseId --jq '.[0].databaseId // empty')
+          # the newest successful build that SAVED state (a no-op rebuild has pages but no first-seen-state artifact)
+          run_id=
+          for id in $(gh run list -R "$GITHUB_REPOSITORY" --workflow build.yml --branch main --status success -L 8 \
+                      --json databaseId --jq '.[].databaseId'); do
+            if gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/artifacts" \
+                 --jq '.artifacts[] | select(.name=="first-seen-state" and (.expired|not)) | .name' | grep -q .; then
+              run_id=$id; break
+            fi
+          done
           echo "latest successful build: ${run_id:-none}"
           mkdir -p pages state
           if [ -n "$run_id" ] && gh run download "$run_id" -R "$GITHUB_REPOSITORY" -n github-pages -D pages-art \
