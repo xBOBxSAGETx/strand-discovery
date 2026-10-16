@@ -29,6 +29,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import build                    # the one loader of the hand lists (build.load_hand_list); no network at import
 import accuracy_frame           # the shared frame for the Popular / Top cards (issue #92)
+import accuracy_people          # Director / Actor cards against Wikidata (issue #93)
 
 SCHEDULES = {'vt', 'fb', 'wodp'}
 ORPHAN_NETWORKS = {'netflix': {213}, 'hbo-max': {49, 3186, 8304}}      # the sets arrivals.py uses (F2 / F3)
@@ -42,6 +43,9 @@ FRAME_CARDS = 12                # Popular / Top frame (accuracy_frame.py): seede
 FRAME_SAMPLE = 20               # card titles checked per card (precision)
 FRAME_SEED = 'audit-92'         # fixed, so the baseline compares like with like
 FRAME_MAX_DROP = 5.0            # points below accuracy_baseline.json "frame" that open the issue
+PEOPLE_CARDS = 12               # Director / Actor frame (accuracy_people.py): seeded cards per kind that Wikidata knows
+PEOPLE_SPARE = 3                # extra cards of the seeded order fetched from the live site, for cards Wikidata does not know
+PEOPLE_SEED = 'audit-93'
 
 
 def tmdb(path, **params):
@@ -280,14 +284,18 @@ def main():
     ap.add_argument('--cards', type=int, default=FRAME_CARDS, help='Popular / Top frame: seeded cards per kind (0 = off)')
     ap.add_argument('--frame-sample', type=int, default=FRAME_SAMPLE, help='Popular / Top frame: card titles checked per card')
     ap.add_argument('--frame-seed', default=FRAME_SEED, help='fixed seed of the card + title sample (a stable baseline)')
+    ap.add_argument('--people-cards', type=int, default=PEOPLE_CARDS, help='Director / Actor frame: seeded cards per kind (0 = off)')
+    ap.add_argument('--people-seed', default=PEOPLE_SEED, help='fixed seed of the Director / Actor card + title sample')
     ap.add_argument('--today', help='tests only: the date to judge against (default: the build date)')
     a = ap.parse_args()
     pages, state_dir, out = Path(a.pages), Path(a.state), Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     spec = json.loads(Path(a.spec).read_text(encoding='utf-8'))
     frame_cards = {k: accuracy_frame.pick_cards(spec, k, a.cards, a.frame_seed) for k in accuracy_frame.KINDS} if a.cards else {}
+    people_pool = {k: accuracy_people.pick_people(spec, k, a.people_seed) for k in accuracy_people.PROP} if a.people_cards else {}
     if a.fetch_site:
-        fetch_site(a.fetch_site, pages, [c['slug'] for cs in frame_cards.values() for c in cs])
+        fetch_site(a.fetch_site, pages, [c['slug'] for cs in frame_cards.values() for c in cs] +
+                   [c['slug'] for cs in people_pool.values() for c in cs[:a.people_cards + PEOPLE_SPARE]])
     summary = json.loads((pages / 'summary.json').read_text(encoding='utf-8'))
     cands = load_candidates(state_dir, summary['generated_at'][:10])
     if a.today:                                  # tests only: judge the recall window / list month as of this date
@@ -313,6 +321,12 @@ def main():
     for kind, cs in frame_cards.items():          # Popular / Top: recall + precision + labelled gaps (accuracy_frame.py)
         row, gaps = accuracy_frame.measure(kind, cs, spec, lambda slug: card_order(pages, slug), tmdb, dt.date.today().isoformat(),
                                            a.frame_sample, a.frame_seed)
+        frame_sum.append(row)
+        frame_gaps += gaps
+    for kind, pool in people_pool.items():        # Director / Actor: against Wikidata (accuracy_people.py)
+        row, gaps = accuracy_people.measure_people(kind, pool, spec, lambda slug: card_order(pages, slug), tmdb,
+                                                   accuracy_people.wikidata, dt.date.today().isoformat(), a.people_cards,
+                                                   a.frame_sample, a.people_seed)
         frame_sum.append(row)
         frame_gaps += gaps
     if frame_gaps:
