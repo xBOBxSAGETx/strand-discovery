@@ -45,6 +45,7 @@ import json, random, time, urllib.parse, urllib.request
 from pathlib import Path
 
 import accuracy_frame as af
+import accuracy_corrections as ac
 
 HERE = Path(__file__).resolve().parent
 SPARQL = 'https://query.wikidata.org/sparql'
@@ -129,7 +130,7 @@ def studio_truth_query(qids, props):
     values = ' '.join('wd:' + q for q in qids)
     union = ' UNION '.join('{ ?f wdt:%s ?co }' % p for p in props)
     return """
-SELECT ?f (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (MIN(?tmdb) AS ?tmdbid) (MAX(?links) AS ?sitelinks) WHERE {
+SELECT ?f (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (GROUP_CONCAT(DISTINCT STR(?tmdb); separator=" ") AS ?tmdbids) (MAX(?links) AS ?sitelinks) WHERE {
   VALUES ?co { %s }
   %s
   ?f wdt:P4947 ?tmdb ; wikibase:sitelinks ?links .
@@ -145,7 +146,7 @@ def series_truth_query(qids, media='movie'):
     values = ' '.join('wd:' + q for q in qids)
     prop = 'P4947' if media == 'movie' else 'P4983'
     return """
-SELECT ?f ?kind (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (MIN(?id) AS ?tmdbid) (MAX(?links) AS ?sitelinks) WHERE {
+SELECT ?f ?kind (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (GROUP_CONCAT(DISTINCT STR(?id); separator=" ") AS ?tmdbids) (MAX(?links) AS ?sitelinks) WHERE {
   VALUES ?root { %s }
   { ?f wdt:P179 ?root } UNION { ?f wdt:P179/wdt:P179+ ?root } UNION { ?f wdt:P8345 ?root }
   ?f wdt:%s ?id ; wikibase:sitelinks ?links .
@@ -157,22 +158,37 @@ SELECT ?f ?kind (SAMPLE(?label) AS ?title) (MIN(?date) AS ?released) (MIN(?id) A
 
 
 def parse_truth(rows, today, kind='movie'):
-    """Wikidata binding rows -> {'movie:123': {'name','date','links','qid'}}. A row without a numeric TMDB id is dropped
+    """Wikidata binding rows -> {'movie:123': {'name','date','links','qid','alts'}}. One row = one Wikidata item; it may carry
+    several TMDB ids (a stale one next to the live one, #129): the lowest is the key, the rest are 'alts' (resolve_alts()
+    picks the one on the card). A row without a numeric TMDB id is dropped
     (P4947 is the TMDB *movie* id, P4983 the *TV* id); a film dated after `today` is not yet released: dropped; no date kept."""
     out = {}
     for r in rows:
-        tid, k = val(r, 'tmdbid', ''), val(r, 'kind', kind)
-        if not tid.isdigit():
+        ids = sorted({int(x) for x in (val(r, 'tmdbids') or val(r, 'tmdbid', '')).split() if x.isdigit()})
+        k = val(r, 'kind', kind)
+        if not ids:
             continue
         date = (val(r, 'released') or '')[:10]
         if not (date[:4].isdigit() and date[4:5] == '-'):      # Wikidata "unknown value" is a URI, not a date
             date = ''
         if date and date > today:
             continue
-        key = f'{k}:{int(tid)}'
+        key = f'{k}:{ids[0]}'
         links = int(val(r, 'sitelinks', 0))
         if key not in out or links > out[key]['links']:
-            out[key] = {'name': val(r, 'title'), 'date': date, 'links': links, 'qid': val(r, 'f', '').rsplit('/', 1)[-1]}
+            out[key] = {'name': val(r, 'title'), 'date': date, 'links': links, 'qid': val(r, 'f', '').rsplit('/', 1)[-1],
+                        'alts': [f'{k}:{i}' for i in ids[1:]]}
+    return out
+
+
+def resolve_alts(truth, have):
+    """An item whose id is not on the card but another id of the same item is: it is found, under the id on the card (#129).
+    -> truth with those keys swapped (a key's other ids stay in 'alts')."""
+    out = {}
+    for key, e in truth.items():
+        ids = [key] + list(e.get('alts', []))
+        on = next((i for i in ids if i in have), key)
+        out[on] = dict(e, alts=[i for i in ids if i != on])
     return out
 
 
@@ -341,7 +357,7 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
     if excluded is None:
         from studio_distributed import EXCLUDE
         excluded = {s: {e['tmdb'] for e in es} for s, es in EXCLUDE.items()}
-    gaps, rf, rt, samp, ok, at_cap, cache = [], 0, 0, 0, 0, [], {}
+    gaps, rf, rt, samp, ok, at_cap, cache, filled = [], 0, 0, 0, 0, [], {}, 0
     prec = {'unconfirmed': 0, 'disagrees': 0}
     unj = 0
 
@@ -352,7 +368,8 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
     for card in cards:
         slug, order = card['slug'], order_of(card['slug'])
         have = set(order)
-        truth = truth_for(card)
+        truth = resolve_alts(truth_for(card), have)
+        known = set(truth) | {a for e in truth.values() for a in e.get('alts', ())}      # every id of every claim item
         medias = ['movie'] if studio else sorted({m for m in card['media']} | {e['type'] for e in card.get('ids', [])})
         ctx = {'collections': {int(c) for c in card.get('collection_ids', [])}}
         r = {m: af.card_rules('popular', {**card, 'sort': card['sort'] if card['kind'] == 'discover' else 'popular'}, m, spec)
@@ -363,6 +380,7 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
             if card['kind'] == 'discover' and counts[m] >= r[m]['depth']:
                 at_cap.append(f'{slug}:{m}')
         found, total, missing = af.score(claim, have)
+        filled += ac.filled(slug, claim, have)
         rf += found
         rt += total
         for k in missing:
@@ -378,7 +396,7 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
             gaps.append({'kind': kind, 'card': slug, 'side': 'recall', 'key': k, 'name': truth[k]['name'], 'label': lab, 'reason': why})
         pool = list(order)
         picked = random.Random(f'{seed}-{slug}').sample(pool, min(n_sample, len(pool)))
-        bad = [k for k in picked if k not in truth]
+        bad = [k for k in picked if k not in known]
         samp += len(picked)
         ok += len(picked) - len(bad)
         wd = {m: lookup(m, [int(k.split(':')[1]) for k in bad if k.startswith(m + ':')]) for m in ('movie', 'series')} if bad else {}
@@ -398,7 +416,7 @@ def measure(kind, cards, spec, order_of, tmdb, today, n_sample, seed, truth_for=
                 unj += 1
                 continue
             gaps.append({'kind': kind, 'card': slug, 'side': 'precision', 'key': k, 'name': f['name'] if f else k, 'label': lab, 'reason': why})
-    row = af.summarize(kind, cards, rf, rt, samp, ok, gaps)
+    row = af.summarize(kind, cards, rf, rt, samp, ok, gaps, filled)
     row['unjudged'] = unj
     row['sample'] = samp - unj                           # only titles Wikidata can judge count (as accuracy_people)
     row['precision'] = af.pct(ok, samp - unj)

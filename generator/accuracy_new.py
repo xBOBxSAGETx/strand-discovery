@@ -33,6 +33,7 @@ Pure functions (window_params, classify_*, label_dated_error) take plain dicts a
 import datetime as dt, random
 
 import accuracy_frame as af
+import accuracy_corrections as ac
 
 WINDOW = 45                        # the New card's arrival window (arrivals.WINDOW)
 TRUTH_K = 40                       # truth titles per medium (two TMDB pages)
@@ -161,7 +162,7 @@ def measure(card, order, spec, tmdb, today, mode, items, cands, seed, n_sample=P
             except RuntimeError:
                 cache[(media, tid)] = None
         return cache[(media, tid)]
-    rf = rt = 0
+    rf = rt = filled = 0
     at_cap = []
     for media in card['media']:
         r = card_checks(card, spec, media, mode)
@@ -176,6 +177,7 @@ def measure(card, order, spec, tmdb, today, mode, items, cands, seed, n_sample=P
                 break
         truth = truth[:truth_k]
         found, total, missing = af.score([k for k, _ in truth], have)
+        filled += ac.filled(slug, [k for k, _ in truth], have)
         rf += found
         rt += total
         names = dict(truth)
@@ -200,6 +202,6 @@ def measure(card, order, spec, tmdb, today, mode, items, cands, seed, n_sample=P
             gaps.append({'kind': 'new-' + svc, 'card': slug, 'side': 'precision', 'key': k, 'name': f['name'], 'label': bad[0], 'reason': bad[1]})
         else:
             ok += 1
-    row = af.summarize('new-' + svc, [card], rf, rt, len(picked), ok, gaps)
+    row = af.summarize('new-' + svc, [card], rf, rt, len(picked), ok, gaps, filled)
     row.update({'at_cap': at_cap, 'mode': mode, 'truth_source': 'tmdb-window', 'circular': True, 'card_size': len(order)})
     return row, gaps

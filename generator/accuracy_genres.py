@@ -323,10 +323,7 @@ def measure_cards(kind, cards, spec, order_of, tmdb, sparql, today, n_sample, se
                     if f'{media}:{i}' in have:
                         cr_found += 1
                         continue
-                    f = detail(media, i)
-                    if bool(f) and bool(f['date']) and f['date'] <= today:
-                        gaps.append({'kind': kind, 'card': slug, 'side': 'must_have', 'key': f'{media}:{i}', 'name': f['name'],
-                                     'label': 'code bug', 'reason': 'our correction is not on its card'})
+                    # a correction missing from its card is judged by accuracy_corrections.settle (#129): a deliberate rule or a code bug
         rf += c['found']
         rt += c['truth']
         sample = random.Random(f'{seed}-{slug}').sample(list(order), min(n_sample, len(order)))

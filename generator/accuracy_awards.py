@@ -37,6 +37,7 @@ import json, re, time, urllib.parse, urllib.request
 from pathlib import Path
 
 import accuracy_frame as af
+import accuracy_corrections as ac
 from accuracy_works import sparql, val
 
 HERE = Path(__file__).resolve().parent
@@ -282,10 +283,11 @@ def measure_card(card, order, spec, lists, wd=None, names=None):
     truth = wd['truth'](cfg, scope, medias)
     out, gaps = [], []
     # recall: a Wikidata winner is found when ANY of its TMDB ids is on the card
-    found = 0
+    found = filled = 0
     for q, e in sorted(truth.items(), key=lambda kv: (kv[1]['name'] or '', kv[0])):
         if e['keys'] & have:
             found += 1
+            filled += any(ac.filled(slug, [k], have) for k in e['keys'])
             continue
         lab, why = classify_missing(e, ctx)
         gaps.append({'kind': slug, 'card': slug, 'side': 'recall', 'key': sorted(e['keys'])[0], 'name': e['name'], 'label': lab,
@@ -314,7 +316,7 @@ def measure_card(card, order, spec, lists, wd=None, names=None):
             continue
         gaps.append({'kind': slug, 'card': slug, 'side': 'precision', 'key': k, 'name': names.get(k, k), 'label': lab, 'reason': why})
     judged = len(order) - unj
-    row = af.summarize(slug, [card], found, len(truth), judged, ok, gaps)
+    row = af.summarize(slug, [card], found, len(truth), judged, ok, gaps, filled)
     row.update({'unjudged': unj, 'sample': judged, 'precision': af.pct(ok, judged), 'coverage': af.pct(judged, len(order)), 'at_cap': [], 'precision_disagrees': disagrees,
                 'truth_source': 'Wikidata ' + '/'.join(cfg['props']), 'circular': False})
     out.append((row, gaps))
