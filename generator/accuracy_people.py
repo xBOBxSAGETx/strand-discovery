@@ -47,26 +47,42 @@ DIRECTOR_JOBS = {'Director', 'Co-Director'}
 FILM, TV_SERIES, SHORT_FILM = 'wd:Q11424', 'wd:Q5398426', 'wd:Q24862'
 
 
+WD_BUDGET = 150        # seconds one query may take over all its tries (a slow query costs one card, not the run)
+WD_MAX_FAILS = 3       # this many queries in a row that gave up: Wikidata is treated as down ...
+WD_COOLDOWN = 120      # ... for this many seconds (every call fails at once), then one query probes it again
+_WD = {'fails': 0, 'last': 0.0}
+
+
 def wikidata(query):
-    """Run one SPARQL query -> [{var: value}], politely (1 s apart, 4 tries). Never surfaces anything but the status."""
+    """Run one SPARQL query -> [{var: value}], politely (1 s apart, up to 4 tries inside WD_BUDGET seconds). Never surfaces
+    anything but the status. After WD_MAX_FAILS queries in a row gave up, calls fail at once for WD_COOLDOWN seconds."""
+    if _WD['fails'] >= WD_MAX_FAILS and time.time() - _WD['last'] < WD_COOLDOWN:
+        raise RuntimeError('Wikidata unavailable (several queries in a row gave up)')
     body = urllib.parse.urlencode({'query': query}).encode()
+    start, why = time.time(), 'timeout'
     for attempt in range(4):
         time.sleep(1.0)
         try:
             req = urllib.request.Request(WD_URL, data=body, headers={'User-Agent': UA, 'Accept': 'application/sparql-results+json'})
-            with urllib.request.urlopen(req, timeout=90) as r:
+            with urllib.request.urlopen(req, timeout=60) as r:
                 data = json.load(r)
+            _WD['fails'] = 0
             return [{k: v['value'] for k, v in b.items()} for b in data['results']['bindings']]
         except urllib.error.HTTPError as e:
-            if e.code in (429, 500, 502, 503, 504) and attempt < 3:
-                time.sleep(8 * (attempt + 1))
-                continue
-            raise RuntimeError(f'Wikidata HTTP {e.code}') from None
+            why = f'HTTP {e.code}'
+            if e.code not in (429, 500, 502, 503, 504):
+                break
         except Exception as e:
-            if attempt < 3:
-                time.sleep(8)
-                continue
-            raise RuntimeError(f'Wikidata {type(e).__name__}') from None
+            why = type(e).__name__
+        if attempt < 3 and time.time() - start < WD_BUDGET:
+            print(f'  wikidata {why}, try {attempt + 2} of 4 in {8 * (attempt + 1)} s: {query[:60]!r}', flush=True)
+            time.sleep(8 * (attempt + 1))
+            continue
+        break
+    _WD['fails'] += 1
+    _WD['last'] = time.time()
+    print(f'  wikidata gave up ({why}) after {round(time.time() - start)} s, {_WD["fails"]} in a row: {query[:60]!r}', flush=True)
+    raise RuntimeError(f'Wikidata {why}' if why.startswith('HTTP') else f'Wikidata {why}')
 
 
 def person_query(pid):
