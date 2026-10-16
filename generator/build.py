@@ -622,7 +622,7 @@ def source_of(card):
             parts.append(f"{tag}: " + ' | '.join(names.get(i, i) for i in p['with_watch_providers'].split('|')))
         elif 'with_networks' in p:
             ids.append(p['with_networks'])
-            parts.append(f"{tag}: network " + named(f"/network/{p['with_networks']}"))
+            parts.append(f"{tag}: network " + ' | '.join(named(f'/network/{n}') for n in p['with_networks'].split('|')))
         elif 'with_companies' in p:
             ids.append(p['with_companies'])
             parts.append(f"{tag}: " + ' | '.join(named(f'/company/{c}') for c in p['with_companies'].split('|')))
