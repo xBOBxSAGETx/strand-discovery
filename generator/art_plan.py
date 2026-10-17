@@ -57,6 +57,8 @@ def details(meta):
 
 def pool(c, dflt):
     """Candidate titles for the background, in preference order."""
+    if c['kind'] == 'union':                    # issue #143: the background pool is the Popular part, as before the union
+        c = build.union_parts(c)[0]
     if c['kind'] in ('mdblist', 'idlist'):
         return build.build_one(c, dflt)[0][:LOOKAHEAD]
     if c['kind'] != 'discover':

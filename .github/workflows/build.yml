@@ -186,6 +186,7 @@ jobs:
       # (Presence reads the logger's last_run; a second same-day run falls back to prev_run). The logger merges its output
       # into the restored new_candidates.json / fs_summary.json, so the other services' New cards in this build keep
       # theirs. Nothing here is saved: a partial never saves state (the save steps below need a full build).
+      # #143: a service's New list is a part of its one card (streaming-<svc>); the old -new slug maps to the same service, -top has no New part
       - name: Partial rebuild - first_seen for the New cards' services
         id: partial_logger
         if: env.SD_CARDS != ''
@@ -195,7 +196,7 @@ jobs:
           SD_CACHE: cache
           SD_ARRIVALS_SINGLE_SOURCE_DROP: ${{ vars.SD_ARRIVALS_SINGLE_SOURCE_DROP }}
         run: |
-          providers=$(echo "$SD_CARDS" | tr ',' '\n' | sed -E 's/^ +| +$//g; s/^sd-//' | grep -E '^streaming-.+-new$' | sed -E 's/^streaming-//; s/-new$//' | sort -u | paste -sd, -)
+          providers=$(echo "$SD_CARDS" | tr ',' '\n' | sed -E 's/^ +| +$//g; s/^sd-//' | grep -E '^streaming-.+' | grep -vE -- '-top$' | sed -E 's/^streaming-//; s/-new$//' | sort -u | paste -sd, -)
           echo "providers=$providers" >> "$GITHUB_OUTPUT"
           echo "New-card services: ${providers:-none}"
           if [ -n "$providers" ]; then SD_FS_ONLY="$providers" python generator/first_seen.py state; fi

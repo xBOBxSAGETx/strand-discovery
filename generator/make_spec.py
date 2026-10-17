@@ -1,8 +1,8 @@
 """Write generator/spec.json: every catalog of the Strand Discovery build, in folder order.
 
-  python make_spec.py <curated_people_v2.csv> [<candidates_v2.json> ...]
+  python make_spec.py <curated_people_v2.csv> <candidates_v2.json> <metrics_directors_v2.json> <metrics_actors_v2.json>
 
-The optional private people files (candidates_v2.json, metrics_directors_v2.json, metrics_actors_v2.json; never committed) only order the people: most total votes of their films first.
+The private people files (never committed) order the people, most total votes of their films first; the run refuses without them.
 
 One spec entry = one catalog = one AIOStreams Jellyfin library. `folders` lists the Strand folders (shelves) whose
 cards point at it; a person listed in two categories is one catalog with two cards. `library` is the library name
@@ -19,7 +19,7 @@ import build                    # the one loader of the hand lists
 VARIANTS = [('popular', 'Popular'), ('new', 'New'), ('top', 'Top Rated')]
 DIRECTOR_CATS = ['Up & Coming', 'Modern Masters', 'Legends', 'Action', 'Animation', 'Comedy', 'Horror', 'Sci-Fi']
 ACTOR_CATS = ['Rising Stars', 'Scene Stealers', 'Legends', 'Action', 'Comedy', 'Drama', 'Horror']
-FOLDERS = ([{'key': f'streaming-{v}', 'title': f'Streaming · {n}', 'shape': 'wide'} for v, n in VARIANTS]
+FOLDERS = ([{'key': 'streaming', 'title': 'Streaming', 'shape': 'wide'}]
            + [{'key': f'genres-{v}', 'title': f'Genres · {n}', 'shape': 'wide'} for v, n in VARIANTS]
            + [{'key': k, 'title': t, 'shape': 'wide'} for k, t in [
                ('networks', 'Networks'), ('studios', 'Studios'), ('series', 'Movie Series'), ('themes', 'Themes'),
@@ -27,14 +27,13 @@ FOLDERS = ([{'key': f'streaming-{v}', 'title': f'Streaming · {n}', 'shape': 'wi
                ('standup', 'Stand-up')]])
 
 
-KEEP_FOLDERS = {'streaming-popular', 'streaming-new', 'networks', 'studios', 'series', 'themes', 'awards', 'acclaimed',
-                'standup'}
+KEEP_FOLDERS = {'streaming', 'networks', 'studios', 'series', 'themes', 'awards', 'acclaimed', 'standup'}
 
 
 def keep_catalog(c):
     if c.get('person_id'):                      # every director and actor (they get one folder each, see below)
         return True
-    return c['slug'] != 'standup-top' and any(f in KEEP_FOLDERS for f in c['folders'])
+    return any(f in KEEP_FOLDERS for f in c['folders'])
 
 
 def slugify(s):
@@ -50,7 +49,7 @@ def slugify(s):
 PEOPLE_FOLDERS = [{'key': 'directors', 'title': 'Directors', 'shape': 'poster'},
                   {'key': 'actors', 'title': 'Actors', 'shape': 'poster'}]
 # folder order in Strand (issue #142); a folder with no cards left is dropped at the end
-FOLDER_ORDER = ['streaming-popular', 'streaming-new', 'networks', 'directors', 'actors', 'studios', 'series', 'themes',
+FOLDER_ORDER = ['streaming', 'networks', 'directors', 'actors', 'studios', 'series', 'themes',
                 'awards', 'acclaimed', 'standup']
 
 # ---- sources -----------------------------------------------------------------------------------------------------
@@ -239,6 +238,29 @@ def disc(slug, library, title, eyebrow, folder, media, sort, movie=None, series=
     return e
 
 
+# issue #143: one card per streaming service / stand-up = the union of its Popular + New + Top Rated parts (build.py kind
+# 'union'). Each part is the discover card it was before the cut, kept verbatim under its old slug (the Popular part under
+# the card's own slug), so every hand list and correction keyed by those slugs still applies. A union holds at most
+# UNION_CAP titles: the AIOStreams server reads only the first JELLYFIN_MAX_SORT_ITEMS=2000 for a sort (year, date, rating).
+UNION_CAP = 2000
+PART_KEYS = ('slug', 'sort', 'min_votes', 'min_age_days', 'tv_air_window', 'provider', 'depth')
+
+
+def union_card(cards, folder):
+    """cards = the discover cards (Popular first, then New, then Top Rated) -> ONE union catalog under the Popular slug."""
+    base = cards[0]
+    assert base['sort'] == 'popular'
+    u = {k: base[k] for k in ('slug', 'library', 'title', 'eyebrow')}
+    u.update(folders=[folder], kind='union', media=base['media'], sort='popular', min_votes=base['min_votes'], cap=UNION_CAP)
+    for k in ('movie', 'series'):
+        if k in base:
+            u[k] = base[k]
+    if any(c.get('provider') for c in cards):                  # the New part's service: arrival / first_seen order, watch triggers
+        u['provider'] = next(c['provider'] for c in cards if c.get('provider'))
+    u['parts'] = [{k: c[k] for k in PART_KEYS if k in c} for c in cards]
+    return u
+
+
 def load_votes(paths):
     """-> {(role, tmdb_id): total audience votes of their films} from the private people files, or {} without any.
     Two shapes are read: candidates_v2.json ({"directors": {cat: {"candidates"|"near_misses": [{tmdb_id, metrics}]}}, "actors": ...},
@@ -257,8 +279,10 @@ def load_votes(paths):
                     for cand in grp.get('candidates', []) + grp.get('near_misses', []):
                         put(role, cand['tmdb_id'], (cand.get('metrics') or {}).get('total_votes'))
         else:
+            name = Path(path).name.lower()          # metrics_directors_v2.json holds DIRECTING votes whatever the person's main job
+            fixed = 'Director' if 'director' in name else 'Actor' if 'actor' in name else None
             for e in data.values():
-                role = 'Director' if e.get('dept') == 'Directing' else 'Actor'
+                role = fixed or ('Director' if e.get('dept') == 'Directing' else 'Actor')
                 put(role, e['tmdb_id'], e.get('total_votes', (e.get('all') or {}).get('total_votes')))
     return votes
 
@@ -279,21 +303,27 @@ def order_people(cats, votes):
 
 
 def main():
+    if len(sys.argv) < 3:
+        sys.exit('make_spec.py needs the private order files after the CSV (candidates_v2.json, metrics_directors_v2.json, '
+                 'metrics_actors_v2.json): with only the CSV it would silently reshuffle the Directors and Actors rows. '
+                 'Usage: python make_spec.py <curated_people_v2.csv> <candidates_v2.json> <metrics_directors_v2.json> <metrics_actors_v2.json>')
     cats = []
-    for v, n in VARIANTS:                                    # streaming x3
-        for name, ids in STREAMING:
+    for name, ids in STREAMING:                              # one union card per service (issue #143)
+        p = {'watch_region': 'US', 'with_watch_providers': ids,
+             'with_watch_monetization_types': MONETIZATION.get(name, 'free|ads' if name in FREE_SERVICES else 'flatrate')}
+        parts = []
+        for v, n in VARIANTS:
             if v == 'top' and name in NO_TOP:
                 continue
-            p = {'watch_region': 'US', 'with_watch_providers': ids,
-                 'with_watch_monetization_types': MONETIZATION.get(name, 'free|ads' if name in FREE_SERVICES else 'flatrate')}
             eyebrow = {'popular': 'Streaming', 'new': 'New on Streaming', 'top': 'Top Rated · Streaming'}[v]
-            cats.append(disc(f'streaming-{slugify(name)}' + ('' if v == 'popular' else f'-{v}'), f'{name} · {n}', name,
-                             eyebrow, f'streaming-{v}', ['movie', 'series'], v, movie=p, series=p))
+            parts.append(disc(f'streaming-{slugify(name)}' + ('' if v == 'popular' else f'-{v}'), f'{name} · {n}', name,
+                              eyebrow, 'streaming', ['movie', 'series'], v, movie=p, series=p))
             if v == 'new':
                 # TV "New" = episodes aired in the last 45 days (new seasons count), until the provider's first_seen
-                # history is long enough; then build.py orders the whole card by date first seen on the service
-                cats[-1]['tv_air_window'] = 45
-                cats[-1]['provider'] = slugify(name)
+                # history is long enough; then build.py orders the whole part by date first seen on the service
+                parts[-1]['tv_air_window'] = 45
+                parts[-1]['provider'] = slugify(name)
+        cats.append(union_card(parts, 'streaming'))
     for v, n in VARIANTS:                                    # genres x3
         for name, mp, sp in GENRES:
             media = [m for m, p in (('movie', mp), ('series', sp)) if p is not None]
@@ -371,14 +401,13 @@ def main():
         if not acclaimed:
             e['min_age_days'] = GEM_MIN_AGE_MOVIES if media == 'movie' else 365
         cats.append(e)
-    for v, n in VARIANTS:
-        p = {'with_keywords': '9716'}
-        mp = {**p, 'with_runtime.gte': 20}                    # half-hour specials count; clips don't
-        sp = {**p, 'without_genres': '10767|10763|10764'}     # no talent/reality shows ("India's Got Latent")
-        cats.append(disc('standup' + ('' if v == 'popular' else f'-{v}'), f'Stand-up · {n}', f'Stand-up · {n}',
-                         {'popular': 'Stand-up', 'new': 'New · Stand-up', 'top': 'Top Rated · Stand-up'}[v],
-                         'standup', ['movie', 'series'], v, movie=mp, series=sp,
-                         min_votes={'popular': 10, 'new': 3, 'top': {'movie': 50, 'series': 20}}[v]))
+    p = {'with_keywords': '9716'}                            # Stand-up: Popular + New in one card (Top Rated stays cut)
+    mp = {**p, 'with_runtime.gte': 20}                       # half-hour specials count; clips don't
+    sp = {**p, 'without_genres': '10767|10763|10764'}        # no talent/reality shows ("India's Got Latent")
+    cats.append(union_card([disc('standup' + ('' if v == 'popular' else f'-{v}'), f'Stand-up · {n}', f'Stand-up · {n}',
+                                 {'popular': 'Stand-up', 'new': 'New · Stand-up'}[v], 'standup', ['movie', 'series'], v,
+                                 movie=mp, series=sp, min_votes={'popular': 10, 'new': 3}[v])
+                           for v, n in VARIANTS[:2]], 'standup'))
 
     # people: one catalog per person+role; folder list in CSV rank order
     people = {}
@@ -398,11 +427,18 @@ def main():
         people[key]['ranks'][folder] = int(r['rank'])
     cats += list(people.values())
 
-    # keep list (issue #142, owner yes AIO chat 2026-10-17 ~10:52 AM PT; it widens the #139 cut of 2026-10-16): streaming
-    # Popular + New, networks, studios, movie series, themes, awards, acclaimed, stand-up Popular + New, and every
-    # director and actor in one folder each. Genres, Top Rated and Decades stay cut. Kept cards keep their ids, names, order.
+    # keep list (issue #142, owner yes AIO chat 2026-10-17 ~10:52 AM PT; it widens the #139 cut of 2026-10-16): streaming,
+    # networks, studios, movie series, themes, awards, acclaimed, stand-up, and every director and actor in one folder
+    # each. Genres and Decades stay cut. Issue #143: streaming and stand-up are ONE union card each (Popular + New [+ Top
+    # Rated]); the old -new / -top catalogs are retired, the Popular slug (= the library id) stays.
     cats = [c for c in cats if keep_catalog(c)]
-    cats = order_people(cats, load_votes(sys.argv[2:]))
+    votes = load_votes(sys.argv[2:])
+    nameless = [f"{c['eyebrow']} {c['title']} ({c['person_id']})" for c in cats
+                if c.get('person_id') and (c['eyebrow'], c['person_id']) not in votes]
+    if nameless:                                             # they would sink to the bottom of their row (critic note on #144)
+        sys.exit(f'{len(nameless)} people have no vote numbers in the private order files, so they would rank last: '
+                 f'{nameless[:8]}... Fill them first (one TMDB pass into the metrics files).')
+    cats = order_people(cats, votes)
     byk = {f['key']: f for f in FOLDERS + PEOPLE_FOLDERS}
     used = {f for c in cats for f in c['folders']}
     FOLDERS[:] = [byk[k] for k in FOLDER_ORDER if k in used]

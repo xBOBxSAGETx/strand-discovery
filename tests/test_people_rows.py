@@ -12,8 +12,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PRE = {c['slug']: c for c in json.loads((ROOT / 'tests' / 'fixtures' / 'spec_before_cut.json').read_text(encoding='utf-8'))['catalogs']}
-ORDER = ['streaming-popular', 'streaming-new', 'networks', 'directors', 'actors', 'studios', 'series', 'themes',
-         'awards', 'acclaimed', 'standup']
+# #143: one Streaming folder (a union card per service) and the owner's order
+ORDER = ['streaming', 'networks', 'directors', 'actors', 'studios', 'series', 'themes', 'awards', 'acclaimed', 'standup']
 
 
 def problems(spec):
@@ -34,6 +34,9 @@ def problems(spec):
         old = PRE.get(c['slug'])
         if old is None:
             out.append(f"{c['slug']}: not in the pre-cut spec")
+        elif c.get('kind') == 'union':          # #143: the card keeps the Popular card's id and library name; its parts are tested in test_union_card
+            if c['library'] != old['library']:
+                out.append(f"{c['slug']}: library renamed")
         elif {k: v for k, v in c.items() if k not in ('folders', 'ranks')} != {k: v for k, v in old.items() if k not in ('folders', 'ranks')}:
             out.append(f"{c['slug']}: changed since before the cut")
     return out
@@ -45,7 +48,7 @@ SPEC = json.loads((ROOT / 'generator' / 'spec.json').read_text(encoding='utf-8')
 class PeopleRows(unittest.TestCase):
     def test_spec_has_one_directors_row_one_actors_row_and_the_old_ids(self):
         self.assertEqual(problems(SPEC), [])
-        self.assertEqual(len(SPEC['catalogs']), 518)       # 81 kept + 177 + 173 + 18 + 57 + 13, Tarantino counted once
+        self.assertEqual(len(SPEC['catalogs']), 496)       # 518 minus the 22 retired New cards (21 services + Stand-up New), #143
 
     def test_control_a_broken_copy_is_noticed(self):
         bad = copy.deepcopy(SPEC)

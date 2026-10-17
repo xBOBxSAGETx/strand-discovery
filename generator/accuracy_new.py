@@ -43,7 +43,7 @@ DETAIL = 'watch/providers,keywords,release_dates'
 
 
 def svc_of(card):
-    return card['slug'][len('streaming-'):-len('-new')]
+    return card.get('provider') or card['slug'][len('streaming-'):-len('-new')]     # #143: the union card names its service
 
 
 def window_params(card, media, today):
@@ -152,7 +152,7 @@ def measure(card, order, spec, tmdb, today, mode, items, cands, seed, n_sample=P
     svc, slug = svc_of(card), card['slug']
     lo = (dt.date.fromisoformat(today) - dt.timedelta(days=WINDOW)).isoformat()
     have = set(order)
-    cap = card.get('depth') or spec['defaults']['depth']['new']
+    cap = card.get('cap') or card.get('depth') or spec['defaults']['depth']['new']      # #143: a union card's cap covers all three parts
     cache, gaps = {}, []
 
     def detail(media, tid):

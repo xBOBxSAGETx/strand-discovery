@@ -126,7 +126,7 @@ def pick_cards(spec, kind, n, seed):
         f, s = c.get('folders', []), c['slug']
         return {'network': 'networks' in f, 'decade': 'decades' in f, 'acclaimed': s.startswith('acclaimed-acclaimed-'),
                 'hidden': s.startswith('acclaimed-hidden-gem'), 'standup': 'standup' in f}[kind]
-    cards = sorted((c for c in spec['catalogs'] if c.get('kind') == 'discover' and of_kind(c)), key=lambda c: c['slug'])
+    cards = sorted((c for c in spec['catalogs'] if c.get('kind') in ('discover', 'union') and of_kind(c)), key=lambda c: c['slug'])
     if len(cards) > n:
         random.Random(f'{seed}-{kind}').shuffle(cards)
         cards = sorted(cards[:n], key=lambda c: c['slug'])

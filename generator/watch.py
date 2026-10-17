@@ -150,7 +150,8 @@ class Watch:
 
     # ---- source -> cards
     def new_cards(self, services):
-        return [c['slug'] for c in self.cards if c.get('sort') == 'new' and c.get('provider') in services]
+        # issue #143: the New list is a part of the service's union card; the card is what gets rebuilt
+        return [c['slug'] for c in self.cards if c.get('provider') in services and (c.get('sort') == 'new' or c.get('kind') == 'union')]
 
     def provider_cards(self, ids):
         return [c['slug'] for c in self.cards if prov_ids(c) & ids]
@@ -221,7 +222,9 @@ class Watch:
         for pop in self.cards:
             if pop['slug'].startswith('streaming-') and pop.get('sort') == 'popular':
                 slug = pop['slug'][len('streaming-'):]
-                new = self.by_slug.get(f'streaming-{slug}-new', pop)
+                # issue #143: a union card holds its New list as a part (the discover card it was); older specs have the -new card
+                new = (next((p for p in build.union_parts(pop) if p['sort'] == 'new'), pop)
+                if pop.get('kind') == 'union' else self.by_slug.get(f'streaming-{slug}-new', pop))
                 for media in ('movie', 'series'):
                     if media in new.get('media', []) and new.get(media):
                         jobs.append((slug, media, pop, new))

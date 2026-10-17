@@ -356,7 +356,8 @@ class AddMustPassEveryDiscoverFilter(unittest.TestCase):
 class CorrectionData(unittest.TestCase):
     def test_every_add_on_a_new_card_has_a_date(self):
         spec = json.loads((HERE / 'spec.json').read_text(encoding='utf-8'))
-        new = {c['slug'] for c in spec['catalogs'] if c.get('provider')}
+        # #143: a service card is a union; only its New part (slug '<card>-new') is a date-first-seen list
+        new = {c['slug'] for c in spec['catalogs'] if c.get('provider') and c['kind'] != 'union'} |             {p['slug'] for c in spec['catalogs'] if c['kind'] == 'union' for p in build.union_parts(c) if p['sort'] == 'new' and p.get('provider')}
         for slug, entries in build.load_hand_list('corrections').items():
             for e in entries:
                 if slug in new and e['side'] == 'add':
