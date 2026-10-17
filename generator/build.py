@@ -107,6 +107,8 @@ def load_hand_list(name, spec=None, path=None):
 
 _last = [0.0]
 _backfill = [0]
+_rating_backfill = [0]
+RATING_BACKFILL_MAX = int(os.environ.get('SD_RATING_BACKFILL_MAX', '400'))   # per run: old cached previews refetched for a rating
 GENRE_BACKFILL_MAX = int(os.environ.get('SD_GENRE_BACKFILL_MAX', '3000'))   # per run; 0 = no refetch
 _calls = [0]
 _fill = [0, 0]                 # discover fill pass (issue #25): pages read, ids recovered
@@ -203,6 +205,12 @@ def released_iso(date):
     return f'{date[:10]}T00:00:00.000Z' if re.fullmatch(r'\d{4}-\d{2}-\d{2}', (date or '')[:10]) else None
 
 
+def rating_str(item):
+    """TMDB vote_average as the Stremio imdbRating string ("7.8"); None when nobody voted, so an unrated title has no
+    rating (the fork's imdbRatingOf reads a missing field as undefined) instead of sorting as 0. Issue #35."""
+    return f"{item['vote_average']:.1f}" if item.get('vote_count') and item.get('vote_average') else None
+
+
 def preview(item, media):
     title = item.get('title') or item.get('name')
     date = item.get('release_date') or item.get('first_air_date') or ''
@@ -215,6 +223,8 @@ def preview(item, media):
         meta['releaseInfo'] = date[:4]
     if released_iso(date):
         meta['released'] = released_iso(date)
+    if rating_str(item):
+        meta['imdbRating'] = rating_str(item)
     # private: canonical genres for the genre pages, stripped before anything is written
     meta['_g'] = canon_genres(item.get('genre_ids') or [g['id'] for g in item.get('genres') or []])
     return meta
@@ -234,10 +244,20 @@ def details_preview(media, tid):
         stale = bool(old) and '_g' not in old['p'] and _backfill[0] < GENRE_BACKFILL_MAX
         if stale:
             _backfill[0] += 1
+        # cached before ratings were kept (#35): fill from a TMDB row seen this run, else refetch up to a per-run cap
+        if old and 'v' not in old:
+            seen = _keys.get((media, tid))
+            if seen:
+                if seen['votes'] and seen['vote']:
+                    old['p']['imdbRating'] = f"{seen['vote']:.1f}"
+                old['v'] = 1
+            elif not stale and _rating_backfill[0] < RATING_BACKFILL_MAX:
+                _rating_backfill[0] += 1
+                stale = 'rating'
     if key not in _stable or stale:
         try:
             d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}")
-            _stable[key] = ({'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or ''}
+            _stable[key] = ({'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or '', 'v': 1}
                             if d.get('id') else None)
         except RuntimeError:          # a transient failure must not stick
             if not stale:

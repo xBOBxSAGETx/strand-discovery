@@ -31,14 +31,53 @@ class ReleasedDate(unittest.TestCase):
             build._stable.pop('movie:77', None)
         self.assertEqual(m['released'], '2020-03-04T00:00:00.000Z')
 
+    def test_rating_on_preview_and_none_when_unrated(self):
+        m = build.preview({'id': 1, 'title': 'A', 'release_date': '2024-05-17', 'vote_average': 7.84, 'vote_count': 120}, 'movie')
+        self.assertEqual(m['imdbRating'], '7.8')
+        self.assertNotIn('imdbRating', build.preview({'id': 2, 'title': 'B', 'vote_average': 0, 'vote_count': 0}, 'movie'))
+        self.assertNotIn('imdbRating', build.preview({'id': 3, 'title': 'C', 'vote_average': 9.0, 'vote_count': 0}, 'movie'))
+
+    def _old(self, tid):
+        return {'p': {'id': f'tmdb:{tid}', 'type': 'movie', 'name': 'Old', '_g': []}, 'd': '2020-03-04'}
+
+    def test_old_cache_rating_filled_from_seen_row_without_refetch(self):
+        build._stable['movie:78'] = self._old(78)
+        build._keys[('movie', 78)] = {'pop': 1, 'vote': 6.66, 'votes': 50, 'date': '2020-03-04'}
+        try:
+            m = build.details_preview('movie', 78)       # no TMDB call: the key is a dummy
+        finally:
+            build._stable.pop('movie:78', None)
+            build._keys.pop(('movie', 78), None)
+        self.assertEqual(m['imdbRating'], '6.7')
+
+    def test_old_cache_rating_refetch_is_capped(self):
+        calls = []
+        real_tmdb, real_cap, real_n = build.tmdb, build.RATING_BACKFILL_MAX, build._rating_backfill[0]
+        build.tmdb = lambda path, **kw: calls.append(path) or {'id': int(path.rsplit('/', 1)[1]), 'title': 'N',
+                                                              'release_date': '2020-03-04', 'vote_average': 8.0, 'vote_count': 9}
+        build.RATING_BACKFILL_MAX, build._rating_backfill[0] = 1, 0
+        for t in (9900080, 9900081):
+            build._stable[f'movie:{t}'] = self._old(t)
+        try:
+            a, b = build.details_preview("movie", 9900080), build.details_preview("movie", 9900081)
+        finally:
+            build.tmdb, build.RATING_BACKFILL_MAX, build._rating_backfill[0] = real_tmdb, real_cap, real_n
+            for t in (9900080, 9900081):
+                build._stable.pop(f'movie:{t}', None)
+        self.assertEqual(len(calls), 1)                  # one refetch only; the second waits for the next run
+        self.assertEqual(a['imdbRating'], '8.0')
+        self.assertNotIn('imdbRating', b)
+
     def test_written_page_keeps_released(self):
-        m = build.preview({'id': 1, 'title': 'A', 'release_date': '2024-05-17', 'genre_ids': [18]}, 'movie')
+        m = build.preview({'id': 1, 'title': 'A', 'release_date': '2024-05-17', 'genre_ids': [18],
+                          'vote_average': 7.84, 'vote_count': 120}, 'movie')
         with tempfile.TemporaryDirectory() as t:
             root = Path(t)
             build.write_catalog(root, 'movie', 'sd-r', [m], 10)
             out = json.loads((root / 'catalog' / 'movie' / 'sd-r.json').read_text(encoding='utf-8'))['metas'][0]
         self.assertEqual(out['released'], '2024-05-17T00:00:00.000Z')
         self.assertEqual(out['releaseInfo'], '2024')
+        self.assertEqual(out['imdbRating'], '7.8')
 
 
 if __name__ == '__main__':
