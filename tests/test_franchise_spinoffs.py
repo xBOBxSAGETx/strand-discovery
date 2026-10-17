@@ -12,7 +12,7 @@ os.environ['SD_CACHE'] = str(Path(_tmp) / 'sd_cache')
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'generator'))
 import build  # noqa: E402
 
-SPEC = Path(__file__).resolve().parent / 'fixtures' / 'spec_before_cut.json'   # pre-#139-cut: franchises are cut
+SPEC = Path(__file__).resolve().parent.parent / 'generator' / 'spec.json'
 # card title -> TMDB movie ids added by #69 (each checked on Wikidata, P4947, label + date)
 ADDED = {
     'X-Men': [76170, 2080, 263115, 293660, 383498, 533535, 340102],
