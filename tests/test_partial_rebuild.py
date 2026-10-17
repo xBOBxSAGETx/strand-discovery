@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'generator'))
 import build  # noqa: E402
 
 LIVE_URL = 'http://live.test/'
-REAL = json.loads((Path(build.__file__).resolve().parent / 'spec.json').read_text(encoding='utf-8'))
+REAL = json.loads((Path(__file__).resolve().parent / 'fixtures' / 'spec_before_cut.json').read_text(encoding='utf-8'))   # pre-#139-cut: the test cards include cut shelves
 SLUGS = list(dict.fromkeys(['studio-a24', 'genre-horror', 'genre-horror-new'] + [c['slug'] for c in REAL['catalogs'][:12]]))[:12]
 SIZES = {'studio-a24': 250, 'genre-horror': 130, 'genre-horror-new': 40}      # others: 60
 

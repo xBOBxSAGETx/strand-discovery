@@ -10,7 +10,7 @@ on:
         type: boolean
         default: false
       allow_catalog_removal:
-        description: 'Accept catalogs removed/renamed on purpose (the >30% item-drop guard still applies)'
+        description: 'Accept catalogs removed/renamed on purpose (the >30% item-drop guard then compares only the catalogs that remain)'
         type: boolean
         default: false
       deploy:

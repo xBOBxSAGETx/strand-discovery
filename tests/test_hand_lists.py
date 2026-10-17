@@ -7,7 +7,7 @@ a source. No network:
 KNOWN_GAPS names a list still in an old shape that lacks a field. It is empty since part 2 (#83): every list has the
 one shape. A new gap would need a line with a reason, and the test fails when a listed gap is no longer a gap.
 """
-import os, re, sys, tempfile, unittest
+import json, os, re, sys, tempfile, unittest
 from pathlib import Path
 
 _tmp = tempfile.mkdtemp(prefix='sd-tests-')
@@ -60,6 +60,9 @@ class HandListData(unittest.TestCase):
         for name in build.HAND_LISTS:
             with self.subTest(list=name):
                 groups = build.load_hand_list(name)
+                if name == 'card_ids':      # franchise ids live in spec.json; the #139 cut left no franchise card, so also read the pre-cut spec
+                    pre = json.loads((Path(__file__).resolve().parent / 'fixtures' / 'spec_before_cut.json').read_text(encoding='utf-8'))
+                    groups = {**build.load_hand_list(name, spec=pre), **groups}
                 self.assertTrue(groups, f'{name}: loaded nothing')
                 self.assertEqual(validate(name, groups), [])
 

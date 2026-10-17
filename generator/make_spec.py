@@ -25,6 +25,18 @@ FOLDERS = ([{'key': f'streaming-{v}', 'title': f'Streaming · {n}', 'shape': 'wi
                ('standup', 'Stand-up')]])
 
 
+KEEP_FOLDERS = {'streaming-popular', 'streaming-new', 'networks', 'awards', 'acclaimed', 'standup'}
+KEEP_DIRECTORS = {'dir-quentin-tarantino'}
+
+
+def keep_catalog(c):
+    if c['slug'] in KEEP_DIRECTORS:
+        return True
+    if c.get('person_id'):
+        return False
+    return c['slug'] != 'standup-top' and any(f in KEEP_FOLDERS for f in c['folders'])
+
+
 def slugify(s):
     # accents -> ASCII first (é->e, ó->o, ñ->n): slugs become catalog ids and Strand library ids, so they must not
     # lose letters ("Chloé Zhao" was "chlo-zhao")
@@ -342,6 +354,15 @@ def main():
         people[key]['folders'].append(folder)
         people[key]['ranks'][folder] = int(r['rank'])
     cats += list(people.values())
+
+    # keep list (owner okay 2026-10-16, issue #139): streaming Popular + New, networks, awards, acclaimed, stand-up
+    # Popular + New, and director Quentin Tarantino. Everything else is cut; kept cards keep their ids, names, order.
+    cats = [c for c in cats if keep_catalog(c)]
+    for c in cats:
+        if c.get('person_id'):
+            c['folders'] = [f for f in c['folders'] if f in KEEP_FOLDERS or f.startswith('directors-')]
+    used = {f for c in cats for f in c['folders']}
+    FOLDERS[:] = [f for f in FOLDERS if f['key'] in used]
 
     # structural asserts
     keys = {f['key'] for f in FOLDERS}

@@ -11,7 +11,7 @@ Env:
   PREV_SUMMARY_URL   optional: last deployed summary.json, used by the refresh guards
   FORCE_FAIL         optional: "1" fails the run after building (pilot test: last deploy must stay served)
   ALLOW_CATALOG_REMOVAL optional: "1" (manual runs only) accepts catalogs that were removed/renamed on purpose;
-                     the >30% total-items guard still applies
+                     the >30% total-items guard then compares only the catalogs that remain
   SD_KINDS_OFF       optional: comma list of catalog kinds to leave out of this deploy (staged rollout: Stage A
                      deploys with "director,actor" so AIOStreams can't surface people libraries before Stage B)
   SD_KEEP            optional: comma list of slugs kept despite SD_KINDS_OFF (the pilot's live library)
@@ -1249,6 +1249,20 @@ def build_kind(card, dflt):
     raise SystemExit(f'unknown kind {kind}')
 
 
+def total_drop_problem(prev, counts, total, allow_removal):
+    """-> the GUARD message when total items fell more than DROP_LIMIT against the last run, else None. On a manual run
+    with allow_catalog_removal (#139: one deliberate cut of shelves) only the catalogs that remain are compared, so
+    shelves removed on purpose do not count as a drop; each kept catalog is still guarded one by one afterwards.
+    Nightly runs never set it and compare the whole total."""
+    old = prev.get('total_items')
+    if allow_removal:
+        old = sum(n for c, n in prev.get('catalogs', {}).items() if c in counts)
+        total = sum(counts.values())
+    if old and total < old * (1 - DROP_LIMIT):
+        return f'GUARD: total items dropped {old} -> {total} (>30%)'
+    return None
+
+
 def main():
     root = Path(sys.argv[1] if len(sys.argv) > 1 else 'out')
     spec = json.loads((HERE / 'spec.json').read_text(encoding='utf-8'))
@@ -1412,8 +1426,9 @@ def main():
             print(f'catalogs removed/renamed on purpose (manual run): {emptied}')
         elif emptied:
             sys.exit(f'GUARD: previously non-empty catalogs are now empty: {emptied}')
-        if prev.get('total_items') and summary['total_items'] < prev['total_items'] * (1 - DROP_LIMIT):
-            sys.exit(f"GUARD: total items dropped {prev['total_items']} -> {summary['total_items']} (>30%)")
+        problem = total_drop_problem(prev, counts, summary['total_items'], os.environ.get('ALLOW_CATALOG_REMOVAL') == '1')
+        if problem:
+            sys.exit(problem)
         dropped = [f'{c} {n}->{counts[c]}' for c, n in prev.get('catalogs', {}).items()
                    if n >= 20 and 0 < counts.get(c, 0) < n * (1 - CARD_DROP)]
         if len(dropped) > CARD_DROP_MAX:

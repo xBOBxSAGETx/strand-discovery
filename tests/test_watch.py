@@ -66,7 +66,7 @@ def baseline(net, tmdb, **kw):
     return state
 
 
-NETFLIX = ['streaming-netflix', 'streaming-netflix-new', 'streaming-netflix-top']
+NETFLIX = ['streaming-netflix', 'streaming-netflix-new']      # Top Rated is cut (#139)
 FLIPPED = {'total_results': 501, 'results': [{'id': i} for i in range(1, 21)]}
 
 
@@ -153,8 +153,8 @@ class WatchTests(unittest.TestCase):
     def test_too_many_cards_is_full(self):
         state = baseline(self.net, self.tmdb)
         self.tmdb.disc[('/discover/movie', '8')] = {'total_results': 501, 'results': []}
-        self.run_again(state, max_cards=2)
-        res = self.run_again(state, max_cards=2)
+        self.run_again(state, max_cards=1)
+        res = self.run_again(state, max_cards=1)
         self.assertTrue(res['full'])
         self.assertEqual(res['cards'], [])
 
@@ -321,7 +321,7 @@ class DispatchTests(unittest.TestCase):
         self.assertEqual(self.main('--dispatch')['dispatch'], 'sent')
 
     def test_too_many_cards_dispatches_a_full_build(self):
-        watch.MAX_CARDS = 2
+        watch.MAX_CARDS = 1
         self.tmdb.disc[('/discover/movie', '8')] = FLIPPED
         self.main('--dispatch')
         res = self.main('--dispatch')
