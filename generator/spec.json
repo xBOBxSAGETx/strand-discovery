@@ -4085,42 +4085,6 @@
    "person_id": 86626
   },
   {
-   "slug": "comic-hannah-gadsby",
-   "library": "Comedian · Hannah Gadsby",
-   "title": "Hannah Gadsby",
-   "eyebrow": "Comedian",
-   "folders": [
-    "standup"
-   ],
-   "ranks": {
-    "standup": 20
-   },
-   "kind": "comedian",
-   "media": [
-    "movie",
-    "series"
-   ],
-   "person_id": 1434819
-  },
-  {
-   "slug": "comic-suzy-eddie-izzard",
-   "library": "Comedian · Suzy Eddie Izzard",
-   "title": "Suzy Eddie Izzard",
-   "eyebrow": "Comedian",
-   "folders": [
-    "standup"
-   ],
-   "ranks": {
-    "standup": 21
-   },
-   "kind": "comedian",
-   "media": [
-    "movie",
-    "series"
-   ],
-   "person_id": 1926
-  },
-  {
    "slug": "comic-patton-oswalt",
    "library": "Comedian · Patton Oswalt",
    "title": "Patton Oswalt",
@@ -4129,7 +4093,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 22
+    "standup": 20
    },
    "kind": "comedian",
    "media": [
@@ -4147,7 +4111,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 23
+    "standup": 21
    },
    "kind": "comedian",
    "media": [
@@ -4165,7 +4129,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 24
+    "standup": 22
    },
    "kind": "comedian",
    "media": [
@@ -4183,7 +4147,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 25
+    "standup": 23
    },
    "kind": "comedian",
    "media": [
@@ -4201,7 +4165,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 26
+    "standup": 24
    },
    "kind": "comedian",
    "media": [
@@ -4219,7 +4183,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 27
+    "standup": 25
    },
    "kind": "comedian",
    "media": [
@@ -4237,7 +4201,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 28
+    "standup": 26
    },
    "kind": "comedian",
    "media": [
@@ -4255,7 +4219,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 29
+    "standup": 27
    },
    "kind": "comedian",
    "media": [
@@ -4273,7 +4237,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 30
+    "standup": 28
    },
    "kind": "comedian",
    "media": [
@@ -4291,7 +4255,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 31
+    "standup": 29
    },
    "kind": "comedian",
    "media": [
@@ -4309,7 +4273,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 32
+    "standup": 30
    },
    "kind": "comedian",
    "media": [
@@ -4327,7 +4291,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 33
+    "standup": 31
    },
    "kind": "comedian",
    "media": [
@@ -4345,7 +4309,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 34
+    "standup": 32
    },
    "kind": "comedian",
    "media": [
@@ -4363,7 +4327,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 35
+    "standup": 33
    },
    "kind": "comedian",
    "media": [
@@ -4381,7 +4345,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 36
+    "standup": 34
    },
    "kind": "comedian",
    "media": [
@@ -4399,7 +4363,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 37
+    "standup": 35
    },
    "kind": "comedian",
    "media": [
@@ -4417,7 +4381,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 38
+    "standup": 36
    },
    "kind": "comedian",
    "media": [
@@ -4435,7 +4399,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 39
+    "standup": 37
    },
    "kind": "comedian",
    "media": [
@@ -4453,7 +4417,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 40
+    "standup": 38
    },
    "kind": "comedian",
    "media": [
@@ -4471,7 +4435,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 41
+    "standup": 39
    },
    "kind": "comedian",
    "media": [
@@ -4489,7 +4453,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 42
+    "standup": 40
    },
    "kind": "comedian",
    "media": [
@@ -4507,7 +4471,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 43
+    "standup": 41
    },
    "kind": "comedian",
    "media": [
@@ -4525,7 +4489,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 44
+    "standup": 42
    },
    "kind": "comedian",
    "media": [
@@ -4543,7 +4507,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 45
+    "standup": 43
    },
    "kind": "comedian",
    "media": [
@@ -4561,7 +4525,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 46
+    "standup": 44
    },
    "kind": "comedian",
    "media": [
@@ -4579,7 +4543,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 47
+    "standup": 45
    },
    "kind": "comedian",
    "media": [
@@ -4597,7 +4561,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 48
+    "standup": 46
    },
    "kind": "comedian",
    "media": [
@@ -4615,7 +4579,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 49
+    "standup": 47
    },
    "kind": "comedian",
    "media": [
@@ -4633,7 +4597,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 50
+    "standup": 48
    },
    "kind": "comedian",
    "media": [
@@ -4651,7 +4615,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 51
+    "standup": 49
    },
    "kind": "comedian",
    "media": [
@@ -4669,7 +4633,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 52
+    "standup": 50
    },
    "kind": "comedian",
    "media": [
@@ -4687,7 +4651,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 53
+    "standup": 51
    },
    "kind": "comedian",
    "media": [
@@ -4705,7 +4669,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 54
+    "standup": 52
    },
    "kind": "comedian",
    "media": [
@@ -4723,7 +4687,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 55
+    "standup": 53
    },
    "kind": "comedian",
    "media": [
@@ -4741,7 +4705,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 56
+    "standup": 54
    },
    "kind": "comedian",
    "media": [
@@ -4759,7 +4723,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 57
+    "standup": 55
    },
    "kind": "comedian",
    "media": [
@@ -4777,7 +4741,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 58
+    "standup": 56
    },
    "kind": "comedian",
    "media": [
@@ -4795,7 +4759,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 59
+    "standup": 57
    },
    "kind": "comedian",
    "media": [
@@ -4813,7 +4777,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 60
+    "standup": 58
    },
    "kind": "comedian",
    "media": [
@@ -4831,7 +4795,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 61
+    "standup": 59
    },
    "kind": "comedian",
    "media": [
@@ -4849,7 +4813,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 62
+    "standup": 60
    },
    "kind": "comedian",
    "media": [
@@ -4867,7 +4831,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 63
+    "standup": 61
    },
    "kind": "comedian",
    "media": [
@@ -4885,7 +4849,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 64
+    "standup": 62
    },
    "kind": "comedian",
    "media": [
@@ -4903,7 +4867,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 65
+    "standup": 63
    },
    "kind": "comedian",
    "media": [
@@ -4921,7 +4885,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 66
+    "standup": 64
    },
    "kind": "comedian",
    "media": [
@@ -4939,7 +4903,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 67
+    "standup": 65
    },
    "kind": "comedian",
    "media": [
@@ -4957,7 +4921,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 68
+    "standup": 66
    },
    "kind": "comedian",
    "media": [
@@ -4975,7 +4939,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 69
+    "standup": 67
    },
    "kind": "comedian",
    "media": [
@@ -4993,7 +4957,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 70
+    "standup": 68
    },
    "kind": "comedian",
    "media": [
@@ -5001,6 +4965,42 @@
     "series"
    ],
    "person_id": 94006
+  },
+  {
+   "slug": "comic-steve-harvey",
+   "library": "Comedian · Steve Harvey",
+   "title": "Steve Harvey",
+   "eyebrow": "Comedian",
+   "folders": [
+    "standup"
+   ],
+   "ranks": {
+    "standup": 69
+   },
+   "kind": "comedian",
+   "media": [
+    "movie",
+    "series"
+   ],
+   "person_id": 82587
+  },
+  {
+   "slug": "comic-andrew-schulz",
+   "library": "Comedian · Andrew Schulz",
+   "title": "Andrew Schulz",
+   "eyebrow": "Comedian",
+   "folders": [
+    "standup"
+   ],
+   "ranks": {
+    "standup": 70
+   },
+   "kind": "comedian",
+   "media": [
+    "movie",
+    "series"
+   ],
+   "person_id": 1880755
   },
   {
    "slug": "comic-patrice-oneal",
@@ -5165,24 +5165,6 @@
    "person_id": 1181310
   },
   {
-   "slug": "comic-andrew-schulz",
-   "library": "Comedian · Andrew Schulz",
-   "title": "Andrew Schulz",
-   "eyebrow": "Comedian",
-   "folders": [
-    "standup"
-   ],
-   "ranks": {
-    "standup": 80
-   },
-   "kind": "comedian",
-   "media": [
-    "movie",
-    "series"
-   ],
-   "person_id": 1880755
-  },
-  {
    "slug": "comic-james-acaster",
    "library": "Comedian · James Acaster",
    "title": "James Acaster",
@@ -5191,7 +5173,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 81
+    "standup": 80
    },
    "kind": "comedian",
    "media": [
@@ -5209,7 +5191,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 82
+    "standup": 81
    },
    "kind": "comedian",
    "media": [
@@ -5227,7 +5209,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 83
+    "standup": 82
    },
    "kind": "comedian",
    "media": [
@@ -5245,7 +5227,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 84
+    "standup": 83
    },
    "kind": "comedian",
    "media": [
@@ -5263,7 +5245,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 85
+    "standup": 84
    },
    "kind": "comedian",
    "media": [
@@ -5281,7 +5263,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 86
+    "standup": 85
    },
    "kind": "comedian",
    "media": [
@@ -5299,7 +5281,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 87
+    "standup": 86
    },
    "kind": "comedian",
    "media": [
@@ -5317,7 +5299,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 88
+    "standup": 87
    },
    "kind": "comedian",
    "media": [
@@ -5335,7 +5317,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 89
+    "standup": 88
    },
    "kind": "comedian",
    "media": [
@@ -5353,7 +5335,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 90
+    "standup": 89
    },
    "kind": "comedian",
    "media": [
@@ -5371,7 +5353,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 91
+    "standup": 90
    },
    "kind": "comedian",
    "media": [
@@ -5379,24 +5361,6 @@
     "series"
    ],
    "person_id": 1177838
-  },
-  {
-   "slug": "comic-ilana-glazer",
-   "library": "Comedian · Ilana Glazer",
-   "title": "Ilana Glazer",
-   "eyebrow": "Comedian",
-   "folders": [
-    "standup"
-   ],
-   "ranks": {
-    "standup": 92
-   },
-   "kind": "comedian",
-   "media": [
-    "movie",
-    "series"
-   ],
-   "person_id": 1325716
   },
   {
    "slug": "comic-sam-morril",
@@ -5407,7 +5371,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 93
+    "standup": 91
    },
    "kind": "comedian",
    "media": [
@@ -5425,7 +5389,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 94
+    "standup": 92
    },
    "kind": "comedian",
    "media": [
@@ -5443,7 +5407,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 95
+    "standup": 93
    },
    "kind": "comedian",
    "media": [
@@ -5461,7 +5425,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 96
+    "standup": 94
    },
    "kind": "comedian",
    "media": [
@@ -5479,7 +5443,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 97
+    "standup": 95
    },
    "kind": "comedian",
    "media": [
@@ -5497,7 +5461,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 98
+    "standup": 96
    },
    "kind": "comedian",
    "media": [
@@ -5515,7 +5479,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 99
+    "standup": 97
    },
    "kind": "comedian",
    "media": [
@@ -5533,7 +5497,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 100
+    "standup": 98
    },
    "kind": "comedian",
    "media": [
@@ -5551,7 +5515,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 101
+    "standup": 99
    },
    "kind": "comedian",
    "media": [
@@ -5569,7 +5533,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 102
+    "standup": 100
    },
    "kind": "comedian",
    "media": [
@@ -5587,7 +5551,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 103
+    "standup": 101
    },
    "kind": "comedian",
    "media": [
@@ -5605,7 +5569,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 104
+    "standup": 102
    },
    "kind": "comedian",
    "media": [
@@ -5623,7 +5587,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 105
+    "standup": 103
    },
    "kind": "comedian",
    "media": [
@@ -5641,7 +5605,7 @@
     "standup"
    ],
    "ranks": {
-    "standup": 106
+    "standup": 104
    },
    "kind": "comedian",
    "media": [
@@ -5649,6 +5613,42 @@
     "series"
    ],
    "person_id": 1231673
+  },
+  {
+   "slug": "comic-dan-soder",
+   "library": "Comedian · Dan Soder",
+   "title": "Dan Soder",
+   "eyebrow": "Comedian",
+   "folders": [
+    "standup"
+   ],
+   "ranks": {
+    "standup": 105
+   },
+   "kind": "comedian",
+   "media": [
+    "movie",
+    "series"
+   ],
+   "person_id": 1578815
+  },
+  {
+   "slug": "comic-kevin-nealon",
+   "library": "Comedian · Kevin Nealon",
+   "title": "Kevin Nealon",
+   "eyebrow": "Comedian",
+   "folders": [
+    "standup"
+   ],
+   "ranks": {
+    "standup": 106
+   },
+   "kind": "comedian",
+   "media": [
+    "movie",
+    "series"
+   ],
+   "person_id": 58478
   },
   {
    "slug": "dir-steven-spielberg",

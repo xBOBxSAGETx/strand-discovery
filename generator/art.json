@@ -3649,6 +3649,17 @@
    }
   },
   {
+   "slug": "comic-steve-harvey",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Steve Harvey",
+   "bg": {
+    "kind": "path",
+    "path": "/7t7f7fHytr0JbjYCkMthpjBRZTv.jpg",
+    "from": "The Original Kings of Comedy (tmdb:23618)"
+   }
+  },
+  {
    "slug": "comic-patrice-oneal",
    "shape": "wide",
    "eyebrow": "Comedian",
@@ -4041,6 +4052,28 @@
     "kind": "path",
     "path": "/sxQnSjF7OBVkvOJE0ySXZz1XDss.jpg",
     "from": "Brad Williams: Fun Size (tmdb:399798)"
+   }
+  },
+  {
+   "slug": "comic-dan-soder",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Dan Soder",
+   "bg": {
+    "kind": "path",
+    "path": "/mSSrkDofpRLQTZb8B9yCVU19Ydx.jpg",
+    "from": "Dan Soder: Son of a Gary (tmdb:654125)"
+   }
+  },
+  {
+   "slug": "comic-kevin-nealon",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Kevin Nealon",
+   "bg": {
+    "kind": "path",
+    "path": "/m0JbxurTTKii2zj9j66jUDgatf.jpg",
+    "from": "Kevin Nealon: Loose in the Crotch (tmdb:1624209)"
    }
   },
   {

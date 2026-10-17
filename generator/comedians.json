@@ -231,30 +231,6 @@
    "group": "greats"
   },
   {
-   "id": 1434819,
-   "name": "Hannah Gadsby",
-   "specials": 6,
-   "newest": "2026-01-12",
-   "first": "2013-01-10",
-   "recent": 3,
-   "votes": 434,
-   "wave_votes": 36,
-   "best": "Hannah Gadsby: Nanette",
-   "group": "greats"
-  },
-  {
-   "id": 1926,
-   "name": "Suzy Eddie Izzard",
-   "specials": 15,
-   "newest": "2021-05-15",
-   "first": "1993-11-15",
-   "recent": 0,
-   "votes": 414,
-   "wave_votes": 0,
-   "best": "Eddie Izzard: Dress to Kill",
-   "group": "greats"
-  },
-  {
    "id": 10872,
    "name": "Patton Oswalt",
    "specials": 14,
@@ -843,6 +819,30 @@
    "group": "greats"
   },
   {
+   "id": 82587,
+   "name": "Steve Harvey",
+   "specials": 9,
+   "newest": "2024-07-09",
+   "first": "1995-08-10",
+   "recent": 1,
+   "votes": 85,
+   "wave_votes": 0,
+   "best": "The Original Kings of Comedy",
+   "group": "greats"
+  },
+  {
+   "id": 1880755,
+   "name": "Andrew Schulz",
+   "specials": 3,
+   "newest": "2025-03-03",
+   "first": "2019-08-26",
+   "recent": 1,
+   "votes": 82,
+   "wave_votes": 30,
+   "best": "Andrew Schulz: Infamous",
+   "group": "greats"
+  },
+  {
    "id": 543256,
    "name": "Patrice O'Neal",
    "specials": 4,
@@ -948,18 +948,6 @@
    "votes": 40,
    "wave_votes": 35,
    "best": "Cheeseburger",
-   "group": "wave"
-  },
-  {
-   "id": 1880755,
-   "name": "Andrew Schulz",
-   "specials": 3,
-   "newest": "2025-03-03",
-   "first": "2019-08-26",
-   "recent": 1,
-   "votes": 82,
-   "wave_votes": 30,
-   "best": "Andrew Schulz: Infamous",
    "group": "wave"
   },
   {
@@ -1092,18 +1080,6 @@
    "votes": 71,
    "wave_votes": 15,
    "best": "Pete Holmes: Faces and Sounds",
-   "group": "wave"
-  },
-  {
-   "id": 1325716,
-   "name": "Ilana Glazer",
-   "specials": 2,
-   "newest": "2024-12-19",
-   "first": "2020-01-03",
-   "recent": 1,
-   "votes": 35,
-   "wave_votes": 13,
-   "best": "Ilana Glazer: The Planet Is Burning",
    "group": "wave"
   },
   {
@@ -1272,6 +1248,30 @@
    "votes": 34,
    "wave_votes": 4,
    "best": "Brad Williams: Fun Size",
+   "group": "wave"
+  },
+  {
+   "id": 1578815,
+   "name": "Dan Soder",
+   "specials": 3,
+   "newest": "2024-03-01",
+   "first": "2016-05-21",
+   "recent": 1,
+   "votes": 11,
+   "wave_votes": 4,
+   "best": "Dan Soder: Son of a Gary",
+   "group": "wave"
+  },
+  {
+   "id": 58478,
+   "name": "Kevin Nealon",
+   "specials": 2,
+   "newest": "2026-01-28",
+   "first": "2012-08-04",
+   "recent": 1,
+   "votes": 14,
+   "wave_votes": 4,
+   "best": "Kevin Nealon: Whelmed, But Not Overly",
    "group": "wave"
   }
  ]
