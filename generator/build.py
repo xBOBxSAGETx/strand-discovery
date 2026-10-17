@@ -197,6 +197,12 @@ _keys = {}                     # (medium, tmdb id) -> sort values seen on TMDB's
 _new_keys = {}                 # (card slug, medium, tmdb id) -> "new" card order key (arrival / first_seen date + popularity)
 
 
+def released_iso(date):
+    """TMDB 'YYYY-MM-DD' -> the full ISO date the Stremio meta 'released' field carries (the AIOStreams fork's Jellyfin
+    sort parses it with Date().toISOString()); None when TMDB has no full date. Issue #35."""
+    return f'{date[:10]}T00:00:00.000Z' if re.fullmatch(r'\d{4}-\d{2}-\d{2}', (date or '')[:10]) else None
+
+
 def preview(item, media):
     title = item.get('title') or item.get('name')
     date = item.get('release_date') or item.get('first_air_date') or ''
@@ -207,6 +213,8 @@ def preview(item, media):
         meta['poster'] = f"{IMG}/{POSTER_SIZE}{item['poster_path']}"
     if date[:4]:
         meta['releaseInfo'] = date[:4]
+    if released_iso(date):
+        meta['released'] = released_iso(date)
     # private: canonical genres for the genre pages, stripped before anything is written
     meta['_g'] = canon_genres(item.get('genre_ids') or [g['id'] for g in item.get('genres') or []])
     return meta
@@ -236,6 +244,8 @@ def details_preview(media, tid):
                 return None           # not cached: try again next run
             _stable[key] = old        # keep the pre-genre entry (no genre pages for it this run)
     hit = _stable[key]
+    if hit and hit['d'] and 'released' not in hit['p'] and released_iso(hit['d']):
+        hit['p']['released'] = released_iso(hit['d'])      # cached before #35: filled from the cached date, no refetch
     return hit['p'] if hit and hit['d'] and hit['d'] <= TODAY else None
 
 
