@@ -246,11 +246,14 @@ UNION_CAP = 2000
 PART_KEYS = ('slug', 'sort', 'min_votes', 'min_age_days', 'tv_air_window', 'provider', 'depth')
 
 
-def union_card(cards, folder):
-    """cards = the discover cards (Popular first, then New, then Top Rated) -> ONE union catalog under the Popular slug."""
+def union_card(cards, folder, title=None):
+    """cards = the discover cards (Popular first, then New, then Top Rated) -> ONE union catalog under the Popular slug.
+    title: the card's own title when the Popular part's title names its variant (library name and id stay)."""
     base = cards[0]
     assert base['sort'] == 'popular'
     u = {k: base[k] for k in ('slug', 'library', 'title', 'eyebrow')}
+    if title:
+        u['title'] = title
     u.update(folders=[folder], kind='union', media=base['media'], sort='popular', min_votes=base['min_votes'], cap=UNION_CAP)
     for k in ('movie', 'series'):
         if k in base:
@@ -407,7 +410,7 @@ def main():
     cats.append(union_card([disc('standup' + ('' if v == 'popular' else f'-{v}'), f'Stand-up · {n}', f'Stand-up · {n}',
                                  {'popular': 'Stand-up', 'new': 'New · Stand-up'}[v], 'standup', ['movie', 'series'], v,
                                  movie=mp, series=sp, min_votes={'popular': 10, 'new': 3}[v])
-                           for v, n in VARIANTS[:2]], 'standup'))
+                           for v, n in VARIANTS[:2]], 'standup', title='Stand-up'))   # #147: one card, no "· Popular"
 
     # people: one catalog per person+role; folder list in CSV rank order
     people = {}
