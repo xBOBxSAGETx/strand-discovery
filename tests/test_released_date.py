@@ -68,6 +68,47 @@ class ReleasedDate(unittest.TestCase):
         self.assertEqual(a['imdbRating'], '8.0')
         self.assertNotIn('imdbRating', b)
 
+    def _ago(self, n):
+        return (__import__('datetime').date.fromisoformat(build.TODAY) - __import__('datetime').timedelta(days=n)).isoformat()
+
+    def _run(self, tid, entry, seen=None):
+        """details_preview on a cached entry with TMDB stubbed: -> (meta, number of TMDB calls)."""
+        calls = []
+        real = build.tmdb
+        build.tmdb = lambda path, **kw: calls.append(path) or {'id': tid, 'title': 'N', 'release_date': entry['d'],
+                                                              'vote_average': 8.0, 'vote_count': 900}
+        build._stable[f'movie:{tid}'] = entry
+        if seen:
+            build._keys[('movie', tid)] = seen
+        try:
+            return build.details_preview('movie', tid), len(calls)
+        finally:
+            build.tmdb = real
+            build._stable.pop(f'movie:{tid}', None)
+            build._keys.pop(('movie', tid), None)
+
+    def test_recent_title_rated_over_30_days_ago_is_refetched(self):
+        e = {'p': {'id': 'tmdb:9900090', 'type': 'movie', 'name': 'R', '_g': [], 'imdbRating': '3.0'},
+             'd': self._ago(60), 'v': self._ago(45)}
+        m, n = self._run(9900090, e)
+        self.assertEqual((n, m['imdbRating']), (1, '8.0'))
+
+    def test_old_release_rated_long_ago_is_not_refetched(self):
+        e = {'p': {'id': 'tmdb:9900091', 'type': 'movie', 'name': 'O', '_g': [], 'imdbRating': '7.0'},
+             'd': self._ago(2000), 'v': self._ago(400)}
+        m, n = self._run(9900091, e)
+        self.assertEqual((n, m['imdbRating']), (0, '7.0'))
+
+    def test_seen_row_overwrites_stale_cached_rating(self):
+        e = {'p': {'id': 'tmdb:9900092', 'type': 'movie', 'name': 'S', '_g': [], 'imdbRating': '3.0'},
+             'd': self._ago(2000), 'v': self._ago(400)}
+        m, n = self._run(9900092, e, {'pop': 1, 'vote': 7.46, 'votes': 500, 'date': e['d']})
+        self.assertEqual((n, m['imdbRating']), (0, '7.5'))
+        e2 = {'p': {'id': 'tmdb:9900093', 'type': 'movie', 'name': 'S', '_g': [], 'imdbRating': '3.0'},
+              'd': self._ago(2000), 'v': self._ago(400)}
+        m2, _ = self._run(9900093, e2, {'pop': 1, 'vote': 0, 'votes': 0, 'date': e2['d']})
+        self.assertNotIn('imdbRating', m2)               # the row now has no votes: the old score is dropped
+
     def test_written_page_keeps_released(self):
         m = build.preview({'id': 1, 'title': 'A', 'release_date': '2024-05-17', 'genre_ids': [18],
                           'vote_average': 7.84, 'vote_count': 120}, 'movie')

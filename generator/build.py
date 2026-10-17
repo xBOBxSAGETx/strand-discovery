@@ -108,7 +108,7 @@ def load_hand_list(name, spec=None, path=None):
 _last = [0.0]
 _backfill = [0]
 _rating_backfill = [0]
-RATING_BACKFILL_MAX = int(os.environ.get('SD_RATING_BACKFILL_MAX', '400'))   # per run: old cached previews refetched for a rating
+RATING_BACKFILL_MAX = int(os.environ.get('SD_RATING_BACKFILL_MAX', '3000'))   # per run: cached previews refetched for a rating (same cap as the genre backfill)
 GENRE_BACKFILL_MAX = int(os.environ.get('SD_GENRE_BACKFILL_MAX', '3000'))   # per run; 0 = no refetch
 _calls = [0]
 _fill = [0, 0]                 # discover fill pass (issue #25): pages read, ids recovered
@@ -235,6 +235,16 @@ def released(item, media):
     return bool(date) and date <= TODAY
 
 
+def rating_due(entry):
+    """A cached preview needs a rating refetch when it never had one fetched ('v' = the fetch date, absent on old entries),
+    or when it was released within the last 365 days and its rating is over 30 days old (a new title's score moves)."""
+    v = entry.get('v')
+    if not isinstance(v, str):
+        return True
+    day = lambda n: (dt.date.fromisoformat(TODAY) - dt.timedelta(days=n)).isoformat()
+    return v < day(30) and (entry.get('d') or '') >= day(365)
+
+
 def details_preview(media, tid):
     """Preview for one TMDB id (cached durably); None if unknown or not released yet."""
     key = f'{media}:{tid}'
@@ -245,19 +255,21 @@ def details_preview(media, tid):
         if stale:
             _backfill[0] += 1
         # cached before ratings were kept (#35): fill from a TMDB row seen this run, else refetch up to a per-run cap
-        if old and 'v' not in old:
+        if old:
             seen = _keys.get((media, tid))
-            if seen:
+            if seen:                  # this run's TMDB row is current: it always wins over the cached rating
                 if seen['votes'] and seen['vote']:
                     old['p']['imdbRating'] = f"{seen['vote']:.1f}"
-                old['v'] = 1
-            elif not stale and _rating_backfill[0] < RATING_BACKFILL_MAX:
+                else:
+                    old['p'].pop('imdbRating', None)
+                old['v'] = TODAY
+            elif not stale and _rating_backfill[0] < RATING_BACKFILL_MAX and rating_due(old):
                 _rating_backfill[0] += 1
                 stale = 'rating'
     if key not in _stable or stale:
         try:
             d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}")
-            _stable[key] = ({'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or '', 'v': 1}
+            _stable[key] = ({'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or '', 'v': TODAY}
                             if d.get('id') else None)
         except RuntimeError:          # a transient failure must not stick
             if not stale:
@@ -1322,6 +1334,7 @@ def main():
     (root / '.nojekyll').write_text('', encoding='utf-8')
     summary = {'generated_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'tmdb_requests': _calls[0],
                'seconds': round(time.monotonic() - t0), 'total_items': sum(counts.values()), 'catalogs': counts}
+    summary['rating_backfilled'] = _rating_backfill[0]     # #35: cached previews refetched this run for a rating
     modes = lambda c: 'arrivals' if arrival_mode(c) else 'first_seen' if first_seen_mode(c) else 'release_date'
     if selected is None:
         summary['genre_pages'] = {'files': sum(g['files'] for g in genre_stats.values()),
