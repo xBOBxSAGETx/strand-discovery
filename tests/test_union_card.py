@@ -80,7 +80,7 @@ class UnionMerge(unittest.TestCase):
 class SpecShape(unittest.TestCase):
     def test_496_catalogs_one_streaming_folder_no_retired_slugs(self):
         slugs = [c['slug'] for c in SPEC['catalogs']]
-        self.assertEqual(len(slugs), 496)
+        self.assertEqual(len([c for c in SPEC['catalogs'] if c['kind'] != 'comedian']), 496)   # + the comedian cards (#149)
         self.assertEqual(len(slugs), len(set(slugs)))
         self.assertEqual([f['key'] for f in SPEC['folders']][:2], ['streaming', 'networks'])
         streaming = [c for c in SPEC['catalogs'] if 'streaming' in c['folders']]

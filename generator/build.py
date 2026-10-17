@@ -826,6 +826,38 @@ def actor(card, dropped):
     return [p for _, p in sorted(ranked, key=lambda x: -x[0])]
 
 
+PLAYS_SELF = re.compile(r'^\s*(self|himself|herself|themselves|themself)\b', re.I)
+NOT_SPECIAL = re.compile(r'archive|uncredited|voice', re.I)
+COMEDY = 35
+
+
+def is_special(c, name):
+    """Issue #149: a stand-up special of `name` = a released English Comedy film where they play themself (not archive
+    footage, not uncredited, not a voice) and headline it: billed first, or their surname is in the title. A blank
+    role counts as themself when the surname is in the title (many one-person specials list no role: Michael Che).
+    The one rule for the comedian card and for generator/comedians.py (who gets a card)."""
+    ch = c.get('character') or ''
+    in_title = name.split()[-1].casefold() in (c.get('title') or '').casefold()
+    return bool((PLAYS_SELF.search(ch) or (not ch.strip() and in_title)) and not NOT_SPECIAL.search(ch)
+                and COMEDY in (c.get('genre_ids') or []) and c.get('original_language') == 'en' and released(c, 'movie')
+                and (c.get('order') == 0 or in_title))
+
+
+def specials_of(cast, name):
+    """Their specials (movie credits passing is_special), deduped, newest first."""
+    got = {c['id']: c for c in cast if c.get('media_type', 'movie') == 'movie' and is_special(c, name)}
+    return sorted(got.values(), key=lambda c: c['release_date'], reverse=True)
+
+
+def comedian(card, dropped):
+    """Issue #149: the comedian card = their stand-up specials first, newest first, then their acting (the actor card's
+    rules, which drop every Self credit), best-known first."""
+    cast = tmdb(f"/person/{card['person_id']}/combined_credits").get('cast', [])
+    specials = [preview(c, 'movie') for c in specials_of(cast, card['title'])]
+    ids = {m['id'] for m in specials}
+    return specials + [m for m in actor(card, dropped) if not (m['type'] == 'movie' and m['id'] in ids)]
+
+
 MDBLIST_JSON = 'https://mdblist.com/lists/{list}/json'   # public export, no key needed
 
 
@@ -880,8 +912,9 @@ def source_of(card):
         names = [named(f'/collection/{c}') for c in card['collection_ids']]
         ids = card.get('ids') or []
         return card['collection_ids'], ' + '.join(names) + (f' + {len(ids)} listed titles' if ids else '')
-    if k in ('director', 'actor'):
-        return card['person_id'], named(f"/person/{card['person_id']}") + (' (directing)' if k == 'director' else ' (acting)')
+    if k in ('director', 'actor', 'comedian'):
+        return card['person_id'], named(f"/person/{card['person_id']}") + {'director': ' (directing)', 'actor': ' (acting)',
+                                                                           'comedian': ' (specials, then acting)'}[k]
     parts, ids = [], []
     for media in card['media']:
         p = card.get(media, {})
@@ -1301,9 +1334,9 @@ def build_kind(card, dflt):
         dropped = []
         metas = director(card, dropped)
         return metas, (f"dropped {len(dropped)} short: " + '; '.join(dropped)) if dropped else ''
-    if kind == 'actor':
+    if kind in ('actor', 'comedian'):
         dropped = {}
-        metas = actor(card, dropped)
+        metas = (actor if kind == 'actor' else comedian)(card, dropped)
         return metas, ('dropped ' + ', '.join(f'{k} {v}' for k, v in sorted(dropped.items()))) if dropped else ''
     if kind == 'mdblist':
         return interleave([mdblist(card, m) for m in card['media']]), notes
