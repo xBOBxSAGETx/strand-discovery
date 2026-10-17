@@ -107,6 +107,8 @@ def load_hand_list(name, spec=None, path=None):
 
 _last = [0.0]
 _backfill = [0]
+_rating_backfill = [0]
+RATING_BACKFILL_MAX = int(os.environ.get('SD_RATING_BACKFILL_MAX', '3000'))   # per run: cached previews refetched for a rating (same cap as the genre backfill)
 GENRE_BACKFILL_MAX = int(os.environ.get('SD_GENRE_BACKFILL_MAX', '3000'))   # per run; 0 = no refetch
 _calls = [0]
 _fill = [0, 0]                 # discover fill pass (issue #25): pages read, ids recovered
@@ -197,6 +199,18 @@ _keys = {}                     # (medium, tmdb id) -> sort values seen on TMDB's
 _new_keys = {}                 # (card slug, medium, tmdb id) -> "new" card order key (arrival / first_seen date + popularity)
 
 
+def released_iso(date):
+    """TMDB 'YYYY-MM-DD' -> the full ISO date the Stremio meta 'released' field carries (the AIOStreams fork's Jellyfin
+    sort parses it with Date().toISOString()); None when TMDB has no full date. Issue #35."""
+    return f'{date[:10]}T00:00:00.000Z' if re.fullmatch(r'\d{4}-\d{2}-\d{2}', (date or '')[:10]) else None
+
+
+def rating_str(item):
+    """TMDB vote_average as the Stremio imdbRating string ("7.8"); None when nobody voted, so an unrated title has no
+    rating (the fork's imdbRatingOf reads a missing field as undefined) instead of sorting as 0. Issue #35."""
+    return f"{item['vote_average']:.1f}" if item.get('vote_count') and item.get('vote_average') else None
+
+
 def preview(item, media):
     title = item.get('title') or item.get('name')
     date = item.get('release_date') or item.get('first_air_date') or ''
@@ -207,6 +221,10 @@ def preview(item, media):
         meta['poster'] = f"{IMG}/{POSTER_SIZE}{item['poster_path']}"
     if date[:4]:
         meta['releaseInfo'] = date[:4]
+    if released_iso(date):
+        meta['released'] = released_iso(date)
+    if rating_str(item):
+        meta['imdbRating'] = rating_str(item)
     # private: canonical genres for the genre pages, stripped before anything is written
     meta['_g'] = canon_genres(item.get('genre_ids') or [g['id'] for g in item.get('genres') or []])
     return meta
@@ -215,6 +233,16 @@ def preview(item, media):
 def released(item, media):
     date = item.get('release_date') if media == 'movie' else item.get('first_air_date')
     return bool(date) and date <= TODAY
+
+
+def rating_due(entry):
+    """A cached preview needs a rating refetch when it never had one fetched ('v' = the fetch date, absent on old entries),
+    or when it was released within the last 365 days and its rating is over 30 days old (a new title's score moves)."""
+    v = entry.get('v')
+    if not isinstance(v, str):
+        return True
+    day = lambda n: (dt.date.fromisoformat(TODAY) - dt.timedelta(days=n)).isoformat()
+    return v < day(30) and (entry.get('d') or '') >= day(365)
 
 
 def details_preview(media, tid):
@@ -226,16 +254,30 @@ def details_preview(media, tid):
         stale = bool(old) and '_g' not in old['p'] and _backfill[0] < GENRE_BACKFILL_MAX
         if stale:
             _backfill[0] += 1
+        # cached before ratings were kept (#35): fill from a TMDB row seen this run, else refetch up to a per-run cap
+        if old:
+            seen = _keys.get((media, tid))
+            if seen:                  # this run's TMDB row is current: it always wins over the cached rating
+                if seen['votes'] and seen['vote']:
+                    old['p']['imdbRating'] = f"{seen['vote']:.1f}"
+                else:
+                    old['p'].pop('imdbRating', None)
+                old['v'] = TODAY
+            elif not stale and _rating_backfill[0] < RATING_BACKFILL_MAX and rating_due(old):
+                _rating_backfill[0] += 1
+                stale = 'rating'
     if key not in _stable or stale:
         try:
             d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}")
-            _stable[key] = ({'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or ''}
+            _stable[key] = ({'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or '', 'v': TODAY}
                             if d.get('id') else None)
         except RuntimeError:          # a transient failure must not stick
             if not stale:
                 return None           # not cached: try again next run
             _stable[key] = old        # keep the pre-genre entry (no genre pages for it this run)
     hit = _stable[key]
+    if hit and hit['d'] and 'released' not in hit['p'] and released_iso(hit['d']):
+        hit['p']['released'] = released_iso(hit['d'])      # cached before #35: filled from the cached date, no refetch
     return hit['p'] if hit and hit['d'] and hit['d'] <= TODAY else None
 
 
@@ -1292,6 +1334,7 @@ def main():
     (root / '.nojekyll').write_text('', encoding='utf-8')
     summary = {'generated_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'), 'tmdb_requests': _calls[0],
                'seconds': round(time.monotonic() - t0), 'total_items': sum(counts.values()), 'catalogs': counts}
+    summary['rating_backfilled'] = _rating_backfill[0]     # #35: cached previews refetched this run for a rating
     modes = lambda c: 'arrivals' if arrival_mode(c) else 'first_seen' if first_seen_mode(c) else 'release_date'
     if selected is None:
         summary['genre_pages'] = {'files': sum(g['files'] for g in genre_stats.values()),

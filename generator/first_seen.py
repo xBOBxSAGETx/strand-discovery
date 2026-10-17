@@ -228,7 +228,10 @@ def main():
                                   '_g': build.canon_genres(r.get('genre_ids')),
                                   **({'poster': f"{build.IMG}/{build.POSTER_SIZE}{r['poster_path']}"} if r.get('poster_path') else {}),
                                   **({'releaseInfo': (r.get('release_date') or r.get('first_air_date'))[:4]}
-                                     if (r.get('release_date') or r.get('first_air_date')) else {})}
+                                     if (r.get('release_date') or r.get('first_air_date')) else {}),
+                                  **({'imdbRating': build.rating_str(r)} if build.rating_str(r) else {}),
+                                  **({'released': build.released_iso(r.get('release_date') or r.get('first_air_date'))}
+                                     if build.released_iso(r.get('release_date') or r.get('first_air_date')) else {})}
                                  for k, r in fresh]
         print(f"  {p['slug']:<18} size {len(present):>6} adds {adds:>4} removals {removals:>4} history {history:>3}d "
               f"requests {s['requests']:>5}{' sliced' if s['sliced'] else ''}"
