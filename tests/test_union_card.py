@@ -106,6 +106,16 @@ class SpecShape(unittest.TestCase):
             self.assertEqual(c['library'], PRE[c['slug']]['library'])      # the server library id/name are unchanged
         self.assertGreaterEqual(n, 21 * 2 + 2)
 
+    def test_no_union_card_title_names_a_variant(self):
+        """#147: the one Stand-up card read "Stand-up · Popular" (the Popular part's title); a union card and its art
+        name the whole card. The library name stays, so the server library id/name don't move."""
+        art = {c['slug']: c for c in json.loads((ROOT / 'generator' / 'art.json').read_text(encoding='utf-8'))['cards']}
+        for c in SPEC['catalogs']:
+            if c['kind'] == 'union':
+                self.assertNotIn('·', c['title'], c['slug'])
+                self.assertEqual(art[c['slug']]['title'], c['title'], c['slug'])
+        self.assertEqual(next(c for c in SPEC['catalogs'] if c['slug'] == 'standup')['title'], 'Stand-up')
+
     def test_control_the_518_card_spec_fails_the_shape(self):
         """The spec before #143 had 518 cards and three Streaming folders: the shape test must be able to fail."""
         old_folders = ['streaming-popular', 'streaming-new']

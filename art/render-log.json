@@ -2565,7 +2565,8 @@
   "bg": "Bo Burnham: Inside (tmdb:823754)",
   "title_px": 104,
   "title_lines": 1,
-  "bytes": 77112,
+  "safe_area": "ok",
+  "bytes": 70549,
   "fails": []
  },
  {
