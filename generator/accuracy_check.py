@@ -135,10 +135,10 @@ def precision(pages, state_dir, spec, summary, cands, n, seed, official, unknown
     by_slug = {c['slug']: c for c in spec['catalogs']}
     rows, table = [], []
     for slug, mode in sorted(summary.get('new_card_modes', {}).items()):
-        if mode != 'arrivals' or not slug.endswith('-new'):      # #143: a union card's New part is not a shelf of its own
+        if mode != 'arrivals':
             continue
-        svc = slug[len('streaming-'):-len('-new')]
         card, order = by_slug[slug], card_order(pages, slug)
+        svc = card['provider']                                   # #143: the service's one card holds its New part
         cmap = {c['key']: c for c in cands['providers'].get(svc, [])}
         dated = [k for k in order if k in cmap]
         random.seed(f'{seed}-{svc}')
@@ -189,11 +189,7 @@ def recall(pages, summary, official_rows, today, baseline):
     lo = (dt.date.fromisoformat(today) - dt.timedelta(days=WINDOW)).isoformat()
     out = []
     for svc in sorted({r['service'] for r in official_rows}):
-        slug = f'streaming-{svc}-new'
-        if slug not in summary.get('new_card_modes', {}):         # #143: the New shelf is part of the one service card now
-            out.append({'service': svc, 'status': 'skipped', 'official_in_window': 0, 'month': '-', 'stale': False,
-                        'note': 'New is part of the one service card (issue #143): arrival recall not measured'})
-            continue
+        slug = f'streaming-{svc}'                                 # #143: the service's one card holds its New part
         # measured on the LATEST month that has an official list for this service (lists are a manual refresh)
         month = max(r['date'][:7] for r in official_rows if r['service'] == svc)
         inwin = {f"{r['media']}:{r['tmdb_id']}" for r in official_rows
@@ -449,9 +445,7 @@ def main():
     new_notes = []
     new_state = json.loads(gzip.decompress((state_dir / 'first_seen.json.gz').read_bytes()))
     for slug, mode in sorted(summary.get('new_card_modes', {}).items()):     # every New card: recall vs TMDB window, precision
-        if not slug.endswith('-new'):                         # #143: New is part of the one service card, no shelf to measure
-            continue
-        svc = slug[len('streaming-'):-len('-new')]
+        svc = by_slug_card(spec, slug)['provider']            # #143: the service's one card holds its New part
         try:
             row, gaps = accuracy_new.measure(by_slug_card(spec, slug), card_order(pages, slug), spec, tmdb, today, mode,
                                              new_state['providers'].get(svc, {}).get('items', {}),
@@ -512,7 +506,7 @@ def main():
     notes += [f"recall not measured for {r['service']}: {r['note']}" for r in rec if r['status'] == 'skipped']
     cmp = None
     if a.snapshot:                               # DuckDB reads all shelves; then the week-over-week compare (notes only)
-        ok_keys = {(f"sd-streaming-{r['provider']}-new", r['key']) for r in rows if r['class'] == 'ok'}
+        ok_keys = {(f"sd-streaming-{r['provider']}", r['key']) for r in rows if r['class'] == 'ok'}
         files, titles = snapshot(pages, Path(a.snapshot), ok_keys)
         print(f'DuckDB read {files} shelf files, {titles} titles')
         cmp = compare_weeks(a.prev, a.snapshot) if a.prev else None

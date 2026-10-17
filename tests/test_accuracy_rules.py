@@ -185,5 +185,19 @@ class Measure(unittest.TestCase):
         self.assertEqual((row2['truth'], row2['no_truth']), (0, ['network-peacock']))
 
 
+class StandupUnion(unittest.TestCase):
+    """#143: Stand-up is one card (Popular + New); a title is judged by the loosest part, New's floor of 3."""
+    CARD = dict(CARDS['standup'], kind='union', cap=2000, parts=[
+        {'slug': 'standup', 'sort': 'popular', 'min_votes': 10}, {'slug': 'standup-new', 'sort': 'new', 'min_votes': 3}])
+
+    def judge(self, votes):
+        r = ar.rules_of('standup', self.CARD, 'series', SPEC)
+        return ar.classify_extra(ar.facts(det(7, date='2026-10-01', votes=votes, movie=False, kw=(9716,)), 'series'), 'series', self.CARD, r, TODAY)
+
+    def test_a_3_vote_new_title_is_not_a_code_bug_and_2_votes_still_is(self):
+        self.assertIsNone(self.judge(3))
+        self.assertEqual(self.judge(2)[0], 'code bug')
+
+
 if __name__ == '__main__':
     unittest.main()

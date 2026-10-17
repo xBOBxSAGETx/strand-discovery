@@ -3,7 +3,7 @@ window truth and the per-card measure. Stubbed TMDB (no network).
 
     python -m unittest tests.test_accuracy_new
 """
-import json, os, sys, unittest
+import gzip, json, os, sys, tempfile, unittest
 from pathlib import Path
 
 os.environ.setdefault('TMDB_API_KEY', 'unused-in-tests')
@@ -11,10 +11,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'generator'))
 import accuracy_new as an  # noqa: E402
 
 TODAY = '2026-10-15'
-SPEC = {'defaults': {'depth': {'new': 500}, 'without_keywords': '111'}, 'catalogs': []}
+SPEC = {'defaults': {'depth': {'new': 500, 'popular': 1000}, 'without_keywords': '111'}, 'catalogs': []}
 NF = {'slug': 'streaming-netflix-new', 'kind': 'discover', 'sort': 'new', 'media': ['movie', 'series'],
       'movie': {'watch_region': 'US', 'with_watch_providers': '8', 'with_watch_monetization_types': 'flatrate'},
       'series': {'watch_region': 'US', 'with_watch_providers': '8', 'with_watch_monetization_types': 'flatrate'}}
+UNION_NF = dict(NF, slug='streaming-netflix', kind='union', sort='popular', provider='netflix', min_votes=10, cap=2000, folders=['streaming'],
+                parts=[{'slug': 'streaming-netflix', 'sort': 'popular', 'min_votes': 10},
+                       {'slug': 'streaming-netflix-new', 'sort': 'new', 'min_votes': 5, 'provider': 'netflix'},
+                       {'slug': 'streaming-netflix-top', 'sort': 'top', 'min_votes': {'movie': 300, 'series': 150}, 'min_age_days': 180}])
 
 
 def det(tid, date='2026-10-01', on=True, kw=(), title=None):
@@ -86,6 +90,50 @@ class Measure(unittest.TestCase):
         cands = {'movie:7': {'date': '2026-09-01', 'precision': 'day', 'sources': ['x']}}
         row, gaps = self.run_card(['movie:7'], {'movie': []}, {7: det(7, on=False)}, mode='arrivals', cands=cands, items={'m:7': ['2026-09-01', '2026-09-30']})
         self.assertEqual([(g['side'], g['label']) for g in gaps], [('precision', 'deliberate rule')])
+
+
+class UnionCard(unittest.TestCase):
+    """#143: the New measures run on the service's one union card (svc = its provider), none is skipped."""
+    def setUp(self):
+        import accuracy_check as ck
+        self.ck = ck
+        self.pages = Path(tempfile.mkdtemp(prefix='sd-acc-'))
+        d = self.pages / 'catalog' / 'movie'
+        d.mkdir(parents=True)
+        self.keys = [f'movie:{i}' for i in range(1, 11)]
+        (d / 'sd-streaming-netflix.json').write_text(json.dumps({'metas': [{'type': 'movie', 'id': f'tmdb:{i}'} for i in range(1, 11)]}), encoding='utf-8')
+        self.summary = {'new_card_modes': {'streaming-netflix': 'arrivals'}}
+
+    def test_measure_runs_on_the_union_card_with_its_provider(self):
+        row, gaps = an.measure(UNION_NF, ['movie:1', 'series:2'], SPEC, fake_tmdb({1: det(1), 2: det(2)}, {'movie': [1], 'series': [2]}),
+                               TODAY, 'release_date', {}, {}, 'seed', n_sample=20, truth_k=20)
+        self.assertEqual((an.svc_of(UNION_NF), row['kind'], row['recall'], row['precision'], gaps), ('netflix', 'new-netflix', 100.0, 100.0, []))
+
+    def test_measure_does_not_mistake_the_union_cap_for_the_new_cap(self):
+        order = [f'movie:{i}' for i in range(1, 601)]
+        row, _ = an.measure(UNION_NF, order, SPEC, fake_tmdb({1: det(1)}, {'movie': [1]}), TODAY, 'release_date', {}, {}, 'seed', n_sample=0, truth_k=20)
+        self.assertEqual(row['at_cap'], [])
+
+    def test_recall_is_measured_on_the_union_card(self):
+        rows = [{'service': 'netflix', 'date': '2026-10-10', 'media': 'movie', 'tmdb_id': str(i)} for i in range(1, 11)]
+        out = self.ck.recall(self.pages, self.summary, rows, TODAY, {})
+        self.assertEqual([(r['service'], r['status'], r['found'], r['recall']) for r in out], [('netflix', 'measured', 10, 100.0)])
+
+    def test_precision_samples_the_union_card(self):
+        state = {'providers': {'netflix': {'signals': {}, 'items': {}, 'last_run': TODAY}}}
+        sd = self.pages / 'state'
+        sd.mkdir()
+        (sd / 'first_seen.json.gz').write_bytes(gzip.compress(json.dumps(state).encode()))
+        cands = {'date': TODAY, 'providers': {'netflix': [{'key': k, 'date': '2026-10-10', 'precision': 'day', 'sources': ['vt'], 'status': 'x'}
+                                                          for k in self.keys[:3]]}}
+        saved = self.ck.tmdb
+        self.ck.tmdb = lambda path, **p: {'results': {'US': {'flatrate': [{'provider_id': 8}]}}}
+        try:
+            table, rows = self.ck.precision(self.pages, sd, {'catalogs': [UNION_NF]}, self.summary, cands, 5, 'seed', {}, set())
+        finally:
+            self.ck.tmdb = saved
+        self.assertEqual([(t['provider'], t['dated_items'], t['sample'], t['on_service']) for t in table], [('netflix', 3, 3, 3)])
+        self.assertEqual({r['class'] for r in rows}, {'ok'})
 
 
 class NewRowsNeverAlarmOnNumbers(unittest.TestCase):

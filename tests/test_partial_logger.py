@@ -120,10 +120,10 @@ class WorkflowSteps(unittest.TestCase):
         step = self.steps[i.index('partial_logger')]
         self.assertEqual(step['if'], "env.SD_CARDS != ''")
         self.assertIn('SD_FS_ONLY="$providers" python generator/first_seen.py state', step['run'])
-        self.assertIn("^streaming-.+-new$", step['run'])                   # streaming New cards only
+        self.assertIn("^streaming-", step['run'])                          # streaming service cards only
         self.assertEqual(self.steps[i.index('arrivals')]['if'], "env.SD_CARDS == '' || steps.partial_logger.outputs.providers != ''")
 
-    def test_services_are_taken_from_the_streaming_new_slugs_only(self):
+    def test_services_are_taken_from_the_streaming_service_slugs_only(self):
         step = next(s for s in self.steps if s.get('id') == 'partial_logger')
         script = step['run'].replace('if [ -n "$providers" ]; then SD_FS_ONLY="$providers" python generator/first_seen.py state; fi', ':')
         bash = next((b for b in ('bash', 'C:/Program Files/Git/usr/bin/bash.exe')
@@ -138,9 +138,19 @@ class WorkflowSteps(unittest.TestCase):
                                capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, r.stderr)
             return gh_out.read_text(encoding='utf-8').strip().replace('providers=', '')
+        # #143: a service's one union card (streaming-<svc>) holds its New part; the old -new slug still maps to the service
+        self.assertEqual(out('streaming-netflix'), 'netflix')
         self.assertEqual(out('streaming-prime-video-new, sd-streaming-mubi-new,streaming-netflix,streaming-netflix-top,genre-horror-new'),
-                         'mubi,prime-video')
-        self.assertEqual(out('genre-horror-new,studio-a24'), '')
+                         'mubi,netflix,prime-video')
+        self.assertEqual(out('streaming-netflix-top'), '')
+        self.assertEqual(out('genre-horror-new,studio-a24,standup'), '')
+
+    def test_every_union_card_of_the_spec_names_its_service_by_its_slug(self):
+        spec = json.loads((Path(__file__).resolve().parents[1] / 'generator' / 'spec.json').read_text(encoding='utf-8'))
+        union = [c for c in spec['catalogs'] if c.get('kind') == 'union' and c.get('provider')]
+        self.assertEqual(len(union), 21)
+        for c in union:
+            self.assertEqual(c['slug'], 'streaming-' + c['provider'])
 
     def test_a_partial_never_saves_state(self):
         saves = [s for s in self.steps if s.get('name') in (

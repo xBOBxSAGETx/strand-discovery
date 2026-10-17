@@ -110,5 +110,33 @@ class Frame(unittest.TestCase):
         self.assertNotIn('t0', [c['slug'] for c in a])
 
 
+UNION = {'slug': 'streaming-x', 'kind': 'union', 'folders': ['streaming'], 'sort': 'popular', 'min_votes': 10, 'cap': 2000,
+         'provider': 'x', 'media': ['movie', 'series'], 'movie': PROV, 'series': PROV,
+         'parts': [{'slug': 'streaming-x', 'sort': 'popular', 'min_votes': 10},
+                   {'slug': 'streaming-x-new', 'sort': 'new', 'min_votes': 5, 'provider': 'x'},
+                   {'slug': 'streaming-x-top', 'sort': 'top', 'min_votes': {'movie': 300, 'series': 150}, 'min_age_days': 180}]}
+
+
+class UnionCard(unittest.TestCase):
+    """#143: the weekly accuracy judges a union card's title by the loosest of its parts (Popular + New + Top Rated)."""
+    def judge(self, card, det, media='movie'):
+        return af.classify_extra(af.facts(det, media), media, card, af.card_rules('popular', card, media, SPEC), TODAY)
+
+    def test_a_3_vote_new_arrival_on_a_union_card_is_not_a_code_bug(self):
+        self.assertIsNone(self.judge(UNION, movie(1, votes=3, date='2026-10-10')))        # new, 5 days old, 3 votes
+        self.assertIsNone(self.judge(UNION, series(2, votes=3, date='2026-10-10'), 'series'))
+
+    def test_control_the_same_title_on_a_plain_popular_card_is_a_code_bug(self):
+        lab, why = self.judge(POP, movie(1, votes=3, date='2026-10-10'))
+        self.assertEqual(lab, 'code bug')
+        self.assertIn('floor 10', why)
+
+    def test_the_loosest_part_sets_the_rules_and_real_breaks_still_show(self):
+        r = af.card_rules('popular', UNION, 'movie', SPEC)
+        self.assertEqual((r['min_votes'], r['min_age_days']), (0, 0))
+        self.assertEqual(af.card_rules('popular', dict(UNION, parts=[UNION['parts'][0], UNION['parts'][2]]), 'movie', SPEC)['min_votes'], 10)
+        self.assertEqual(self.judge(UNION, movie(3, date='2027-01-01'))[0], 'code bug')       # unreleased stays a bug
+
+
 if __name__ == '__main__':
     unittest.main()

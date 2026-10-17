@@ -66,13 +66,21 @@ def pick_cards(spec, kind, n, seed):
 
 def card_rules(kind, card, media, spec):
     """The numbers the card's rules use for this medium (read from the spec, not copied)."""
-    votes = card.get('min_votes', 10)
-    votes = votes[media] if isinstance(votes, dict) else votes
+    def floor(c):
+        if c.get('sort') == 'new' and c.get('provider'):     # a service's New part: arrivals / first-seen titles have no floor
+            return 0                                          # (accuracy_new.card_checks)
+        v = c.get('min_votes', 10)
+        return v[media] if isinstance(v, dict) else v
+    # a union card (#143) holds titles from its Popular, New and Top Rated parts: each title is judged by the loosest part
+    # (lowest vote floor, no age floor when any part has none), so a 3-vote arrival is not "on the card but breaks its own rule"
+    parts = (card.get('parts') or [card]) if card.get('kind') == 'union' else [card]
+    votes = min(floor(p) for p in parts)
+    min_age = min(p.get('min_age_days', 0) for p in parts)
     d = spec['defaults']
     kw = {int(x) for x in str(d.get('without_keywords', '')).split('|') if x}
     if media == 'series':
         kw |= {int(x) for x in str(d.get('without_keywords_tv', '')).split('|') if x}
-    return {'min_votes': votes, 'min_age_days': card.get('min_age_days', 0),
+    return {'min_votes': votes, 'min_age_days': min_age,
             'min_runtime': 40 if (media == 'movie' and card['sort'] in ('top', 'votes')) else 0,
             'depth': card.get('depth') or d['depth'][card['sort']], 'keywords_out': kw,
             'deny': {e['tmdb'] for e in d.get('deny', []) if e['type'] == media}}
