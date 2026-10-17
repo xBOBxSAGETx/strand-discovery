@@ -32,6 +32,8 @@ def problems(spec):
             out.append(f'folder {k} has no cards')
     for c in spec['catalogs']:
         old = PRE.get(c['slug'])
+        if c.get('kind') == 'comedian':         # #149: new cards, tested in test_comedian_card
+            continue
         if old is None:
             out.append(f"{c['slug']}: not in the pre-cut spec")
         elif c.get('kind') == 'union':          # #143: the card keeps the Popular card's id and library name; its parts are tested in test_union_card
@@ -48,7 +50,7 @@ SPEC = json.loads((ROOT / 'generator' / 'spec.json').read_text(encoding='utf-8')
 class PeopleRows(unittest.TestCase):
     def test_spec_has_one_directors_row_one_actors_row_and_the_old_ids(self):
         self.assertEqual(problems(SPEC), [])
-        self.assertEqual(len(SPEC['catalogs']), 496)       # 518 minus the 22 retired New cards (21 services + Stand-up New), #143
+        self.assertEqual(len([c for c in SPEC['catalogs'] if c['kind'] != 'comedian']), 496)   # 518 minus the 22 retired New cards (21 services + Stand-up New), #143; comedian cards (#149) on top
 
     def test_control_a_broken_copy_is_noticed(self):
         bad = copy.deepcopy(SPEC)

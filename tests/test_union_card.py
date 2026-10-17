@@ -80,7 +80,7 @@ class UnionMerge(unittest.TestCase):
 class SpecShape(unittest.TestCase):
     def test_496_catalogs_one_streaming_folder_no_retired_slugs(self):
         slugs = [c['slug'] for c in SPEC['catalogs']]
-        self.assertEqual(len(slugs), 496)
+        self.assertEqual(len([c for c in SPEC['catalogs'] if c['kind'] != 'comedian']), 496)   # + the comedian cards (#149)
         self.assertEqual(len(slugs), len(set(slugs)))
         self.assertEqual([f['key'] for f in SPEC['folders']][:2], ['streaming', 'networks'])
         streaming = [c for c in SPEC['catalogs'] if 'streaming' in c['folders']]
@@ -114,7 +114,7 @@ class SpecShape(unittest.TestCase):
             if c['kind'] == 'union':
                 self.assertNotIn('·', c['title'], c['slug'])
                 self.assertEqual(art[c['slug']]['title'], c['title'], c['slug'])
-        self.assertEqual(next(c for c in SPEC['catalogs'] if c['slug'] == 'standup')['title'], 'Stand-up')
+        self.assertEqual(next(c for c in SPEC['catalogs'] if c['slug'] == 'standup')['title'], 'New Stand-up')   # #150
 
     def test_control_the_518_card_spec_fails_the_shape(self):
         """The spec before #143 had 518 cards and three Streaming folders: the shape test must be able to fail."""

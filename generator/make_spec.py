@@ -48,6 +48,7 @@ def slugify(s):
 # people: ONE folder for all directors and ONE for all actors (issue #142); the old per-category folders are gone
 PEOPLE_FOLDERS = [{'key': 'directors', 'title': 'Directors', 'shape': 'poster'},
                   {'key': 'actors', 'title': 'Actors', 'shape': 'poster'}]
+PEOPLE_KINDS = ('director', 'actor')          # the Directors / Actors rows, ordered by the private vote files
 # folder order in Strand (issue #142); a folder with no cards left is dropped at the end
 FOLDER_ORDER = ['streaming', 'networks', 'directors', 'actors', 'studios', 'series', 'themes',
                 'awards', 'acclaimed', 'standup']
@@ -246,9 +247,10 @@ UNION_CAP = 2000
 PART_KEYS = ('slug', 'sort', 'min_votes', 'min_age_days', 'tv_air_window', 'provider', 'depth')
 
 
-def union_card(cards, folder, title=None):
+def union_card(cards, folder, title=None, order=None):
     """cards = the discover cards (Popular first, then New, then Top Rated) -> ONE union catalog under the Popular slug.
-    title: the card's own title when the Popular part's title names its variant (library name and id stay)."""
+    title: the card's own title when the Popular part's title names its variant (library name and id stay).
+    order: 'newest' = newest release first (#150 New Stand-up); default popularity."""
     base = cards[0]
     assert base['sort'] == 'popular'
     u = {k: base[k] for k in ('slug', 'library', 'title', 'eyebrow')}
@@ -261,6 +263,8 @@ def union_card(cards, folder, title=None):
     if any(c.get('provider') for c in cards):                  # the New part's service: arrival / first_seen order, watch triggers
         u['provider'] = next(c['provider'] for c in cards if c.get('provider'))
     u['parts'] = [{k: c[k] for k in PART_KEYS if k in c} for c in cards]
+    if order:
+        u['order'] = order
     return u
 
 
@@ -293,10 +297,10 @@ def load_votes(paths):
 def order_people(cats, votes):
     """Put every director in ONE 'directors' folder and every actor in ONE 'actors' folder, best-known first:
     most total votes, then lowest old rank, then name. ranks = 1..N. Non-people stay in place, people go last."""
-    rest = [c for c in cats if not c.get('person_id')]
+    rest = [c for c in cats if c['kind'] not in PEOPLE_KINDS]          # comedians (#149) keep their Stand-up row order
     out = []
     for role, folder in (('Director', 'directors'), ('Actor', 'actors')):
-        group = [c for c in cats if c.get('person_id') and c['eyebrow'] == role]
+        group = [c for c in cats if c['kind'] in PEOPLE_KINDS and c['eyebrow'] == role]
         group.sort(key=lambda c: (-votes.get((role, c['person_id']), -1), min(c['ranks'].values()), c['title']))
         for n, c in enumerate(group, 1):
             c['folders'] = [folder]
@@ -410,7 +414,12 @@ def main():
     cats.append(union_card([disc('standup' + ('' if v == 'popular' else f'-{v}'), f'Stand-up · {n}', f'Stand-up · {n}',
                                  {'popular': 'Stand-up', 'new': 'New · Stand-up'}[v], 'standup', ['movie', 'series'], v,
                                  movie=mp, series=sp, min_votes={'popular': 10, 'new': 3}[v])
-                           for v, n in VARIANTS[:2]], 'standup', title='Stand-up'))   # #147: one card, no "· Popular"
+                           for v, n in VARIANTS[:2]], 'standup', title='New Stand-up', order='newest'))   # #150: the row's first card, newest first
+    # issue #149: one card per comedian after the Stand-up card, in comedians.json order (greats, then making a wave)
+    for n, c in enumerate(json.loads((HERE / 'comedians.json').read_text(encoding='utf-8'))['comedians'], 1):
+        cats.append({'slug': f"comic-{slugify(c['name'])}", 'library': f"Comedian · {c['name']}", 'title': c['name'],
+                     'eyebrow': 'Comedian', 'folders': ['standup'], 'ranks': {'standup': n}, 'kind': 'comedian',
+                     'media': ['movie', 'series'], 'person_id': c['id']})
 
     # people: one catalog per person+role; folder list in CSV rank order
     people = {}
@@ -437,7 +446,7 @@ def main():
     cats = [c for c in cats if keep_catalog(c)]
     votes = load_votes(sys.argv[2:])
     nameless = [f"{c['eyebrow']} {c['title']} ({c['person_id']})" for c in cats
-                if c.get('person_id') and (c['eyebrow'], c['person_id']) not in votes]
+                if c['kind'] in PEOPLE_KINDS and (c['eyebrow'], c['person_id']) not in votes]
     if nameless:                                             # they would sink to the bottom of their row (critic note on #144)
         sys.exit(f'{len(nameless)} people have no vote numbers in the private order files, so they would rank last: '
                  f'{nameless[:8]}... Fill them first (one TMDB pass into the metrics files).')
