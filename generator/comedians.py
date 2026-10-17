@@ -10,7 +10,7 @@
 4. Making a wave: headliners of the most popular English stand-up specials released since WAVE_SINCE, with 2+ specials,
    not already in, first special since NEWCOMER (no veterans: Jamie Foxx, Mike Epps); the WAVE whose specials since WAVE_SINCE have the most audience votes (the special's popularity
    today let in actors with one club show; person popularity let in TV stars).
-5. Everyone: their card holds MIN_TITLES+ titles; women are left out (SKIP_GENDER, the owner's call).
+5. Everyone: their card holds MIN_TITLES+ titles and their TMDB gender is not in SKIP_GENDER.
 About 1,700 TMDB requests (~2 min). Re-run to refresh the list; the owner can cut or add names in CUT / ADD.
 """
 import datetime as dt, json, sys
@@ -27,9 +27,7 @@ GREATS, WAVE, WAVE_SINCE, RECENT, NEWCOMER = 70, 30, '2023-01-01', '2023-01-01',
 LEGENDS = {3198: 'Rodney Dangerfield', 130281: 'Sam Kinison', 7167: 'Don Rickles',
            59255: 'Mitch Hedberg', 543256: "Patrice O'Neal", 1897: 'Bernie Mac'}
 CUT = {}          # tmdb id -> name: never a card (owner's cuts)
-# owner, AIO chat 2026-10-17 ~2:13 PM PT: "skip female comedians". TMDB person gender 1 = female; 0 (not set) is kept
-# and checked by eye on the list table.
-SKIP_GENDER = {1}
+SKIP_GENDER = {1}  # the owner's choice (AIO chat 2026-10-17 ~2:13 PM PT): TMDB person gender values left out
 ADD = {}          # tmdb id -> name: always a card, after the greats (owner's adds)
 
 
