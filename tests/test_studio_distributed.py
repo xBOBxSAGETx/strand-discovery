@@ -95,7 +95,7 @@ class StudioDistributed(unittest.TestCase):
 class DataFile(unittest.TestCase):
     def test_data_file_sane(self):
         data = json.loads((GEN / 'studio_distributed.json').read_text(encoding='utf-8'))
-        spec = json.loads((Path(__file__).resolve().parent / 'fixtures' / 'spec_before_cut.json').read_text(encoding='utf-8'))   # pre-#139-cut: studios are cut
+        spec = json.loads((GEN / 'spec.json').read_text(encoding='utf-8'))
         studios = {c['slug'] for c in spec['catalogs'] if 'studios' in c.get('folders', [])}
         self.assertEqual(set(data), set(studio_distributed.STUDIO_ITEMS))        # no strays
         self.assertEqual(set(data), {'studio-a24', 'studio-neon', 'studio-lionsgate', 'studio-focus-features',

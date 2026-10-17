@@ -97,7 +97,7 @@ class TruthMapping(unittest.TestCase):
         self.assertEqual((got[1]['statements'], got[1]['by']['P272'][1]), ('Q55', {'Q55'}))
 
     def test_every_card_has_a_wikidata_item(self):
-        spec = json.loads((Path(__file__).resolve().parent / 'fixtures' / 'spec_before_cut.json').read_text(encoding='utf-8'))      # pre-#139-cut spec: the studio/series cards are cut
+        spec = json.loads((Path(aw.HERE) / 'spec.json').read_text(encoding='utf-8'))
         ind, listed = aw.pick_studio_cards(spec)
         self.assertEqual((len(ind), len(listed)), (13, 5))                    # the 18 studio cards, split by how they are built
         ser = aw.pick_series_cards(spec)

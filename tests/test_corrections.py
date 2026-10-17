@@ -366,7 +366,7 @@ class CorrectionData(unittest.TestCase):
     def test_file_is_well_formed(self):
         lists = build.load_hand_list('corrections')
         must = build.load_hand_list('theme_must_haves')
-        spec = json.loads((Path(__file__).resolve().parent / 'fixtures' / 'spec_before_cut.json').read_text(encoding='utf-8'))   # pre-#139-cut
+        spec = json.loads((Path(__file__).resolve().parent / 'fixtures' / 'spec_before_cut.json').read_text(encoding='utf-8'))   # pre-#139-cut: corrections still name genre cards, which stay cut (#142)
         slugs = {c['slug'] for c in spec['catalogs']}
         self.assertTrue(set(lists) <= slugs)
         self.assertIn(FIXED['movie'], [e['tmdb'] for e in lists['theme-zombies']])

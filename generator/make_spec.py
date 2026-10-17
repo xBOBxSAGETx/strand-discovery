@@ -1,6 +1,8 @@
 """Write generator/spec.json: every catalog of the Strand Discovery build, in folder order.
 
-  python make_spec.py <curated_people_v2.csv>
+  python make_spec.py <curated_people_v2.csv> [<candidates_v2.json> ...]
+
+The optional private people files (candidates_v2.json, metrics_directors_v2.json, metrics_actors_v2.json; never committed) only order the people: most total votes of their films first.
 
 One spec entry = one catalog = one AIOStreams Jellyfin library. `folders` lists the Strand folders (shelves) whose
 cards point at it; a person listed in two categories is one catalog with two cards. `library` is the library name
@@ -25,15 +27,13 @@ FOLDERS = ([{'key': f'streaming-{v}', 'title': f'Streaming · {n}', 'shape': 'wi
                ('standup', 'Stand-up')]])
 
 
-KEEP_FOLDERS = {'streaming-popular', 'streaming-new', 'networks', 'awards', 'acclaimed', 'standup'}
-KEEP_DIRECTORS = {'dir-quentin-tarantino'}
+KEEP_FOLDERS = {'streaming-popular', 'streaming-new', 'networks', 'studios', 'series', 'themes', 'awards', 'acclaimed',
+                'standup'}
 
 
 def keep_catalog(c):
-    if c['slug'] in KEEP_DIRECTORS:
+    if c.get('person_id'):                      # every director and actor (they get one folder each, see below)
         return True
-    if c.get('person_id'):
-        return False
     return c['slug'] != 'standup-top' and any(f in KEEP_FOLDERS for f in c['folders'])
 
 
@@ -46,8 +46,12 @@ def slugify(s):
     return re.sub(r'[^a-z0-9]+', '-', s).strip('-')
 
 
-FOLDERS += [{'key': f'directors-{slugify(c)}', 'title': f'Directors · {c}', 'shape': 'poster'} for c in DIRECTOR_CATS]
-FOLDERS += [{'key': f'actors-{slugify(c)}', 'title': f'Actors · {c}', 'shape': 'poster'} for c in ACTOR_CATS]
+# people: ONE folder for all directors and ONE for all actors (issue #142); the old per-category folders are gone
+PEOPLE_FOLDERS = [{'key': 'directors', 'title': 'Directors', 'shape': 'poster'},
+                  {'key': 'actors', 'title': 'Actors', 'shape': 'poster'}]
+# folder order in Strand (issue #142); a folder with no cards left is dropped at the end
+FOLDER_ORDER = ['streaming-popular', 'streaming-new', 'networks', 'directors', 'actors', 'studios', 'series', 'themes',
+                'awards', 'acclaimed', 'standup']
 
 # ---- sources -----------------------------------------------------------------------------------------------------
 # subscription services: flatrate only; ad-supported / library services: free|ads. Rent/buy never counts as "on it".
@@ -235,6 +239,45 @@ def disc(slug, library, title, eyebrow, folder, media, sort, movie=None, series=
     return e
 
 
+def load_votes(paths):
+    """-> {(role, tmdb_id): total audience votes of their films} from the private people files, or {} without any.
+    Two shapes are read: candidates_v2.json ({"directors": {cat: {"candidates"|"near_misses": [{tmdb_id, metrics}]}}, "actors": ...},
+    only the shortlisted people) and metrics_{directors,actors}_v2.json ({id: {dept, total_votes | all.total_votes}},
+    everyone). Only the numbers are used for ordering; nothing from the files is written to the spec."""
+    votes = {}
+
+    def put(role, tid, v):
+        if v is not None:
+            votes[(role, int(tid))] = max(v, votes.get((role, int(tid)), 0))
+    for path in paths:
+        data = json.loads(Path(path).read_text(encoding='utf-8'))
+        if 'directors' in data or 'actors' in data:
+            for role, key in (('Director', 'directors'), ('Actor', 'actors')):
+                for grp in data.get(key, {}).values():
+                    for cand in grp.get('candidates', []) + grp.get('near_misses', []):
+                        put(role, cand['tmdb_id'], (cand.get('metrics') or {}).get('total_votes'))
+        else:
+            for e in data.values():
+                role = 'Director' if e.get('dept') == 'Directing' else 'Actor'
+                put(role, e['tmdb_id'], e.get('total_votes', (e.get('all') or {}).get('total_votes')))
+    return votes
+
+
+def order_people(cats, votes):
+    """Put every director in ONE 'directors' folder and every actor in ONE 'actors' folder, best-known first:
+    most total votes, then lowest old rank, then name. ranks = 1..N. Non-people stay in place, people go last."""
+    rest = [c for c in cats if not c.get('person_id')]
+    out = []
+    for role, folder in (('Director', 'directors'), ('Actor', 'actors')):
+        group = [c for c in cats if c.get('person_id') and c['eyebrow'] == role]
+        group.sort(key=lambda c: (-votes.get((role, c['person_id']), -1), min(c['ranks'].values()), c['title']))
+        for n, c in enumerate(group, 1):
+            c['folders'] = [folder]
+            c['ranks'] = {folder: n}
+        out += group
+    return rest + out
+
+
 def main():
     cats = []
     for v, n in VARIANTS:                                    # streaming x3
@@ -355,14 +398,14 @@ def main():
         people[key]['ranks'][folder] = int(r['rank'])
     cats += list(people.values())
 
-    # keep list (owner okay 2026-10-16, issue #139): streaming Popular + New, networks, awards, acclaimed, stand-up
-    # Popular + New, and director Quentin Tarantino. Everything else is cut; kept cards keep their ids, names, order.
+    # keep list (issue #142, owner yes AIO chat 2026-10-17 ~10:52 AM PT; it widens the #139 cut of 2026-10-16): streaming
+    # Popular + New, networks, studios, movie series, themes, awards, acclaimed, stand-up Popular + New, and every
+    # director and actor in one folder each. Genres, Top Rated and Decades stay cut. Kept cards keep their ids, names, order.
     cats = [c for c in cats if keep_catalog(c)]
-    for c in cats:
-        if c.get('person_id'):
-            c['folders'] = [f for f in c['folders'] if f in KEEP_FOLDERS or f.startswith('directors-')]
+    cats = order_people(cats, load_votes(sys.argv[2:]))
+    byk = {f['key']: f for f in FOLDERS + PEOPLE_FOLDERS}
     used = {f for c in cats for f in c['folders']}
-    FOLDERS[:] = [f for f in FOLDERS if f['key'] in used]
+    FOLDERS[:] = [byk[k] for k in FOLDER_ORDER if k in used]
 
     # structural asserts
     keys = {f['key'] for f in FOLDERS}
