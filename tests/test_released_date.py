@@ -32,7 +32,7 @@ class ReleasedDate(unittest.TestCase):
         self.assertEqual(m['released'], '2020-03-04T00:00:00.000Z')
 
     def test_rating_on_preview_and_none_when_unrated(self):
-        m = build.preview({'id': 1, 'title': 'A', 'release_date': '2024-05-17', 'vote_average': 7.84, 'vote_count': 120}, 'movie')
+        m = build.preview({'id': 1, 'title': 'A', 'release_date': '2024-05-17', 'vote_average': 7.84, 'vote_count': 400}, 'movie')
         self.assertEqual(m['imdbRating'], '7.8')
         self.assertNotIn('imdbRating', build.preview({'id': 2, 'title': 'B', 'vote_average': 0, 'vote_count': 0}, 'movie'))
         self.assertNotIn('imdbRating', build.preview({'id': 3, 'title': 'C', 'vote_average': 9.0, 'vote_count': 0}, 'movie'))
@@ -42,7 +42,7 @@ class ReleasedDate(unittest.TestCase):
 
     def test_old_cache_rating_filled_from_seen_row_without_refetch(self):
         build._stable['movie:78'] = self._old(78)
-        build._keys[('movie', 78)] = {'pop': 1, 'vote': 6.66, 'votes': 50, 'date': '2020-03-04'}
+        build._keys[('movie', 78)] = {'pop': 1, 'vote': 6.66, 'votes': 400, 'date': '2020-03-04'}
         try:
             m = build.details_preview('movie', 78)       # no TMDB call: the key is a dummy
         finally:
@@ -54,7 +54,7 @@ class ReleasedDate(unittest.TestCase):
         calls = []
         real_tmdb, real_cap, real_n = build.tmdb, build.RATING_BACKFILL_MAX, build._rating_backfill[0]
         build.tmdb = lambda path, **kw: calls.append(path) or {'id': int(path.rsplit('/', 1)[1]), 'title': 'N',
-                                                              'release_date': '2020-03-04', 'vote_average': 8.0, 'vote_count': 9}
+                                                              'release_date': '2020-03-04', 'vote_average': 8.0, 'vote_count': 400}
         build.RATING_BACKFILL_MAX, build._rating_backfill[0] = 1, 0
         for t in (9900080, 9900081):
             build._stable[f'movie:{t}'] = self._old(t)
@@ -89,29 +89,29 @@ class ReleasedDate(unittest.TestCase):
 
     def test_recent_title_rated_over_30_days_ago_is_refetched(self):
         e = {'p': {'id': 'tmdb:9900090', 'type': 'movie', 'name': 'R', '_g': [], 'imdbRating': '3.0'},
-             'd': self._ago(60), 'v': self._ago(45)}
+             'd': self._ago(60), 'v': self._ago(45), 'vc': 900}
         m, n = self._run(9900090, e)
         self.assertEqual((n, m['imdbRating']), (1, '8.0'))
 
     def test_old_release_rated_long_ago_is_not_refetched(self):
         e = {'p': {'id': 'tmdb:9900091', 'type': 'movie', 'name': 'O', '_g': [], 'imdbRating': '7.0'},
-             'd': self._ago(2000), 'v': self._ago(400)}
+             'd': self._ago(2000), 'v': self._ago(400), 'vc': 900}
         m, n = self._run(9900091, e)
         self.assertEqual((n, m['imdbRating']), (0, '7.0'))
 
     def test_seen_row_overwrites_stale_cached_rating(self):
         e = {'p': {'id': 'tmdb:9900092', 'type': 'movie', 'name': 'S', '_g': [], 'imdbRating': '3.0'},
-             'd': self._ago(2000), 'v': self._ago(400)}
+             'd': self._ago(2000), 'v': self._ago(400), 'vc': 900}
         m, n = self._run(9900092, e, {'pop': 1, 'vote': 7.46, 'votes': 500, 'date': e['d']})
         self.assertEqual((n, m['imdbRating']), (0, '7.5'))
         e2 = {'p': {'id': 'tmdb:9900093', 'type': 'movie', 'name': 'S', '_g': [], 'imdbRating': '3.0'},
-              'd': self._ago(2000), 'v': self._ago(400)}
+              'd': self._ago(2000), 'v': self._ago(400), 'vc': 900}
         m2, _ = self._run(9900093, e2, {'pop': 1, 'vote': 0, 'votes': 0, 'date': e2['d']})
         self.assertNotIn('imdbRating', m2)               # the row now has no votes: the old score is dropped
 
     def test_written_page_keeps_released(self):
         m = build.preview({'id': 1, 'title': 'A', 'release_date': '2024-05-17', 'genre_ids': [18],
-                          'vote_average': 7.84, 'vote_count': 120}, 'movie')
+                          'vote_average': 7.84, 'vote_count': 400}, 'movie')
         with tempfile.TemporaryDirectory() as t:
             root = Path(t)
             build.write_catalog(root, 'movie', 'sd-r', [m], 10)
