@@ -66,7 +66,7 @@ def baseline(net, tmdb, **kw):
     return state
 
 
-NETFLIX = ['streaming-netflix', 'streaming-netflix-new']      # Top Rated is cut (#139)
+NETFLIX = ['streaming-netflix']      # one card per service (#143): Popular + New (+ Top Rated where kept) are parts of it
 FLIPPED = {'total_results': 501, 'results': [{'id': i} for i in range(1, 21)]}
 
 
@@ -91,8 +91,8 @@ class WatchTests(unittest.TestCase):
         state = baseline(self.net, self.tmdb)
         self.net.bodies[watch.FEED_URLS['won']] = b'a new post'
         res = self.run_again(state)
-        self.assertEqual(res['cards'], ['streaming-netflix-new'])
-        self.assertEqual(res['reasons'], {'streaming-netflix-new': ['feed won changed']})
+        self.assertEqual(res['cards'], ['streaming-netflix'])
+        self.assertEqual(res['reasons'], {'streaming-netflix': ['feed won changed']})
 
     def test_feed_200_with_the_same_body_is_nothing(self):
         state = baseline(self.net, self.tmdb)
@@ -104,7 +104,7 @@ class WatchTests(unittest.TestCase):
         state = baseline(self.net, self.tmdb)
         self.net.bodies[watch.FEED_URLS['wodp']] = b'new'
         self.assertEqual(self.run_again(state)['cards'],
-                         ['streaming-disneyplus-new', 'streaming-hbo-max-new', 'streaming-hulu-new'])
+                         ['streaming-disneyplus', 'streaming-hbo-max', 'streaming-hulu'])
 
     def test_mdblist_200_gives_its_card(self):
         state = baseline(self.net, self.tmdb)
@@ -148,13 +148,13 @@ class WatchTests(unittest.TestCase):
         state = baseline(self.net, self.tmdb)
         self.tmdb.disc[('/discover/tv', '8')] = {'total_results': 500, 'results': [{'id': i} for i in range(2, 22)]}
         self.run_again(state)
-        self.assertIn('streaming-netflix-new', self.run_again(state)['cards'])
+        self.assertIn('streaming-netflix', self.run_again(state)['cards'])
 
     def test_too_many_cards_is_full(self):
         state = baseline(self.net, self.tmdb)
         self.tmdb.disc[('/discover/movie', '8')] = {'total_results': 501, 'results': []}
-        self.run_again(state, max_cards=1)
-        res = self.run_again(state, max_cards=1)
+        self.run_again(state, max_cards=0)
+        res = self.run_again(state, max_cards=0)
         self.assertTrue(res['full'])
         self.assertEqual(res['cards'], [])
 
@@ -204,8 +204,9 @@ class WatchTests(unittest.TestCase):
         build.TODAY = today
         build.tmdb = lambda path, **p: (seen.append((path, p)), {'results': [], 'total_results': 0, 'total_pages': 0})[1]
         try:
-            for slug in ('streaming-netflix-new', 'streaming-tubi-new', 'streaming-mubi-new'):
-                card = copy.deepcopy(next(c for c in SPEC['catalogs'] if c['slug'] == slug))
+            for slug in ('streaming-netflix', 'streaming-tubi', 'streaming-mubi'):
+                union = next(c for c in SPEC['catalogs'] if c['slug'] == slug)
+                card = copy.deepcopy(next(p for p in build.union_parts(union) if p['sort'] == 'new'))   # #143: New is a part
                 for media in ('movie', 'series'):
                     seen.clear()
                     build.discover(card, media, 5, SPEC['defaults'])
@@ -321,7 +322,7 @@ class DispatchTests(unittest.TestCase):
         self.assertEqual(self.main('--dispatch')['dispatch'], 'sent')
 
     def test_too_many_cards_dispatches_a_full_build(self):
-        watch.MAX_CARDS = 1
+        watch.MAX_CARDS = 0
         self.tmdb.disc[('/discover/movie', '8')] = FLIPPED
         self.main('--dispatch')
         res = self.main('--dispatch')

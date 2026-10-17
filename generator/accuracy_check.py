@@ -135,7 +135,7 @@ def precision(pages, state_dir, spec, summary, cands, n, seed, official, unknown
     by_slug = {c['slug']: c for c in spec['catalogs']}
     rows, table = [], []
     for slug, mode in sorted(summary.get('new_card_modes', {}).items()):
-        if mode != 'arrivals':
+        if mode != 'arrivals' or not slug.endswith('-new'):      # #143: a union card's New part is not a shelf of its own
             continue
         svc = slug[len('streaming-'):-len('-new')]
         card, order = by_slug[slug], card_order(pages, slug)
@@ -190,6 +190,10 @@ def recall(pages, summary, official_rows, today, baseline):
     out = []
     for svc in sorted({r['service'] for r in official_rows}):
         slug = f'streaming-{svc}-new'
+        if slug not in summary.get('new_card_modes', {}):         # #143: the New shelf is part of the one service card now
+            out.append({'service': svc, 'status': 'skipped', 'official_in_window': 0, 'month': '-', 'stale': False,
+                        'note': 'New is part of the one service card (issue #143): arrival recall not measured'})
+            continue
         # measured on the LATEST month that has an official list for this service (lists are a manual refresh)
         month = max(r['date'][:7] for r in official_rows if r['service'] == svc)
         inwin = {f"{r['media']}:{r['tmdb_id']}" for r in official_rows
@@ -445,6 +449,8 @@ def main():
     new_notes = []
     new_state = json.loads(gzip.decompress((state_dir / 'first_seen.json.gz').read_bytes()))
     for slug, mode in sorted(summary.get('new_card_modes', {}).items()):     # every New card: recall vs TMDB window, precision
+        if not slug.endswith('-new'):                         # #143: New is part of the one service card, no shelf to measure
+            continue
         svc = slug[len('streaming-'):-len('-new')]
         try:
             row, gaps = accuracy_new.measure(by_slug_card(spec, slug), card_order(pages, slug), spec, tmdb, today, mode,

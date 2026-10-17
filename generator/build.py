@@ -643,6 +643,8 @@ def placement(card):
             return (lambda m: _new_keys.get((card['slug'], m['type'], int(m['id'].split(':', 1)[1])))), True, 'arrival'
         return {'popular': (val('pop'), True), 'top': (val('vote'), True), 'votes': (val('votes'), True),
                 'new': (date_of, True), 'release_asc': (date_of, False)}[card['sort']] + (card['sort'],)
+    if kind == 'union':                       # issue #143: a union card is in popularity order
+        return val('pop'), True, 'popular'
     if kind == 'franchise':
         return date_of, False, 'release date'
     if kind in ('director', 'actor'):
@@ -1217,8 +1219,70 @@ def build_one(card, dflt):
     return metas, '; '.join(x for x in [notes] + skipped if x)
 
 
+UNION_CAP = 2000       # the AIOStreams server reads only the first JELLYFIN_MAX_SORT_ITEMS=2000 titles for a sort
+
+
+def union_parts(card):
+    """Issue #143: the discover cards a union card is made of (Popular, New, Top Rated), each exactly as it was before the
+    union: the union's own media / movie / series / min_votes, overridden by the part's sort, votes, age, window, provider.
+    A part keeps its old slug (Popular = the union's slug), so hand lists, corrections and first_seen keyed by it still apply."""
+    base = {k: v for k, v in card.items() if k not in ('parts', 'cap', 'kind', 'provider', 'folders', 'sort', 'min_votes')}
+    return [{**base, 'kind': 'discover', 'folders': card['folders'], **p} for p in card['parts']]
+
+
+def union_merge(by_sort, cap=UNION_CAP):
+    """-> (metas, stats). One list from a service's Popular, New and Top Rated lists, deduped on (type, id).
+    Every New title is kept (so the date / year sorts find recent arrivals); the rest of the room, up to `cap`, is filled
+    by popularity: the Popular list in its own order, then Top Rated-only titles by popularity. The default order of the
+    result is popularity: the kept Popular titles in the Popular list's order, then the New-only and Top Rated-only titles
+    by popularity (a stable sort, so ties keep their list order)."""
+    ident = lambda m: (m['type'], m['id'])
+    pop = lambda m: (_keys.get((m['type'], int(m['id'].split(':', 1)[1]))) or {}).get('pop') or 0
+    popular, new, top = (list(by_sort.get(s, [])) for s in ('popular', 'new', 'top'))
+    new = list({ident(m): m for m in new}.values())
+    new_ids = {ident(m) for m in new}
+    seen = set(new_ids)
+    fill = []
+    for m in popular:
+        if ident(m) not in seen:
+            seen.add(ident(m))
+            fill.append(m)
+    extra = []
+    for m in top:
+        if ident(m) not in seen:
+            seen.add(ident(m))
+            extra.append(m)
+    fill += sorted(extra, key=pop, reverse=True)
+    keep = fill[:max(0, cap - len(new))]
+    kept_ids = new_ids | {ident(m) for m in keep}
+    head, head_ids = [], set()
+    for m in popular:                                     # the Popular list's own order
+        if ident(m) in kept_ids and ident(m) not in head_ids:
+            head_ids.add(ident(m))
+            head.append(m)
+    tail = sorted([m for m in new + keep if ident(m) not in head_ids], key=pop, reverse=True)
+    out = head + tail
+    pop_ids, top_ids = {ident(m) for m in popular}, {ident(m) for m in top}
+    return out, {'popular': len(popular), 'new': len(new_ids), 'top': len(top), 'kept': len(out),
+                 'new_kept': len(new_ids & {ident(m) for m in out}), 'new_only': len(new_ids - pop_ids - top_ids),
+                 'popular_and_new': len(pop_ids & new_ids), 'cut_by_cap': len(fill) - len(keep)}
+
+
+def build_union(card, dflt):
+    by_sort, part_notes = {}, []
+    for part in union_parts(card):
+        metas, notes = build_one(part, dflt)               # the whole part pipeline: arrivals / first_seen, corrections
+        by_sort[part['sort']] = metas
+        part_notes.append(f"{part['sort']} {len(metas)}" + (f' ({notes})' if notes else ''))
+    metas, st = union_merge(by_sort, card.get('cap', UNION_CAP))
+    return metas, (f"union of {' + '.join(part_notes)} -> {st['kept']}: all {st['new_kept']} New kept "
+                   f"({st['popular_and_new']} also Popular), {st['cut_by_cap']} cut by the {card.get('cap', UNION_CAP)} cap")
+
+
 def build_kind(card, dflt):
     kind, notes = card['kind'], ''
+    if kind == 'union':
+        return build_union(card, dflt)
     if kind == 'discover' and 'studios' in card.get('folders', []):      # issue #66: + the films the studio distributed
         return interleave([add_studio_distributed(card, discover(card, m, depth_of(card, dflt), dflt))
                            for m in card['media']]), notes

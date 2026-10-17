@@ -3,14 +3,14 @@
   python people_review.py <summary.json>
 
 Uses the deployed summary.json item counts. The people lists were curated with a floor of 3 qualifying titles
-(2 for Up & Coming / Rising Stars); a person under that floor now, or with an empty card, is listed for review.
+(2 in the Directors and Actors folders, which merged the Up & Coming / Rising Stars lists); a person under that floor now, or with an empty card, is listed for review.
 The list itself is curated by hand - this only points at candidates for a swap.
 """
 import json, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-LOW_FLOOR = {'directors-up-and-coming', 'actors-rising-stars'}
+LOW_FLOOR = {'directors', 'actors'}      # one Directors and one Actors folder now (issue #142): the lowest floor of the old lists applies
 
 
 def main():

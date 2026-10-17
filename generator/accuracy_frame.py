@@ -44,7 +44,7 @@ import datetime as dt, math, random
 import accuracy_corrections as ac
 
 KINDS = {
-    'popular': {'folder': 'streaming-popular', 'sort_by': 'popularity.desc', 'truth_votes': 0,
+    'popular': {'folder': 'streaming', 'sort_by': 'popularity.desc', 'truth_votes': 0,
                 'claim': 'the most popular titles streaming on the service in the US'},
     'top': {'folder': 'streaming-top', 'sort_by': 'vote_average.desc', 'truth_votes': 100,
             'claim': 'the best-rated titles with enough votes, streaming on the service in the US'},
@@ -58,7 +58,7 @@ DETAIL_APPEND = 'watch/providers,keywords,release_dates'            # one call p
 
 def pick_cards(spec, kind, n, seed):
     """The first n of a seeded shuffle of the kind's cards (stable for a given spec and seed)."""
-    cards = [c for c in spec['catalogs'] if KINDS[kind]['folder'] in c.get('folders', []) and c.get('kind') == 'discover']
+    cards = [c for c in spec['catalogs'] if KINDS[kind]['folder'] in c.get('folders', []) and c.get('kind') in ('discover', 'union')]
     cards.sort(key=lambda c: c['slug'])
     random.Random(f'{seed}-{kind}').shuffle(cards)
     return sorted(cards[:n], key=lambda c: c['slug'])

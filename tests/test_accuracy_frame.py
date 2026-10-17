@@ -16,7 +16,7 @@ TODAY = '2026-10-15'
 SPEC = {'defaults': {'depth': {'popular': 3, 'top': 3}, 'without_keywords': '111|222', 'without_keywords_tv': '333', 'deny': []},
         'catalogs': []}
 PROV = {'watch_region': 'US', 'with_watch_providers': '8', 'with_watch_monetization_types': 'flatrate'}
-POP = {'slug': 'streaming-x', 'kind': 'discover', 'folders': ['streaming-popular'], 'sort': 'popular', 'min_votes': 10,
+POP = {'slug': 'streaming-x', 'kind': 'discover', 'folders': ['streaming'], 'sort': 'popular', 'min_votes': 10,
        'movie': PROV, 'series': PROV}
 TOP = {'slug': 'streaming-x-top', 'kind': 'discover', 'folders': ['streaming-top'], 'sort': 'top',
        'min_votes': {'movie': 300, 'series': 150}, 'min_age_days': 180, 'movie': PROV, 'series': PROV}
