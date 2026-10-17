@@ -3707,7 +3707,7 @@
   {
    "slug": "standup",
    "library": "Stand-up · Popular",
-   "title": "Stand-up",
+   "title": "New Stand-up",
    "eyebrow": "Stand-up",
    "folders": [
     "standup"
@@ -3739,7 +3739,8 @@
      "sort": "new",
      "min_votes": 3
     }
-   ]
+   ],
+   "order": "newest"
   },
   {
    "slug": "comic-dave-chappelle",

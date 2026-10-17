@@ -62,6 +62,29 @@ class ComedianRow(unittest.TestCase):
         self.assertEqual([c['ranks']['standup'] for c in row[1:]], list(range(1, len(listed) + 1)))
         self.assertGreaterEqual(len(listed), 90)
 
+    def test_every_comedian_card_has_its_picture(self):         # #150: one wide card shape for the whole row
+        spec = json.loads((ROOT / 'generator' / 'spec.json').read_text(encoding='utf-8'))
+        art = {c['slug']: c for c in json.loads((ROOT / 'generator' / 'art.json').read_text(encoding='utf-8'))['cards']}
+        row = [c for c in spec['catalogs'] if 'standup' in c['folders']]
+        bad = [c['slug'] for c in row if c['slug'] not in art or art[c['slug']]['shape'] != 'wide'
+               or art[c['slug']]['title'] != c['title'] or not (ROOT / 'art' / 'cards' / f"{c['slug']}.jpg").exists()]
+        self.assertEqual(bad, [])
+
+
+class NewStandup(unittest.TestCase):
+    """#150: the row's first card is "New Stand-up" (the Popular + New union), newest release first."""
+    def test_newest_first(self):
+        spec = json.loads((ROOT / 'generator' / 'spec.json').read_text(encoding='utf-8'))
+        card = next(c for c in spec['catalogs'] if c['slug'] == 'standup')
+        self.assertEqual((card['title'], card['order'], card['library']), ('New Stand-up', 'newest', 'Stand-up · Popular'))
+        m = lambda i, d: {'id': f'tmdb:{i}', 'type': 'movie', 'name': str(i), 'released': d}
+        parts = {'popular': [m(1, '2019-01-01'), m(2, '2025-05-01')], 'new': [m(3, '2026-10-01'), m(2, '2025-05-01')]}
+        with mock.patch.object(build, 'build_one', side_effect=lambda part, d: (parts[part['sort']], '')):
+            got = [x['name'] for x in build.build_union(card, {})[0]]
+            self.assertEqual(got, ['3', '2', '1'])
+            control = [x['name'] for x in build.build_union(dict(card, order=None), {})[0]]
+            self.assertNotEqual(control, got)           # control: without the order the union is in popularity order
+
 
 if __name__ == '__main__':
     unittest.main()

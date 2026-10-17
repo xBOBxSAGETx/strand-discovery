@@ -643,6 +643,8 @@ def placement(card):
             return (lambda m: _new_keys.get((card['slug'], m['type'], int(m['id'].split(':', 1)[1])))), True, 'arrival'
         return {'popular': (val('pop'), True), 'top': (val('vote'), True), 'votes': (val('votes'), True),
                 'new': (date_of, True), 'release_asc': (date_of, False)}[card['sort']] + (card['sort'],)
+    if kind == 'union' and card.get('order') == 'newest':      # issue #150: New Stand-up
+        return date_of, True, 'release date'
     if kind == 'union':                       # issue #143: a union card is in popularity order
         return val('pop'), True, 'popular'
     if kind == 'franchise':
@@ -1259,7 +1261,7 @@ def union_parts(card):
     """Issue #143: the discover cards a union card is made of (Popular, New, Top Rated), each exactly as it was before the
     union: the union's own media / movie / series / min_votes, overridden by the part's sort, votes, age, window, provider.
     A part keeps its old slug (Popular = the union's slug), so hand lists, corrections and first_seen keyed by it still apply."""
-    base = {k: v for k, v in card.items() if k not in ('parts', 'cap', 'kind', 'provider', 'folders', 'sort', 'min_votes')}
+    base = {k: v for k, v in card.items() if k not in ('parts', 'cap', 'kind', 'provider', 'folders', 'sort', 'min_votes', 'order')}
     return [{**base, 'kind': 'discover', 'folders': card['folders'], **p} for p in card['parts']]
 
 
@@ -1308,6 +1310,8 @@ def build_union(card, dflt):
         by_sort[part['sort']] = metas
         part_notes.append(f"{part['sort']} {len(metas)}" + (f' ({notes})' if notes else ''))
     metas, st = union_merge(by_sort, card.get('cap', UNION_CAP))
+    if card.get('order') == 'newest':                       # issue #150: New Stand-up = newest release first
+        metas = sorted(metas, key=lambda m: m.get('released') or m.get('releaseInfo') or '', reverse=True)
     return metas, (f"union of {' + '.join(part_notes)} -> {st['kept']}: all {st['new_kept']} New kept "
                    f"({st['popular_and_new']} also Popular), {st['cut_by_cap']} cut by the {card.get('cap', UNION_CAP)} cap")
 

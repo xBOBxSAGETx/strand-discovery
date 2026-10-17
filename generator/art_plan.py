@@ -4,6 +4,7 @@
 
 Background rules (per-slug overrides and the avoid list in art_overrides.json win):
   people          -> TMDB profile photo (poster)
+  comedians       -> the backdrop of their best-known special, else their photo (wide, the Stand-up row; #150)
   franchise       -> first collection's backdrop
   awards lists    -> the list's #1 (newest winner)
   Top Rated cards -> the card's own #1 (classics after the 180-day rule)
@@ -61,6 +62,10 @@ def pool(c, dflt):
         c = build.union_parts(c)[0]
     if c['kind'] in ('mdblist', 'idlist'):
         return build.build_one(c, dflt)[0][:LOOKAHEAD]
+    if c['kind'] == 'comedian':                 # issue #150: their specials, best-known (most votes) first
+        cast = build.tmdb(f"/person/{c['person_id']}/combined_credits").get('cast', [])
+        return [build.preview(x, 'movie')
+                for x in sorted(build.specials_of(cast, c['title']), key=lambda x: -(x.get('vote_count') or 0))]
     if c['kind'] != 'discover':
         return []
     movies_only = COMBINED_TV_GENRES & set(str(c.get('series', {}).get('with_genres', '')).split('|'))
@@ -144,7 +149,8 @@ def main():
                     info = details(m)
                     if not info['backdrop']:
                         continue
-                    if not doc_card and DOCUMENTARY in info['genres']:
+                    # TMDB tags many stand-up specials Documentary too: a comedian's own special is never skipped for it
+                    if not doc_card and c['kind'] != 'comedian' and DOCUMENTARY in info['genres']:
                         skipped['documentary'] += 1
                         continue
                     if doc_card and TASTE_KEYWORDS & set(info['keywords']):
@@ -158,6 +164,8 @@ def main():
                 if pick:
                     used.add(pick[1])
                     card['bg'] = {'kind': 'path', 'path': pick[1], 'from': f"{pick[0]['name']} ({pick[0]['id']})"}
+                elif c['kind'] == 'comedian':           # no special with a backdrop (Mitch Hedberg): their own photo
+                    card['bg'] = {'kind': 'person', 'id': c['person_id']}
                 else:
                     problems.append(f"{c['slug']}: no acceptable unused backdrop among {len(cands)} candidates")
             p = c.get('movie', {}) if c['kind'] == 'discover' else {}

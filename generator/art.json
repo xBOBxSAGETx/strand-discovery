@@ -2871,11 +2871,1176 @@
    "slug": "standup",
    "shape": "wide",
    "eyebrow": "Stand-up",
-   "title": "Stand-up",
+   "title": "New Stand-up",
    "bg": {
     "kind": "path",
     "path": "/9sfVyE3sP2dkCwDyV7UlYP5TAAR.jpg",
     "from": "Bo Burnham: Inside (tmdb:823754)"
+   }
+  },
+  {
+   "slug": "comic-dave-chappelle",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Dave Chappelle",
+   "bg": {
+    "kind": "path",
+    "path": "/qs4YtPoCTLiv9V2w8oaAOAliF6W.jpg",
+    "from": "Dave Chappelle: Sticks & Stones (tmdb:624932)"
+   }
+  },
+  {
+   "slug": "comic-louis-ck",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Louis C.K.",
+   "bg": {
+    "kind": "path",
+    "path": "/pm5YOQhaNaJILOLfcEVxRBNxGVX.jpg",
+    "from": "Louis C.K.: Hilarious (tmdb:45523)"
+   }
+  },
+  {
+   "slug": "comic-ricky-gervais",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Ricky Gervais",
+   "bg": {
+    "kind": "path",
+    "path": "/5afNyKD5VALvRXhO4bJPS2NY4eY.jpg",
+    "from": "Ricky Gervais: Humanity (tmdb:508933)"
+   }
+  },
+  {
+   "slug": "comic-kevin-hart",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Kevin Hart",
+   "bg": {
+    "kind": "path",
+    "path": "/d4pIsjOiPz8CUhkBCXFJVxSwNDY.jpg",
+    "from": "Kevin Hart: What Now? (tmdb:339927)"
+   }
+  },
+  {
+   "slug": "comic-bo-burnham",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Bo Burnham",
+   "bg": {
+    "kind": "path",
+    "path": "/nicDo6SnBxK93ROGAhpKTOAhy2i.jpg",
+    "from": "Bo Burnham: Make Happy (tmdb:400608)"
+   }
+  },
+  {
+   "slug": "comic-bill-burr",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Bill Burr",
+   "bg": {
+    "kind": "path",
+    "path": "/kh7DTqP9z2kZjRLLcuexY9toANH.jpg",
+    "from": "Bill Burr: Paper Tiger (tmdb:625128)"
+   }
+  },
+  {
+   "slug": "comic-george-carlin",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "George Carlin",
+   "bg": {
+    "kind": "path",
+    "path": "/629NplPGq1rYIFu6YhR6ri9jxEr.jpg",
+    "from": "George Carlin: It's Bad for Ya! (tmdb:13643)"
+   }
+  },
+  {
+   "slug": "comic-jim-jefferies",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jim Jefferies",
+   "bg": {
+    "kind": "path",
+    "path": "/rPVBATVM1ChcIBZmGpQRq4rkEbt.jpg",
+    "from": "Jim Jefferies: Bare (tmdb:289333)"
+   }
+  },
+  {
+   "slug": "comic-john-mulaney",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "John Mulaney",
+   "bg": {
+    "kind": "path",
+    "path": "/8iTGzNjDAFsn2zZr6sdJ79GLp5K.jpg",
+    "from": "John Mulaney: The Comeback Kid (tmdb:367735)"
+   }
+  },
+  {
+   "slug": "comic-chris-rock",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Chris Rock",
+   "bg": {
+    "kind": "path",
+    "path": "/5lSF2ZlhzX5LEPUvAwCe6Hbv9Nh.jpg",
+    "from": "Chris Rock: Tamborine (tmdb:505159)"
+   }
+  },
+  {
+   "slug": "comic-bill-maher",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Bill Maher",
+   "bg": {
+    "kind": "path",
+    "path": "/lsTgf0YfoBUUAwm79xDVEpsq3tQ.jpg",
+    "from": "Religulous (tmdb:13007)"
+   }
+  },
+  {
+   "slug": "comic-jimmy-carr",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jimmy Carr",
+   "bg": {
+    "kind": "path",
+    "path": "/dGBeIHyKPBFucdxdOJt1kHRjfQg.jpg",
+    "from": "Jimmy Carr: His Dark Material (tmdb:904263)"
+   }
+  },
+  {
+   "slug": "comic-eddie-murphy",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Eddie Murphy",
+   "bg": {
+    "kind": "path",
+    "path": "/zAP5PZVtSIOZwweMaHmNKHJ3xTF.jpg",
+    "from": "Eddie Murphy Raw (tmdb:17159)"
+   }
+  },
+  {
+   "slug": "comic-jeff-dunham",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jeff Dunham",
+   "bg": {
+    "kind": "path",
+    "path": "/hfTW2KG7KVZqNdIhHLF1RvNdSyk.jpg",
+    "from": "Jeff Dunham: Arguing with Myself (tmdb:14542)"
+   }
+  },
+  {
+   "slug": "comic-jim-gaffigan",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jim Gaffigan",
+   "bg": {
+    "kind": "path",
+    "path": "/fHopIX4xn4CVRny0eZHoGJiflTY.jpg",
+    "from": "Jim Gaffigan: Beyond the Pale (tmdb:108930)"
+   }
+  },
+  {
+   "slug": "comic-trevor-noah",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Trevor Noah",
+   "bg": {
+    "kind": "path",
+    "path": "/vgb50CODlk4DQ6kh63H0YBAHGUp.jpg",
+    "from": "Trevor Noah: Afraid of the Dark (tmdb:440767)"
+   }
+  },
+  {
+   "slug": "comic-gabriel-iglesias",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Gabriel Iglesias",
+   "bg": {
+    "kind": "path",
+    "path": "/kDp6yX9gfkHCYkfxkuIvliR1FYn.jpg",
+    "from": "The Fluffy Movie (tmdb:256273)"
+   }
+  },
+  {
+   "slug": "comic-jerry-seinfeld",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jerry Seinfeld",
+   "bg": {
+    "kind": "path",
+    "path": "/gHUDHuwEOnHrMihVB0oW8TCnBGF.jpg",
+    "from": "Jerry Before Seinfeld (tmdb:473812)"
+   }
+  },
+  {
+   "slug": "comic-aziz-ansari",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Aziz Ansari",
+   "bg": {
+    "kind": "path",
+    "path": "/19LIk4lJUeJteYzMLbpvyWzKnF9.jpg",
+    "from": "Aziz Ansari: Buried Alive (tmdb:230158)"
+   }
+  },
+  {
+   "slug": "comic-hannah-gadsby",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Hannah Gadsby",
+   "bg": {
+    "kind": "path",
+    "path": "/n26DIR4qNozRawHix7HtTSATGGL.jpg",
+    "from": "Hannah Gadsby: Nanette (tmdb:529531)"
+   }
+  },
+  {
+   "slug": "comic-suzy-eddie-izzard",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Suzy Eddie Izzard",
+   "bg": {
+    "kind": "path",
+    "path": "/mcJyECd3u2gc7rU0cwNa2Iua7TH.jpg",
+    "from": "Eddie Izzard: Dress to Kill (tmdb:13589)"
+   }
+  },
+  {
+   "slug": "comic-patton-oswalt",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Patton Oswalt",
+   "bg": {
+    "kind": "path",
+    "path": "/kjH0Dw7vKt01Uhxthti3vlJS3oE.jpg",
+    "from": "Patton Oswalt: Annihilation (tmdb:479263)"
+   }
+  },
+  {
+   "slug": "comic-kevin-smith",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Kevin Smith",
+   "bg": {
+    "kind": "path",
+    "path": "/ceZvtFvuMrZaaQ7GSMO4iT1FAVM.jpg",
+    "from": "An Evening with Kevin Smith (tmdb:14348)"
+   }
+  },
+  {
+   "slug": "comic-tom-segura",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Tom Segura",
+   "bg": {
+    "kind": "path",
+    "path": "/52qdVLDc3QrxEFKi8of6wDRYY5k.jpg",
+    "from": "Tom Segura: Mostly Stories (tmdb:376482)"
+   }
+  },
+  {
+   "slug": "comic-richard-pryor",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Richard Pryor",
+   "bg": {
+    "kind": "path",
+    "path": "/79tVYfh4lRHb1Ql2Tc2lslJMloa.jpg",
+    "from": "Richard Pryor: Live in Concert (tmdb:22975)"
+   }
+  },
+  {
+   "slug": "comic-bill-hicks",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Bill Hicks",
+   "bg": {
+    "kind": "path",
+    "path": "/imtyiqjJtzpp5nXz3JmBV7MOLJx.jpg",
+    "from": "American: The Bill Hicks Story (tmdb:46105)"
+   }
+  },
+  {
+   "slug": "comic-anthony-jeselnik",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Anthony Jeselnik",
+   "bg": {
+    "kind": "path",
+    "path": "/lryNLNqF2tSUuGf1QCaUUM0dyyV.jpg",
+    "from": "Anthony Jeselnik: Thoughts and Prayers (tmdb:364089)"
+   }
+  },
+  {
+   "slug": "comic-mike-birbiglia",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Mike Birbiglia",
+   "bg": {
+    "kind": "path",
+    "path": "/zMoMgkmkLIgWIh3GklwJUo14Wae.jpg",
+    "from": "Mike Birbiglia: My Girlfriend's Boyfriend (tmdb:216652)"
+   }
+  },
+  {
+   "slug": "comic-russell-peters",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Russell Peters",
+   "bg": {
+    "kind": "path",
+    "path": "/hiYdaULVGCbTVO8qvdsYMVF0qyX.jpg",
+    "from": "Russell Peters: Notorious (tmdb:228009)"
+   }
+  },
+  {
+   "slug": "comic-robin-williams",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Robin Williams",
+   "bg": {
+    "kind": "path",
+    "path": "/mjkZdwctyi1uINESy3V5nFOIjpJ.jpg",
+    "from": "Robin Williams: Weapons of Self Destruction (tmdb:26621)"
+   }
+  },
+  {
+   "slug": "comic-joe-rogan",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Joe Rogan",
+   "bg": {
+    "kind": "path",
+    "path": "/1fdebTUzYC7Igj8ZJWqUF1LcJZR.jpg",
+    "from": "Joe Rogan: Triggered (tmdb:421854)"
+   }
+  },
+  {
+   "slug": "comic-katt-williams",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Katt Williams",
+   "bg": {
+    "kind": "path",
+    "path": "/vqV7XiqEd2fN5DzeO9Xf9iDlUgr.jpg",
+    "from": "Katt Williams: Great America (tmdb:497522)"
+   }
+  },
+  {
+   "slug": "comic-hasan-minhaj",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Hasan Minhaj",
+   "bg": {
+    "kind": "path",
+    "path": "/3de0T89Ag6JpK5FGVwn0FrOQPeS.jpg",
+    "from": "Hasan Minhaj: Homecoming King (tmdb:458310)"
+   }
+  },
+  {
+   "slug": "comic-jack-whitehall",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jack Whitehall",
+   "bg": {
+    "kind": "path",
+    "path": "/RtXjo7hZ8Jia89N1VwMXGexA0B.jpg",
+    "from": "Jack Whitehall: I'm Only Joking (tmdb:718866)"
+   }
+  },
+  {
+   "slug": "comic-marc-maron",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Marc Maron",
+   "bg": {
+    "kind": "path",
+    "path": "/dbtcz6YPoV96EDqy8iM3RtM4EMl.jpg",
+    "from": "Marc Maron: Too Real (tmdb:474155)"
+   }
+  },
+  {
+   "slug": "comic-bert-kreischer",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Bert Kreischer",
+   "bg": {
+    "kind": "path",
+    "path": "/mkPTyHMVSaBICc5pR2GMYEuLW0N.jpg",
+    "from": "Bert Kreischer: Hey Big Boy (tmdb:675267)"
+   }
+  },
+  {
+   "slug": "comic-adam-sandler",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Adam Sandler",
+   "bg": {
+    "kind": "path",
+    "path": "/ydcQjPLBPgUr59hGU144mZwPcT1.jpg",
+    "from": "Adam Sandler: 100% Fresh (tmdb:517596)"
+   }
+  },
+  {
+   "slug": "comic-pete-davidson",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Pete Davidson",
+   "bg": {
+    "kind": "path",
+    "path": "/pz5tO9nJ4rMCfg4ePcsT3AM8EMg.jpg",
+    "from": "Pete Davidson: Alive from New York (tmdb:673768)"
+   }
+  },
+  {
+   "slug": "comic-norm-macdonald",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Norm Macdonald",
+   "bg": {
+    "kind": "path",
+    "path": "/f97RKkeciQdQfwoUreC6KPFeow7.jpg",
+    "from": "Norm Macdonald: Hitler's Dog, Gossip & Trickery (tmdb:456193)"
+   }
+  },
+  {
+   "slug": "comic-nate-bargatze",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Nate Bargatze",
+   "bg": {
+    "kind": "path",
+    "path": "/naTD98mxfeU8piwt12huSv95koh.jpg",
+    "from": "Nate Bargatze: The Tennessee Kid (tmdb:590872)"
+   }
+  },
+  {
+   "slug": "comic-lewis-black",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Lewis Black",
+   "bg": {
+    "kind": "path",
+    "path": "/tWOrBxG3uGwH70mdsA2i17zb4Qp.jpg",
+    "from": "Lewis Black: Red, White & Screwed (tmdb:37406)"
+   }
+  },
+  {
+   "slug": "comic-demetri-martin",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Demetri Martin",
+   "bg": {
+    "kind": "path",
+    "path": "/nuu5M3tfTdngW5t9mGJOtIU0eRL.jpg",
+    "from": "Demetri Martin: Live (At the Time) (tmdb:354544)"
+   }
+  },
+  {
+   "slug": "comic-sebastian-maniscalco",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Sebastian Maniscalco",
+   "bg": {
+    "kind": "path",
+    "path": "/gTD7f44rpn42qRSAoGcm8JlUATn.jpg",
+    "from": "Sebastian Maniscalco: Stay Hungry (tmdb:567525)"
+   }
+  },
+  {
+   "slug": "comic-stewart-lee",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Stewart Lee",
+   "bg": {
+    "kind": "path",
+    "path": "/wxgq3i1PNKskaorEcRPFZ8cHv09.jpg",
+    "from": "Stewart Lee: If You Prefer a Milder Comedian, Please Ask for One (tmdb:47330)"
+   }
+  },
+  {
+   "slug": "comic-jo-koy",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jo Koy",
+   "bg": {
+    "kind": "path",
+    "path": "/psfrTGyAFEuMQMct1m3IqECJkyk.jpg",
+    "from": "Jo Koy: Live from Seattle (tmdb:449359)"
+   }
+  },
+  {
+   "slug": "comic-neal-brennan",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Neal Brennan",
+   "bg": {
+    "kind": "path",
+    "path": "/rfR8SqKyJlCiZURxzAVKb7RP1wc.jpg",
+    "from": "Neal Brennan: 3 Mics (tmdb:435351)"
+   }
+  },
+  {
+   "slug": "comic-bill-bailey",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Bill Bailey",
+   "bg": {
+    "kind": "path",
+    "path": "/lWQRCAIv76hQxSDcczWmRsBv1gj.jpg",
+    "from": "Bill Bailey: Part Troll (tmdb:13584)"
+   }
+  },
+  {
+   "slug": "comic-ronny-chieng",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Ronny Chieng",
+   "bg": {
+    "kind": "path",
+    "path": "/bfch1WCENMQY8jdoAgXn3bu8A3Z.jpg",
+    "from": "Ronny Chieng: Asian Comedian Destroys America! (tmdb:649802)"
+   }
+  },
+  {
+   "slug": "comic-michael-mcintyre",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Michael McIntyre",
+   "bg": {
+    "kind": "path",
+    "path": "/7VF9QgOSUoH3K51TTFVVz7nupTB.jpg",
+    "from": "Michael McIntyre: Hello Wembley (tmdb:25484)"
+   }
+  },
+  {
+   "slug": "comic-jeff-foxworthy",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jeff Foxworthy",
+   "bg": {
+    "kind": "path",
+    "path": "/pkFlwWtIwMkMaq9eZTZG0VeawKM.jpg",
+    "from": "Blue Collar Comedy Tour: The Movie (tmdb:23626)"
+   }
+  },
+  {
+   "slug": "comic-david-cross",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "David Cross",
+   "bg": {
+    "kind": "path",
+    "path": "/6onwD2yJA4wSMdKxvsv9GDNcShd.jpg",
+    "from": "David Cross: Let America Laugh (tmdb:32263)"
+   }
+  },
+  {
+   "slug": "comic-russell-brand",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Russell Brand",
+   "bg": {
+    "kind": "path",
+    "path": "/bHEtArWE6zCnlfEgXkSEWgXTm0v.jpg",
+    "from": "Russell Brand: Messiah Complex (tmdb:238185)"
+   }
+  },
+  {
+   "slug": "comic-billy-connolly",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Billy Connolly",
+   "bg": {
+    "kind": "path",
+    "path": "/nZjS19p6kgKqlaK8RqLn2D27tlE.jpg",
+    "from": "An Audience with Billy Connolly (tmdb:24492)"
+   }
+  },
+  {
+   "slug": "comic-vir-das",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Vir Das",
+   "bg": {
+    "kind": "path",
+    "path": "/oelgN0qz6OgurpKiLFn6yvmbTJI.jpg",
+    "from": "Vir Das: Abroad Understanding (tmdb:454361)"
+   }
+  },
+  {
+   "slug": "comic-michael-che",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Michael Che",
+   "bg": {
+    "kind": "path",
+    "path": "/fkSvOwrzsObycJ4qpa6vyfh6JSM.jpg",
+    "from": "Michael Che Matters (tmdb:425498)"
+   }
+  },
+  {
+   "slug": "comic-steve-martin",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Steve Martin",
+   "bg": {
+    "kind": "path",
+    "path": "/6vQUaq3OhUq3FWojTerVrAIejfv.jpg",
+    "from": "Steve Martin and Martin Short: An Evening You Will Forget for the Rest of Your Life (tmdb:525814)"
+   }
+  },
+  {
+   "slug": "comic-jim-norton",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jim Norton",
+   "bg": {
+    "kind": "path",
+    "path": "/wyQiHwOEQC2sE3d6L3kovpG7s8N.jpg",
+    "from": "Jim Norton: Mouthful of Shame (tmdb:446048)"
+   }
+  },
+  {
+   "slug": "comic-marlon-wayans",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Marlon Wayans",
+   "bg": {
+    "kind": "path",
+    "path": "/dTkPB8oenu0zUrcG8fUrtQLr3zB.jpg",
+    "from": "Marlon Wayans: Woke-ish (tmdb:507729)"
+   }
+  },
+  {
+   "slug": "comic-matt-rife",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Matt Rife",
+   "bg": {
+    "kind": "path",
+    "path": "/1lKwXYaZ9hxro6cIuuaOkqdaAdS.jpg",
+    "from": "Matt Rife: Natural Selection (tmdb:1195988)"
+   }
+  },
+  {
+   "slug": "comic-kevin-james",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Kevin James",
+   "bg": {
+    "kind": "path",
+    "path": "/voqlJdFNFUD8C4qEi3NHZQIhI4S.jpg",
+    "from": "Kevin James: Never Don't Give Up (tmdb:519804)"
+   }
+  },
+  {
+   "slug": "comic-craig-ferguson",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Craig Ferguson",
+   "bg": {
+    "kind": "path",
+    "path": "/ghBKDYFcDOOFu63AiJgh55xCbRx.jpg",
+    "from": "Craig Ferguson: Tickle Fight (tmdb:490928)"
+   }
+  },
+  {
+   "slug": "comic-seth-meyers",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Seth Meyers",
+   "bg": {
+    "kind": "path",
+    "path": "/5NTE4ZyckTSKLjEMxRClKcqe2yK.jpg",
+    "from": "Seth Meyers: Lobby Baby (tmdb:642203)"
+   }
+  },
+  {
+   "slug": "comic-bill-cosby",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Bill Cosby",
+   "bg": {
+    "kind": "path",
+    "path": "/92DAD8HDfsYu4mdSwkXb2rXprvs.jpg",
+    "from": "Bill Cosby: Himself (tmdb:20120)"
+   }
+  },
+  {
+   "slug": "comic-jeff-ross",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jeff Ross",
+   "bg": {
+    "kind": "path",
+    "path": "/62crxqR3QhxQlF8N6kKzdnjVPc8.jpg",
+    "from": "Jeff Ross Roasts Criminals: Live at Brazos County Jail (tmdb:343295)"
+   }
+  },
+  {
+   "slug": "comic-ron-white",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Ron White",
+   "bg": {
+    "kind": "path",
+    "path": "/xOpLS2b7DKxwuZ4savEf8gl20m9.jpg",
+    "from": "Ron White: If You Quit Listening, I'll Shut Up (tmdb:550302)"
+   }
+  },
+  {
+   "slug": "comic-denis-leary",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Denis Leary",
+   "bg": {
+    "kind": "path",
+    "path": "/qezg8pfBIRaziQZUvjRKu8aZhb6.jpg",
+    "from": "Denis Leary: No Cure for Cancer (tmdb:26797)"
+   }
+  },
+  {
+   "slug": "comic-dane-cook",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Dane Cook",
+   "bg": {
+    "kind": "path",
+    "path": "/2esCR9LdsbsMQaxLts3DFrwTwd7.jpg",
+    "from": "Dane Cook: Vicious Circle (tmdb:15501)"
+   }
+  },
+  {
+   "slug": "comic-ken-jeong",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Ken Jeong",
+   "bg": {
+    "kind": "path",
+    "path": "/rykdEy3pyQFpUSUU1R0o3kXKqVa.jpg",
+    "from": "Ken Jeong: You Complete Me, Ho (tmdb:573917)"
+   }
+  },
+  {
+   "slug": "comic-peter-kay",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Peter Kay",
+   "bg": {
+    "kind": "path",
+    "path": "/xgsRKjmhhoUjv6jSQVpn80Cugef.jpg",
+    "from": "Peter Kay: The Tour That Didn't Tour Tour (tmdb:78061)"
+   }
+  },
+  {
+   "slug": "comic-dara-o-briain",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Dara Ó Briain",
+   "bg": {
+    "kind": "path",
+    "path": "/s9WA5oxjDYXwVOlJkiL6QQe4C6v.jpg",
+    "from": "Dara Ó Briain: This Is the Show (tmdb:50065)"
+   }
+  },
+  {
+   "slug": "comic-patrice-oneal",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Patrice O'Neal",
+   "bg": {
+    "kind": "path",
+    "path": "/ydOjxCv9rrT6vIO9YzdwMUmb3dS.jpg",
+    "from": "Patrice O'Neal: Elephant in the Room (tmdb:57469)"
+   }
+  },
+  {
+   "slug": "comic-sam-kinison",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Sam Kinison",
+   "bg": {
+    "kind": "path",
+    "path": "/hZ9dZF9OdR6hHItUAKKmNrnsDc3.jpg",
+    "from": "Sam Kinison: Breaking the Rules (tmdb:44123)"
+   }
+  },
+  {
+   "slug": "comic-rodney-dangerfield",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Rodney Dangerfield",
+   "bg": {
+    "kind": "path",
+    "path": "/ozAceVxrFQLvxpC5IpodKssDP5N.jpg",
+    "from": "Rodney Dangerfield: Nothin' Goes Right (tmdb:157579)"
+   }
+  },
+  {
+   "slug": "comic-don-rickles",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Don Rickles",
+   "bg": {
+    "kind": "path",
+    "path": "/xRPrWB3v3c2HUyc7f0NYV6lNtia.jpg",
+    "from": "Mr. Warmth: The Don Rickles Project (tmdb:26765)"
+   }
+  },
+  {
+   "slug": "comic-mitch-hedberg",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Mitch Hedberg",
+   "bg": {
+    "kind": "person",
+    "id": 59255
+   }
+  },
+  {
+   "slug": "comic-bernie-mac",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Bernie Mac",
+   "bg": {
+    "kind": "path",
+    "path": "/mX2L2WZbK9V7uDTUTkUbLjbLNGp.jpg",
+    "from": "Bernie Mac: Live From St. Louis (tmdb:1105103)"
+   }
+  },
+  {
+   "slug": "comic-shane-gillis",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Shane Gillis",
+   "bg": {
+    "kind": "path",
+    "path": "/3CWyyENjl5DqcAWTHGdJNeYBEsZ.jpg",
+    "from": "Shane Gillis: Beautiful Dogs (tmdb:1169007)"
+   }
+  },
+  {
+   "slug": "comic-tony-hinchcliffe",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Tony Hinchcliffe",
+   "bg": {
+    "kind": "path",
+    "path": "/lGXtr3CirFSPzbcqQxUP2CPeTj4.jpg",
+    "from": "Kill Tony: Kill or Be Killed (tmdb:1453677)"
+   }
+  },
+  {
+   "slug": "comic-andrew-santino",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Andrew Santino",
+   "bg": {
+    "kind": "path",
+    "path": "/2ENIE4lJmiE69Sd6freplKHcSkx.jpg",
+    "from": "Cheeseburger (tmdb:1066717)"
+   }
+  },
+  {
+   "slug": "comic-andrew-schulz",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Andrew Schulz",
+   "bg": {
+    "kind": "path",
+    "path": "/yz5yu43vmRaROX4PdFvPFPcBx53.jpg",
+    "from": "Andrew Schulz: Infamous (tmdb:999283)"
+   }
+  },
+  {
+   "slug": "comic-james-acaster",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "James Acaster",
+   "bg": {
+    "kind": "path",
+    "path": "/wbB1pI8lZ8FkOeFZS0BhV2ztUmH.jpg",
+    "from": "James Acaster: Cold Lasagne Hate Myself 1999 (tmdb:763274)"
+   }
+  },
+  {
+   "slug": "comic-mark-normand",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Mark Normand",
+   "bg": {
+    "kind": "path",
+    "path": "/6iWi4IEi8sF5kkKRgsmNJHUBQxD.jpg",
+    "from": "Mark Normand: Soup to Nuts (tmdb:1156017)"
+   }
+  },
+  {
+   "slug": "comic-kumail-nanjiani",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Kumail Nanjiani",
+   "bg": {
+    "kind": "path",
+    "path": "/1wruGeuequY1PumBfEgCEifpGb5.jpg",
+    "from": "Kumail Nanjiani: Night Thoughts (tmdb:1529419)"
+   }
+  },
+  {
+   "slug": "comic-stavros-halkias",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Stavros Halkias",
+   "bg": {
+    "kind": "path",
+    "path": "/aZY17mncsi7zM8IcvucdxgnbM1C.jpg",
+    "from": "Stavros Halkias: Uncle Stav (tmdb:1664003)"
+   }
+  },
+  {
+   "slug": "comic-matteo-lane",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Matteo Lane",
+   "bg": {
+    "kind": "path",
+    "path": "/KSrGQNkTZUhTYiC75hC0ANYDy3.jpg",
+    "from": "Matteo Lane: Hair Plugs & Heartache (tmdb:1139144)"
+   }
+  },
+  {
+   "slug": "comic-ramy-youssef",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Ramy Youssef",
+   "bg": {
+    "kind": "path",
+    "path": "/ikYI8Gh5E6x4T7mjnHORjyGXzIA.jpg",
+    "from": "Ramy Youssef: Feelings (tmdb:612413)"
+   }
+  },
+  {
+   "slug": "comic-alex-edelman",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Alex Edelman",
+   "bg": {
+    "kind": "path",
+    "path": "/x7FvGNMA451hCIGTS23x98midnc.jpg",
+    "from": "Alex Edelman: Just for Us (tmdb:1255883)"
+   }
+  },
+  {
+   "slug": "comic-josh-johnson",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Josh Johnson",
+   "bg": {
+    "kind": "path",
+    "path": "/itfBdke18CbHvz7UkQHhi2hO9Q1.jpg",
+    "from": "Josh Johnson: Symphony (tmdb:1675032)"
+   }
+  },
+  {
+   "slug": "comic-deon-cole",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Deon Cole",
+   "bg": {
+    "kind": "path",
+    "path": "/njiP8iFfdawkY74XqhcaLDyiMXi.jpg",
+    "from": "Deon Cole: Cole Hearted (tmdb:638072)"
+   }
+  },
+  {
+   "slug": "comic-aaron-chen",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Aaron Chen",
+   "bg": {
+    "kind": "path",
+    "path": "/2GlpDWCq0iGEgbfrKv7deLAxpCa.jpg",
+    "from": "Aaron Chen: Funny Garden (tmdb:1660968)"
+   }
+  },
+  {
+   "slug": "comic-pete-holmes",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Pete Holmes",
+   "bg": {
+    "kind": "path",
+    "path": "/xqjEY0Os0guK68hFtaWvMJ1rFMS.jpg",
+    "from": "Pete Holmes: Faces and Sounds (tmdb:426488)"
+   }
+  },
+  {
+   "slug": "comic-ilana-glazer",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Ilana Glazer",
+   "bg": {
+    "kind": "path",
+    "path": "/9zmBhaOk15xpZNXO2RSfeZ4D2ZN.jpg",
+    "from": "Ilana Glazer: The Planet Is Burning (tmdb:660297)"
+   }
+  },
+  {
+   "slug": "comic-sam-morril",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Sam Morril",
+   "bg": {
+    "kind": "path",
+    "path": "/qAlnf6HmHXNvtivaAehMan1yujL.jpg",
+    "from": "Sam Morril: Same Time Tomorrow (tmdb:1019427)"
+   }
+  },
+  {
+   "slug": "comic-ralph-barbosa",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Ralph Barbosa",
+   "bg": {
+    "kind": "path",
+    "path": "/4O8bJnKKNDrX2USoH6uqEXjqRWZ.jpg",
+    "from": "Ralph Barbosa: Cowabunga (tmdb:1198879)"
+   }
+  },
+  {
+   "slug": "comic-sheng-wang",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Sheng Wang",
+   "bg": {
+    "kind": "path",
+    "path": "/91GiACE7u0I0ElSCia41jv2WaeC.jpg",
+    "from": "Sheng Wang: Sweet and Juicy (tmdb:1015999)"
+   }
+  },
+  {
+   "slug": "comic-phil-wang",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Phil Wang",
+   "bg": {
+    "kind": "path",
+    "path": "/wiUme298Lz3yGAmYhIxvgtj3Ue8.jpg",
+    "from": "Phil Wang: Philly Philly Wang Wang (tmdb:857563)"
+   }
+  },
+  {
+   "slug": "comic-chris-distefano",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Chris Distefano",
+   "bg": {
+    "kind": "path",
+    "path": "/yzLxmHfjPrNcsiIPgsGQEgkkbCw.jpg",
+    "from": "Chris Distefano: It's Just Unfortunate (tmdb:1422308)"
+   }
+  },
+  {
+   "slug": "comic-chris-fleming",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Chris Fleming",
+   "bg": {
+    "kind": "path",
+    "path": "/kRlYXEFORGxWlqfNPOrGvUqeDLw.jpg",
+    "from": "Chris Fleming: Live at The Palace (tmdb:1632879)"
+   }
+  },
+  {
+   "slug": "comic-nish-kumar",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Nish Kumar",
+   "bg": {
+    "kind": "path",
+    "path": "/6yxXVV5Y7sT4ritexhiVYqkYbEL.jpg",
+    "from": "Nish Kumar: Your Power, Your Control (tmdb:1168785)"
+   }
+  },
+  {
+   "slug": "comic-gianmarco-soresi",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Gianmarco Soresi",
+   "bg": {
+    "kind": "path",
+    "path": "/aO7MT32xbSxXwh2EyCWZT0U6Arh.jpg",
+    "from": "Gianmarco Soresi: Thief of Joy (tmdb:1547831)"
+   }
+  },
+  {
+   "slug": "comic-julio-torres",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Julio Torres",
+   "bg": {
+    "kind": "path",
+    "path": "/dqXW5kXQeok9AOaAu6WzBW1DkB5.jpg",
+    "from": "My Favorite Shapes by Julio Torres (tmdb:612392)"
+   }
+  },
+  {
+   "slug": "comic-mike-vecchione",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Mike Vecchione",
+   "bg": {
+    "kind": "path",
+    "path": "/usVLX27zYLwO8KfNQD8xkkiQ2bl.jpg",
+    "from": "Mike Vecchione: Low Income White (tmdb:1506262)"
+   }
+  },
+  {
+   "slug": "comic-jerrod-carmichael",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Jerrod Carmichael",
+   "bg": {
+    "kind": "path",
+    "path": "/dSoJ8tgH83cZeX4ngxXDqXGQpUj.jpg",
+    "from": "Jerrod Carmichael: Rothaniel (tmdb:952326)"
+   }
+  },
+  {
+   "slug": "comic-mo-gilligan",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Mo Gilligan",
+   "bg": {
+    "kind": "path",
+    "path": "/csxETIqD6L16azXlB2HKghcbufQ.jpg",
+    "from": "Mo Gilligan: Momentum (tmdb:635497)"
+   }
+  },
+  {
+   "slug": "comic-adam-pally",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Adam Pally",
+   "bg": {
+    "kind": "path",
+    "path": "/z2gQCawVjLwilspPWF3WTNqdyJx.jpg",
+    "from": "An Intimate Evening with Adam Pally (tmdb:1552027)"
+   }
+  },
+  {
+   "slug": "comic-brad-williams",
+   "shape": "wide",
+   "eyebrow": "Comedian",
+   "title": "Brad Williams",
+   "bg": {
+    "kind": "path",
+    "path": "/sxQnSjF7OBVkvOJE0ySXZz1XDss.jpg",
+    "from": "Brad Williams: Fun Size (tmdb:399798)"
    }
   },
   {

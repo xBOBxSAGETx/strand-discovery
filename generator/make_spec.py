@@ -247,9 +247,10 @@ UNION_CAP = 2000
 PART_KEYS = ('slug', 'sort', 'min_votes', 'min_age_days', 'tv_air_window', 'provider', 'depth')
 
 
-def union_card(cards, folder, title=None):
+def union_card(cards, folder, title=None, order=None):
     """cards = the discover cards (Popular first, then New, then Top Rated) -> ONE union catalog under the Popular slug.
-    title: the card's own title when the Popular part's title names its variant (library name and id stay)."""
+    title: the card's own title when the Popular part's title names its variant (library name and id stay).
+    order: 'newest' = newest release first (#150 New Stand-up); default popularity."""
     base = cards[0]
     assert base['sort'] == 'popular'
     u = {k: base[k] for k in ('slug', 'library', 'title', 'eyebrow')}
@@ -262,6 +263,8 @@ def union_card(cards, folder, title=None):
     if any(c.get('provider') for c in cards):                  # the New part's service: arrival / first_seen order, watch triggers
         u['provider'] = next(c['provider'] for c in cards if c.get('provider'))
     u['parts'] = [{k: c[k] for k in PART_KEYS if k in c} for c in cards]
+    if order:
+        u['order'] = order
     return u
 
 
@@ -411,7 +414,7 @@ def main():
     cats.append(union_card([disc('standup' + ('' if v == 'popular' else f'-{v}'), f'Stand-up · {n}', f'Stand-up · {n}',
                                  {'popular': 'Stand-up', 'new': 'New · Stand-up'}[v], 'standup', ['movie', 'series'], v,
                                  movie=mp, series=sp, min_votes={'popular': 10, 'new': 3}[v])
-                           for v, n in VARIANTS[:2]], 'standup', title='Stand-up'))   # #147: one card, no "· Popular"
+                           for v, n in VARIANTS[:2]], 'standup', title='New Stand-up', order='newest'))   # #150: the row's first card, newest first
     # issue #149: one card per comedian after the Stand-up card, in comedians.json order (greats, then making a wave)
     for n, c in enumerate(json.loads((HERE / 'comedians.json').read_text(encoding='utf-8'))['comedians'], 1):
         cats.append({'slug': f"comic-{slugify(c['name'])}", 'library': f"Comedian · {c['name']}", 'title': c['name'],

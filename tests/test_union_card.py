@@ -114,7 +114,7 @@ class SpecShape(unittest.TestCase):
             if c['kind'] == 'union':
                 self.assertNotIn('·', c['title'], c['slug'])
                 self.assertEqual(art[c['slug']]['title'], c['title'], c['slug'])
-        self.assertEqual(next(c for c in SPEC['catalogs'] if c['slug'] == 'standup')['title'], 'Stand-up')
+        self.assertEqual(next(c for c in SPEC['catalogs'] if c['slug'] == 'standup')['title'], 'New Stand-up')   # #150
 
     def test_control_the_518_card_spec_fails_the_shape(self):
         """The spec before #143 had 518 cards and three Streaming folders: the shape test must be able to fail."""

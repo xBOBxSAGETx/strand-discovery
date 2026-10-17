@@ -2566,7 +2566,7 @@
   "title_px": 104,
   "title_lines": 1,
   "safe_area": "ok",
-  "bytes": 70549,
+  "bytes": 74441,
   "fails": []
  },
  {
@@ -5735,6 +5735,1066 @@
   "title_px": 72,
   "title_lines": 2,
   "bytes": 60654,
+  "fails": []
+ },
+ {
+  "slug": "comic-dave-chappelle",
+  "shape": "wide",
+  "bg": "Dave Chappelle: Sticks & Stones (tmdb:624932)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 67535,
+  "fails": []
+ },
+ {
+  "slug": "comic-louis-ck",
+  "shape": "wide",
+  "bg": "Louis C.K.: Hilarious (tmdb:45523)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 55173,
+  "fails": []
+ },
+ {
+  "slug": "comic-ricky-gervais",
+  "shape": "wide",
+  "bg": "Ricky Gervais: Humanity (tmdb:508933)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 56672,
+  "fails": []
+ },
+ {
+  "slug": "comic-kevin-hart",
+  "shape": "wide",
+  "bg": "Kevin Hart: What Now? (tmdb:339927)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 55345,
+  "fails": []
+ },
+ {
+  "slug": "comic-bo-burnham",
+  "shape": "wide",
+  "bg": "Bo Burnham: Make Happy (tmdb:400608)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 117231,
+  "fails": []
+ },
+ {
+  "slug": "comic-bill-burr",
+  "shape": "wide",
+  "bg": "Bill Burr: Paper Tiger (tmdb:625128)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 33719,
+  "fails": []
+ },
+ {
+  "slug": "comic-george-carlin",
+  "shape": "wide",
+  "bg": "George Carlin: It's Bad for Ya! (tmdb:13643)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 129129,
+  "fails": []
+ },
+ {
+  "slug": "comic-jim-jefferies",
+  "shape": "wide",
+  "bg": "Jim Jefferies: Bare (tmdb:289333)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 77003,
+  "fails": []
+ },
+ {
+  "slug": "comic-john-mulaney",
+  "shape": "wide",
+  "bg": "John Mulaney: The Comeback Kid (tmdb:367735)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 50717,
+  "fails": []
+ },
+ {
+  "slug": "comic-chris-rock",
+  "shape": "wide",
+  "bg": "Chris Rock: Tamborine (tmdb:505159)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 69823,
+  "fails": []
+ },
+ {
+  "slug": "comic-bill-maher",
+  "shape": "wide",
+  "bg": "Religulous (tmdb:13007)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 81078,
+  "fails": []
+ },
+ {
+  "slug": "comic-jimmy-carr",
+  "shape": "wide",
+  "bg": "Jimmy Carr: His Dark Material (tmdb:904263)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 65978,
+  "fails": []
+ },
+ {
+  "slug": "comic-eddie-murphy",
+  "shape": "wide",
+  "bg": "Eddie Murphy Raw (tmdb:17159)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 62948,
+  "fails": []
+ },
+ {
+  "slug": "comic-jeff-dunham",
+  "shape": "wide",
+  "bg": "Jeff Dunham: Arguing with Myself (tmdb:14542)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 68757,
+  "fails": []
+ },
+ {
+  "slug": "comic-jim-gaffigan",
+  "shape": "wide",
+  "bg": "Jim Gaffigan: Beyond the Pale (tmdb:108930)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 44079,
+  "fails": []
+ },
+ {
+  "slug": "comic-trevor-noah",
+  "shape": "wide",
+  "bg": "Trevor Noah: Afraid of the Dark (tmdb:440767)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 60705,
+  "fails": []
+ },
+ {
+  "slug": "comic-gabriel-iglesias",
+  "shape": "wide",
+  "bg": "The Fluffy Movie (tmdb:256273)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 85994,
+  "fails": []
+ },
+ {
+  "slug": "comic-jerry-seinfeld",
+  "shape": "wide",
+  "bg": "Jerry Before Seinfeld (tmdb:473812)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 117743,
+  "fails": []
+ },
+ {
+  "slug": "comic-aziz-ansari",
+  "shape": "wide",
+  "bg": "Aziz Ansari: Buried Alive (tmdb:230158)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 40779,
+  "fails": []
+ },
+ {
+  "slug": "comic-hannah-gadsby",
+  "shape": "wide",
+  "bg": "Hannah Gadsby: Nanette (tmdb:529531)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 47773,
+  "fails": []
+ },
+ {
+  "slug": "comic-suzy-eddie-izzard",
+  "shape": "wide",
+  "bg": "Eddie Izzard: Dress to Kill (tmdb:13589)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 65238,
+  "fails": []
+ },
+ {
+  "slug": "comic-patton-oswalt",
+  "shape": "wide",
+  "bg": "Patton Oswalt: Annihilation (tmdb:479263)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 56593,
+  "fails": []
+ },
+ {
+  "slug": "comic-kevin-smith",
+  "shape": "wide",
+  "bg": "An Evening with Kevin Smith (tmdb:14348)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 48588,
+  "fails": []
+ },
+ {
+  "slug": "comic-tom-segura",
+  "shape": "wide",
+  "bg": "Tom Segura: Mostly Stories (tmdb:376482)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 72311,
+  "fails": []
+ },
+ {
+  "slug": "comic-richard-pryor",
+  "shape": "wide",
+  "bg": "Richard Pryor: Live in Concert (tmdb:22975)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 48311,
+  "fails": []
+ },
+ {
+  "slug": "comic-bill-hicks",
+  "shape": "wide",
+  "bg": "American: The Bill Hicks Story (tmdb:46105)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 55308,
+  "fails": []
+ },
+ {
+  "slug": "comic-anthony-jeselnik",
+  "shape": "wide",
+  "bg": "Anthony Jeselnik: Thoughts and Prayers (tmdb:364089)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 94572,
+  "fails": []
+ },
+ {
+  "slug": "comic-mike-birbiglia",
+  "shape": "wide",
+  "bg": "Mike Birbiglia: My Girlfriend's Boyfriend (tmdb:216652)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 58241,
+  "fails": []
+ },
+ {
+  "slug": "comic-russell-peters",
+  "shape": "wide",
+  "bg": "Russell Peters: Notorious (tmdb:228009)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 82794,
+  "fails": []
+ },
+ {
+  "slug": "comic-robin-williams",
+  "shape": "wide",
+  "bg": "Robin Williams: Weapons of Self Destruction (tmdb:26621)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 67597,
+  "fails": []
+ },
+ {
+  "slug": "comic-joe-rogan",
+  "shape": "wide",
+  "bg": "Joe Rogan: Triggered (tmdb:421854)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 113577,
+  "fails": []
+ },
+ {
+  "slug": "comic-katt-williams",
+  "shape": "wide",
+  "bg": "Katt Williams: Great America (tmdb:497522)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 86606,
+  "fails": []
+ },
+ {
+  "slug": "comic-hasan-minhaj",
+  "shape": "wide",
+  "bg": "Hasan Minhaj: Homecoming King (tmdb:458310)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 79053,
+  "fails": []
+ },
+ {
+  "slug": "comic-jack-whitehall",
+  "shape": "wide",
+  "bg": "Jack Whitehall: I'm Only Joking (tmdb:718866)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 78786,
+  "fails": []
+ },
+ {
+  "slug": "comic-marc-maron",
+  "shape": "wide",
+  "bg": "Marc Maron: Too Real (tmdb:474155)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 98665,
+  "fails": []
+ },
+ {
+  "slug": "comic-bert-kreischer",
+  "shape": "wide",
+  "bg": "Bert Kreischer: Hey Big Boy (tmdb:675267)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 105841,
+  "fails": []
+ },
+ {
+  "slug": "comic-adam-sandler",
+  "shape": "wide",
+  "bg": "Adam Sandler: 100% Fresh (tmdb:517596)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 126508,
+  "fails": []
+ },
+ {
+  "slug": "comic-pete-davidson",
+  "shape": "wide",
+  "bg": "Pete Davidson: Alive from New York (tmdb:673768)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 54353,
+  "fails": []
+ },
+ {
+  "slug": "comic-norm-macdonald",
+  "shape": "wide",
+  "bg": "Norm Macdonald: Hitler's Dog, Gossip & Trickery (tmdb:456193)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 91361,
+  "fails": []
+ },
+ {
+  "slug": "comic-nate-bargatze",
+  "shape": "wide",
+  "bg": "Nate Bargatze: The Tennessee Kid (tmdb:590872)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 58687,
+  "fails": []
+ },
+ {
+  "slug": "comic-lewis-black",
+  "shape": "wide",
+  "bg": "Lewis Black: Red, White & Screwed (tmdb:37406)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 67649,
+  "fails": []
+ },
+ {
+  "slug": "comic-demetri-martin",
+  "shape": "wide",
+  "bg": "Demetri Martin: Live (At the Time) (tmdb:354544)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 71542,
+  "fails": []
+ },
+ {
+  "slug": "comic-sebastian-maniscalco",
+  "shape": "wide",
+  "bg": "Sebastian Maniscalco: Stay Hungry (tmdb:567525)",
+  "title_px": 104,
+  "title_lines": 2,
+  "safe_area": "ok",
+  "bytes": 131764,
+  "fails": []
+ },
+ {
+  "slug": "comic-stewart-lee",
+  "shape": "wide",
+  "bg": "Stewart Lee: If You Prefer a Milder Comedian, Please Ask for One (tmdb:47330)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 54319,
+  "fails": []
+ },
+ {
+  "slug": "comic-jo-koy",
+  "shape": "wide",
+  "bg": "Jo Koy: Live from Seattle (tmdb:449359)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 64908,
+  "fails": []
+ },
+ {
+  "slug": "comic-neal-brennan",
+  "shape": "wide",
+  "bg": "Neal Brennan: 3 Mics (tmdb:435351)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 83201,
+  "fails": []
+ },
+ {
+  "slug": "comic-bill-bailey",
+  "shape": "wide",
+  "bg": "Bill Bailey: Part Troll (tmdb:13584)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 66259,
+  "fails": []
+ },
+ {
+  "slug": "comic-ronny-chieng",
+  "shape": "wide",
+  "bg": "Ronny Chieng: Asian Comedian Destroys America! (tmdb:649802)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 73657,
+  "fails": []
+ },
+ {
+  "slug": "comic-michael-mcintyre",
+  "shape": "wide",
+  "bg": "Michael McIntyre: Hello Wembley (tmdb:25484)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 63176,
+  "fails": []
+ },
+ {
+  "slug": "comic-jeff-foxworthy",
+  "shape": "wide",
+  "bg": "Blue Collar Comedy Tour: The Movie (tmdb:23626)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 108988,
+  "fails": []
+ },
+ {
+  "slug": "comic-david-cross",
+  "shape": "wide",
+  "bg": "David Cross: Let America Laugh (tmdb:32263)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 58565,
+  "fails": []
+ },
+ {
+  "slug": "comic-russell-brand",
+  "shape": "wide",
+  "bg": "Russell Brand: Messiah Complex (tmdb:238185)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 131432,
+  "fails": []
+ },
+ {
+  "slug": "comic-billy-connolly",
+  "shape": "wide",
+  "bg": "An Audience with Billy Connolly (tmdb:24492)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 124440,
+  "fails": []
+ },
+ {
+  "slug": "comic-vir-das",
+  "shape": "wide",
+  "bg": "Vir Das: Abroad Understanding (tmdb:454361)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 91464,
+  "fails": []
+ },
+ {
+  "slug": "comic-michael-che",
+  "shape": "wide",
+  "bg": "Michael Che Matters (tmdb:425498)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 140312,
+  "fails": []
+ },
+ {
+  "slug": "comic-steve-martin",
+  "shape": "wide",
+  "bg": "Steve Martin and Martin Short: An Evening You Will Forget for the Rest of Your Life (tmdb:525814)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 87576,
+  "fails": []
+ },
+ {
+  "slug": "comic-jim-norton",
+  "shape": "wide",
+  "bg": "Jim Norton: Mouthful of Shame (tmdb:446048)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 45819,
+  "fails": []
+ },
+ {
+  "slug": "comic-marlon-wayans",
+  "shape": "wide",
+  "bg": "Marlon Wayans: Woke-ish (tmdb:507729)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 68351,
+  "fails": []
+ },
+ {
+  "slug": "comic-matt-rife",
+  "shape": "wide",
+  "bg": "Matt Rife: Natural Selection (tmdb:1195988)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 59784,
+  "fails": []
+ },
+ {
+  "slug": "comic-kevin-james",
+  "shape": "wide",
+  "bg": "Kevin James: Never Don't Give Up (tmdb:519804)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 83233,
+  "fails": []
+ },
+ {
+  "slug": "comic-craig-ferguson",
+  "shape": "wide",
+  "bg": "Craig Ferguson: Tickle Fight (tmdb:490928)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 89720,
+  "fails": []
+ },
+ {
+  "slug": "comic-seth-meyers",
+  "shape": "wide",
+  "bg": "Seth Meyers: Lobby Baby (tmdb:642203)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 67926,
+  "fails": []
+ },
+ {
+  "slug": "comic-bill-cosby",
+  "shape": "wide",
+  "bg": "Bill Cosby: Himself (tmdb:20120)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 69716,
+  "fails": []
+ },
+ {
+  "slug": "comic-jeff-ross",
+  "shape": "wide",
+  "bg": "Jeff Ross Roasts Criminals: Live at Brazos County Jail (tmdb:343295)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 58552,
+  "fails": []
+ },
+ {
+  "slug": "comic-ron-white",
+  "shape": "wide",
+  "bg": "Ron White: If You Quit Listening, I'll Shut Up (tmdb:550302)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 85863,
+  "fails": []
+ },
+ {
+  "slug": "comic-denis-leary",
+  "shape": "wide",
+  "bg": "Denis Leary: No Cure for Cancer (tmdb:26797)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 89993,
+  "fails": []
+ },
+ {
+  "slug": "comic-dane-cook",
+  "shape": "wide",
+  "bg": "Dane Cook: Vicious Circle (tmdb:15501)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 142809,
+  "fails": []
+ },
+ {
+  "slug": "comic-ken-jeong",
+  "shape": "wide",
+  "bg": "Ken Jeong: You Complete Me, Ho (tmdb:573917)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 60891,
+  "fails": []
+ },
+ {
+  "slug": "comic-peter-kay",
+  "shape": "wide",
+  "bg": "Peter Kay: The Tour That Didn't Tour Tour (tmdb:78061)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 73302,
+  "fails": []
+ },
+ {
+  "slug": "comic-dara-o-briain",
+  "shape": "wide",
+  "bg": "Dara Ó Briain: This Is the Show (tmdb:50065)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 40754,
+  "fails": []
+ },
+ {
+  "slug": "comic-patrice-oneal",
+  "shape": "wide",
+  "bg": "Patrice O'Neal: Elephant in the Room (tmdb:57469)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 102857,
+  "fails": []
+ },
+ {
+  "slug": "comic-sam-kinison",
+  "shape": "wide",
+  "bg": "Sam Kinison: Breaking the Rules (tmdb:44123)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 77248,
+  "fails": []
+ },
+ {
+  "slug": "comic-rodney-dangerfield",
+  "shape": "wide",
+  "bg": "Rodney Dangerfield: Nothin' Goes Right (tmdb:157579)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 54532,
+  "fails": []
+ },
+ {
+  "slug": "comic-don-rickles",
+  "shape": "wide",
+  "bg": "Mr. Warmth: The Don Rickles Project (tmdb:26765)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 56468,
+  "fails": []
+ },
+ {
+  "slug": "comic-mitch-hedberg",
+  "shape": "wide",
+  "bg": "/1Urrrx1TOCF8Q2mu5lcQcQoyDRt.jpg",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 73325,
+  "fails": []
+ },
+ {
+  "slug": "comic-bernie-mac",
+  "shape": "wide",
+  "bg": "Bernie Mac: Live From St. Louis (tmdb:1105103)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 56178,
+  "fails": []
+ },
+ {
+  "slug": "comic-shane-gillis",
+  "shape": "wide",
+  "bg": "Shane Gillis: Beautiful Dogs (tmdb:1169007)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 59031,
+  "fails": []
+ },
+ {
+  "slug": "comic-tony-hinchcliffe",
+  "shape": "wide",
+  "bg": "Kill Tony: Kill or Be Killed (tmdb:1453677)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 109036,
+  "fails": []
+ },
+ {
+  "slug": "comic-andrew-santino",
+  "shape": "wide",
+  "bg": "Cheeseburger (tmdb:1066717)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 69411,
+  "fails": []
+ },
+ {
+  "slug": "comic-andrew-schulz",
+  "shape": "wide",
+  "bg": "Andrew Schulz: Infamous (tmdb:999283)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 146783,
+  "fails": []
+ },
+ {
+  "slug": "comic-james-acaster",
+  "shape": "wide",
+  "bg": "James Acaster: Cold Lasagne Hate Myself 1999 (tmdb:763274)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 45491,
+  "fails": []
+ },
+ {
+  "slug": "comic-mark-normand",
+  "shape": "wide",
+  "bg": "Mark Normand: Soup to Nuts (tmdb:1156017)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 71072,
+  "fails": []
+ },
+ {
+  "slug": "comic-kumail-nanjiani",
+  "shape": "wide",
+  "bg": "Kumail Nanjiani: Night Thoughts (tmdb:1529419)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 71715,
+  "fails": []
+ },
+ {
+  "slug": "comic-stavros-halkias",
+  "shape": "wide",
+  "bg": "Stavros Halkias: Uncle Stav (tmdb:1664003)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 85405,
+  "fails": []
+ },
+ {
+  "slug": "comic-matteo-lane",
+  "shape": "wide",
+  "bg": "Matteo Lane: Hair Plugs & Heartache (tmdb:1139144)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 85056,
+  "fails": []
+ },
+ {
+  "slug": "comic-ramy-youssef",
+  "shape": "wide",
+  "bg": "Ramy Youssef: Feelings (tmdb:612413)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 117628,
+  "fails": []
+ },
+ {
+  "slug": "comic-alex-edelman",
+  "shape": "wide",
+  "bg": "Alex Edelman: Just for Us (tmdb:1255883)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 63237,
+  "fails": []
+ },
+ {
+  "slug": "comic-josh-johnson",
+  "shape": "wide",
+  "bg": "Josh Johnson: Symphony (tmdb:1675032)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 94516,
+  "fails": []
+ },
+ {
+  "slug": "comic-deon-cole",
+  "shape": "wide",
+  "bg": "Deon Cole: Cole Hearted (tmdb:638072)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 106795,
+  "fails": []
+ },
+ {
+  "slug": "comic-aaron-chen",
+  "shape": "wide",
+  "bg": "Aaron Chen: Funny Garden (tmdb:1660968)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 54536,
+  "fails": []
+ },
+ {
+  "slug": "comic-pete-holmes",
+  "shape": "wide",
+  "bg": "Pete Holmes: Faces and Sounds (tmdb:426488)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 52035,
+  "fails": []
+ },
+ {
+  "slug": "comic-ilana-glazer",
+  "shape": "wide",
+  "bg": "Ilana Glazer: The Planet Is Burning (tmdb:660297)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 52496,
+  "fails": []
+ },
+ {
+  "slug": "comic-sam-morril",
+  "shape": "wide",
+  "bg": "Sam Morril: Same Time Tomorrow (tmdb:1019427)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 91885,
+  "fails": []
+ },
+ {
+  "slug": "comic-ralph-barbosa",
+  "shape": "wide",
+  "bg": "Ralph Barbosa: Cowabunga (tmdb:1198879)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 43481,
+  "fails": []
+ },
+ {
+  "slug": "comic-sheng-wang",
+  "shape": "wide",
+  "bg": "Sheng Wang: Sweet and Juicy (tmdb:1015999)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 50750,
+  "fails": []
+ },
+ {
+  "slug": "comic-phil-wang",
+  "shape": "wide",
+  "bg": "Phil Wang: Philly Philly Wang Wang (tmdb:857563)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 75117,
+  "fails": []
+ },
+ {
+  "slug": "comic-chris-distefano",
+  "shape": "wide",
+  "bg": "Chris Distefano: It's Just Unfortunate (tmdb:1422308)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 111753,
+  "fails": []
+ },
+ {
+  "slug": "comic-chris-fleming",
+  "shape": "wide",
+  "bg": "Chris Fleming: Live at The Palace (tmdb:1632879)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 89653,
+  "fails": []
+ },
+ {
+  "slug": "comic-nish-kumar",
+  "shape": "wide",
+  "bg": "Nish Kumar: Your Power, Your Control (tmdb:1168785)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 99693,
+  "fails": []
+ },
+ {
+  "slug": "comic-gianmarco-soresi",
+  "shape": "wide",
+  "bg": "Gianmarco Soresi: Thief of Joy (tmdb:1547831)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 58306,
+  "fails": []
+ },
+ {
+  "slug": "comic-julio-torres",
+  "shape": "wide",
+  "bg": "My Favorite Shapes by Julio Torres (tmdb:612392)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 58636,
+  "fails": []
+ },
+ {
+  "slug": "comic-mike-vecchione",
+  "shape": "wide",
+  "bg": "Mike Vecchione: Low Income White (tmdb:1506262)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 110008,
+  "fails": []
+ },
+ {
+  "slug": "comic-jerrod-carmichael",
+  "shape": "wide",
+  "bg": "Jerrod Carmichael: Rothaniel (tmdb:952326)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 66206,
+  "fails": []
+ },
+ {
+  "slug": "comic-mo-gilligan",
+  "shape": "wide",
+  "bg": "Mo Gilligan: Momentum (tmdb:635497)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 66713,
+  "fails": []
+ },
+ {
+  "slug": "comic-adam-pally",
+  "shape": "wide",
+  "bg": "An Intimate Evening with Adam Pally (tmdb:1552027)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 136269,
+  "fails": []
+ },
+ {
+  "slug": "comic-brad-williams",
+  "shape": "wide",
+  "bg": "Brad Williams: Fun Size (tmdb:399798)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 121206,
   "fails": []
  }
 ]
