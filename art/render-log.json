@@ -6796,5 +6796,35 @@
   "safe_area": "ok",
   "bytes": 121206,
   "fails": []
+ },
+ {
+  "slug": "comic-steve-harvey",
+  "shape": "wide",
+  "bg": "The Original Kings of Comedy (tmdb:23618)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 100215,
+  "fails": []
+ },
+ {
+  "slug": "comic-dan-soder",
+  "shape": "wide",
+  "bg": "Dan Soder: Son of a Gary (tmdb:654125)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 34262,
+  "fails": []
+ },
+ {
+  "slug": "comic-kevin-nealon",
+  "shape": "wide",
+  "bg": "Kevin Nealon: Loose in the Crotch (tmdb:1624209)",
+  "title_px": 104,
+  "title_lines": 1,
+  "safe_area": "ok",
+  "bytes": 56960,
+  "fails": []
  }
 ]

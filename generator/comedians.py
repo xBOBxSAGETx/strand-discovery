@@ -27,7 +27,7 @@ GREATS, WAVE, WAVE_SINCE, RECENT, NEWCOMER = 70, 30, '2023-01-01', '2023-01-01',
 LEGENDS = {3198: 'Rodney Dangerfield', 130281: 'Sam Kinison', 7167: 'Don Rickles',
            59255: 'Mitch Hedberg', 543256: "Patrice O'Neal", 1897: 'Bernie Mac'}
 CUT = {}          # tmdb id -> name: never a card (owner's cuts)
-SKIP_GENDER = {1}  # the owner's choice (AIO chat 2026-10-17 ~2:13 PM PT): TMDB person gender values left out
+SKIP_GENDER = {1, 3}  # the owner's choice (AIO chat 2026-10-17 ~2:13 PM PT and ~3:09 PM PT): TMDB person gender values left out
 ADD = {}          # tmdb id -> name: always a card, after the greats (owner's adds)
 
 
