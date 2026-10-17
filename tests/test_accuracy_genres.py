@@ -16,7 +16,8 @@ import build  # noqa: E402
 import accuracy_genres as ag  # noqa: E402
 
 TODAY = '2026-10-15'
-SPEC = json.loads((Path(build.HERE) / 'spec.json').read_text(encoding='utf-8'))
+# the full 606-card spec from before the #139 cut: the generator still supports every card type, and these tests cover them
+SPEC = json.loads((Path(__file__).resolve().parent / 'fixtures' / 'spec_before_cut.json').read_text(encoding='utf-8'))
 CARDS = {c['slug']: c for c in SPEC['catalogs']}
 
 
