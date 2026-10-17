@@ -229,7 +229,8 @@ def main():
                                   **({'poster': f"{build.IMG}/{build.POSTER_SIZE}{r['poster_path']}"} if r.get('poster_path') else {}),
                                   **({'releaseInfo': (r.get('release_date') or r.get('first_air_date'))[:4]}
                                      if (r.get('release_date') or r.get('first_air_date')) else {}),
-                                  **({'imdbRating': build.rating_str(r)} if build.rating_str(r) else {}),
+                                  **({'imdbRating': build.rating_str(r, 'movie' if k[0] == 'm' else 'series')}
+                                     if build.rating_str(r, 'movie' if k[0] == 'm' else 'series') else {}),
                                   **({'released': build.released_iso(r.get('release_date') or r.get('first_air_date'))}
                                      if build.released_iso(r.get('release_date') or r.get('first_air_date')) else {})}
                                  for k, r in fresh]

@@ -205,10 +205,19 @@ def released_iso(date):
     return f'{date[:10]}T00:00:00.000Z' if re.fullmatch(r'\d{4}-\d{2}-\d{2}', (date or '')[:10]) else None
 
 
-def rating_str(item):
-    """TMDB vote_average as the Stremio imdbRating string ("7.8"); None when nobody voted, so an unrated title has no
-    rating (the fork's imdbRatingOf reads a missing field as undefined) instead of sorting as 0. Issue #35."""
-    return f"{item['vote_average']:.1f}" if item.get('vote_count') and item.get('vote_average') else None
+# Issue #138: imdbRating only for titles with at least the vote floor of the streaming Top Rated cards (make_spec.py
+# VOTES['top'], spec min_votes movie 300 / series 150), so the fork's rating sort is not led by a 9.6 from a handful of votes.
+RATING_MIN_VOTES = {'movie': 300, 'series': 150}
+
+
+def rating_value(media, vote, votes):
+    """TMDB vote_average as the Stremio imdbRating string ("7.8"); None when the title has fewer votes than the Top Rated
+    floor (or none), so it has no rating (the fork's imdbRatingOf reads a missing field as undefined) and sorts last."""
+    return f"{vote:.1f}" if vote and (votes or 0) >= RATING_MIN_VOTES.get(media, 300) else None
+
+
+def rating_str(item, media):
+    return rating_value(media, item.get('vote_average'), item.get('vote_count'))
 
 
 def preview(item, media):
@@ -223,8 +232,8 @@ def preview(item, media):
         meta['releaseInfo'] = date[:4]
     if released_iso(date):
         meta['released'] = released_iso(date)
-    if rating_str(item):
-        meta['imdbRating'] = rating_str(item)
+    if rating_str(item, media):
+        meta['imdbRating'] = rating_str(item, media)
     # private: canonical genres for the genre pages, stripped before anything is written
     meta['_g'] = canon_genres(item.get('genre_ids') or [g['id'] for g in item.get('genres') or []])
     return meta
@@ -239,7 +248,7 @@ def rating_due(entry):
     """A cached preview needs a rating refetch when it never had one fetched ('v' = the fetch date, absent on old entries),
     or when it was released within the last 365 days and its rating is over 30 days old (a new title's score moves)."""
     v = entry.get('v')
-    if not isinstance(v, str):
+    if not isinstance(v, str) or 'vc' not in entry:      # 'vc' = the vote count at the fetch (#138); older entries are refetched
         return True
     day = lambda n: (dt.date.fromisoformat(TODAY) - dt.timedelta(days=n)).isoformat()
     return v < day(30) and (entry.get('d') or '') >= day(365)
@@ -258,24 +267,28 @@ def details_preview(media, tid):
         if old:
             seen = _keys.get((media, tid))
             if seen:                  # this run's TMDB row is current: it always wins over the cached rating
-                if seen['votes'] and seen['vote']:
-                    old['p']['imdbRating'] = f"{seen['vote']:.1f}"
+                r = rating_value(media, seen['vote'], seen['votes'])
+                if r:
+                    old['p']['imdbRating'] = r
                 else:
                     old['p'].pop('imdbRating', None)
-                old['v'] = TODAY
+                old['v'], old['vc'] = TODAY, seen['votes']
             elif not stale and _rating_backfill[0] < RATING_BACKFILL_MAX and rating_due(old):
                 _rating_backfill[0] += 1
                 stale = 'rating'
     if key not in _stable or stale:
         try:
             d = tmdb(f"/{'movie' if media == 'movie' else 'tv'}/{tid}")
-            _stable[key] = ({'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or '', 'v': TODAY}
+            _stable[key] = ({'p': preview(d, media), 'd': d.get('release_date') or d.get('first_air_date') or '', 'v': TODAY,
+                             'vc': d.get('vote_count') or 0}
                             if d.get('id') else None)
         except RuntimeError:          # a transient failure must not stick
             if not stale:
                 return None           # not cached: try again next run
             _stable[key] = old        # keep the pre-genre entry (no genre pages for it this run)
     hit = _stable[key]
+    if hit and 'vc' not in hit:           # vote count unknown (cached before #138, not refetched yet): no rating beats a low-vote one
+        hit['p'].pop('imdbRating', None)
     if hit and hit['d'] and 'released' not in hit['p'] and released_iso(hit['d']):
         hit['p']['released'] = released_iso(hit['d'])      # cached before #35: filled from the cached date, no refetch
     return hit['p'] if hit and hit['d'] and hit['d'] <= TODAY else None
