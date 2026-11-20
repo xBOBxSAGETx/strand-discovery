@@ -56,8 +56,15 @@ try {
             $limit = if ($f[0] -eq 'in_progress') { 15 } else { 20 }   # the job's own timeout is 10 min
             if ($age -gt $limit) {
                 # stale: cancel it so it stops blocking; a failed cancel throws -> ERROR, no dispatch this tick
-                Invoke-Gh run cancel $f[2] -R $Repo | Out-Null
-                Write-Log "cancelled stale $($f[0]) run $($f[2]) ($age min)"
+                try {
+                    Invoke-Gh run cancel $f[2] -R $Repo | Out-Null
+                    Write-Log "cancelled stale $($f[0]) run $($f[2]) ($age min)"
+                } catch {
+                    # GitHub can list a finished run as queued forever; cancel then answers HTTP 409 "completed". Not busy: skip it.
+                    if ($_.Exception.Message -match '(?i)cannot cancel a workflow run that is completed') {
+                        Write-Log "ghost $($f[0]) run $($f[2]) already completed; skipping cancel"
+                    } else { throw }   # any other cancel error stays fail-closed
+                }
             } else { $busy += $f[0] }
         }
         if ($busy.Count -gt 0) {
