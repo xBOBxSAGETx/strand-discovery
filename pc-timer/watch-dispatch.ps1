@@ -30,6 +30,7 @@ function Write-Log([string]$Msg) {
     Add-Content -Path $log -Value ('{0} {1}' -f (Get-Date).ToString('yyyy-MM-ddTHH:mm:sszzz'), $Msg)
 }
 
+# Any comma list passed to gh (e.g. --json a,b) MUST be quoted: PowerShell turns an unquoted a,b into an array = separate words.
 function Invoke-Gh {
     $global:LASTEXITCODE = 0
     $out = & $Gh @args 2>&1
@@ -44,7 +45,7 @@ try {
     if ($v -ne 'on') {
         $result = "off (SD_WATCH='$v'), nothing started"
     } else {
-        $rows = Invoke-Gh run list -w watch.yml -R $Repo -L 20 --json status,createdAt,databaseId `
+        $rows = Invoke-Gh run list -w watch.yml -R $Repo -L 20 --json 'status,createdAt,databaseId' `
             --jq '.[] | [.status, .createdAt, .databaseId] | @tsv'
         $busy = @()
         foreach ($line in @($rows | Out-String -Stream | ForEach-Object { $_.Trim() } | Where-Object { $_ })) {
