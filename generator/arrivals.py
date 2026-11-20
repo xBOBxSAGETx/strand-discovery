@@ -1123,6 +1123,10 @@ def _year(r):
 
 
 TMDB_ERROR_HOW = 'CHECK: TMDB error (not cached; retried next run)'
+NEG_HOW = 'CHECK: no TMDB result'
+NEG_RECHECK_DAYS = 14                                                    # a cached "no result" is asked again after this
+NEG_RECHECK_MAX = int(os.environ.get('SD_NEG_RECHECK_MAX', '300'))       # re-asks per run; the rest wait for the next run
+_neg_rechecks = [0]
 
 
 def resolve(row, present):
@@ -1133,10 +1137,27 @@ def resolve(row, present):
     it is a runaway abort, so the step fails before the state is written (the logger's fallback stays; health alerts)."""
     ver = 'arr3' if FRANCHISE.match(row['title']) else 'arr2'
     key = f"{ver}:{row.get('media')}|{norm(row['title'])}|{row.get('year')}|{row.get('season')}|{row['service']}"
+
+    def fresh():
+        v = list(_resolve(row, present))
+        return v + [dt.date.today().isoformat()] if v[6] == NEG_HOW else v    # a "no result" carries its date (8th)
+
+    old = build._stable.get(key)
     try:
-        return tuple(build.stable(key, lambda: list(_resolve(row, present))))
+        if old and old[6] == NEG_HOW and not _neg_fresh(old) and _neg_rechecks[0] < NEG_RECHECK_MAX:
+            _neg_rechecks[0] += 1
+            build._stable[key] = fresh()          # an error raises before this line: the old entry stays
+        return tuple(build.stable(key, fresh)[:7])
     except RuntimeError:
         return (False, row.get('media'), None, '', None, 0, TMDB_ERROR_HOW)
+
+
+def _neg_fresh(v):
+    """A cached "no TMDB result" is trusted only with an ISO date (8th element) under NEG_RECHECK_DAYS old."""
+    try:
+        return len(v) > 7 and (dt.date.today() - dt.date.fromisoformat(v[7])).days < NEG_RECHECK_DAYS
+    except (TypeError, ValueError):
+        return False
 
 
 def _search(media, query):
@@ -1187,7 +1208,7 @@ def _resolve(row, present):
             m, r, _ = best
             return (False, m, r['id'], r.get('title') or r.get('name'), _year(r), r.get('popularity') or 0,
                     'CHECK: no exact title' + (' within year' if y else ''))
-        return (False, row.get('media'), None, '', None, 0, 'CHECK: no TMDB result')
+        return (False, row.get('media'), None, '', None, 0, NEG_HOW)
     if len(exact) == 1:
         m, r = exact[0]
         return (True, m, r['id'], r.get('title') or r.get('name'), _year(r), r.get('popularity') or 0,
