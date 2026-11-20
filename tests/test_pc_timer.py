@@ -20,7 +20,7 @@ $gh = {
     [void]$words.Add(($args | ForEach-Object { '[' + $_ + ']' }) -join '')
     if ($args[0] -eq 'variable') { $WATCH }
     elseif ($args[0] -eq 'run' -and $args[1] -eq 'list') { $RUNS }
-    elseif ($args[0] -eq 'run' -and $args[1] -eq 'cancel') { if ($CANCELFAIL) { $global:LASTEXITCODE = 1; 'boom' } }
+    elseif ($args[0] -eq 'run' -and $args[1] -eq 'cancel') { if ($CANCELFAIL) { $global:LASTEXITCODE = 1; $CANCELMSG } }
 }
 '''
 
@@ -31,9 +31,9 @@ def row(status, minutes, rid=7):
     return '%s	%s	%s' % (status, t, rid)
 
 
-def run_script(watch, runs, cancel_fails=False):
+def run_script(watch, runs, cancel_fails=False, cancel_msg='boom'):
     log = tempfile.mkdtemp(prefix='sd-pc-timer-')
-    cmd = (STUB.replace('$WATCH', "'%s'" % watch).replace('$CANCELFAIL', '$true' if cancel_fails else '$false').replace('$RUNS', "@(%s)" % ','.join("'%s'" % r for r in runs))
+    cmd = (STUB.replace('$CANCELMSG', "'%s'" % cancel_msg).replace('$WATCH', "'%s'" % watch).replace('$CANCELFAIL', '$true' if cancel_fails else '$false').replace('$RUNS', "@(%s)" % ','.join("'%s'" % r for r in runs))
            + "\n& '%s' -Gh $gh -LogDir '%s' | Out-Host\n" % (SCRIPT, log)
            + "'CALLS:' + ($calls -join ' | ')\n"
            + "'WORDS:' + ($words -join ' | ')\n"
@@ -85,6 +85,15 @@ class PcTimer(unittest.TestCase):
         out = run_script('on', [row('queued', 30, 557)], cancel_fails=True)
         self.assertNotIn('workflow run', out, out)
         self.assertIn('ERROR', out)
+
+    def test_ghost_completed_queued_run_is_skipped_then_dispatched(self):
+        # GitHub keeps a ghost run listed as queued; cancel answers HTTP 409 "completed". Must not block the tick.
+        out = run_script('on', [row('queued', 30, 558)], cancel_fails=True,
+                         cancel_msg='HTTP 409: Cannot cancel a workflow run that is completed.')
+        self.assertIn('ghost queued run 558 already completed; skipping cancel', out)
+        self.assertIn('workflow run watch.yml', out)
+        self.assertIn('dispatched watch.yml', out)
+        self.assertNotIn('ERROR', out, out)
 
 
 if __name__ == '__main__':
