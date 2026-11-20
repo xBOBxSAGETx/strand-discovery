@@ -321,6 +321,16 @@ class DispatchTests(unittest.TestCase):
         os.environ['STUB_RUNS'] = json.dumps([{'status': 'completed'}])
         self.assertEqual(self.main('--dispatch')['dispatch'], 'sent')
 
+    def test_a_long_dead_build_of_main_does_not_hold_the_dispatch(self):
+        import datetime
+        ago = lambda m: (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=m)).strftime('%Y-%m-%dT%H:%M:%SZ')
+        self.flip_netflix()
+        os.environ['STUB_RUNS'] = json.dumps([{'status': 'queued', 'createdAt': ago(5), 'databaseId': 1}])
+        self.assertEqual(self.main('--dispatch')['dispatch'], 'held')          # 5 min old: a real build
+        os.environ['STUB_RUNS'] = json.dumps([{'status': 'queued', 'createdAt': ago(180), 'databaseId': 2}])
+        self.assertEqual(self.main('--dispatch')['dispatch'], 'sent')          # 3 hours old: dead
+        self.assertIn('ignoring stuck build 2', self.stdout)
+
     def test_too_many_cards_dispatches_a_full_build(self):
         watch.MAX_CARDS = 0
         self.tmdb.disc[('/discover/movie', '8')] = FLIPPED
