@@ -14,8 +14,10 @@ PS = shutil.which('pwsh') or shutil.which('powershell')
 # The stub gh records every call in $calls and answers the two reads the script makes.
 STUB = r'''
 $calls = New-Object System.Collections.ArrayList
+$words = New-Object System.Collections.ArrayList   # each argument in [brackets]: shows where words split
 $gh = {
     [void]$calls.Add(($args -join ' '))
+    [void]$words.Add(($args | ForEach-Object { '[' + $_ + ']' }) -join '')
     if ($args[0] -eq 'variable') { $WATCH }
     elseif ($args[0] -eq 'run' -and $args[1] -eq 'list') { $RUNS }
     elseif ($args[0] -eq 'run' -and $args[1] -eq 'cancel') { if ($CANCELFAIL) { $global:LASTEXITCODE = 1; 'boom' } }
@@ -34,6 +36,7 @@ def run_script(watch, runs, cancel_fails=False):
     cmd = (STUB.replace('$WATCH', "'%s'" % watch).replace('$CANCELFAIL', '$true' if cancel_fails else '$false').replace('$RUNS', "@(%s)" % ','.join("'%s'" % r for r in runs))
            + "\n& '%s' -Gh $gh -LogDir '%s' | Out-Host\n" % (SCRIPT, log)
            + "'CALLS:' + ($calls -join ' | ')\n"
+           + "'WORDS:' + ($words -join ' | ')\n"
            + "'LOG:' + (Get-Content (Join-Path '%s' 'watch.log') -Raw)\n" % log)
     p = subprocess.run([PS, '-NoProfile', '-NonInteractive', '-Command', cmd], capture_output=True, text=True, timeout=60)
     return p.stdout
@@ -51,6 +54,11 @@ class PcTimer(unittest.TestCase):
         out = run_script('on', [row('completed', 5), row('completed', 90)])
         self.assertIn('workflow run watch.yml -R xBOBxSAGETx/strand-discovery --ref main -f dry=false', out)
         self.assertIn('dispatched watch.yml', out)
+
+    def test_json_field_list_reaches_gh_as_one_word(self):
+        # PowerShell splits an unquoted `--json a,b,c` into three words; real gh then fails 'unknown command "createdAt"'
+        out = run_script('on', [row('completed', 5)])
+        self.assertIn('[--json][status,createdAt,databaseId]', out)   # unquoted it is [System.Object[]]: an array a real exe gets as 3 words
 
     def test_busy_run_skips(self):
         out = run_script('on', [row('in_progress', 3), row('completed', 90)])
