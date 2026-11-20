@@ -288,13 +288,28 @@ def dispatch_cmd(res):
     return None
 
 
+BUSY_MAX_MIN = 90
+
+
 def build_busy(run=subprocess.run):
-    """True while a build of main is queued or running (raises on a gh failure)."""
-    r = run(gh_cmd() + ['run', 'list', '--workflow', 'build.yml', '--branch', 'main', '--limit', '30', '--json', 'status'],
+    """True while a recent build of main is queued or running (raises on a gh failure)."""
+    r = run(gh_cmd() + ['run', 'list', '--workflow', 'build.yml', '--branch', 'main', '--limit', '30', '--json', 'status,createdAt,databaseId'],
             capture_output=True, text=True, timeout=120)
     if r.returncode:
         raise RuntimeError(f'gh run list failed (exit {r.returncode}): {r.stderr.strip()[:300]}')
-    return any(x.get('status') != 'completed' for x in json.loads(r.stdout or '[]'))
+    now = dt.datetime.now(dt.timezone.utc)
+    for x in json.loads(r.stdout or '[]'):
+        if x.get('status') == 'completed':
+            continue
+        try:
+            age = (now - dt.datetime.fromisoformat(x['createdAt'].replace('Z', '+00:00'))).total_seconds() / 60
+        except (KeyError, ValueError, TypeError):
+            age = 0
+        if age > BUSY_MAX_MIN:   # long dead (build 60 + deploy 10 + margin): do not hold dispatches forever
+            print(f"watch: ignoring stuck build {x.get('databaseId')} ({int(age)} min old)")
+            continue
+        return True
+    return False
 
 
 def dispatch(res, run=subprocess.run):

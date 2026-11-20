@@ -1,7 +1,7 @@
 # #79: run on the owner's PC every 5 minutes by a Windows scheduled task (see install-task.ps1).
 # GitHub's own */5 timer fires only every few hours, so this starts watch.yml instead.
 #   1. SD_WATCH (repo variable) is not "on"  -> do nothing (the off switch still works)
-#   2. a watch.yml run is already queued / running -> do nothing
+#   2. a watch.yml run is queued / running -> do nothing; one stuck (queued > 20 min, running > 15) is cancelled first
 #   3. else: gh workflow run watch.yml --ref main -f dry=false
 # One log line per run in %LOCALAPPDATA%\strand-watch\watch.log (rolls to watch.log.old at 400 KB: under 1 MB in all).
 # Works in Windows PowerShell 5.1 and PowerShell 7. -Gh is a scriptblock so tests can stub GitHub.
@@ -44,9 +44,21 @@ try {
     if ($v -ne 'on') {
         $result = "off (SD_WATCH='$v'), nothing started"
     } else {
-        $runs = Invoke-Gh run list -w watch.yml -R $Repo -L 20 --json status --jq '.[].status'
-        $busy = @($runs | Out-String -Stream | ForEach-Object { $_.Trim() } |
-            Where-Object { $_ -in @('queued', 'in_progress', 'waiting', 'pending', 'requested') })
+        $rows = Invoke-Gh run list -w watch.yml -R $Repo -L 20 --json status,createdAt,databaseId `
+            --jq '.[] | [.status, .createdAt, .databaseId] | @tsv'
+        $busy = @()
+        foreach ($line in @($rows | Out-String -Stream | ForEach-Object { $_.Trim() } | Where-Object { $_ })) {
+            $f = $line -split "`t"
+            if ($f[0] -notin @('queued', 'in_progress', 'waiting', 'pending', 'requested')) { continue }
+            $age = 0
+            try { $age = [int]((Get-Date).ToUniversalTime() - [datetime]::Parse($f[1]).ToUniversalTime()).TotalMinutes } catch { }
+            $limit = if ($f[0] -eq 'in_progress') { 15 } else { 20 }   # the job's own timeout is 10 min
+            if ($age -gt $limit) {
+                # stale: cancel it so it stops blocking; a failed cancel throws -> ERROR, no dispatch this tick
+                Invoke-Gh run cancel $f[2] -R $Repo | Out-Null
+                Write-Log "cancelled stale $($f[0]) run $($f[2]) ($age min)"
+            } else { $busy += $f[0] }
+        }
         if ($busy.Count -gt 0) {
             $result = "skipped, a watch.yml run is already $($busy[0])"
         } else {
