@@ -5,7 +5,7 @@
 The real build.tmdb() runs against a local 127.0.0.1 fake TMDB (no network, no key); only build.API and build's
 time.sleep are patched (no 31 s of 5xx back-off). The durable cache is build._stable (saved as stable.json).
 """
-import http.server, json, os, sys, tempfile, threading, unittest, urllib.parse
+import datetime as dt, http.server, json, os, sys, tempfile, threading, unittest, urllib.parse
 from pathlib import Path
 
 _tmp = tempfile.mkdtemp(prefix='sd-tests-resolve-')
@@ -65,11 +65,13 @@ class ResolveNeverCachesATMDBError(unittest.TestCase):
         FakeTMDB.ROUTES, FakeTMDB.HITS = {}, []
         self.before = dict(build._stable)
         self.calls = build._calls[0]
+        a._neg_rechecks[0], self.maxn = 0, a.NEG_RECHECK_MAX
 
     def tearDown(self):
         build._stable.clear()
         build._stable.update(self.before)
         build._calls[0] = self.calls
+        a.NEG_RECHECK_MAX = self.maxn
 
     def new_keys(self):
         return sorted(set(build._stable) - set(self.before))
@@ -148,6 +150,53 @@ class ResolveNeverCachesATMDBError(unittest.TestCase):
         res = a.resolve(row('No Such Title'), lambda *x: False)
         self.assertEqual(res[6], 'CHECK: no TMDB result')             # a real "nothing found" is a real answer
         self.assertEqual(self.new_keys(), ['arr2:movie|no such title|2026|None|netflix'])
+
+    # ---- a cached "no TMDB result" is asked again (#37) --------------------------------------------------------
+    def neg(self, title, dated=None):
+        k = f"arr2:movie|{title.lower()}|2026|None|netflix"
+        build._stable[k] = [False, 'movie', None, '', None, 0, a.NEG_HOW] + (
+            [(dt.date.today() - dt.timedelta(days=dated)).isoformat()] if dated is not None else [])
+        return k
+
+    def found(self, rid, title):
+        FakeTMDB.ROUTES = {'/search/movie': (200, {'results': [hit(rid, title)]}), f'/movie/{rid}': (200, {'runtime': 95})}
+
+    def test_legacy_undated_negative_is_asked_again(self):
+        k = self.neg('Quiet Harbor')
+        self.found(601, 'Quiet Harbor')
+        res = a.resolve(row('Quiet Harbor'), lambda *x: False)
+        self.assertEqual(res[:3], (True, 'movie', 601))
+        self.assertEqual(len(build._stable[k]), 7)                     # stored positive
+
+    def test_recent_negative_makes_no_request(self):
+        self.neg('Quiet Harbor', 3)
+        self.found(602, 'Quiet Harbor')
+        self.assertEqual(a.resolve(row('Quiet Harbor'), lambda *x: False)[6], a.NEG_HOW)
+        self.assertEqual(FakeTMDB.HITS, [])
+
+    def test_old_negative_is_asked_again_and_redated(self):
+        k = self.neg('No Such Title', 20)
+        FakeTMDB.ROUTES = {'/search/movie': (200, {'results': []})}
+        a.resolve(row('No Such Title'), lambda *x: False)
+        self.assertTrue(FakeTMDB.HITS)
+        self.assertEqual(build._stable[k][7], dt.date.today().isoformat())
+
+    def test_recheck_cap_per_run(self):
+        a.NEG_RECHECK_MAX = 2
+        for t in ('Aaa One', 'Bbb Two', 'Ccc Three'):
+            self.neg(t)
+        FakeTMDB.ROUTES = {'/search/movie': (200, {'results': []})}
+        for t in ('Aaa One', 'Bbb Two', 'Ccc Three'):
+            a.resolve(row(t), lambda *x: False)
+        self.assertEqual(FakeTMDB.HITS.count('/search/movie'), 2)
+
+    def test_error_during_recheck_keeps_old_entry(self):
+        k = self.neg('Quiet Harbor')
+        old = list(build._stable[k])
+        FakeTMDB.ROUTES = {'/search/movie': (500, {})}
+        res = a.resolve(row('Quiet Harbor'), lambda *x: False)
+        self.assertEqual(res[6], a.TMDB_ERROR_HOW)
+        self.assertEqual(build._stable[k], old)
 
 
 if __name__ == '__main__':
